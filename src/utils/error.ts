@@ -1,14 +1,13 @@
 import { MessageEmbed, Message } from "discord.js";
 import { Command } from "discord-akairo";
 
-const { prefix } = require("../../config.json");
-
 export default function Error(
 	message: Message,
 	command: Command,
 	error: string,
 	description: string
 ) {
+	const prefix = message.util?.parsed?.prefix;
 	let current;
 	let usage: string = `${prefix}${command.id}`;
 	for (let i = 0; (current = command.args[i]); i++) {

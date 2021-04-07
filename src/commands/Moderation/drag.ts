@@ -16,14 +16,24 @@ export default class DragCommand extends Command {
 	constructor() {
 		super("drag", {
 			aliases: ["drag", "move"],
+			category: "Moderation",
+			clientPermissions: ["MOVE_MEMBERS"],
 			args: args,
 		});
 	}
 
+	userPermissions(message: Message) {
+		if (
+			!message.member!.roles.cache.some((role) => role.name === "Discord Mod")
+		) {
+			return "Discord Mod";
+		}
+
+		return null;
+	}
+
 	exec(message: Message, args: any) {
 		const victim = args.user;
-		if (!message.member!.roles.cache.find((r) => r.name === "Discord Mod"))
-			return;
 
 		// Get the mentioned user
 		const Channel = message.member!.voice.channel;

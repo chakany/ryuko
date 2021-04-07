@@ -1,5 +1,11 @@
 {
 	"token": "",
 	"prefix": "!",
-	"ownerId": ""
+	"ownerId": "",
+	"db": {
+		"host": "",
+		"database": "",
+		"username": "",
+		"password": ""
+	}
 }
