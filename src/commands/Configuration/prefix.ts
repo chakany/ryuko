@@ -18,6 +18,7 @@ export default class PrefixCommand extends Command {
 			aliases: ["prefix"],
 			category: "Configuration",
 			args: arg,
+			description: "Change the prefix of the bot",
 			channel: "guild",
 			userPermissions: ["ADMINISTRATOR"],
 		});

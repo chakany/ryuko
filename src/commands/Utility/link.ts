@@ -19,6 +19,7 @@ export default class LinkCommand extends Command {
 			aliases: ["link"],
 			category: "Utility",
 			args: arg,
+			description: "Link your Discord and MC accounts together",
 			channel: "guild",
 		});
 	}

@@ -6,6 +6,7 @@ export default class PingCommand extends Command {
 	constructor() {
 		super("ping", {
 			aliases: ["ping"],
+			description: "Check bot latency",
 			category: "Utility",
 		});
 	}

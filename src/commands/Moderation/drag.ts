@@ -17,6 +17,7 @@ export default class DragCommand extends Command {
 		super("drag", {
 			aliases: ["drag", "move"],
 			category: "Moderation",
+			description: "Drag other members into your own channel",
 			clientPermissions: ["MOVE_MEMBERS"],
 			args: args,
 		});
