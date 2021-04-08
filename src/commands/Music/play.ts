@@ -84,6 +84,7 @@ export default class PlayCommand extends Command {
 					new MessageEmbed({
 						title: `Added to Queue!`,
 						description: "`" + track.info.title + "`",
+						url: track.info.uri,
 						color: 16716032,
 						timestamp: new Date(),
 						author: {
@@ -144,6 +145,7 @@ export default class PlayCommand extends Command {
 				new MessageEmbed({
 					title: `Now Playing`,
 					description: "`" + track.info.title + "`",
+					url: track.info.uri,
 					color: 16716032,
 					timestamp: new Date(),
 					author: {
