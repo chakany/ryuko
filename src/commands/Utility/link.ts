@@ -39,11 +39,11 @@ export default class LinkCommand extends Command {
 						timestamp: new Date(),
 						author: {
 							name: message.author.tag,
-							icon_url: message.author.avatarURL({ dynamic: true }),
+							icon_url: message.author.avatarURL({ dynamic: true }) || "",
 						},
 						footer: {
 							text: message.client.user?.tag,
-							icon_url: message.client.user?.avatarURL({ dynamic: true }),
+							icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
 						},
 					})
 				);

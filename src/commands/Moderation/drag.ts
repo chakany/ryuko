@@ -19,10 +19,12 @@ export default class DragCommand extends Command {
 			category: "Moderation",
 			description: "Drag other members into your own channel",
 			clientPermissions: ["MOVE_MEMBERS"],
+			channel: "guild",
 			args: args,
 		});
 	}
 
+	// @ts-ignore stupid issue over types and shit
 	userPermissions(message: Message) {
 		if (
 			!message.member!.roles.cache.some((role) => role.name === "Discord Mod")
@@ -33,7 +35,7 @@ export default class DragCommand extends Command {
 		return null;
 	}
 
-	exec(message: Message, args: any) {
+	exec(message: Message, args: any): any {
 		const victim = args.user;
 
 		// Get the mentioned user

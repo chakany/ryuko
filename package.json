@@ -6,7 +6,8 @@
 	"scripts": {
 		"start": "cd dist && node .",
 		"dev": "cd src && npx ts-node-dev --transpile-only .",
-		"dist": "npx tsc"
+		"dist": "npx tsc",
+		"postinstall": "patch-package"
 	},
 	"author": "Jack C <30955604+jacany@users.noreply.github.com>",
 	"license": "MIT",
@@ -23,6 +24,8 @@
 		"glob": "^7.1.6",
 		"mariadb": "^2.5.3",
 		"mysql": "^2.18.1",
+		"patch-package": "^6.4.7",
+		"postinstall-postinstall": "^2.1.0",
 		"sequelize": "^6.6.2",
 		"shoukaku": "1.5.2"
 	}

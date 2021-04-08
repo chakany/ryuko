@@ -14,8 +14,8 @@ export default class ReadyListener extends Listener {
 	}
 
 	exec() {
-		console.log(`Logged in as ${this.client.user.tag}`);
-		this.client.user.setActivity("among us", {
+		console.log(`Logged in as ${this.client.user!.tag}`);
+		this.client.user!.setActivity("among us", {
 			type: "PLAYING",
 		});
 	}

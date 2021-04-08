@@ -37,11 +37,11 @@ export default class HelpCommand extends Command {
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }),
+					icon_url: message.author.avatarURL({ dynamic: true }) || "",
 				},
 				footer: {
 					text: `Only showing avaliable commands\n${message.client.user?.tag}`,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }),
+					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
 				},
 			});
 			for (const [key, dvalue] of new Map(message.util?.handler.categories!)) {
@@ -69,11 +69,11 @@ export default class HelpCommand extends Command {
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }),
+					icon_url: message.author.avatarURL({ dynamic: true }) || "",
 				},
 				footer: {
 					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }),
+					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
 				},
 			});
 

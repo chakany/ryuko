@@ -10,7 +10,9 @@ export default function Error(
 	const prefix = message.util?.parsed?.prefix;
 	let current;
 	let usage: string = `${prefix}${command.id}`;
+	// @ts-ignore
 	if (command.args)
+		// @ts-ignore
 		for (let i = 0; (current = command.args[i]); i++) {
 			usage = usage + ` <${current.id}>`;
 		}
@@ -21,11 +23,11 @@ export default function Error(
 		timestamp: new Date(),
 		author: {
 			name: message.author.tag,
-			icon_url: message.author.avatarURL({ dynamic: true }),
+			icon_url: message.author.avatarURL({ dynamic: true }) || "",
 		},
 		footer: {
 			text: message.client.user?.tag,
-			icon_url: message.client.user?.avatarURL({ dynamic: true }),
+			icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
 		},
 		fields: [
 			{

@@ -24,9 +24,13 @@ export default class PrefixCommand extends Command {
 		});
 	}
 
-	async exec(message: Message, args: any) {
+	async exec(message: Message, args: any): Promise<any> {
 		// The third param is the default.
-		const oldPrefix = this.client.settings.get(message.guild.id, "prefix", "!");
+		const oldPrefix = this.client.settings.get(
+			message.guild!.id,
+			"prefix",
+			"!"
+		);
 
 		if (!args.prefix) {
 			return message.channel.send(
@@ -39,7 +43,7 @@ export default class PrefixCommand extends Command {
 			);
 		}
 
-		await this.client.settings.set(message.guild.id, "prefix", args.prefix);
+		await this.client.settings.set(message.guild!.id, "prefix", args.prefix);
 		return message.channel.send(
 			new MessageEmbed({
 				title: ":white_check_mark: Changed Prefix",
@@ -48,11 +52,11 @@ export default class PrefixCommand extends Command {
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }),
+					icon_url: message.author.avatarURL({ dynamic: true }) || "",
 				},
 				footer: {
 					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }),
+					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
 				},
 			})
 		);

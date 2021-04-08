@@ -9,8 +9,6 @@ import { Shoukaku } from "shoukaku";
 
 import Db from "./db";
 
-import Queue from "./utils/queue";
-
 const config = require("../config.json");
 
 const ShoukakuOptions = {

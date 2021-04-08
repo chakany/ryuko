@@ -23,7 +23,7 @@ export default class DisableCommand extends Command {
 		});
 	}
 
-	async exec(message: Message, args: any) {
+	async exec(message: Message, args: any): Promise<any> {
 		try {
 			const category: Category<any, any> = this.handler.findCategory(
 				args.command
@@ -41,13 +41,14 @@ export default class DisableCommand extends Command {
 						timestamp: new Date(),
 						author: {
 							name: message.author.tag,
-							icon_url: message.author.avatarURL({ dynamic: true }),
+							icon_url: message.author.avatarURL({ dynamic: true }) || "",
 						},
 						footer: {
 							text: message.client.user?.tag,
-							icon_url: message.client.user?.avatarURL({
-								dynamic: true,
-							}),
+							icon_url:
+								message.client.user?.avatarURL({
+									dynamic: true,
+								}) || "",
 						},
 					})
 				);
@@ -61,13 +62,14 @@ export default class DisableCommand extends Command {
 						timestamp: new Date(),
 						author: {
 							name: message.author.tag,
-							icon_url: message.author.avatarURL({ dynamic: true }),
+							icon_url: message.author.avatarURL({ dynamic: true }) || "",
 						},
 						footer: {
 							text: message.client.user?.tag,
-							icon_url: message.client.user?.avatarURL({
-								dynamic: true,
-							}),
+							icon_url:
+								message.client.user?.avatarURL({
+									dynamic: true,
+								}) || "",
 						},
 					})
 				);
