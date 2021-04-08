@@ -23,6 +23,7 @@
 		"glob": "^7.1.6",
 		"mariadb": "^2.5.3",
 		"mysql": "^2.18.1",
-		"sequelize": "^6.6.2"
+		"sequelize": "^6.6.2",
+		"shoukaku": "1.5.2"
 	}
 }

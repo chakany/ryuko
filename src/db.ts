@@ -11,24 +11,18 @@ const sequelize = new Sequelize(db.database, db.username, db.password, {
 });
 
 // Our Models
-const linked = sequelize.define(
-	"linked",
-	{
-		mc: {
-			type: DataTypes.STRING,
-			allowNull: false,
-			unique: true,
-		},
-		discord: {
-			type: DataTypes.STRING,
-			allowNull: false,
-			unique: true,
-		},
+const linked = sequelize.define("linked", {
+	mc: {
+		type: DataTypes.STRING,
+		allowNull: false,
+		unique: "mc",
 	},
-	{
-		freezeTableName: true,
-	}
-);
+	discord: {
+		type: DataTypes.STRING,
+		allowNull: false,
+		unique: "discord",
+	},
+});
 
 const guild = sequelize.define("guild", {
 	id: {

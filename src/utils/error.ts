@@ -10,9 +10,10 @@ export default function Error(
 	const prefix = message.util?.parsed?.prefix;
 	let current;
 	let usage: string = `${prefix}${command.id}`;
-	for (let i = 0; (current = command.args[i]); i++) {
-		usage = usage + ` <${current.id}>`;
-	}
+	if (command.args)
+		for (let i = 0; (current = command.args[i]); i++) {
+			usage = usage + ` <${current.id}>`;
+		}
 	return new MessageEmbed({
 		title: ":x:Error: `" + command.id + "`",
 		description: "```diff\n- " + error + "\n+ " + description + "```",

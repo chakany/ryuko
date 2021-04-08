@@ -5,14 +5,27 @@ import {
 	ListenerHandler,
 	SequelizeProvider,
 } from "discord-akairo";
+import { Shoukaku } from "shoukaku";
 
 import Db from "./db";
 
+import Queue from "./utils/queue";
+
 const config = require("../config.json");
+
+const ShoukakuOptions = {
+	moveOnDisconnect: false,
+	resumable: false,
+	resumableTimeout: 30,
+	reconnectTries: 2,
+	restTimeout: 10000,
+};
 
 export default class Bot extends AkairoClient {
 	public config: any;
 	public settings: SequelizeProvider;
+	public shoukaku;
+	public queue;
 	private commandHandler: CommandHandler;
 	private inhibitorHandler: InhibitorHandler;
 	private listenerHandler: ListenerHandler;
@@ -32,6 +45,9 @@ export default class Bot extends AkairoClient {
 		this.config = config;
 
 		this.settings = Db.getSettings();
+
+		this.shoukaku = new Shoukaku(this, config.lavalink, ShoukakuOptions);
+		this.queue = new Map();
 
 		this.commandHandler = new CommandHandler(this, {
 			directory: "./commands",
@@ -65,7 +81,29 @@ export default class Bot extends AkairoClient {
 		this.commandHandler.loadAll();
 	}
 
+	_setupShoukakuEvents() {
+		this.shoukaku.on("ready", (name) =>
+			console.log(`Lavalink ${name}: Ready!`)
+		);
+		this.shoukaku.on("error", (name, error) =>
+			console.error(`Lavalink ${name}: Error Caught,`, error)
+		);
+		this.shoukaku.on("close", (name, code, reason) =>
+			console.warn(
+				`Lavalink ${name}: Closed, Code ${code}, Reason ${
+					reason || "No reason"
+				}`
+			)
+		);
+		this.shoukaku.on("disconnected", (name, reason) =>
+			console.warn(
+				`Lavalink ${name}: Disconnected, Reason ${reason || "No reason"}`
+			)
+		);
+	}
+
 	start(): this {
+		this._setupShoukakuEvents();
 		this.login(this.config.token);
 		this.on("disconnect", () => console.log("Disconnected!"));
 
