@@ -15,8 +15,8 @@ export default class PlayCommand extends Command {
 	protected args = arg;
 
 	constructor() {
-		super("tplay", {
-			aliases: ["tplay"],
+		super("play", {
+			aliases: ["play"],
 			description: "Play music into your Voice Channel!",
 			category: "Music",
 			clientPermissions: ["SPEAK", "CONNECT"],
