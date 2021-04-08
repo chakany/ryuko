@@ -31,6 +31,7 @@ export default class SayCommand extends Command {
 				"Invalid Argument",
 				"You must provide something to say!"
 			);
-		return message.channel.send(args.response);
+		message.channel.send(args.response);
+		return message.delete();
 	}
 }
