@@ -9,15 +9,17 @@ export default class StopCommand extends Command {
 			aliases: ["stop"],
 			description: "Stops the currently playing song",
 			category: "Music",
+			channel: "guild",
 		});
 	}
 
-	async exec(message: Message) {
+	async exec(message: Message): Promise<any> {
 		try {
+			// @ts-ignore
 			const serverQueue = message.client.queue.get(message.guild.id);
 			if (
-				!message.member.voice.channel ||
-				message.member?.voice.channel !== serverQueue.voiceChannel
+				message.member!.voice.channel ||
+				message.member!.voice.channel !== serverQueue.voiceChannel
 			)
 				return message.channel.send(
 					Error(
@@ -37,7 +39,8 @@ export default class StopCommand extends Command {
 					)
 				);
 			serverQueue.connection.disconnect();
-			message.client.queue.delete(message.guild.id);
+			// @ts-ignore
+			message.client.queue.delete(message.guild!.id);
 		} catch (error) {
 			console.error(error);
 			return message.channel.send(

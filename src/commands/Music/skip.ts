@@ -9,14 +9,25 @@ export default class SkipCommand extends Command {
 			aliases: ["skip"],
 			description: "Skips the currently playing song",
 			category: "Music",
+			channel: "guild",
 		});
 	}
 
-	async exec(message: Message) {
+	async exec(message: Message): Promise<any> {
 		try {
+			// @ts-ignore
 			const serverQueue = message.client.queue.get(message.guild.id);
+			if (serverQueue === undefined)
+				return message.channel.send(
+					Error(
+						message,
+						this,
+						"Invalid Usage",
+						"There is no song currently playing"
+					)
+				);
 			if (
-				!message.member.voice.channel ||
+				!message.member?.voice.channel ||
 				message.member?.voice.channel !== serverQueue.voiceChannel
 			)
 				return message.channel.send(
@@ -25,15 +36,6 @@ export default class SkipCommand extends Command {
 						this,
 						"Invalid Usage",
 						"You have to be in the voice channel to skip the music!"
-					)
-				);
-			if (!serverQueue)
-				return message.channel.send(
-					Error(
-						message,
-						this,
-						"Invalid Usage",
-						"There is no song currently playing"
 					)
 				);
 			serverQueue.connection.stopTrack();

@@ -10,12 +10,14 @@ export default class QueueCommand extends Command {
 			aliases: ["queue"],
 			description: "Gets the Song Queue",
 			category: "Music",
+			channel: "guild",
 		});
 	}
 
-	async exec(message: Message) {
+	async exec(message: Message): Promise<any> {
 		try {
-			const serverQueue = message.client.queue.get(message.guild.id);
+			// @ts-ignore
+			const serverQueue = message.client.queue.get(message.guild!.id);
 			if (!serverQueue)
 				return message.channel.send(
 					Error(
@@ -40,11 +42,11 @@ export default class QueueCommand extends Command {
 					timestamp: new Date(),
 					author: {
 						name: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }),
+						icon_url: message.author.avatarURL({ dynamic: true }) || "",
 					},
 					footer: {
 						text: message.client.user?.tag,
-						icon_url: message.client.user?.avatarURL({ dynamic: true }),
+						icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
 					},
 				})
 			);

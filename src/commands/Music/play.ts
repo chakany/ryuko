@@ -15,12 +15,13 @@ export default class PlayCommand extends Command {
 	protected args = arg;
 
 	constructor() {
-		super("play", {
-			aliases: ["play"],
+		super("tplay", {
+			aliases: ["tplay"],
 			description: "Play music into your Voice Channel!",
 			category: "Music",
 			clientPermissions: ["SPEAK", "CONNECT"],
 			args: arg,
+			channel: "guild",
 		});
 	}
 
@@ -33,13 +34,14 @@ export default class PlayCommand extends Command {
 		}
 	}
 
-	async exec(message: Message, args: any) {
+	async exec(message: Message, args: any): Promise<any> {
 		try {
+			// @ts-ignore
 			const queue = message.client.queue;
 			const guild = message.guild;
-			const serverQueue = queue.get(message.guild.id);
+			const serverQueue = queue.get(message.guild!.id);
 
-			const voiceChannel = message.member.voice.channel;
+			const voiceChannel = message.member!.voice.channel;
 			if (!voiceChannel)
 				return message.channel.send(
 					Error(
@@ -63,19 +65,20 @@ export default class PlayCommand extends Command {
 					songs: [],
 					playing: true,
 				};
-
+				// @ts-ignore
 				queueContruct.voiceChannel = message.member?.voice.channel;
 
-				queue.set(message.guild.id, queueContruct);
+				queue.set(message.guild!.id, queueContruct);
 
+				// @ts-ignore
 				queueContruct.songs.push(track);
 				try {
 					this.play(message, queueContruct.songs[0], node);
 				} catch (err) {
 					console.log(err);
-					queue.delete(message.guild.id);
+					queue.delete(message.guild!.id);
 					return message.channel.send(
-						Error(message, this, "An error occurred", error.message)
+						Error(message, this, "An error occurred", err.message)
 					);
 				}
 			} else {
@@ -89,11 +92,11 @@ export default class PlayCommand extends Command {
 						timestamp: new Date(),
 						author: {
 							name: message.author.tag,
-							icon_url: message.author.avatarURL({ dynamic: true }),
+							icon_url: message.author.avatarURL({ dynamic: true }) || "",
 						},
 						footer: {
 							text: message.client.user?.tag,
-							icon_url: message.client.user?.avatarURL({ dynamic: true }),
+							icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
 						},
 						fields: [
 							{
@@ -111,15 +114,37 @@ export default class PlayCommand extends Command {
 			);
 		}
 	}
+	// @ts-ignore
 	async play(message: Message, track, node, player: ShoukakuPlayer = null) {
 		try {
+			// @ts-ignore
 			const queue = message.client.queue;
-			const serverQueue = queue.get(message.guild.id);
-			if (!player)
+			const serverQueue = queue.get(message.guild!.id);
+			if (!player) {
 				player = await node.joinVoiceChannel({
-					guildID: message.guild.id,
-					voiceChannelID: message.member.voice.channelID,
+					guildID: message.guild!.id,
+					voiceChannelID: message.member!.voice.channelID,
 				});
+				for (const event of ["end", "closed", "nodeDisconnect"]) {
+					// @ts-ignore
+					player.on(event, () => {
+						serverQueue.songs.shift();
+						if (event === "end")
+							if (serverQueue.songs[0] !== undefined) {
+								this.play(message, serverQueue.songs[0], node, player);
+							} else {
+								player.disconnect();
+								queue.delete(message.guild!.id);
+								return;
+							}
+						else if (event === "closed" || event === "nodeDisconnect") {
+							player.disconnect();
+							queue.delete(message.guild!.id);
+							return;
+						}
+					});
+				}
+			}
 			serverQueue.connection = player;
 			player.voiceConnection.selfDeaf = true;
 			player.voiceConnection.player.on("error", (error) => {
@@ -129,17 +154,6 @@ export default class PlayCommand extends Command {
 				);
 				player.disconnect();
 			});
-			for (const event of ["end", "closed", "nodeDisconnect"])
-				player.on(event, () => {
-					serverQueue.songs.shift();
-					if (serverQueue.songs[0] !== undefined) {
-						this.play(message, serverQueue.songs[0], node, player);
-					} else {
-						player.disconnect();
-						queue.delete(message.guild.id);
-						return;
-					}
-				});
 			await player.playTrack(track);
 			await message.channel.send(
 				new MessageEmbed({
@@ -150,11 +164,11 @@ export default class PlayCommand extends Command {
 					timestamp: new Date(),
 					author: {
 						name: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }),
+						icon_url: message.author.avatarURL({ dynamic: true }) || "",
 					},
 					footer: {
 						text: message.client.user?.tag,
-						icon_url: message.client.user?.avatarURL({ dynamic: true }),
+						icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
 					},
 					fields: [
 						{
