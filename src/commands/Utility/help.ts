@@ -76,7 +76,6 @@ export default class HelpCommand extends Command {
 			return message.channel.send(helpEmbed);
 		} else if (args.command === "all") {
 			// If our command argument is all, this gets a list of ALL commands regardless of permission
-			const helpCommand = message.util?.parsed?.alias;
 			const helpEmbed = new MessageEmbed({
 				title: `${message.client.user!.username}'s Commands`,
 				description:
@@ -143,7 +142,7 @@ export default class HelpCommand extends Command {
 					command.userPermissions
 				);
 			if (command.aliases.length > 1)
-				helpEmbed.addField("Aliases", command.aliases);
+				helpEmbed.addField("Aliases", command.aliases.splice(1));
 			if (command.ownerOnly) helpEmbed.addField("Owner Only", "True");
 			if (command.args) {
 				let current;
@@ -152,6 +151,31 @@ export default class HelpCommand extends Command {
 				}
 			}
 			helpEmbed.addField("Usage", "`" + usage + "`");
+			return message.channel.send(helpEmbed);
+		} else if (message.util?.handler.categories.get(args.command)) {
+			// If our command argument is all, this gets a list of ALL commands regardless of permission
+			const helpEmbed = new MessageEmbed({
+				color: 16716032,
+				timestamp: new Date(),
+				author: {
+					name: message.author.tag,
+					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+				},
+				footer: {
+					text: message.client.user?.tag,
+					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+				},
+			});
+			let commands = "";
+			const category = message.util?.handler.categories.get(args.command)!;
+			for (const [key2, fvalue] of new Map(category)) {
+				// For each command in that category
+				// Add it to the variable commands
+				commands = commands + " `" + fvalue.aliases[0] + "`";
+			}
+			// Add it to the embed
+			helpEmbed.setTitle("Category: `" + category.id + "`");
+			helpEmbed.setDescription(commands);
 			return message.channel.send(helpEmbed);
 		} else {
 			return message.channel.send(
