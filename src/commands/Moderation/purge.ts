@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message } from "discord.js";
+import { Message, MessageEmbed, Collection } from "discord.js";
 
 import Error from "../../utils/error";
 
@@ -78,22 +78,83 @@ export default class PurgeCommand extends Command {
 				)
 			);
 		try {
+			let deleted: Collection<string, Message>;
 			await message.channel.messages
 				.fetch({ limit: count + 1 })
 				.then((messages) => {
-					let toDelete: any = messages;
 					// Fetches the messages
 					if (victim) {
-						toDelete = [];
-						messages
-							.filter((m) => m.author.id === victim.id)
-							.forEach((msg) => toDelete.push(msg));
+						deleted = messages.filter(
+							(m) => m.author.id === victim.id || m.id === message.id
+						);
+					} else {
+						deleted = messages;
 					}
+					if (!deleted.find((sus) => sus.id === message.id))
+						return message.channel.send(
+							Error(
+								message,
+								this,
+								"Invalid Argument",
+								"I could not find that user!"
+							)
+						);
 					// @ts-ignore
 					message.channel.bulkDelete(
-						toDelete // Bulk deletes all messages that have been fetched and are not older than 14 days (due to the Discord API)
+						deleted // Bulk deletes all messages that have been fetched and are not older than 14 days (due to the Discord API)
 					);
 				});
+			const logchannel = this.client.settings.get(
+				message.guild!.id,
+				"loggingChannel",
+				"None"
+			);
+			if (logchannel === "None") return;
+			let purgeEmbed = new MessageEmbed({
+				title: "Purge",
+				color: 16716032,
+				timestamp: new Date(),
+				author: {
+					name: message.author.tag,
+					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+				},
+				footer: {
+					text: `No content ("") means that there was probably an embed there\nGreen represents the command that initated the purge\n${message.client.user?.tag}`,
+					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+				},
+				fields: [
+					{
+						name: "Channel",
+						value: `<#${message.channel.id}>`,
+						inline: true,
+					},
+					{
+						name: "Number of Messages",
+						value: "`" + args.count + "`",
+						inline: true,
+					},
+				],
+			});
+			let content: any = "```diff\n";
+			// @ts-ignore
+			for (const [key, value] of deleted) {
+				if (key === message.id)
+					content =
+						content +
+						`+ ${value.author.tag} (${value.author.id}): "${value.content}"\n`;
+				else
+					content =
+						content +
+						`- ${value.author.tag} (${value.author.id}): "${value.content}"\n`;
+			}
+			content = content + "```";
+			purgeEmbed.setDescription(content);
+
+			// @ts-ignore
+			this.client.channels.cache
+				.get(logchannel)
+				// @ts-ignore
+				.send(purgeEmbed);
 		} catch (error) {
 			console.error(error);
 			return message.channel.send(
