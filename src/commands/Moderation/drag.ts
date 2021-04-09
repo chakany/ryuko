@@ -109,10 +109,12 @@ export default class DragCommand extends Command {
 				.send(
 					new MessageEmbed({
 						title: "Drag",
+						description:
+							"`" + victim.user.tag + "` `" + victim.user.id + "` was dragged",
 						color: 16716032,
 						timestamp: new Date(),
 						author: {
-							name: message.author.tag,
+							name: message.author.tag + " (" + message.author.id + ")",
 							icon_url: message.author.avatarURL({ dynamic: true }) || "",
 						},
 						footer: {
@@ -121,7 +123,7 @@ export default class DragCommand extends Command {
 						},
 						fields: [
 							{
-								name: "Dragged from",
+								name: "From",
 								value: "`" + oldChannel.name + "`",
 								inline: true,
 							},

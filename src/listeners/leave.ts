@@ -76,7 +76,7 @@ export default class LeaveListener extends Listener {
 								// @ts-ignore
 								thumbnail: target.avatarURL({ dynamic: true }) || "",
 								author: {
-									name: executor.tag,
+									name: executor.tag + " (" + executor.id + ")",
 									icon_url: executor.avatarURL({ dynamic: true }) || "",
 								},
 								footer: {

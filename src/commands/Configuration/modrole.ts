@@ -70,8 +70,6 @@ export default class ModroleCommand extends Command {
 			new MessageEmbed({
 				title: ":white_check_mark: Changed Mod Role",
 				color: 16716032,
-				description:
-					"`" + currentRole + "` :arrow_right: `" + args.role.id + "`",
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag,
@@ -81,6 +79,19 @@ export default class ModroleCommand extends Command {
 					text: message.client.user?.tag,
 					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
 				},
+				fields: [
+					{
+						name: "From",
+						value: "`" + currentRole + "`",
+						inline: true,
+					},
+					{
+						name: "To",
+						// @ts-ignore
+						value: "`" + args.role.id + "`",
+						inline: true,
+					},
+				],
 			})
 		);
 	}

@@ -115,7 +115,7 @@ export default class PurgeCommand extends Command {
 				color: 16716032,
 				timestamp: new Date(),
 				author: {
-					name: message.author.tag,
+					name: message.author.tag + " (" + message.author.id + ")",
 					icon_url: message.author.avatarURL({ dynamic: true }) || "",
 				},
 				footer: {

@@ -37,7 +37,7 @@ export default class MessageEditListener extends Listener {
 						color: 16716032,
 						timestamp: new Date(),
 						author: {
-							name: oldMessage.author.tag,
+							name: oldMessage.author.tag + " (" + oldMessage.author.id + ")",
 							icon_url: oldMessage.author.avatarURL({ dynamic: true }) || "",
 						},
 						footer: {

@@ -87,7 +87,7 @@ export default class DeleteListener extends Listener {
 							color: 16716032,
 							timestamp: new Date(),
 							author: {
-								name: executor.tag,
+								name: executor.tag + " (" + executor.id + ")",
 								icon_url: executor.avatarURL({ dynamic: true }) || "",
 							},
 							footer: {

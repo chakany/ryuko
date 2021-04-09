@@ -73,8 +73,6 @@ export default class LogchannelCommand extends Command {
 			new MessageEmbed({
 				title: ":white_check_mark: Changed Logging Channel",
 				color: 16716032,
-				description:
-					"`" + currentChannel + "` :arrow_right: `" + args.channel.id + "`",
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag,
@@ -84,6 +82,19 @@ export default class LogchannelCommand extends Command {
 					text: message.client.user?.tag,
 					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
 				},
+				fields: [
+					{
+						name: "From",
+						value: "`" + currentChannel + "`",
+						inline: true,
+					},
+					{
+						name: "To",
+						// @ts-ignore
+						value: "`" + args.channel.id + "`",
+						inline: true,
+					},
+				],
 			})
 		);
 	}
