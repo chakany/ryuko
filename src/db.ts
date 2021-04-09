@@ -48,6 +48,9 @@ const guild = sequelize.define("guild", {
 	modRole: {
 		type: DataTypes.STRING,
 	},
+	loggingChannel: {
+		type: DataTypes.STRING,
+	},
 });
 
 export default new (class Db {

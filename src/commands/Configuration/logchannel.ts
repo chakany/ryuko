@@ -5,21 +5,20 @@ import Error from "../../utils/error";
 
 const arg = [
 	{
-		id: "role",
-		type: "role",
+		id: "channel",
+		type: "textChannel",
 	},
 ];
 
-export default class ModroleCommand extends Command {
+export default class LogchannelCommand extends Command {
 	protected args = arg;
 
 	constructor() {
-		super("modrole", {
-			aliases: ["modrole"],
+		super("logchannel", {
+			aliases: ["logchannel", "loggingchannel"],
 			category: "Configuration",
 			args: arg,
-			description:
-				"Changes the Mod Role, setting this is required if you want to use Moderation commands.",
+			description: "Changes the Logging Channel",
 			channel: "guild",
 			userPermissions: ["ADMINISTRATOR"],
 		});
@@ -29,18 +28,18 @@ export default class ModroleCommand extends Command {
 		const prefix = message.util?.parsed?.prefix;
 
 		// The third param is the default.
-		const currentRole = this.client.settings.get(
+		const currentChannel = this.client.settings.get(
 			message.guild!.id,
-			"modRole",
+			"loggingChannel",
 			"None"
 		);
 
-		if (!args.role && currentRole !== "None") {
+		if (!args.channel && currentChannel !== "None") {
 			return message.channel.send(
 				new MessageEmbed({
-					title: "Current Mod Role",
+					title: "Current Logging Channel",
 					color: 16716032,
-					description: "`" + currentRole + "`",
+					description: "`" + currentChannel + "`",
 					timestamp: new Date(),
 					author: {
 						name: message.author.tag,
@@ -52,26 +51,30 @@ export default class ModroleCommand extends Command {
 					},
 				})
 			);
-		} else if (!args.role && currentRole === "None") {
+		} else if (!args.channel && currentChannel === "None") {
 			return message.channel.send(
 				Error(
 					message,
 					this,
 					"Invalid Configuration",
-					"There is no mod role set, use the '" +
+					"There is no logging channel set, use the '" +
 						prefix +
-						"modrole' command to set it."
+						"logchannel' command to set it."
 				)
 			);
 		}
 
-		await this.client.settings.set(message.guild!.id, "modRole", args.role.id);
+		await this.client.settings.set(
+			message.guild!.id,
+			"loggingChannel",
+			args.channel.id
+		);
 		return message.channel.send(
 			new MessageEmbed({
-				title: ":white_check_mark: Changed Mod Role",
+				title: ":white_check_mark: Changed Logging Channel",
 				color: 16716032,
 				description:
-					"`" + currentRole + "` :arrow_right: `" + args.role.id + "`",
+					"`" + currentChannel + "` :arrow_right: `" + args.channel.id + "`",
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag,
