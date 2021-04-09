@@ -7,7 +7,7 @@ import Error from "../../utils/error";
 export default class QueueCommand extends Command {
 	constructor() {
 		super("queue", {
-			aliases: ["queue"],
+			aliases: ["queue", "nowplaying"],
 			description: "Gets the Song Queue",
 			category: "Music",
 			channel: "guild",

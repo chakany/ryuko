@@ -41,6 +41,10 @@ const guild = sequelize.define("guild", {
 		allowNull: false,
 		defaultValue: prefix,
 	},
+	volume: {
+		type: DataTypes.INTEGER,
+		defaultValue: 100,
+	},
 });
 
 export default new (class Db {

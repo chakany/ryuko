@@ -41,6 +41,8 @@ export default class PlayCommand extends Command {
 			const queue = message.client.queue;
 			const guild = message.guild;
 			const serverQueue = queue.get(message.guild!.id);
+			if (serverQueue !== undefined && serverQueue.connection)
+				return serverQueue.connection.setPaused(false);
 			if (!message.util?.parsed?.content)
 				return message.channel.send(
 					Error(
@@ -152,8 +154,13 @@ export default class PlayCommand extends Command {
 					guildID: message.guild!.id,
 					voiceChannelID: message.member!.voice.channelID,
 					deaf: true,
-					volume: 90,
 				});
+				console.log(
+					await this.client.settings.get(message.guild!.id, "volume", 100)
+				);
+				player.setVolume(
+					await this.client.settings.get(message.guild!.id, "volume", 100)
+				);
 				for (const event of ["end", "closed", "nodeDisconnect"]) {
 					// @ts-ignore
 					player.on(event, () => {
