@@ -17,9 +17,18 @@ export default class StopCommand extends Command {
 		try {
 			// @ts-ignore
 			const serverQueue = message.client.queue.get(message.guild.id);
+			if (serverQueue === undefined)
+				return message.channel.send(
+					Error(
+						message,
+						this,
+						"Invalid Usage",
+						"There is no song currently playing"
+					)
+				);
 			if (
-				message.member!.voice.channel ||
-				message.member!.voice.channel !== serverQueue.voiceChannel
+				!message.member?.voice.channel ||
+				message.member?.voice.channel !== serverQueue.voiceChannel
 			)
 				return message.channel.send(
 					Error(
@@ -27,15 +36,6 @@ export default class StopCommand extends Command {
 						this,
 						"Invalid Usage",
 						"You have to be in the voice channel to stop the music!"
-					)
-				);
-			if (!serverQueue)
-				return message.channel.send(
-					Error(
-						message,
-						this,
-						"Invalid Usage",
-						"There is no song currently playing"
 					)
 				);
 			serverQueue.connection.disconnect();

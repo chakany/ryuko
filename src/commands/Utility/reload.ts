@@ -10,7 +10,7 @@ const arg = [
 	},
 ];
 
-export default class DisableCommand extends Command {
+export default class ReloadCommand extends Command {
 	protected args = arg;
 
 	constructor() {

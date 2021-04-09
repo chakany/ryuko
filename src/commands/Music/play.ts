@@ -1,6 +1,7 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 import { ShoukakuPlayer } from "shoukaku";
+import ystr from "ytsr";
 
 import Error from "../../utils/error";
 
@@ -40,7 +41,15 @@ export default class PlayCommand extends Command {
 			const queue = message.client.queue;
 			const guild = message.guild;
 			const serverQueue = queue.get(message.guild!.id);
-
+			if (!message.util?.parsed?.content)
+				return message.channel.send(
+					Error(
+						message,
+						this,
+						"Invalid Argument",
+						"You must provide something to play! It can be a URL or a search query."
+					)
+				);
 			const voiceChannel = message.member!.voice.channel;
 			if (!voiceChannel)
 				return message.channel.send(
@@ -51,9 +60,27 @@ export default class PlayCommand extends Command {
 						"You are not in a voice channel!"
 					)
 				);
-
+			let url;
+			if (this._checkURL(args.song)) url = args.song;
+			else {
+				// @ts-ignore
+				const searchResults = await ystr(message.util?.parsed?.content, {
+					limit: 2,
+				});
+				// @ts-ignore
+				url = searchResults.items[0].url;
+				if (!url)
+					return message.channel.send(
+						Error(
+							message,
+							this,
+							"Search Failed",
+							"I could not find that on YouTube"
+						)
+					);
+			}
 			const node = this.client.shoukaku.getNode();
-			let data = await node.rest.resolve(args.song);
+			let data = await node.rest.resolve(url);
 			if (!data) return;
 			const track = data.tracks.shift();
 
