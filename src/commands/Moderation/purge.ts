@@ -130,7 +130,8 @@ export default class PurgeCommand extends Command {
 					},
 					{
 						name: "Number of Messages",
-						value: "`" + args.count + "`",
+						// @ts-ignore
+						value: "`" + deleted.size + "`",
 						inline: true,
 					},
 				],
