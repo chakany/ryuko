@@ -22,7 +22,7 @@ export default class HelpCommand extends Command {
 		});
 	}
 
-	async exec(message: Message, args: any) {
+	async exec(message: Message, args: any): Promise<any> {
 		const prefix = message.util?.parsed?.prefix;
 		const helpCommand = message.util?.parsed?.alias;
 		if (!args.command) {
