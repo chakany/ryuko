@@ -45,6 +45,9 @@ const guild = sequelize.define("guild", {
 		type: DataTypes.INTEGER,
 		defaultValue: 100,
 	},
+	modRole: {
+		type: DataTypes.STRING,
+	},
 });
 
 export default new (class Db {

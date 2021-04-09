@@ -1,10 +1,12 @@
-import { Command } from "discord-akairo";
+import { Command, Argument } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
+
+import Error from "../../utils/error";
 
 const arg = [
 	{
 		id: "command",
-		type: "commandAlias",
+		type: Argument.union("commandAlias", "string"),
 	},
 ];
 
@@ -22,8 +24,58 @@ export default class HelpCommand extends Command {
 
 	async exec(message: Message, args: any) {
 		const prefix = message.util?.parsed?.prefix;
-
+		const helpCommand = message.util?.parsed?.alias;
 		if (!args.command) {
+			// If there are no command arguments, this will show all commands that are accessible to the user based on their permissions, roles, and owner status.
+			const helpEmbed = new MessageEmbed({
+				title: `${message.client.user!.username}'s Commands`,
+				description:
+					"**Prefix**: `" +
+					prefix +
+					"`\n**View All Commands**: `" +
+					`${prefix}${helpCommand} all` +
+					"`\n**View Command Info**: `" +
+					`${prefix}${helpCommand} <${arg[0].id}>` +
+					"`",
+				color: 16716032,
+				timestamp: new Date(),
+				author: {
+					name: message.author.tag,
+					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+				},
+				footer: {
+					text: `Only showing avaliable commands\n${message.client.user?.tag}`,
+					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+				},
+			});
+			const modRole = this.client.settings.get(
+				message.guild!.id,
+				"modRole",
+				"None"
+			);
+			for (const [key, dvalue] of new Map(message.util?.handler.categories!)) {
+				// For each category
+				let commands = "";
+				for (const [key2, fvalue] of new Map(dvalue)) {
+					// For each command in that category
+					// Check if the user has the permissions to use that command
+					if (
+						(fvalue.ownerOnly && !this.client.isOwner(message.author)) ||
+						(fvalue.categoryID === "Moderation" &&
+							!message.member!.roles.cache.some((role) => role.id === modRole))
+					) {
+						// The user does not have the permissions to use this command, do not display it.
+					} else {
+						// The user does have the permission to use it, add it to the commands variable.
+						commands = commands + " `" + fvalue.aliases[0] + "`";
+					}
+				}
+				// If the commands variable has any value, add it to the embed
+				if (commands) helpEmbed.addField(key, commands);
+			}
+			return message.channel.send(helpEmbed);
+		} else if (args.command === "all") {
+			// If our command argument is all, this gets a list of ALL commands regardless of permission
 			const helpCommand = message.util?.parsed?.alias;
 			const helpEmbed = new MessageEmbed({
 				title: `${message.client.user!.username}'s Commands`,
@@ -40,26 +92,23 @@ export default class HelpCommand extends Command {
 					icon_url: message.author.avatarURL({ dynamic: true }) || "",
 				},
 				footer: {
-					text: `Only showing avaliable commands\n${message.client.user?.tag}`,
+					text: `Showing all commands\n${message.client.user?.tag}`,
 					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
 				},
 			});
 			for (const [key, dvalue] of new Map(message.util?.handler.categories!)) {
+				// For each category
 				let commands = "";
-				let disabledCommands;
 				for (const [key2, fvalue] of new Map(dvalue)) {
-					let current;
-					if (fvalue.ownerOnly && !this.client.isOwner(message.author)) {
-					} else {
-						for (let i = 0; (current = fvalue.aliases[i]); i++) {
-							commands = commands + " `" + current + "`";
-						}
-					}
+					// For each command in that category
+					// Add it to the variable commands
+					commands = commands + " `" + fvalue.aliases[0] + "`";
 				}
-				if (commands) helpEmbed.addField(key, commands);
+				// Add it to the embed
+				helpEmbed.addField(key, commands);
 			}
 			return message.channel.send(helpEmbed);
-		} else {
+		} else if (args.command.id) {
 			const command = args.command;
 			let usage: string = `${prefix}${command.id}`;
 
@@ -104,6 +153,15 @@ export default class HelpCommand extends Command {
 			}
 			helpEmbed.addField("Usage", "`" + usage + "`");
 			return message.channel.send(helpEmbed);
+		} else {
+			return message.channel.send(
+				Error(
+					message,
+					this,
+					"Invalid Argument",
+					`You must provide a valid command, use ${prefix}${helpCommand} on it's own, or use ${prefix}${helpCommand} all.`
+				)
+			);
 		}
 	}
 }
