@@ -151,6 +151,8 @@ export default class PlayCommand extends Command {
 				player = await node.joinVoiceChannel({
 					guildID: message.guild!.id,
 					voiceChannelID: message.member!.voice.channelID,
+					deaf: true,
+					volume: 90,
 				});
 				for (const event of ["end", "closed", "nodeDisconnect"]) {
 					// @ts-ignore
