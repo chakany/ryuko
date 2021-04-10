@@ -4,8 +4,8 @@
 	"main": "dist/index.js",
 	"repository": "https://github.com/jacany/aina",
 	"scripts": {
-		"start": "cd dist && node .",
-		"dev": "cd src && npx ts-node-dev --transpile-only .",
+		"start": "cd dist && node . | npx bunyan -o short",
+		"dev": "cd src && npx ts-node-dev --transpile-only . | npx bunyan -o short",
 		"dist": "npx tsc",
 		"postinstall": "patch-package"
 	},
