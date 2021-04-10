@@ -42,7 +42,7 @@ export default class StopCommand extends Command {
 			// @ts-ignore
 			message.client.queue.delete(message.guild!.id);
 		} catch (error) {
-			console.error(error);
+			this.client.log.error(error);
 			return message.channel.send(
 				Error(message, this, "An error occurred", error.message)
 			);

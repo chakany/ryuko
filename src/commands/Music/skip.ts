@@ -40,7 +40,7 @@ export default class SkipCommand extends Command {
 				);
 			serverQueue.connection.stopTrack();
 		} catch (error) {
-			console.error(error);
+			this.client.log.error(error);
 			return message.channel.send(
 				Error(message, this, "An error occurred", error.message)
 			);

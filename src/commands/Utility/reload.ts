@@ -83,7 +83,7 @@ export default class ReloadCommand extends Command {
 					)
 				);
 		} catch (err) {
-			console.error(err);
+			this.client.log.error(err);
 			throw err;
 		}
 	}

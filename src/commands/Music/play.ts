@@ -104,7 +104,7 @@ export default class PlayCommand extends Command {
 				try {
 					this.play(message, queueContruct.songs[0], node);
 				} catch (err) {
-					console.log(err);
+					this.client.log.error(err);
 					queue.delete(message.guild!.id);
 					return message.channel.send(
 						Error(message, this, "An error occurred", err.message)
@@ -137,7 +137,7 @@ export default class PlayCommand extends Command {
 				);
 			}
 		} catch (error) {
-			console.log(error);
+			this.client.log.error(error);
 			return message.channel.send(
 				Error(message, this, "An error occurred", error.message)
 			);
@@ -155,9 +155,6 @@ export default class PlayCommand extends Command {
 					voiceChannelID: message.member!.voice.channelID,
 					deaf: true,
 				});
-				console.log(
-					await this.client.settings.get(message.guild!.id, "volume", 100)
-				);
 				player.setVolume(
 					await this.client.settings.get(message.guild!.id, "volume", 100)
 				);
@@ -184,7 +181,7 @@ export default class PlayCommand extends Command {
 			serverQueue.connection = player;
 			player.voiceConnection.selfDeaf = true;
 			player.voiceConnection.player.on("error", (error) => {
-				console.error(error);
+				this.client.log.error(error);
 				message.channel.send(
 					Error(message, this, "An error occurred", error.message)
 				);
@@ -215,7 +212,7 @@ export default class PlayCommand extends Command {
 				})
 			);
 		} catch (error) {
-			console.error(error);
+			this.client.log.error(error);
 			return message.channel.send(
 				Error(message, this, "An error occurred", error.message)
 			);

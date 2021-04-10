@@ -157,7 +157,7 @@ export default class PurgeCommand extends Command {
 				// @ts-ignore
 				.send(purgeEmbed);
 		} catch (error) {
-			console.error(error);
+			this.client.log.error(error);
 			return message.channel.send(
 				Error(message, this, "An error occurred", error.message)
 			);

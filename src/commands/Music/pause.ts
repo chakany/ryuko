@@ -40,7 +40,7 @@ export default class PauseCommand extends Command {
 				);
 			serverQueue.connection.setPaused(true);
 		} catch (error) {
-			console.error(error);
+			this.client.log.error(error);
 			return message.channel.send(
 				Error(message, this, "An error occurred", error.message)
 			);

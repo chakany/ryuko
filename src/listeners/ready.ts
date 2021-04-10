@@ -14,7 +14,7 @@ export default class ReadyListener extends Listener {
 	}
 
 	exec() {
-		console.log(`Logged in as ${this.client.user!.tag}`);
+		this.client.log.info(`Logged in as ${this.client.user!.tag}`);
 		this.client.user!.setActivity("BULKING SEASON", {
 			type: "COMPETING",
 		});

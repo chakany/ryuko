@@ -113,7 +113,7 @@ export default class LeaveListener extends Listener {
 				);
 			}
 		} catch (error) {
-			console.error(error);
+			this.client.log.error(error);
 		}
 	}
 }

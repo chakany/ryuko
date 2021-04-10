@@ -1,13 +1,19 @@
 import { Sequelize, Model, DataTypes } from "sequelize";
 import { SequelizeProvider } from "discord-akairo";
 import axios from "axios";
+import bunyan from "bunyan";
+let log = bunyan.createLogger({
+	name: "db",
+	stream: process.stdout,
+	level: "debug",
+});
 
 const { db, prefix } = require("../config.json");
 
 const sequelize = new Sequelize(db.database, db.username, db.password, {
 	host: db.host,
 	dialect: "mariadb",
-	logging: console.log,
+	logging: (msg) => log.debug(msg),
 });
 
 // Our Models
@@ -73,7 +79,7 @@ export default new (class Db {
 
 			return true;
 		} catch (err) {
-			console.error(err);
+			log.error(err);
 			throw err;
 		}
 	}
@@ -90,7 +96,7 @@ export default new (class Db {
 
 			return true;
 		} catch (err) {
-			console.error(err);
+			log.error(err);
 			throw err;
 		}
 	}

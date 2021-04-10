@@ -6,6 +6,7 @@ import {
 	SequelizeProvider,
 } from "discord-akairo";
 import { Shoukaku } from "shoukaku";
+import bunyan from "bunyan";
 
 import Db from "./db";
 
@@ -24,11 +25,12 @@ export default class Bot extends AkairoClient {
 	public settings: SequelizeProvider;
 	public shoukaku;
 	public queue;
+	public log: bunyan;
 	private commandHandler: CommandHandler;
 	private inhibitorHandler: InhibitorHandler;
 	private listenerHandler: ListenerHandler;
 
-	constructor() {
+	constructor(log: bunyan) {
 		Db.sync();
 
 		super(
@@ -41,6 +43,7 @@ export default class Bot extends AkairoClient {
 		);
 
 		this.config = config;
+		this.log = log;
 
 		this.settings = Db.getSettings();
 
@@ -80,30 +83,29 @@ export default class Bot extends AkairoClient {
 	}
 
 	_setupShoukakuEvents() {
-		this.shoukaku.on("ready", (name) =>
-			console.log(`Lavalink ${name}: Ready!`)
-		);
-		this.shoukaku.on("error", (name, error) =>
-			console.error(`Lavalink ${name}: Error Caught,`, error)
-		);
+		let log = bunyan.createLogger({
+			name: "lavalink",
+			stream: process.stdout,
+			level: "info",
+		});
+
+		this.shoukaku.on("ready", (name) => log.info(`Lavalink is ready!`));
+		this.shoukaku.on("error", (name, error) => log.error(error));
 		this.shoukaku.on("close", (name, code, reason) =>
-			console.warn(
-				`Lavalink ${name}: Closed, Code ${code}, Reason ${
-					reason || "No reason"
-				}`
-			)
+			log.warn(`Lavalink Closed, Code ${code}, Reason ${reason || "No reason"}`)
 		);
 		this.shoukaku.on("disconnected", (name, reason) =>
-			console.warn(
+			log.warn(
 				`Lavalink ${name}: Disconnected, Reason ${reason || "No reason"}`
 			)
 		);
 	}
 
 	start(): this {
+		this.log.info("Bot is starting...");
 		this._setupShoukakuEvents();
 		this.login(this.config.token);
-		this.on("disconnect", () => console.log("Disconnected!"));
+		this.on("disconnect", () => this.log.warn("Disconnected!"));
 
 		return this;
 	}

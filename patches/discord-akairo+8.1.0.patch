@@ -1,8 +1,8 @@
 diff --git a/node_modules/discord-akairo/src/index.d.ts b/node_modules/discord-akairo/src/index.d.ts
-index cb4d20a..690e326 100644
+index cb4d20a..c4f9557 100644
 --- a/node_modules/discord-akairo/src/index.d.ts
 +++ b/node_modules/discord-akairo/src/index.d.ts
-@@ -28,6 +28,11 @@ declare module 'discord-akairo' {
+@@ -28,6 +28,12 @@ declare module 'discord-akairo' {
          public util: ClientUtil;
  
          public isOwner(user: UserResolvable): boolean;
@@ -11,6 +11,7 @@ index cb4d20a..690e326 100644
 +        public settings: SequelizeProvider;
 +        public shoukaku: any;
 +        public queue: any;
++        public log: bunyan;
      }
  
      export class AkairoHandler extends EventEmitter {

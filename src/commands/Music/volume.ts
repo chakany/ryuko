@@ -70,7 +70,7 @@ export default class VolumeCommand extends Command {
 			await this.client.settings
 				.set(message.guild!.id, "volume", args.volume)
 				.catch((error) => {
-					console.error(error);
+					this.client.log.error(error);
 					return message.channel.send(
 						Error(
 							message,
@@ -98,7 +98,7 @@ export default class VolumeCommand extends Command {
 				})
 			);
 		} catch (error) {
-			console.error(error);
+			this.client.log.error(error);
 			return message.channel.send(
 				Error(message, this, "An error occurred", error.message)
 			);
