@@ -15,6 +15,7 @@ export default class MessageEditListener extends Listener {
 
 	exec(oldMessage: Message, newMessage: Message) {
 		if (!oldMessage.guild) return;
+		if (oldMessage.author.tag === "GitHub#0000") return;
 		const logChannel = this.client.settings.get(
 			oldMessage.guild.id,
 			"loggingChannel",
