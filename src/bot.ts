@@ -74,6 +74,10 @@ export default class Bot extends AkairoClient {
 			directory: "./listeners",
 		});
 
+		this.listenerHandler.setEmitters({
+			process: process,
+		});
+
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.commandHandler.useListenerHandler(this.listenerHandler);
 
