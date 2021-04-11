@@ -93,15 +93,13 @@ export default class Bot extends AkairoClient {
 			level: "info",
 		});
 
-		this.shoukaku.on("ready", (name) => log.info(`Lavalink is ready!`));
+		this.shoukaku.on("ready", (name) => log.info(`${name} is ready to roll!`));
 		this.shoukaku.on("error", (name, error) => log.error(error));
 		this.shoukaku.on("close", (name, code, reason) =>
-			log.warn(`Lavalink Closed, Code ${code}, Reason ${reason || "No reason"}`)
+			log.warn(`${name} Closed, Code ${code}, Reason ${reason || "No reason"}`)
 		);
 		this.shoukaku.on("disconnected", (name, reason) =>
-			log.warn(
-				`Lavalink ${name}: Disconnected, Reason ${reason || "No reason"}`
-			)
+			log.warn(`Disconnected from ${name}, Reason ${reason || "No reason"}`)
 		);
 	}
 

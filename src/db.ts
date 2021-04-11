@@ -61,6 +61,7 @@ const guild = sequelize.define("guild", {
 
 export default new (class Db {
 	getSettings() {
+		log.info("Initializing & Syncing");
 		return new SequelizeProvider(guild, {
 			idColumn: "id",
 		});
