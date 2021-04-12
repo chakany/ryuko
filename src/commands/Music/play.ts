@@ -41,7 +41,7 @@ export default class PlayCommand extends Command {
 			const queue = message.client.queue;
 			const guild = message.guild;
 			const serverQueue = queue.get(message.guild!.id);
-			if (serverQueue !== undefined && serverQueue.connection)
+			if (serverQueue !== undefined && serverQueue.connection && args.song)
 				return serverQueue.connection.setPaused(false);
 			if (!message.util?.parsed?.content)
 				return message.channel.send(
