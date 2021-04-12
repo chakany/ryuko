@@ -8,7 +8,7 @@ import {
 import { Shoukaku } from "shoukaku";
 import bunyan from "bunyan";
 
-import Db from "./db";
+import Db from "./utils/db";
 
 const config = require("../config.json");
 

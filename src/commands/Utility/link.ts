@@ -2,7 +2,7 @@ import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
 import Error from "../../utils/error";
-import Db from "../../db";
+import Db from "../../utils/db";
 
 const arg = [
 	{
