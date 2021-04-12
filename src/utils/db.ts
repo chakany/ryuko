@@ -8,7 +8,7 @@ let log = bunyan.createLogger({
 	level: "debug",
 });
 
-const { db, prefix } = require("../config.json");
+const { db, prefix } = require("../../config.json");
 
 const sequelize = new Sequelize(db.database, db.username, db.password, {
 	host: db.host,
