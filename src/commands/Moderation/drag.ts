@@ -12,7 +12,6 @@ const args = [
 
 export default class DragCommand extends Command {
 	protected args = args;
-	protected modOnly = true;
 
 	constructor() {
 		super("drag", {
@@ -22,33 +21,8 @@ export default class DragCommand extends Command {
 			clientPermissions: ["MOVE_MEMBERS"],
 			channel: "guild",
 			args: args,
+			modOnly: true,
 		});
-	}
-
-	// @ts-ignore stupid issue over types and shit
-	userPermissions(message: Message) {
-		const modRole = this.client.settings.get(
-			message.guild!.id,
-			"modRole",
-			null
-		);
-		if (
-			modRole &&
-			!message.member!.roles.cache.some((role) => role.id === modRole)
-		) {
-			return "roleId: " + modRole;
-		} else if (!modRole) {
-			return message.channel.send(
-				Error(
-					message,
-					this,
-					"Invalid Configuration",
-					"To use mod commands, you must first set a mod role. See the configuration section in help for more info."
-				)
-			);
-		}
-
-		return null;
 	}
 
 	exec(message: Message, args: any): any {

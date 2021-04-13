@@ -61,7 +61,7 @@ export default class HelpCommand extends Command {
 					// Check if the user has the permissions to use that command
 					if (
 						(fvalue.ownerOnly && !this.client.isOwner(message.author)) ||
-						(fvalue.categoryID === "Moderation" &&
+						(fvalue.modOnly &&
 							!message.member!.roles.cache.some((role) => role.id === modRole))
 					) {
 						// The user does not have the permissions to use this command, do not display it.
