@@ -62,7 +62,11 @@ export default class HelpCommand extends Command {
 					if (
 						(fvalue.ownerOnly && !this.client.isOwner(message.author)) ||
 						(fvalue.modOnly &&
-							!message.member!.roles.cache.some((role) => role.id === modRole))
+							!message.member!.roles.cache.some(
+								(role) => role.id === modRole
+							)) ||
+						(!fvalue.guild.includes(message.guild!.id) &&
+							fvalue.guild.length != 0)
 					) {
 						// The user does not have the permissions to use this command, do not display it.
 					} else {

@@ -21,11 +21,11 @@ export default class LinkCommand extends Command {
 			args: arg,
 			description: "Link your Discord and MC accounts together",
 			channel: "guild",
+			guild: ["828397273930530826"],
 		});
 	}
 
 	async exec(message: Message, args: any) {
-		if (message.guild!.id !== "828397273930530826") return;
 		const waitMessage = await message.channel.send("*Please Wait...*");
 		if (!(await Db.checkLinkedUser(message.author.id))) {
 			if (args.username) {

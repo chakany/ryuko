@@ -1,5 +1,5 @@
 diff --git a/node_modules/discord-akairo/src/index.d.ts b/node_modules/discord-akairo/src/index.d.ts
-index cb4d20a..5d12fb8 100644
+index cb4d20a..9f5d295 100644
 --- a/node_modules/discord-akairo/src/index.d.ts
 +++ b/node_modules/discord-akairo/src/index.d.ts
 @@ -28,6 +28,12 @@ declare module 'discord-akairo' {
@@ -15,27 +15,34 @@ index cb4d20a..5d12fb8 100644
      }
  
      export class AkairoHandler extends EventEmitter {
-@@ -169,6 +175,7 @@ declare module 'discord-akairo' {
+@@ -169,6 +175,8 @@ declare module 'discord-akairo' {
          public ignoreCooldown?: Snowflake | Snowflake[] | IgnoreCheckPredicate;
          public ignorePermissions?: Snowflake | Snowflake[] | IgnoreCheckPredicate;
          public ownerOnly: boolean;
 +        public modOnly: boolean;
++        public guild: string[];
          public prefix?: string | string[] | PrefixSupplier;
          public ratelimit: number;
          public regex: RegExp | RegexSupplier;
-@@ -561,6 +568,7 @@ declare module 'discord-akairo' {
+@@ -561,6 +569,8 @@ declare module 'discord-akairo' {
          lock?: KeySupplier | 'guild' | 'channel' | 'user';
          optionFlags?: string[];
          ownerOnly?: boolean;
 +        modOnly?: boolean;
++        guild?: string[];
          prefix?: string | string[] | PrefixSupplier;
          ratelimit?: number;
          regex?: RegExp | RegexSupplier;
 diff --git a/node_modules/discord-akairo/src/struct/commands/Command.js b/node_modules/discord-akairo/src/struct/commands/Command.js
-index 1003663..3ecc37a 100644
+index 1003663..53cfa20 100644
 --- a/node_modules/discord-akairo/src/struct/commands/Command.js
 +++ b/node_modules/discord-akairo/src/struct/commands/Command.js
-@@ -21,6 +21,7 @@ class Command extends AkairoModule {
+@@ -17,10 +17,12 @@ class Command extends AkairoModule {
+         const {
+             aliases = [],
+             args = this.args || [],
++            guild = this.guild || [],
+             quoted = true,
              separator,
              channel = null,
              ownerOnly = false,
@@ -43,7 +50,20 @@ index 1003663..3ecc37a 100644
              editable = true,
              typing = false,
              cooldown = null,
-@@ -74,6 +75,12 @@ class Command extends AkairoModule {
+@@ -46,6 +48,12 @@ class Command extends AkairoModule {
+          */
+         this.aliases = aliases;
+ 
++        /**
++         * Guilds the command can be used in.
++         * @type {string[]}
++         */
++        this.guild = guild;
++
+         const { flagWords, optionFlagWords } = Array.isArray(args)
+             ? ContentParser.getFlags(args)
+             : { flagWords: flags, optionFlagWords: optionFlags };
+@@ -74,6 +82,12 @@ class Command extends AkairoModule {
           */
          this.ownerOnly = Boolean(ownerOnly);
  
@@ -56,7 +76,7 @@ index 1003663..3ecc37a 100644
          /**
           * Whether or not this command can be ran by an edit.
           * @type {boolean}
-@@ -248,6 +255,7 @@ module.exports = Command;
+@@ -248,6 +262,7 @@ module.exports = Command;
   * @prop {string[]} [optionFlags=[]] - Option flags to use when using an ArgumentGenerator.
   * @prop {string} [channel] - Restricts channel to either 'guild' or 'dm'.
   * @prop {boolean} [ownerOnly=false] - Whether or not to allow client owner(s) only.
