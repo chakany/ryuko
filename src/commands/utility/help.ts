@@ -75,7 +75,7 @@ export default class HelpCommand extends Command {
 							)) ||
 						(!fvalue.guild.includes(message.guild!.id) &&
 							fvalue.guild.length != 0) ||
-						disabledCommands.includes(key2)
+						(disabledCommands && disabledCommands.includes(key2))
 					) {
 						// The user does not have the permissions to use this command, do not display it.
 					} else {
@@ -157,7 +157,7 @@ export default class HelpCommand extends Command {
 			if (command.aliases.length > 1)
 				helpEmbed.addField("Aliases", command.aliases.splice(1));
 			if (command.ownerOnly) helpEmbed.addField("Owner Only", "Yes");
-			if (disabledCommands.includes(command.id))
+			if (disabledCommands && disabledCommands.includes(command.id))
 				helpEmbed.addField("Disabled", "Yes");
 			if (command.args) {
 				let current;
