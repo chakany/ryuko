@@ -64,6 +64,7 @@ export default class Bot extends AkairoClient {
 			allowMention: true,
 			handleEdits: true,
 			commandUtil: true,
+			ignorePermissions: config.ownerId,
 		});
 
 		this.inhibitorHandler = new InhibitorHandler(this, {

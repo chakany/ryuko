@@ -9,6 +9,7 @@ export default class DisabledInhibitor extends Inhibitor {
 	}
 
 	exec(message: Message, command: Command) {
+		if (this.client.isOwner(message.author.id)) return false;
 		let disabledCommands = this.client.settings.get(
 			message.guild!.id,
 			"disabledCommands",
