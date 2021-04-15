@@ -12,6 +12,7 @@ export default class ModInhibitor extends Inhibitor {
 
 	exec(message: Message, command: Command) {
 		if (!command.modOnly) return false;
+		if (this.client.isOwner(message.author.id)) return false;
 		const modRole = this.client.settings.get(
 			message.guild!.id,
 			"modRole",

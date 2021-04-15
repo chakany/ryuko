@@ -62,6 +62,9 @@ const guild = sequelize.define("guild", {
 	modRole: {
 		type: DataTypes.STRING,
 	},
+	disabledCommands: {
+		type: DataTypes.JSON,
+	},
 	loggingChannel: {
 		type: DataTypes.STRING,
 	},
