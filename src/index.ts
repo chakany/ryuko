@@ -12,7 +12,6 @@ if (process.env.NODE_ENV !== "production")
 else
 	manager = new ShardingManager("./bot.js", {
 		token: token,
-		execArgv: ["-r", "ts-node/register"],
 	});
 
 manager.on("shardCreate", (shard) => log.info(`Launched shard ${shard.id}`));
