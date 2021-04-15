@@ -1,7 +1,10 @@
 import { ShardingManager } from "discord.js";
 import bunyan from "bunyan";
+import db from "./utils/db";
 const { token } = require("../config.json");
 let log = bunyan.createLogger({ name: "shardmanager" });
+
+db.sync();
 
 let manager;
 if (process.env.NODE_ENV !== "production")

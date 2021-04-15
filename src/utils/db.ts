@@ -72,7 +72,6 @@ const guild = sequelize.define("guild", {
 
 export default new (class Db {
 	getSettings() {
-		log.info("Initializing & Syncing");
 		return new SequelizeProvider(guild, {
 			idColumn: "id",
 		});
@@ -114,6 +113,7 @@ export default new (class Db {
 	}
 
 	async sync() {
+		log.info("Syncing");
 		await guild.sync({ alter: true });
 		await linked.sync({ alter: true });
 	}

@@ -41,8 +41,6 @@ export default class AinaClient extends AkairoClient {
 	private listenerHandler: ListenerHandler;
 
 	constructor(log: bunyan) {
-		Db.sync();
-
 		super(
 			{
 				ownerID: config.ownerId,
