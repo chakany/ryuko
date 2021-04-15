@@ -8,9 +8,9 @@ import {
 import { Shoukaku } from "shoukaku";
 import bunyan from "bunyan";
 
-import Db from "./utils/db";
+import Db from "../utils/db";
 
-const config = require("../config.json");
+const config = require("../../config.json");
 
 const ShoukakuOptions = {
 	moveOnDisconnect: false,
@@ -61,7 +61,7 @@ export default class AinaClient extends AkairoClient {
 		this.queue = new Map();
 
 		this.commandHandler = new CommandHandler(this, {
-			directory: "./commands",
+			directory: "../commands",
 			prefix: (message) => {
 				if (message.guild) {
 					// The third param is the default.
@@ -77,11 +77,11 @@ export default class AinaClient extends AkairoClient {
 		});
 
 		this.inhibitorHandler = new InhibitorHandler(this, {
-			directory: "./inhibitors",
+			directory: "../inhibitors",
 		});
 
 		this.listenerHandler = new ListenerHandler(this, {
-			directory: "./listeners",
+			directory: "../listeners",
 		});
 
 		this.listenerHandler.setEmitters({
