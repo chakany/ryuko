@@ -1,21 +1,8 @@
 diff --git a/node_modules/discord-akairo/src/index.d.ts b/node_modules/discord-akairo/src/index.d.ts
-index cb4d20a..9f5d295 100644
+index cb4d20a..f254313 100644
 --- a/node_modules/discord-akairo/src/index.d.ts
 +++ b/node_modules/discord-akairo/src/index.d.ts
-@@ -28,6 +28,12 @@ declare module 'discord-akairo' {
-         public util: ClientUtil;
- 
-         public isOwner(user: UserResolvable): boolean;
-+
-+        public config: any
-+        public settings: SequelizeProvider;
-+        public shoukaku: any;
-+        public queue: any;
-+        public log: bunyan;
-     }
- 
-     export class AkairoHandler extends EventEmitter {
-@@ -169,6 +175,8 @@ declare module 'discord-akairo' {
+@@ -169,6 +169,8 @@ declare module 'discord-akairo' {
          public ignoreCooldown?: Snowflake | Snowflake[] | IgnoreCheckPredicate;
          public ignorePermissions?: Snowflake | Snowflake[] | IgnoreCheckPredicate;
          public ownerOnly: boolean;
@@ -24,7 +11,7 @@ index cb4d20a..9f5d295 100644
          public prefix?: string | string[] | PrefixSupplier;
          public ratelimit: number;
          public regex: RegExp | RegexSupplier;
-@@ -561,6 +569,8 @@ declare module 'discord-akairo' {
+@@ -561,6 +563,8 @@ declare module 'discord-akairo' {
          lock?: KeySupplier | 'guild' | 'channel' | 'user';
          optionFlags?: string[];
          ownerOnly?: boolean;

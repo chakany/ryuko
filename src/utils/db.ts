@@ -8,13 +8,21 @@ let log = bunyan.createLogger({
 	level: "debug",
 });
 
-const { db, prefix } = require("../../config.json");
+let sequelize;
 
-const sequelize = new Sequelize(db.database, db.username, db.password, {
-	host: db.host,
-	dialect: "mariadb",
-	logging: (msg) => log.debug(msg),
-});
+const { db, prefix } = require("../../config.json");
+if (process.env.NODE_ENV !== "production")
+	sequelize = new Sequelize(db.database, db.username, db.password, {
+		host: db.host,
+		dialect: "mariadb",
+		logging: (msg) => log.debug(msg),
+	});
+else
+	sequelize = new Sequelize(db.database, db.username, db.password, {
+		host: db.host,
+		dialect: "mariadb",
+		logging: false,
+	});
 
 // Our Models
 const linked = sequelize.define(

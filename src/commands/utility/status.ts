@@ -45,12 +45,17 @@ export default class StatusCommand extends Command {
 			);
 
 		// Run the actual command
-		this.client.user!.setActivity(
-			message.util!.parsed!.content!.replace(`${args.type} `, ""),
-			{
-				type: args.type.toUpperCase(),
-			}
-		);
+		const content = message.util!.parsed!.content!.replace(`${args.type} `, "");
+		try {
+			this.client.shard!.broadcastEval(
+				`this.user.setActivity('${content}', { type: '${args.type.toUpperCase()}' })`
+			);
+		} catch (error) {
+			this.client.log.error(error);
+			return message.channel.send(
+				Error(message, this, "An error occurred", error.message)
+			);
+		}
 
 		return message.channel.send(
 			new MessageEmbed({

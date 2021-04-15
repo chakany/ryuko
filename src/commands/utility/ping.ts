@@ -30,13 +30,8 @@ export default class PingCommand extends Command {
 				},
 				fields: [
 					{
-						name: "Latency",
-						value: `${Date.now() - message.createdTimestamp}ms`,
-						inline: true,
-					},
-					{
 						name: "API Latency",
-						value: `${Math.round(this.client.ws.ping)}ms`,
+						value: "`" + `${Math.round(this.client.ws.ping)}ms` + "`",
 						inline: true,
 					},
 				],

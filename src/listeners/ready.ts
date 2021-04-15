@@ -1,5 +1,6 @@
 import { Listener, AkairoClient } from "discord-akairo";
-import { Client } from "discord.js";
+
+const { prefix } = require("../../config.json");
 
 export default class ReadyListener extends Listener {
 	client: AkairoClient;
@@ -13,10 +14,19 @@ export default class ReadyListener extends Listener {
 		this.client = client;
 	}
 
-	exec() {
+	async exec() {
 		this.client.log.info(`${this.client.user!.username} is ready to roll!`);
-		this.client.user!.setActivity("BULKING SEASON", {
-			type: "COMPETING",
-		});
+		const serverCount: any = await this.client.shard!.fetchClientValues(
+			"guilds.cache.size"
+		);
+		if (serverCount > 1) {
+			this.client.user!.setActivity(`${serverCount} servers! | ${prefix}help`, {
+				type: "WATCHING",
+			});
+		} else {
+			this.client.user!.setActivity(`${serverCount} server! | ${prefix}help`, {
+				type: "WATCHING",
+			});
+		}
 	}
 }
