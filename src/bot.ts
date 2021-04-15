@@ -1,7 +1,7 @@
 import bunyan from "bunyan";
 let log = bunyan.createLogger({ name: "bot" });
 
-import Bot from "./client";
+import Bot from "./struct/client";
 
 const client = new Bot(log);
 
