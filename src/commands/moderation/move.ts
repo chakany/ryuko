@@ -56,7 +56,7 @@ export default class MoveCommand extends Command {
 					)
 				);
 
-			message.member!.voice.setChannel(Channel);
+			victim.voice.setChannel(Channel);
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
