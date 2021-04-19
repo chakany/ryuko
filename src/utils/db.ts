@@ -8,13 +8,21 @@ let log = bunyan.createLogger({
 	level: "debug",
 });
 
-const { db, prefix } = require("../../config.json");
+let sequelize;
 
-const sequelize = new Sequelize(db.database, db.username, db.password, {
-	host: db.host,
-	dialect: "mariadb",
-	logging: (msg) => log.debug(msg),
-});
+const { db, prefix } = require("../../config.json");
+if (process.env.NODE_ENV !== "production")
+	sequelize = new Sequelize(db.database, db.username, db.password, {
+		host: db.host,
+		dialect: "mariadb",
+		logging: (msg) => log.debug(msg),
+	});
+else
+	sequelize = new Sequelize(db.database, db.username, db.password, {
+		host: db.host,
+		dialect: "mariadb",
+		logging: false,
+	});
 
 // Our Models
 const linked = sequelize.define(
@@ -54,6 +62,9 @@ const guild = sequelize.define("guild", {
 	modRole: {
 		type: DataTypes.STRING,
 	},
+	disabledCommands: {
+		type: DataTypes.JSON,
+	},
 	loggingChannel: {
 		type: DataTypes.STRING,
 	},
@@ -61,7 +72,6 @@ const guild = sequelize.define("guild", {
 
 export default new (class Db {
 	getSettings() {
-		log.info("Initializing & Syncing");
 		return new SequelizeProvider(guild, {
 			idColumn: "id",
 		});
@@ -103,6 +113,7 @@ export default new (class Db {
 	}
 
 	async sync() {
+		log.info("Syncing");
 		await guild.sync({ alter: true });
 		await linked.sync({ alter: true });
 	}

@@ -25,6 +25,14 @@ export default class HelpCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		const prefix = message.util?.parsed?.prefix;
 		const helpCommand = message.util?.parsed?.alias;
+		let disabledCommands = this.client.settings.get(
+			message.guild!.id,
+			"disabledCommands",
+			null
+		);
+
+		if (typeof disabledCommands === "string")
+			disabledCommands = JSON.parse(disabledCommands);
 		if (!args.command) {
 			// If there are no command arguments, this will show all commands that are accessible to the user based on their permissions, roles, and owner status.
 			const helpEmbed = new MessageEmbed({
@@ -66,7 +74,8 @@ export default class HelpCommand extends Command {
 								(role) => role.id === modRole
 							)) ||
 						(!fvalue.guild.includes(message.guild!.id) &&
-							fvalue.guild.length != 0)
+							fvalue.guild.length != 0) ||
+						(disabledCommands && disabledCommands.includes(key2))
 					) {
 						// The user does not have the permissions to use this command, do not display it.
 					} else {
@@ -147,7 +156,9 @@ export default class HelpCommand extends Command {
 				);
 			if (command.aliases.length > 1)
 				helpEmbed.addField("Aliases", command.aliases.splice(1));
-			if (command.ownerOnly) helpEmbed.addField("Owner Only", "True");
+			if (command.ownerOnly) helpEmbed.addField("Owner Only", "Yes");
+			if (disabledCommands && disabledCommands.includes(command.id))
+				helpEmbed.addField("Disabled", "Yes");
 			if (command.args) {
 				let current;
 				for (let i = 0; (current = command.args[i]); i++) {
