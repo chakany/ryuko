@@ -1,0 +1,93 @@
+import { Command } from "discord-akairo";
+import { Message, MessageEmbed } from "discord.js";
+
+import Error from "../../utils/error";
+
+const args = [
+	{
+		id: "question",
+		type: "string",
+	},
+	{
+		id: "choice1",
+		type: "string",
+	},
+	{
+		id: "choice2",
+		type: "string",
+	},
+];
+
+export default class PollCommand extends Command {
+	protected args = args;
+
+	constructor() {
+		super("poll", {
+			aliases: ["poll", "makepoll", "newpoll", "createpoll"],
+			description: "Makes a new poll",
+			category: "Utility",
+			args: args,
+			userPermissions: ["ADMINISTRATOR"],
+		});
+	}
+
+	async exec(message: Message, args: any): Promise<any> {
+		if (!args.question)
+			return message.channel.send(
+				Error(message, this, "Invalid Argument", "Please provide a question!")
+			);
+		if (args.choice1 && !args.choice2)
+			return message.channel.send(
+				Error(
+					message,
+					this,
+					"Invalid Argument",
+					"Please provide a second choice!"
+				)
+			);
+		message.delete();
+		let pollEmbed;
+		if (!args.choice1)
+			pollEmbed = new MessageEmbed({
+				title: "Poll",
+				description: args.question,
+				color: 16716032,
+				timestamp: new Date(),
+				author: {
+					name: message.author.tag,
+					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+				},
+				footer: {
+					text: message.client.user?.tag,
+					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+				},
+				fields: [
+					{ name: ":one:", value: "Yes", inline: true },
+					{ name: ":two:", value: "No", inline: true },
+				],
+			});
+		else
+			pollEmbed = new MessageEmbed({
+				title: "Poll",
+				description: args.question,
+				color: 16716032,
+				timestamp: new Date(),
+				author: {
+					name: message.author.tag,
+					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+				},
+				footer: {
+					text: message.client.user?.tag,
+					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+				},
+				fields: [
+					{ name: ":one:", value: args.choice1, inline: true },
+					{ name: ":two:", value: args.choice2, inline: true },
+				],
+			});
+		let pollmessage = message.channel.send(pollEmbed);
+		(await pollmessage).react("1️⃣");
+		(await pollmessage).react("2️⃣");
+		return;
+	}
+}
