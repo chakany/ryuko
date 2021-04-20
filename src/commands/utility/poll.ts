@@ -49,13 +49,11 @@ export default class PollCommand extends Command {
 		let pollEmbed;
 		if (!args.choice1)
 			pollEmbed = new MessageEmbed({
-				title: "Poll",
-				description: args.question,
+				title: args.question,
 				color: 16716032,
 				timestamp: new Date(),
 				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+					name: "Poll",
 				},
 				footer: {
 					text: message.client.user?.tag,
@@ -68,13 +66,11 @@ export default class PollCommand extends Command {
 			});
 		else
 			pollEmbed = new MessageEmbed({
-				title: "Poll",
-				description: args.question,
+				title: args.question,
 				color: 16716032,
 				timestamp: new Date(),
 				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+					name: "Poll",
 				},
 				footer: {
 					text: message.client.user?.tag,
