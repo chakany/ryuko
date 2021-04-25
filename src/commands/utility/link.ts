@@ -21,7 +21,7 @@ export default class LinkCommand extends Command {
 			args: arg,
 			description: "Link your Discord and MC accounts together",
 			channel: "guild",
-			guild: ["828397273930530826"],
+			guild: ["796140447260737536"],
 		});
 	}
 
