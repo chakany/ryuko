@@ -46,7 +46,25 @@ export default class MoveCommand extends Command {
 					"That user is not currently muted!"
 				)
 			);
+		const muteRole = this.client.settings.get(
+			message.guild!.id,
+			"muteRole",
+			null
+		);
+		if (!muteRole)
+			return message.channel.send(
+				Error(
+					message,
+					this,
+					"Invalid Configuration",
+					`You must have a muted role set!\n+ Use ${
+						message.util?.parsed?.prefix
+					}${this.handler.findCommand("muterole").aliases[0]} to set one.`
+				)
+			);
 
+		args.user.roles.remove(message.guild?.roles.cache.get(muteRole));
+		mutedMembers.get(args.user.id)?.cancel();
 		mutedMembers.delete(args.user.id);
 
 		this.client.jobs.set(message.guild!.id, mutedMembers);
