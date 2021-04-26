@@ -62,6 +62,12 @@ const guild = sequelize.define("guild", {
 	modRole: {
 		type: DataTypes.STRING,
 	},
+	muteRole: {
+		type: DataTypes.STRING,
+	},
+	mutedUsers: {
+		type: DataTypes.JSON,
+	},
 	disabledCommands: {
 		type: DataTypes.JSON,
 	},
@@ -110,6 +116,20 @@ export default new (class Db {
 			log.error(err);
 			throw err;
 		}
+	}
+
+	async getMutedUsers() {
+		let guilds = new Map();
+
+		const dbGuilds = (await guild.findAll()).map((el) =>
+			el.get({ plain: true })
+		);
+
+		dbGuilds.forEach((guild) => {
+			if (guild.mutedUsers) guilds.set(guild.id, guild.mutedUsers);
+		});
+
+		return guilds;
 	}
 
 	async sync() {

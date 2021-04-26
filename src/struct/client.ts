@@ -7,8 +7,10 @@ import {
 } from "discord-akairo";
 import { Shoukaku } from "shoukaku";
 import bunyan from "bunyan";
+import { Job } from "node-schedule";
 
 import Db from "../utils/db";
+import db from "../utils/db";
 
 const config = require("../../config.json");
 
@@ -27,6 +29,7 @@ declare module "discord-akairo" {
 		shoukaku: any;
 		queue: any;
 		log: bunyan;
+		jobs: Map<string, Map<string, Job>>;
 	}
 }
 
@@ -36,6 +39,7 @@ export default class AinaClient extends AkairoClient {
 	public shoukaku;
 	public queue;
 	public log: bunyan;
+	public jobs: Map<string, Map<string, Job>>;
 	private commandHandler: CommandHandler;
 	private inhibitorHandler: InhibitorHandler;
 	private listenerHandler: ListenerHandler;
@@ -52,6 +56,7 @@ export default class AinaClient extends AkairoClient {
 
 		this.config = config;
 		this.log = log;
+		this.jobs = new Map();
 
 		this.settings = Db.getSettings();
 
