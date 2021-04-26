@@ -100,7 +100,7 @@ export default class MuteCommand extends Command {
 					message,
 					this,
 					"Invalid Argument",
-					"You must provide a valid length to mute for!"
+					"You must provide a valid length to mute for!\n+ It must be specified too! Ex: '10m' is 10 minutes"
 				)
 			);
 
