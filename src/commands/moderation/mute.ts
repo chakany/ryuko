@@ -124,7 +124,7 @@ export default class MuteCommand extends Command {
 					"Invalid Configuration",
 					`You must have a muted role set!\n+ Use ${
 						message.util?.parsed?.prefix
-					}${this.handler.findCommand("drag").aliases[0]} to set one.`
+					}${this.handler.findCommand("muterole").aliases[0]} to set one.`
 				)
 			);
 
