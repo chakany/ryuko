@@ -129,7 +129,6 @@ export default class MuteCommand extends Command {
 			);
 
 		// Check if they are already muted
-		console.log(this.client.jobs.get(message.guild!.id));
 		if (this.client.jobs.get(message.guild!.id)?.get(args.user.id)) {
 			return message.channel.send(
 				Error(message, this, "Invalid Usage", "That person is already muted!")

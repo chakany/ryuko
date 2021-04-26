@@ -27,12 +27,8 @@ export default class ReadyListener extends Listener {
 			else current = new Map(current);
 			let guildJobs = new Map();
 			for (const [id, expiry] of muted) {
-				console.log(guild);
-				console.log(id);
-				console.log(expiry);
 				const expires = new Date(expiry);
 				if (expires <= new Date()) {
-					console.log("expired");
 					current.delete(id);
 				} else {
 					const job = schedule.scheduleJob(expires, async function () {
