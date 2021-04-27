@@ -6,6 +6,8 @@ let log = bunyan.createLogger({ name: "shardmanager" });
 
 db.sync();
 
+import "./web";
+
 let manager;
 if (process.env.NODE_ENV !== "production")
 	manager = new ShardingManager("./bot.ts", {
@@ -16,6 +18,5 @@ else
 	manager = new ShardingManager("./bot.js", {
 		token: token,
 	});
-
 manager.on("shardCreate", (shard) => log.info(`Launched shard ${shard.id}`));
 manager.spawn();

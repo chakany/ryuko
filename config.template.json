@@ -1,6 +1,7 @@
 {
 	"token": "",
 	"prefix": "!",
+	"port": 1204,
 	"ownerId": "",
 	"db": {
 		"host": "",
@@ -9,11 +10,11 @@
 		"password": ""
 	},
 	"lavalink": [
-        {
-            "name": "",
-            "host": "",
-            "port": 0000,
-            "auth": ""
-        }
-    ]
+		{
+			"name": "",
+			"host": "",
+			"port": 0000,
+			"auth": ""
+		}
+	]
 }
