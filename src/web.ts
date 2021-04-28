@@ -1,28 +1,24 @@
 import express from "express";
-import next from "next";
+import path from "path";
 import bunyan from "bunyan";
+
+import home from "./routes/home";
+
+let log = bunyan.createLogger({ name: "webserver" });
+const app = express();
 
 const config = require("../config.json");
 
-const dev = process.env.NODE_ENV !== "production";
-let log = bunyan.createLogger({ name: "webserver" });
-const app = next({ dev, dir: "../" });
-const handle = app.getRequestHandler();
+try {
+	app.set("view engine", "ejs");
+	app.set("views", path.join(__dirname, "pages"));
 
-app
-	.prepare()
-	.then(() => {
-		const server = express();
+	// Binds
+	app.use("/", home);
 
-		server.get("*", (req, res) => {
-			return handle(req, res);
-		});
-
-		server.listen(config.port, () => {
-			log.info(`Listening on port ${config.port}`);
-		});
-	})
-	.catch((ex) => {
-		log.error(ex.stack);
-		process.exit(1);
+	app.listen(config.port, () => {
+		log.info(`Bound to port ${config.port}`);
 	});
+} catch (error) {
+	log.error(error);
+}
