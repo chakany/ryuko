@@ -8,7 +8,6 @@ router.get("/", async function (req, res) {
 		res.render("home", {
 			totalShards: manager.totalShards,
 			totalServers: await manager.fetchClientValues("guilds.cache.size"),
-			totalMembers: await manager.fetchClientValues("members.cache.size"),
 		});
 	} catch (err) {
 		log.error(err);
