@@ -1,6 +1,7 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 import { ShoukakuPlayer } from "shoukaku";
+const { getPreview } = require("spotify-url-info");
 import ystr from "ytsr";
 
 import Error from "../../utils/error";
@@ -18,7 +19,8 @@ export default class PlayCommand extends Command {
 	constructor() {
 		super("play", {
 			aliases: ["play"],
-			description: "Play music into your Voice Channel!",
+			description:
+				"Play music into your Voice Channel! Enter a search query, youtube, or spotify url!",
 			category: "Music",
 			clientPermissions: ["SPEAK", "CONNECT"],
 			args: arg,
@@ -26,13 +28,22 @@ export default class PlayCommand extends Command {
 		});
 	}
 
-	_checkURL(string: string) {
+	private _checkURL(string: string) {
 		try {
 			new URL(string);
 			return true;
 		} catch (error) {
 			return false;
 		}
+	}
+
+	private async _search(query: string): Promise<string> {
+		// @ts-ignore
+		const searchResults = await ystr(query, {
+			limit: 2,
+		});
+		// @ts-ignore
+		return searchResults.items[0].url;
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
@@ -63,14 +74,22 @@ export default class PlayCommand extends Command {
 					)
 				);
 			let url;
-			if (this._checkURL(args.song)) url = args.song;
-			else {
-				// @ts-ignore
-				const searchResults = await ystr(message.util?.parsed?.content, {
-					limit: 2,
-				});
-				// @ts-ignore
-				url = searchResults.items[0].url;
+			if (this._checkURL(args.song)) {
+				if (
+					args.song.startsWith("https://www.youtube.com/watch?v=") ||
+					args.song.startsWith("https://youtube.com/watch?v=") ||
+					args.song.startsWith("https://youtu.be/")
+				)
+					url = args.song;
+				else if (args.song.startsWith("https://open.spotify.com/")) {
+					const spotifyResponse = await getPreview(args.song);
+					if (spotifyResponse.type === "track")
+						url = await this._search(
+							`${spotifyResponse.track} - ${spotifyResponse.artist}`
+						);
+				}
+			} else {
+				url = await this._search(message.util?.parsed?.content);
 				if (!url)
 					return message.channel.send(
 						Error(
@@ -144,7 +163,12 @@ export default class PlayCommand extends Command {
 		}
 	}
 	// @ts-ignore
-	async play(message: Message, track, node, player: ShoukakuPlayer = null) {
+	private async play(
+		message: Message,
+		track,
+		node,
+		player: ShoukakuPlayer = null
+	) {
 		try {
 			// @ts-ignore
 			const queue = message.client.queue;
