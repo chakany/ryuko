@@ -29,6 +29,10 @@ export default class DeleteListener extends Listener {
 		});
 		// Since we only have 1 audit log entry in this collection, we can simply grab the first one
 		const deletionLog = fetchedLogs.entries.first();
+		let content =
+			message.content.length > 1800
+				? message.content.substr(0, 1800) + "..."
+				: message.content;
 
 		// Let's perform a coherence check here and make sure we got *something*
 		if (!deletionLog) {
@@ -40,14 +44,15 @@ export default class DeleteListener extends Listener {
 					.send(
 						new MessageEmbed({
 							title: "Message Deleted",
-							description:
-								"```diff\n" +
-								`- ${message.author.tag} (${message.author.id}): "${message.content}"` +
-								"\n```",
+							description: "```diff\n" + `- "${content}"` + "\n```",
 							color: 16716032,
 							timestamp: new Date(),
+							author: {
+								name: `${message.author.tag} (${message.author.id})`,
+								icon_url: message.author.avatarURL({ dynamic: true }) || "",
+							},
 							footer: {
-								text: `We couldn't find who deleted this message\nNo content ("") means that there was probably an embed there\n${message.client.user?.tag}`,
+								text: `No content ("") means that there was probably an embed there\n${message.client.user?.tag}`,
 								icon_url:
 									message.client.user?.avatarURL({ dynamic: true }) || "",
 							},
@@ -55,6 +60,11 @@ export default class DeleteListener extends Listener {
 								{
 									name: "Channel",
 									value: `<#${message.channel.id}>`,
+									inline: true,
+								},
+								{
+									name: "Deleted By",
+									value: message.member,
 									inline: true,
 								},
 							],
@@ -80,15 +90,12 @@ export default class DeleteListener extends Listener {
 					.send(
 						new MessageEmbed({
 							title: "Message Deleted",
-							description:
-								"```diff\n" +
-								`- ${message.author.tag} (${message.author.id}): "${message.content}"` +
-								"\n```",
+							description: "```diff\n" + `- "${content}"` + "\n```",
 							color: 16716032,
 							timestamp: new Date(),
 							author: {
-								name: executor.tag + " (" + executor.id + ")",
-								icon_url: executor.avatarURL({ dynamic: true }) || "",
+								name: `${message.author.tag} (${message.author.id})`,
+								icon_url: message.author.avatarURL({ dynamic: true }) || "",
 							},
 							footer: {
 								text: `No content ("") means that there was probably an embed there\n${message.client.user?.tag}`,
@@ -99,6 +106,11 @@ export default class DeleteListener extends Listener {
 								{
 									name: "Channel",
 									value: `<#${message.channel.id}>`,
+									inline: true,
+								},
+								{
+									name: "Deleted By",
+									value: executor,
 									inline: true,
 								},
 							],
@@ -114,14 +126,15 @@ export default class DeleteListener extends Listener {
 					.send(
 						new MessageEmbed({
 							title: "Message Deleted",
-							description:
-								"```diff\n" +
-								`- ${message.author.tag} (${message.author.id}): "${message.content}"` +
-								"\n```",
+							description: "```diff\n" + `- "${content}"` + "\n```",
 							color: 16716032,
 							timestamp: new Date(),
+							author: {
+								name: `${message.author.tag} (${message.author.id})`,
+								icon_url: message.author.avatarURL({ dynamic: true }) || "",
+							},
 							footer: {
-								text: `This message was possibly deleted by a bot or the person who sent it\nNo content ("") means that there was probably an embed there\n${message.client.user?.tag}`,
+								text: `No content ("") means that there was probably an embed there\n${message.client.user?.tag}`,
 								icon_url:
 									message.client.user?.avatarURL({ dynamic: true }) || "",
 							},

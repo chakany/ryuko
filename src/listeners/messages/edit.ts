@@ -23,6 +23,15 @@ export default class MessageEditListener extends Listener {
 			"None"
 		);
 		if (logChannel === "None") return;
+		let _newmessage =
+			newMessage.content.length > 900
+				? newMessage.content.substr(0, 600) + "..."
+				: newMessage.content;
+		let _oldmessage =
+			oldMessage.content.length > 900
+				? oldMessage.content.substr(0, 600) + "..."
+				: oldMessage.content;
+
 		return (
 			// @ts-ignore
 			this.client.channels.cache
@@ -31,10 +40,11 @@ export default class MessageEditListener extends Listener {
 				.send(
 					new MessageEmbed({
 						title: "Message Edited",
+						url: newMessage.url,
 						description:
 							"```diff" +
-							`\n- "${oldMessage.content}"` +
-							`\n+ "${newMessage.content}"` +
+							`\n- "${_oldmessage}"` +
+							`\n+ "${_newmessage}"` +
 							"\n```",
 						color: 16716032,
 						timestamp: new Date(),
