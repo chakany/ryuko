@@ -7,10 +7,10 @@ import {
 } from "discord-akairo";
 import { Shoukaku } from "shoukaku";
 import bunyan from "bunyan";
+import client from "nekos.life";
 import { Job } from "node-schedule";
 
 import Db from "../utils/db";
-import db from "../utils/db";
 
 const config = require("../../config.json");
 
@@ -30,6 +30,7 @@ declare module "discord-akairo" {
 		queue: any;
 		log: bunyan;
 		jobs: Map<string, Map<string, Job>>;
+		hentai: client;
 	}
 }
 
@@ -40,6 +41,7 @@ export default class AinaClient extends AkairoClient {
 	public queue;
 	public log: bunyan;
 	public jobs: Map<string, Map<string, Job>>;
+	public hentai: client;
 	private commandHandler: CommandHandler;
 	private inhibitorHandler: InhibitorHandler;
 	private listenerHandler: ListenerHandler;
@@ -53,10 +55,12 @@ export default class AinaClient extends AkairoClient {
 				disableMentions: "everyone",
 			}
 		);
+		const newHentai = new client();
 
 		this.config = config;
 		this.log = log;
 		this.jobs = new Map();
+		this.hentai = newHentai;
 
 		this.settings = Db.getSettings();
 
