@@ -75,18 +75,14 @@ export default class PlayCommand extends Command {
 				);
 			let url;
 			if (this._checkURL(args.song)) {
-				if (
-					args.song.startsWith("https://www.youtube.com/watch?v=") ||
-					args.song.startsWith("https://youtube.com/watch?v=") ||
-					args.song.startsWith("https://youtu.be/")
-				)
-					url = args.song;
-				else if (args.song.startsWith("https://open.spotify.com/")) {
+				if (args.song.startsWith("https://open.spotify.com/")) {
 					const spotifyResponse = await getPreview(args.song);
 					if (spotifyResponse.type === "track")
 						url = await this._search(
 							`${spotifyResponse.track} - ${spotifyResponse.artist}`
 						);
+				} else {
+					url = args.song;
 				}
 			} else {
 				url = await this._search(message.util?.parsed?.content);
