@@ -121,7 +121,7 @@ export default class PlayCommand extends Command {
 				// @ts-ignore
 				queueContruct.songs.push(track);
 				try {
-					this.play(message, queueContruct.songs[0], node);
+					this._play(message, queueContruct.songs[0], node);
 				} catch (err) {
 					this.client.log.error(err);
 					queue.delete(message.guild!.id);
@@ -163,12 +163,7 @@ export default class PlayCommand extends Command {
 		}
 	}
 	// @ts-ignore
-	private async play(
-		message: Message,
-		track,
-		node,
-		player: ShoukakuPlayer = null
-	) {
+	async _play(message: Message, track, node, player: ShoukakuPlayer = null) {
 		try {
 			// @ts-ignore
 			const queue = message.client.queue;
@@ -188,7 +183,7 @@ export default class PlayCommand extends Command {
 						serverQueue.songs.shift();
 						if (event === "end")
 							if (serverQueue.songs[0] !== undefined) {
-								this.play(message, serverQueue.songs[0], node, player);
+								this._play(message, serverQueue.songs[0], node, player);
 							} else {
 								player.disconnect();
 								queue.delete(message.guild!.id);
