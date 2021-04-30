@@ -43,7 +43,7 @@ export default class BoobCommand extends Command {
 					icon_url: message.author.avatarURL({ dynamic: true }) || "",
 				},
 				footer: {
-					text: message.client.user?.tag,
+					text: `Images from nekos.life\n${message.client.user!.tag}`,
 					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
 				},
 			})
