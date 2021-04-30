@@ -23,6 +23,8 @@ export default class MessageEditListener extends Listener {
 			"None"
 		);
 		if (logChannel === "None") return;
+		if (oldMessage.author.bot) return;
+
 		let _newmessage =
 			newMessage.content.length > 900
 				? newMessage.content.substr(0, 600) + "..."

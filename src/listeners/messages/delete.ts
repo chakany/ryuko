@@ -21,6 +21,7 @@ export default class DeleteListener extends Listener {
 			"None"
 		);
 		if (logChannel === "None") return;
+		if (message.author.bot) return;
 
 		// ignore direct messages
 		const fetchedLogs = await message.guild.fetchAuditLogs({
