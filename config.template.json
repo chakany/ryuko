@@ -16,5 +16,9 @@
 			"port": 0000,
 			"auth": ""
 		}
-	]
+	],
+	"pterodactyl": {
+		"url": "no trailing slash",
+		"key": "must be a user key"
+	}
 }
