@@ -15,12 +15,14 @@ if (process.env.NODE_ENV !== "production")
 	sequelize = new Sequelize(db.database, db.username, db.password, {
 		host: db.host,
 		dialect: "mariadb",
+		port: db.port,
 		logging: (msg) => log.debug(msg),
 	});
 else
 	sequelize = new Sequelize(db.database, db.username, db.password, {
 		host: db.host,
 		dialect: "mariadb",
+		port: db.port,
 		logging: false,
 	});
 

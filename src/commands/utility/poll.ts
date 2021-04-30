@@ -56,8 +56,8 @@ export default class PollCommand extends Command {
 					name: "Poll",
 				},
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.avatarURL({ dynamic: true }) || "",
 				},
 				fields: [
 					{ name: ":one:", value: "Yes", inline: true },
@@ -73,8 +73,8 @@ export default class PollCommand extends Command {
 					name: "Poll",
 				},
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.avatarURL({ dynamic: true }) || "",
 				},
 				fields: [
 					{ name: ":one:", value: args.choice1, inline: true },
