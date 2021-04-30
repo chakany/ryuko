@@ -3,6 +3,7 @@
 	"prefix": "!",
 	"port": 1204,
 	"ownerId": "",
+	"imgApiUrl": "no trailing slash",
 	"db": {
 		"host": "",
 		"port": 3306,
