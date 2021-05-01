@@ -125,6 +125,14 @@ export default class PanelCommand extends Command {
 							).data.attributes;
 							if (info.description)
 								field = field + "\nDescription:`" + info.description + "`";
+							if (resources.resources.cpu_absolute != 0)
+								field =
+									field +
+									"\nCPU: `" +
+									resources.resources.cpu_absolute +
+									"`/`" +
+									info.limits.cpu +
+									"`";
 							if (resources.resources.memory_bytes != 0)
 								field =
 									field +
