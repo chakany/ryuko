@@ -6,7 +6,7 @@ import Error from "../utils/error";
 export default class ModInhibitor extends Inhibitor {
 	constructor() {
 		super("modOnly", {
-			reason: "Insufficent Permissions",
+			reason: "Only Moderatiors can use this command",
 		});
 	}
 

@@ -4,7 +4,7 @@ import { Message } from "discord.js";
 export default class BlacklistInhibitor extends Inhibitor {
 	constructor() {
 		super("blacklist", {
-			reason: "blacklist",
+			reason: "You are blacklisted from using commands",
 		});
 	}
 

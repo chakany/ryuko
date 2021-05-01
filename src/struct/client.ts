@@ -96,6 +96,9 @@ export default class AinaClient extends AkairoClient {
 
 		this.listenerHandler.setEmitters({
 			process: process,
+			commandHandler: this.commandHandler,
+			inhibitorHandler: this.inhibitorHandler,
+			listenerHandler: this.listenerHandler,
 		});
 
 		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);

@@ -6,7 +6,7 @@ import Error from "../utils/error";
 export default class NsfwInhibitor extends Inhibitor {
 	constructor() {
 		super("nsfw", {
-			reason: "Command is marked as NSFW",
+			reason: "This command can only be used in NSFW Channels",
 		});
 	}
 
@@ -14,15 +14,6 @@ export default class NsfwInhibitor extends Inhibitor {
 		if (!command.nsfw) return false;
 		// @ts-ignore
 		else if (command.nsfw && message.channel.nsfw) return false;
-		else
-			message.channel.send(
-				Error(
-					message,
-					command,
-					"Invalid Usage",
-					"This command can only be used in NSFW Channels!"
-				)
-			);
 		return true;
 	}
 }

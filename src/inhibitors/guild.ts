@@ -4,7 +4,7 @@ import { Message } from "discord.js";
 export default class GuildInhibitor extends Inhibitor {
 	constructor() {
 		super("guild", {
-			reason: "Invalid Guild",
+			reason: "This command is restricted to select guilds",
 		});
 	}
 

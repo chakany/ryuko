@@ -4,7 +4,7 @@ import { Message } from "discord.js";
 export default class DisabledInhibitor extends Inhibitor {
 	constructor() {
 		super("disabledInhibitor", {
-			reason: "disabled",
+			reason: "That command is disabled",
 		});
 	}
 
