@@ -81,3 +81,16 @@ index 1003663..a99f4f7 100644
   * @prop {boolean} [typing=false] - Whether or not to type in channel during execution.
   * @prop {boolean} [editable=true] - Whether or not message edits will run this command.
   * @prop {number} [cooldown] - The command cooldown in milliseconds.
+diff --git a/node_modules/discord-akairo/src/util/Constants.js b/node_modules/discord-akairo/src/util/Constants.js
+index bacd4e1..4d4810e 100644
+--- a/node_modules/discord-akairo/src/util/Constants.js
++++ b/node_modules/discord-akairo/src/util/Constants.js
+@@ -79,7 +79,7 @@ module.exports = {
+     BuiltInReasons: {
+         CLIENT: 'client',
+         BOT: 'bot',
+-        OWNER: 'owner',
++        OWNER: 'Only jacany#0001 can use this command!',
+         GUILD: 'guild',
+         DM: 'dm'
+     }
