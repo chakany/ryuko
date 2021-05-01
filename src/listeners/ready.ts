@@ -106,6 +106,10 @@ export default class ReadyListener extends Listener {
 
 		// Set Discord Status
 		this.client.log.info(`${this.client.user!.username} is ready to roll!`);
+		this.client.user!.setActivity(`#FUCKCHINA | ${prefix}help`, {
+			type: "PLAYING",
+		});
+		/*
 		const serverCount: any = await this.client.shard!.fetchClientValues(
 			"guilds.cache.size"
 		);
@@ -118,5 +122,6 @@ export default class ReadyListener extends Listener {
 				type: "WATCHING",
 			});
 		}
+		*/
 	}
 }
