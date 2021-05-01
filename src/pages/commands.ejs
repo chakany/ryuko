@@ -1,0 +1,10 @@
+<html>
+	<body>
+		<h1>Commands</h1>
+		<h2>This shit is fetched dynamically 😳</h2>
+		<% for( let i = 0; i < categories.length; i++ ) { %>
+		<h1><%= categories[i][0].categoryID %></h1>
+		<% for( let index = 0; index < categories[i].length; index++ ) { %> <%=
+		categories[i][index].id %> <% } %> </br> <% } %>
+	</body>
+</html>
