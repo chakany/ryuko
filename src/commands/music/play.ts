@@ -99,7 +99,6 @@ export default class PlayCommand extends Command {
 			}
 			const node = this.client.shoukaku.getNode();
 			let data = await node.rest.resolve(url);
-			console.log(data);
 			if (!data) return;
 			const tracks = data.tracks;
 
