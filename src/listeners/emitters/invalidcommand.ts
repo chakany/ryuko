@@ -11,6 +11,7 @@ export default class InvalidCommandListener extends Listener {
 	}
 
 	async exec(message: Message) {
+		if (!message.content.startsWith(message.util?.parsed?.prefix!)) return true;
 		// When a non-existent command was ran try to use the levenshtein algorithm to find a close match.
 		const distances = [];
 		const usableCommands = message.util?.handler.aliases;
@@ -22,12 +23,11 @@ export default class InvalidCommandListener extends Listener {
 			});
 		}
 
-		if (!distances.length) return;
+		if (!distances || !distances.length) return;
 
 		distances.sort((a, b) => a.dist - b.dist);
 
 		if (distances[0].dist > 0 && distances[0].dist <= 2) {
-			console.log(distances[0].cmd[0]);
 			return message.channel.send(
 				new MessageEmbed({
 					title: ":x:Error: `" + message.util?.parsed?.alias + "`",
