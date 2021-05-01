@@ -1,5 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
+import { any } from "sequelize/types/lib/operators";
 import { ShoukakuPlayer } from "shoukaku";
 const { getPreview } = require("spotify-url-info");
 import ystr from "ytsr";
@@ -98,8 +99,9 @@ export default class PlayCommand extends Command {
 			}
 			const node = this.client.shoukaku.getNode();
 			let data = await node.rest.resolve(url);
+			console.log(data);
 			if (!data) return;
-			const track = data.tracks.shift();
+			const tracks = data.tracks;
 
 			if (!serverQueue) {
 				const queueContruct = {
@@ -114,10 +116,63 @@ export default class PlayCommand extends Command {
 
 				queue.set(message.guild!.id, queueContruct);
 
-				// @ts-ignore
-				queueContruct.songs.push(track);
+				tracks.forEach((track: any) => {
+					// @ts-ignore
+					queueContruct.songs.push(track);
+				});
+
 				try {
 					this._play(message, queueContruct.songs[0], node);
+					if (data.type === "PLAYLIST")
+						await message.channel.send(
+							new MessageEmbed({
+								title: `Now Playing Playlist`,
+								description: "`" + data.playlistName + "`",
+								url: args.song,
+								color: 16716032,
+								timestamp: new Date(),
+								author: {
+									name: message.author.tag,
+									icon_url: message.author.avatarURL({ dynamic: true }) || "",
+								},
+								footer: {
+									text: message.client.user?.tag,
+									icon_url:
+										message.client.user?.avatarURL({ dynamic: true }) || "",
+								},
+								fields: [
+									{
+										name: "Suggested by:",
+										value: `<@${message.author.id}>`,
+									},
+								],
+							})
+						);
+					else
+						await message.channel.send(
+							new MessageEmbed({
+								title: `Now Playing`,
+								description: "`" + tracks[0].info.title + "`",
+								url: tracks[0].info.uri,
+								color: 16716032,
+								timestamp: new Date(),
+								author: {
+									name: message.author.tag,
+									icon_url: message.author.avatarURL({ dynamic: true }) || "",
+								},
+								footer: {
+									text: message.client.user?.tag,
+									icon_url:
+										message.client.user?.avatarURL({ dynamic: true }) || "",
+								},
+								fields: [
+									{
+										name: "Suggested by:",
+										value: `<@${message.author.id}>`,
+									},
+								],
+							})
+						);
 				} catch (err) {
 					this.client.log.error(err);
 					queue.delete(message.guild!.id);
@@ -126,30 +181,60 @@ export default class PlayCommand extends Command {
 					);
 				}
 			} else {
-				serverQueue.songs.push(track);
-				await message.channel.send(
-					new MessageEmbed({
-						title: `Added to Queue!`,
-						description: "`" + track.info.title + "`",
-						url: track.info.uri,
-						color: 16716032,
-						timestamp: new Date(),
-						author: {
-							name: message.author.tag,
-							icon_url: message.author.avatarURL({ dynamic: true }) || "",
-						},
-						footer: {
-							text: message.client.user?.tag,
-							icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
-						},
-						fields: [
-							{
-								name: "Suggested by:",
-								value: `<@${message.author.id}>`,
+				tracks.forEach((track: any) => {
+					// @ts-ignore
+					serverQueue.songs.push(track);
+				});
+				if (data.type === "PLAYLIST")
+					await message.channel.send(
+						new MessageEmbed({
+							title: `Added Playlist to Queue!`,
+							description: "`" + data.playlistName + "`",
+							url: args.song,
+							color: 16716032,
+							timestamp: new Date(),
+							author: {
+								name: message.author.tag,
+								icon_url: message.author.avatarURL({ dynamic: true }) || "",
 							},
-						],
-					})
-				);
+							footer: {
+								text: message.client.user?.tag,
+								icon_url:
+									message.client.user?.avatarURL({ dynamic: true }) || "",
+							},
+							fields: [
+								{
+									name: "Suggested by:",
+									value: `<@${message.author.id}>`,
+								},
+							],
+						})
+					);
+				else
+					await message.channel.send(
+						new MessageEmbed({
+							title: `Added to Queue!`,
+							description: "`" + tracks[0].info.title + "`",
+							url: tracks[0].info.uri,
+							color: 16716032,
+							timestamp: new Date(),
+							author: {
+								name: message.author.tag,
+								icon_url: message.author.avatarURL({ dynamic: true }) || "",
+							},
+							footer: {
+								text: message.client.user?.tag,
+								icon_url:
+									message.client.user?.avatarURL({ dynamic: true }) || "",
+							},
+							fields: [
+								{
+									name: "Suggested by:",
+									value: `<@${message.author.id}>`,
+								},
+							],
+						})
+					);
 			}
 		} catch (error) {
 			this.client.log.error(error);
@@ -203,29 +288,6 @@ export default class PlayCommand extends Command {
 				player.disconnect();
 			});
 			await player.playTrack(track);
-			await message.channel.send(
-				new MessageEmbed({
-					title: `Now Playing`,
-					description: "`" + track.info.title + "`",
-					url: track.info.uri,
-					color: 16716032,
-					timestamp: new Date(),
-					author: {
-						name: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }) || "",
-					},
-					footer: {
-						text: message.client.user?.tag,
-						icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
-					},
-					fields: [
-						{
-							name: "Suggested by:",
-							value: `<@${message.author.id}>`,
-						},
-					],
-				})
-			);
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(

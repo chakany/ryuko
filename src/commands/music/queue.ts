@@ -29,11 +29,18 @@ export default class QueueCommand extends Command {
 				);
 			let description =
 				"**Currently Playing:** `" + serverQueue.songs[0].info.title + "`\n";
-			let song;
-			for (let i = 1; (song = serverQueue.songs[i]); i++) {
-				description =
-					description + `\n**${i}:**` + " `" + song.info.title + "`";
+			let i;
+			for (i = 1; i < 7; i++) {
+				if (serverQueue.songs.length > 1) {
+					let song = serverQueue.songs[i];
+					console.log(song);
+					description =
+						description + `\n**${i}:**` + " `" + song.info.title + "`";
+				}
 			}
+			if (serverQueue.songs.length > 6)
+				description =
+					description + `\nand **${serverQueue.songs.length - 6}** more.`;
 			return message.channel.send(
 				new MessageEmbed({
 					title: "Song Queue",
