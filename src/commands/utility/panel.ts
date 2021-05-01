@@ -81,7 +81,20 @@ export default class PanelCommand extends Command {
 		switch (args.action) {
 			case "list":
 				const listMessage = await message.channel.send(
-					"<a:loading:837775261373956106> *Please wait..*"
+					new MessageEmbed({
+						title: "<a:loading:837775261373956106> *Please wait..*",
+						description: "Requesting information from panel.",
+						color: 16716032,
+						timestamp: new Date(),
+						author: {
+							name: message.author.tag,
+							icon_url: message.author.avatarURL({ dynamic: true }) || "",
+						},
+						footer: {
+							text: message.client.user?.tag,
+							icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+						},
+					})
 				);
 				const embed = new MessageEmbed({
 					title: "All Servers",
@@ -273,7 +286,20 @@ export default class PanelCommand extends Command {
 		state: string
 	): Promise<boolean> {
 		const startMessage = await message.channel.send(
-			"<a:loading:837775261373956106> *Please wait..*"
+			new MessageEmbed({
+				title: "<a:loading:837775261373956106> *Please wait..*",
+				description: "Sending command to panel.",
+				color: 16716032,
+				timestamp: new Date(),
+				author: {
+					name: message.author.tag,
+					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+				},
+				footer: {
+					text: message.client.user?.tag,
+					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+				},
+			})
 		);
 		try {
 			await this._setPower(server, state);
