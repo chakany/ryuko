@@ -13,7 +13,7 @@ const config = require("../config.json");
 
 try {
 	app.set("view engine", "ejs");
-	app.set("views", path.join(__dirname, "pages"));
+	app.set("views", "../app/pages");
 
 	// Binds
 	app.use("/", home);

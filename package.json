@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "cd dist && cross-env NODE_ENV=production node . | npx bunyan -o short",
 		"dev": "cd src && npx ts-node-dev --transpile-only . | npx bunyan -o short",
-		"dist": "npx tsc && npx copyfiles -u 1 src/pages/**/* dist",
+		"dist": "npx tsc",
 		"postinstall": "patch-package"
 	},
 	"author": "Jack C <30955604+jacany@users.noreply.github.com>",
