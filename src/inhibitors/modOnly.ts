@@ -1,12 +1,11 @@
 import { Inhibitor, Command } from "discord-akairo";
 import { Message } from "discord.js";
 
-import Error from "../utils/error";
-
 export default class ModInhibitor extends Inhibitor {
 	constructor() {
 		super("modOnly", {
-			reason: "Only Moderatiors can use this command",
+			reason:
+				"Only moderators with the moderation role can use this command\nIf there is no moderation role set, then set one with the 'modrole' command.",
 		});
 	}
 
@@ -18,30 +17,12 @@ export default class ModInhibitor extends Inhibitor {
 			"modRole",
 			null
 		);
+
 		if (
-			modRole &&
-			!message.member!.roles.cache.some((role) => role.id === modRole)
+			!modRole ||
+			(modRole &&
+				!message.member!.roles.cache.some((role) => role.id === modRole))
 		) {
-			message.channel.send(
-				Error(
-					message,
-					command,
-					"Insufficent Permissions",
-					"You must be a discord mod to use this command."
-				)
-			);
-
-			return true;
-		} else if (!modRole) {
-			message.channel.send(
-				Error(
-					message,
-					command,
-					"Invalid Configuration",
-					"To use mod commands, you must first set a mod role. See the configuration section in help for more info."
-				)
-			);
-
 			return true;
 		}
 

@@ -11,9 +11,8 @@ export default class NsfwInhibitor extends Inhibitor {
 	}
 
 	exec(message: Message, command: Command) {
-		if (!command.nsfw) return false;
 		// @ts-ignore
-		else if (command.nsfw && message.channel.nsfw) return false;
+		if (!command.nsfw || (command.nsfw && message.channel.nsfw)) return false;
 		return true;
 	}
 }
