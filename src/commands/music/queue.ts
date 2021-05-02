@@ -31,9 +31,8 @@ export default class QueueCommand extends Command {
 				"**Currently Playing:** `" + serverQueue.songs[0].info.title + "`\n";
 			let i;
 			for (i = 1; i < 7; i++) {
-				if (serverQueue.songs.length > 1) {
+				if (serverQueue.songs[i] && serverQueue.songs.length > 1) {
 					let song = serverQueue.songs[i];
-					console.log(song);
 					description =
 						description + `\n**${i}:**` + " `" + song.info.title + "`";
 				}
