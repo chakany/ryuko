@@ -27,7 +27,7 @@ declare module "discord-akairo" {
 	interface AkairoClient {
 		config: any;
 		settings: SequelizeProvider;
-		shoukaku: any;
+		shoukaku: Shoukaku;
 		queue: any;
 		log: bunyan;
 		jobs: Map<string, Map<string, Job>>;
@@ -38,7 +38,7 @@ declare module "discord-akairo" {
 export default class AinaClient extends AkairoClient {
 	public config: any;
 	public settings: SequelizeProvider;
-	public shoukaku;
+	public shoukaku: Shoukaku;
 	public queue;
 	public log: bunyan;
 	public jobs: Map<string, Map<string, Job>>;
