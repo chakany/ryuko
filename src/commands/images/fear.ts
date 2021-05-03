@@ -36,7 +36,7 @@ export default class FearCommand extends Command {
 			const image = await this._getImage(
 				messageAttachment
 					? messageAttachment.url
-					: message.author.avatarURL({ dynamic: true }) || ""
+					: message.author.avatarURL({ dynamic: true, format: "png" }) || ""
 			);
 
 			const attachment = new MessageAttachment(image.data, "image.png");
