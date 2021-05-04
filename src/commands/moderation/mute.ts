@@ -4,6 +4,7 @@ import { add } from "date-fns";
 import schedule from "node-schedule";
 
 import Error from "../../utils/error";
+import Db from "../../utils/db";
 
 const args = [
 	{
@@ -36,7 +37,7 @@ export default class MuteCommand extends Command {
 	}
 
 	// Input anything and spit it back out in milliseconds
-	_resolveTime(input: any): any {
+	_resolveTime(input: any): Date | null {
 		let length = input.replace(/[^\d]/g, "");
 		if (
 			input.endsWith("s") ||
@@ -78,6 +79,7 @@ export default class MuteCommand extends Command {
 			input.endsWith("years")
 		)
 			return add(new Date(), { years: length });
+		else return null;
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
@@ -94,7 +96,7 @@ export default class MuteCommand extends Command {
 
 		const endDate = this._resolveTime(args.length);
 
-		if (!args.length || endDate === undefined)
+		if (!args.length || endDate === null)
 			return message.channel.send(
 				Error(
 					message,
@@ -108,7 +110,7 @@ export default class MuteCommand extends Command {
 			return message.channel.send(
 				Error(message, this, "Invalid Argument", "You must provide a reason!")
 			);
-		const reason = message.util?.parsed?.content!.split(`${args.length} `)[1];
+		const reason = message.util!.parsed!.content!.split(`${args.length} `)[1];
 
 		// Check if there is a role configured for muted people
 		const muteRole = this.client.settings.get(
@@ -171,20 +173,6 @@ export default class MuteCommand extends Command {
 				args.user.roles.remove(message.guild?.roles.cache.get(muteRole));
 
 			outer.client.jobs.get(message.guild!.id)?.delete(args.user.id);
-			const cachedMutes = new Map(
-				JSON.parse(
-					outer.client.settings.get(message.guild!.id, "mutedUsers", null)
-				)
-			);
-
-			cachedMutes.delete(args.user.id);
-
-			outer.client.settings.set(
-				message.guild!.id,
-				"mutedUsers",
-				// @ts-ignore
-				JSON.stringify([...cachedMutes])
-			);
 
 			const logChannel = outer.client.settings.get(
 				message.guild!.id,
@@ -214,23 +202,13 @@ export default class MuteCommand extends Command {
 		guildJobs?.set(args.user.id, job);
 		this.client.jobs.set(message.guild!.id, guildJobs!);
 
-		let cachedMutes = this.client.settings.get(
+		Db.muteUser(
 			message.guild!.id,
-			"mutedUsers",
-			null
-		);
-
-		if (typeof cachedMutes === "string") cachedMutes = JSON.parse(cachedMutes);
-
-		cachedMutes = new Map(cachedMutes);
-
-		cachedMutes.set(args.user.id, endDate.toJSON());
-
-		this.client.settings.set(
-			message.guild!.id,
-			"mutedUsers",
-			// @ts-ignore
-			JSON.stringify([...cachedMutes])
+			"mute",
+			args.user.id,
+			message.author.id,
+			reason,
+			endDate
 		);
 
 		const logChannel = outer.client.settings.get(

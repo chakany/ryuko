@@ -5,6 +5,7 @@ import {
 	ListenerHandler,
 	SequelizeProvider,
 } from "discord-akairo";
+import { Collection } from "discord.js";
 import { Shoukaku } from "shoukaku";
 import bunyan from "bunyan";
 import client from "nekos.life";
@@ -41,7 +42,7 @@ export default class AinaClient extends AkairoClient {
 	public shoukaku: Shoukaku;
 	public queue;
 	public log: bunyan;
-	public jobs: Map<string, Map<string, Job>>;
+	public jobs: Collection<string, Map<string, Job>>;
 	public hentai: client;
 	private commandHandler: CommandHandler;
 	private inhibitorHandler: InhibitorHandler;
@@ -60,7 +61,7 @@ export default class AinaClient extends AkairoClient {
 
 		this.config = config;
 		this.log = log;
-		this.jobs = new Map();
+		this.jobs = new Collection();
 		this.hentai = newHentai;
 
 		this.settings = Db.getSettings();

@@ -1,4 +1,4 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
+import { Sequelize, Model, DataTypes, Op } from "sequelize";
 import { SequelizeProvider } from "discord-akairo";
 import axios from "axios";
 import bunyan from "bunyan";
@@ -8,7 +8,7 @@ let log = bunyan.createLogger({
 	level: "debug",
 });
 
-let sequelize;
+let sequelize: Sequelize;
 
 const { db, prefix } = require("../../config.json");
 if (process.env.NODE_ENV !== "production")
@@ -78,6 +78,39 @@ const guild = sequelize.define("guild", {
 	},
 });
 
+const punishments = sequelize.define("punishments", {
+	punishmentId: {
+		type: DataTypes.INTEGER,
+		allowNull: false,
+		autoIncrement: true,
+		primaryKey: true,
+	},
+	guild: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	},
+	type: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	},
+	id: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	},
+	admin: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	},
+	reason: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	},
+	expires: {
+		type: DataTypes.DATE,
+		allowNull: false,
+	},
+});
+
 export default new (class Db {
 	getSettings() {
 		return new SequelizeProvider(guild, {
@@ -122,21 +155,43 @@ export default new (class Db {
 
 	async getMutedUsers() {
 		let guilds = new Map();
-
-		const dbGuilds = (await guild.findAll()).map((el) =>
-			el.get({ plain: true })
+		const date = new Date();
+		const mutes = await sequelize.query(
+			"SELECT guild,id,expires,createdAt FROM punishments WHERE NOW() <= expires;"
 		);
 
-		dbGuilds.forEach((guild) => {
-			if (guild.mutedUsers) guilds.set(guild.id, guild.mutedUsers);
-		});
+		return mutes[0];
+	}
 
-		return guilds;
+	async muteUser(
+		guild: string,
+		type: string,
+		id: string,
+		admin: string,
+		reason: string,
+		expires: Date
+	) {
+		try {
+			await punishments.create({
+				guild,
+				type,
+				id,
+				admin,
+				reason,
+				expires,
+			});
+
+			return true;
+		} catch (err) {
+			log.error(err);
+			throw err;
+		}
 	}
 
 	async sync() {
 		log.info("Syncing");
 		await guild.sync({ alter: true });
 		await linked.sync({ alter: true });
+		await punishments.sync({ alter: true });
 	}
 })();
