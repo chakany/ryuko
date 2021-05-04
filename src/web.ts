@@ -14,6 +14,7 @@ const config = require("../config.json");
 try {
 	app.set("view engine", "ejs");
 	app.set("views", "../app/pages");
+	app.use(express.static("../app/static"));
 
 	// Binds
 	app.use("/", home);

@@ -1,10 +1,28 @@
+<!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<title>Commands | <%= username %></title>
+		<link rel="stylesheet" type="text/css" href="styles/home.css" />
+	</head>
 	<body>
-		<h1>Commands</h1>
-		<h2>This shit is fetched dynamically 😳</h2>
-		<% for( let i = 0; i < categories.length; i++ ) { %>
-		<h1><%= categories[i][0].categoryID %></h1>
-		<% for( let index = 0; index < categories[i].length; index++ ) { %> <%=
-		categories[i][index].id %> <% } %> </br> <% } %>
+		<div id="container">
+			<h1><%= username %>'s Commands</h1>
+			<% for( let i = 0; i < categories.length; i++ ) { %>
+			<br />
+			<h2><%= categories[i][0].categoryID %></h2>
+			<% for( let index = 0; index < categories[i].length; index++ ) { %><%=
+			categories[i][index].aliases[0] %>, <% } %> <br />
+			<% } %>
+			<br />
+			<a href="/"
+				><button type="button" class="btn btn-primary">Go Back</button></a
+			>
+			<%- include("../components/footer.ejs") %>
+		</div>
 	</body>
 </html>

@@ -9,6 +9,7 @@ router.get("/", async function (req, res) {
 			categories: (
 				await manager.fetchClientValues("commandHandler.categories")
 			)[0],
+			username: await (await manager.fetchClientValues("user"))[0].username,
 		});
 	} catch (err) {
 		log.error(err);
