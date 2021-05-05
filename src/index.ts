@@ -6,8 +6,6 @@ let log = bunyan.createLogger({ name: "shardmanager" });
 
 db.sync();
 
-import "./web";
-
 let manager: ShardingManager;
 if (require.main === module) {
 	if (process.env.NODE_ENV !== "production")
