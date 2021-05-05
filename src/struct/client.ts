@@ -44,11 +44,13 @@ export default class AinaClient extends AkairoClient {
 	public log: bunyan;
 	public jobs: Collection<string, Map<string, Job>>;
 	public hentai: client;
-	private commandHandler: CommandHandler;
+	public commandHandler: CommandHandler;
+	// @ts-expect-error
 	private inhibitorHandler: InhibitorHandler;
+	// @ts-expect-error
 	private listenerHandler: ListenerHandler;
 
-	constructor(log: bunyan) {
+	constructor(log: bunyan, full = true) {
 		super(
 			{
 				ownerID: config.ownerId,
@@ -86,27 +88,28 @@ export default class AinaClient extends AkairoClient {
 			ignorePermissions: config.ownerId,
 			ignoreCooldown: config.ownerId,
 		});
+		if (full) {
+			this.inhibitorHandler = new InhibitorHandler(this, {
+				directory: "./inhibitors",
+			});
 
-		this.inhibitorHandler = new InhibitorHandler(this, {
-			directory: "./inhibitors",
-		});
+			this.listenerHandler = new ListenerHandler(this, {
+				directory: "./listeners",
+			});
 
-		this.listenerHandler = new ListenerHandler(this, {
-			directory: "./listeners",
-		});
+			this.listenerHandler.setEmitters({
+				process: process,
+				commandHandler: this.commandHandler,
+				inhibitorHandler: this.inhibitorHandler,
+				listenerHandler: this.listenerHandler,
+			});
 
-		this.listenerHandler.setEmitters({
-			process: process,
-			commandHandler: this.commandHandler,
-			inhibitorHandler: this.inhibitorHandler,
-			listenerHandler: this.listenerHandler,
-		});
+			this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
+			this.commandHandler.useListenerHandler(this.listenerHandler);
 
-		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
-		this.commandHandler.useListenerHandler(this.listenerHandler);
-
-		this.listenerHandler.loadAll();
-		this.inhibitorHandler.loadAll();
+			this.listenerHandler.loadAll();
+			this.inhibitorHandler.loadAll();
+		}
 		this.commandHandler.loadAll();
 	}
 
@@ -137,11 +140,11 @@ export default class AinaClient extends AkairoClient {
 		}
 	}
 
-	start(): this {
+	async start(token: string): Promise<this> {
 		this.log.info("Bot is starting...");
 		this._setupShoukakuEvents();
 		this._checkImageAPI();
-		this.login(this.config.token);
+		this.login(token);
 		this.on("disconnect", () => this.log.warn("Disconnected!"));
 
 		return this;
