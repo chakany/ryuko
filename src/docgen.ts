@@ -8,7 +8,18 @@ import fsp from "fs/promises";
 let botlog = bunyan.createLogger({ name: "bot" });
 let log = bunyan.createLogger({ name: "docs" });
 
-const { prefix, token } = require("../config.json");
+let prefix: string;
+let token: string;
+
+if (fs.existsSync("../config.json")) {
+	const config = require("../config.json");
+	prefix = config.prefix;
+	token = config.token;
+} else {
+	prefix = "!";
+	// @ts-expect-error
+	token = process.env.AINA_TOKEN;
+}
 
 import Bot from "./struct/client";
 
@@ -47,7 +58,7 @@ async function start() {
 		await removeDir(commandPath);
 		if (!fs.existsSync(commandPath)) await fsp.mkdir(commandPath);
 		// port enviroment variable can be used for token
-		await client.login(process.env.PORT || token);
+		await client.login(token);
 		await fsp.writeFile(
 			"../docs/_coverpage.md",
 			`![logo](${client.user?.avatarURL({
