@@ -1,1 +1,0 @@
-- [Commands](/commands/index)
