@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI/CD
+name: CI
 
 on:
   push:
@@ -27,9 +27,26 @@ jobs:
     needs: build
 
     steps:
+      - name: Set deployment status to Started
+        uses: bobheadxi/deployments@v0.4.3
+        id: deployment
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: Release
+
       - uses: satak/webrequest-action@master
         with:
           url: ${{ secrets.PTERODACTYL_URL }}/api/client/servers/461408fc/power
           method: POST
           payload: '{"signal": "restart"}'
           headers: '{"Authorization": "Bearer ${{ secrets.PTERODACTYL_SECRET }}"}'
+
+      - name: Set deployment status to Finished
+        uses: bobheadxi/deployments@v0.4.3
+        if: always()
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
