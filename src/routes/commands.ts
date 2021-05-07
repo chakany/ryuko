@@ -2,7 +2,7 @@ import express from "express";
 
 const { prefix } = require("../../config.json");
 
-import { manager, log } from "../index";
+import { manager, weblog } from "../index";
 
 const router = express.Router();
 router.get("/", async function (req, res) {
@@ -16,7 +16,7 @@ router.get("/", async function (req, res) {
 			prefix: prefix,
 		});
 	} catch (err) {
-		log.error(err);
+		weblog.error(err);
 	}
 });
 

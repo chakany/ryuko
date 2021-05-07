@@ -4,6 +4,7 @@ import express from "express";
 import db from "./utils/db";
 const { token, port } = require("../config.json");
 let log = bunyan.createLogger({ name: "shardmanager" });
+let weblog = bunyan.createLogger({ name: "webserver" });
 
 db.sync();
 
@@ -25,16 +26,20 @@ const app = express();
 import home from "./routes/home";
 import commands from "./routes/commands";
 
-app.set("view engine", "ejs");
-app.set("views", "../app/pages");
+try {
+	app.set("view engine", "ejs");
+	app.set("views", "../app/pages");
 
-app.use("/", home);
-app.use("/commands", commands);
+	app.use("/", home);
+	app.use("/commands", commands);
 
-app.use(express.static("../app/static"));
+	app.use(express.static("../app/static"));
 
-app.listen(port, () => {
-	log.info(`Bound to port ${port}`);
-});
+	app.listen(port, () => {
+		weblog.info(`Bound to port ${port}`);
+	});
+} catch (error) {
+	weblog.error(error);
+}
 
-export { manager, log };
+export { manager, weblog };
