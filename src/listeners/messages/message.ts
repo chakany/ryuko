@@ -11,12 +11,8 @@ export default class MessageListener extends Listener {
 	}
 
 	async exec(message: Message) {
-		if (message.partial) await message.fetch();
-		// @ts-expect-error
-		this.client.commandHandler.handle(message);
-
 		if (!message.author.bot) {
-			const level = await db.addXp(message.author.id, 200, message);
+			const level = await db.addXp(message.author.id, 10, message);
 			if (typeof level == "number") {
 				const shouldLevelMessage = this.client.settings.get(
 					message.guild!.id,
@@ -31,5 +27,9 @@ export default class MessageListener extends Listener {
 				}
 			}
 		}
+
+		if (message.partial) await message.fetch();
+		// @ts-expect-error
+		this.client.commandHandler.handle(message);
 	}
 }

@@ -169,14 +169,14 @@ export default new (class Db {
 
 						// prettier-ignore
 						if (
-						(xp * multiplier + currentXp) % 10000 == 0 ||
-						(xp * multiplier + currentXp > level * 10000 &&
-							xp * multiplier + currentXp < (level + 1) * 10000 &&
-							currentXp < level * 10000)
+							(xp * multiplier + currentXp) % 500 == 0 ||
+							(xp * multiplier + currentXp > level * 500 &&
+								xp * multiplier + currentXp < (level + 1) * 500 &&
+								currentXp < level * 500)
 						) {
 							level = level + 1;
 							leveledUp = true;
-					}
+						}
 
 						await users.upsert({
 							id,
@@ -185,6 +185,25 @@ export default new (class Db {
 						});
 						if (leveledUp) resolve(level);
 						else resolve(false);
+					});
+			} catch (error) {
+				log.error(error);
+				reject(error);
+			}
+		});
+	}
+
+	async getUserXp(id: string): Promise<any> {
+		return new Promise(async (resolve, reject) => {
+			try {
+				await users
+					.findAll({
+						where: {
+							id,
+						},
+					})
+					.then(async (user) => {
+						resolve(user[0]);
 					});
 			} catch (error) {
 				log.error(error);
