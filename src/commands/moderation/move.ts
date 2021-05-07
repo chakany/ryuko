@@ -3,20 +3,7 @@ import { Message } from "discord.js";
 
 import Error from "../../utils/error";
 
-const args = [
-	{
-		id: "user",
-		type: "member",
-	},
-	{
-		id: "channel",
-		type: "voiceChannel",
-	},
-];
-
 export default class MoveCommand extends Command {
-	protected args = args;
-
 	constructor() {
 		super("move", {
 			aliases: ["move"],
@@ -24,7 +11,16 @@ export default class MoveCommand extends Command {
 			description: "Move members into another voice channel",
 			clientPermissions: ["MOVE_MEMBERS"],
 			channel: "guild",
-			args: args,
+			args: [
+				{
+					id: "user",
+					type: "member",
+				},
+				{
+					id: "channel",
+					type: "voiceChannel",
+				},
+			],
 			modOnly: true,
 		});
 	}

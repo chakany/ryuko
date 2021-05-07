@@ -3,16 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 
 import Error from "../../utils/error";
 
-const args = [
-	{
-		id: "user",
-		type: "memberMention",
-	},
-];
-
 export default class DragCommand extends Command {
-	protected args = args;
-
 	constructor() {
 		super("drag", {
 			aliases: ["drag"],
@@ -20,7 +11,12 @@ export default class DragCommand extends Command {
 			description: "Drag other members into your own channel",
 			clientPermissions: ["MOVE_MEMBERS"],
 			channel: "guild",
-			args: args,
+			args: [
+				{
+					id: "user",
+					type: "memberMention",
+				},
+			],
 			modOnly: true,
 		});
 	}

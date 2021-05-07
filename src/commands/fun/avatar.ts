@@ -1,23 +1,19 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-const arg = [
-	{
-		id: "user",
-		type: "user",
-	},
-];
-
 export default class AvatarCommand extends Command {
-	protected args = arg;
-
 	constructor() {
 		super("avatar", {
 			aliases: ["avatar", "ava", "pfp"],
 			description: "Get's the user's avatar or the person who is mentioned.",
 			category: "Fun",
 			channel: "guild",
-			args: arg,
+			args: [
+				{
+					id: "user",
+					type: "user",
+				},
+			],
 		});
 	}
 

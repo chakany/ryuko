@@ -4,21 +4,17 @@ import { Message, MessageEmbed } from "discord.js";
 import Error from "../../utils/error";
 import Db from "../../utils/db";
 
-const arg = [
-	{
-		id: "username",
-		type: "string",
-	},
-];
-
 export default class LinkCommand extends Command {
-	protected args = arg;
-
 	constructor() {
 		super("link", {
 			aliases: ["link"],
 			category: "Utility",
-			args: arg,
+			args: [
+				{
+					id: "username",
+					type: "string",
+				},
+			],
 			description: "Link your Discord and MC accounts together",
 			channel: "guild",
 			guild: ["796140447260737536"],

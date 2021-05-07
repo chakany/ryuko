@@ -6,24 +6,7 @@ import schedule from "node-schedule";
 import Error from "../../utils/error";
 import Db from "../../utils/db";
 
-const args = [
-	{
-		id: "user",
-		type: "member",
-	},
-	{
-		id: "length",
-		type: "string",
-	},
-	{
-		id: "reason",
-		type: "string",
-	},
-];
-
 export default class MuteCommand extends Command {
-	protected args = args;
-
 	constructor() {
 		super("mute", {
 			aliases: ["mute"],
@@ -31,7 +14,20 @@ export default class MuteCommand extends Command {
 			description: "Mutes a member",
 			clientPermissions: ["MANAGE_ROLES"],
 			channel: "guild",
-			args: args,
+			args: [
+				{
+					id: "user",
+					type: "member",
+				},
+				{
+					id: "length",
+					type: "string",
+				},
+				{
+					id: "reason",
+					type: "string",
+				},
+			],
 			modOnly: true,
 		});
 	}

@@ -6,23 +6,19 @@ import Error from "../../utils/error";
 
 const { imgApiUrl } = require("../../../config.json");
 
-const args = [
-	{
-		id: "text",
-		type: "string",
-	},
-];
-
 export default class TweetCommand extends Command {
-	protected args = args;
-
 	constructor() {
 		super("tweet", {
 			aliases: ["tweet", "trumptweet"],
 			description:
 				"Generates a trump tweet, with the contents being your inputted text.",
 			category: "Fun",
-			args: args,
+			args: [
+				{
+					id: "text",
+					type: "string",
+				},
+			],
 		});
 	}
 

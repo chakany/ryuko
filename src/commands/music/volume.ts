@@ -4,14 +4,6 @@ import { Message } from "discord.js";
 
 import Error from "../../utils/error";
 
-const arg = [
-	{
-		id: "volume",
-		type: "number",
-		default: true,
-	},
-];
-
 export default class VolumeCommand extends Command {
 	constructor() {
 		super("volume", {
@@ -19,7 +11,13 @@ export default class VolumeCommand extends Command {
 			description: "Changes the volume of the currently playing song",
 			category: "Music",
 			channel: "guild",
-			args: arg,
+			args: [
+				{
+					id: "volume",
+					type: "number",
+					default: true,
+				},
+			],
 		});
 	}
 

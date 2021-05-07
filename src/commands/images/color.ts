@@ -6,22 +6,18 @@ import Error from "../../utils/error";
 
 const { imgApiUrl } = require("../../../config.json");
 
-const args = [
-	{
-		id: "hexcode",
-		type: "string",
-	},
-];
-
 export default class ColorCommand extends Command {
-	protected args = args;
-
 	constructor() {
 		super("color", {
 			aliases: ["color"],
 			description: "Generates an image of a color from your input.",
 			category: "Fun",
-			args: args,
+			args: [
+				{
+					id: "hexcode",
+					type: "string",
+				},
+			],
 		});
 	}
 

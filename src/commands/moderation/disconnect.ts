@@ -3,20 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 
 import Error from "../../utils/error";
 
-const args = [
-	{
-		id: "user",
-		type: Argument.product("memberMention", "string"),
-	},
-	{
-		id: "reason",
-		type: "string",
-	},
-];
-
 export default class DisconnectCommand extends Command {
-	protected args = args;
-
 	constructor() {
 		super("disconnect", {
 			aliases: ["disconnect"],
@@ -24,7 +11,16 @@ export default class DisconnectCommand extends Command {
 			description: "Disconnect users that are in a channel",
 			clientPermissions: ["MOVE_MEMBERS"],
 			channel: "guild",
-			args: args,
+			args: [
+				{
+					id: "user",
+					type: Argument.product("memberMention", "string"),
+				},
+				{
+					id: "reason",
+					type: "string",
+				},
+			],
 			modOnly: true,
 		});
 	}

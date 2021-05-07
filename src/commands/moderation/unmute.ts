@@ -3,16 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 
 import Error from "../../utils/error";
 
-const args = [
-	{
-		id: "user",
-		type: "member",
-	},
-];
-
 export default class MoveCommand extends Command {
-	protected args = args;
-
 	constructor() {
 		super("unmute", {
 			aliases: ["unmute"],
@@ -20,7 +11,12 @@ export default class MoveCommand extends Command {
 			description: "Unmute a member",
 			clientPermissions: ["MOVE_MEMBERS"],
 			channel: "guild",
-			args: args,
+			args: [
+				{
+					id: "user",
+					type: "member",
+				},
+			],
 			modOnly: true,
 		});
 	}

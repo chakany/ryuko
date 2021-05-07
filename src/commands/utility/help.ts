@@ -3,22 +3,18 @@ import { Message, MessageEmbed } from "discord.js";
 
 import Error from "../../utils/error";
 
-const arg = [
-	{
-		id: "command",
-		type: Argument.union("commandAlias", "string"),
-	},
-];
-
 export default class HelpCommand extends Command {
-	protected args = arg;
-
 	constructor() {
 		super("help", {
 			aliases: ["help", "commands"],
 			category: "Utility",
 			description: "Shows a list of avaliable commands",
-			args: arg,
+			args: [
+				{
+					id: "command",
+					type: Argument.union("commandAlias", "string"),
+				},
+			],
 		});
 	}
 
@@ -30,7 +26,6 @@ export default class HelpCommand extends Command {
 			"disabledCommands",
 			null
 		);
-
 		if (typeof disabledCommands === "string")
 			disabledCommands = JSON.parse(disabledCommands);
 		if (!args.command) {
@@ -43,7 +38,7 @@ export default class HelpCommand extends Command {
 					"`\n**View All Commands**: `" +
 					`${prefix}${helpCommand} all` +
 					"`\n**View Command Info**: `" +
-					`${prefix}${helpCommand} <${arg[0].id}>` +
+					`${prefix}${helpCommand} <${this.args[0].id}>` +
 					"`",
 				color: 16716032,
 				timestamp: new Date(),
@@ -95,7 +90,7 @@ export default class HelpCommand extends Command {
 					"**Prefix**: `" +
 					prefix +
 					"`\n**View Command Info**: `" +
-					`${prefix}${helpCommand} <${arg[0].id}>` +
+					`${prefix}${helpCommand} <${this.args[0].id}>` +
 					"`",
 				color: 16716032,
 				timestamp: new Date(),

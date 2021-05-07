@@ -3,21 +3,17 @@ import { Message, MessageEmbed } from "discord.js";
 
 import Error from "../../utils/error";
 
-const arg = [
-	{
-		id: "role",
-		type: "role",
-	},
-];
-
 export default class ModroleCommand extends Command {
-	protected args = arg;
-
 	constructor() {
 		super("modrole", {
 			aliases: ["modrole"],
 			category: "Configuration",
-			args: arg,
+			args: [
+				{
+					id: "role",
+					type: "role",
+				},
+			],
 			description:
 				"Changes the Mod Role, setting this is required if you want to use Moderation commands.",
 			channel: "guild",

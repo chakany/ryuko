@@ -9,21 +9,17 @@ import { Message, MessageEmbed } from "discord.js";
 
 import Error from "../../utils/error";
 
-const arg = [
-	{
-		id: "todisable",
-		type: Argument.union("commandAlias", "command", "string"),
-	},
-];
-
 export default class DisableCommand extends Command {
-	protected args = arg;
-
 	constructor() {
 		super("disable", {
 			aliases: ["disable"],
 			category: "Configuration",
-			args: arg,
+			args: [
+				{
+					id: "todisable",
+					type: Argument.union("commandAlias", "command", "string"),
+				},
+			],
 			description: "Disable commands on the bot",
 			channel: "guild",
 			userPermissions: ["ADMINISTRATOR"],

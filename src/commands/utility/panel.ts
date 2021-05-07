@@ -5,26 +5,22 @@ import Error from "../../utils/error";
 
 const { pterodactyl } = require("../../../config.json");
 
-const arg = [
-	{
-		id: "action",
-		type: "string",
-	},
-	{
-		id: "server",
-		type: "string",
-	},
-];
-
 export default class PanelCommand extends Command {
-	protected args = arg;
-
 	constructor() {
 		super("panel", {
 			aliases: ["panel", "pterodactyl"],
 			description: "Execute functions on the Pterodactyl panel.",
 			category: "Utility",
-			args: arg,
+			args: [
+				{
+					id: "action",
+					type: "string",
+				},
+				{
+					id: "server",
+					type: "string",
+				},
+			],
 			ownerOnly: true,
 		});
 	}

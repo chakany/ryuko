@@ -6,23 +6,19 @@ import Error from "../../utils/error";
 
 const { imgApiUrl } = require("../../../config.json");
 
-const args = [
-	{
-		id: "text",
-		type: "string",
-	},
-];
-
 export default class DipshitCommand extends Command {
-	protected args = args;
-
 	constructor() {
 		super("dipshit", {
 			aliases: ["dipshit"],
 			description:
 				"Generates a google 'did you mean dipshit' meme, with the search being your inputted text.",
 			category: "Fun",
-			args: args,
+			args: [
+				{
+					id: "text",
+					type: "string",
+				},
+			],
 		});
 	}
 

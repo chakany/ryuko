@@ -7,16 +7,7 @@ import ystr from "ytsr";
 
 import Error from "../../utils/error";
 
-const arg = [
-	{
-		id: "song",
-		type: "string",
-	},
-];
-
 export default class PlayCommand extends Command {
-	protected args = arg;
-
 	constructor() {
 		super("play", {
 			aliases: ["play"],
@@ -24,7 +15,12 @@ export default class PlayCommand extends Command {
 				"Play music into your Voice Channel! Enter a search query, youtube, or spotify url!",
 			category: "Music",
 			clientPermissions: ["SPEAK", "CONNECT"],
-			args: arg,
+			args: [
+				{
+					id: "song",
+					type: "string",
+				},
+			],
 			channel: "guild",
 		});
 	}

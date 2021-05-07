@@ -3,21 +3,17 @@ import { Message, MessageEmbed } from "discord.js";
 
 import Error from "../../utils/error";
 
-const arg = [
-	{
-		id: "prefix",
-		type: "string",
-	},
-];
-
 export default class PrefixCommand extends Command {
-	protected args = arg;
-
 	constructor() {
 		super("prefix", {
 			aliases: ["prefix"],
 			category: "Configuration",
-			args: arg,
+			args: [
+				{
+					id: "prefix",
+					type: "string",
+				},
+			],
 			description: "Change the prefix of the bot",
 			channel: "guild",
 			userPermissions: ["ADMINISTRATOR"],

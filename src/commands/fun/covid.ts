@@ -5,23 +5,19 @@ import axios from "axios";
 
 import Error from "../../utils/error";
 
-const arg = [
-	{
-		id: "country",
-		type: "string",
-	},
-];
-
 export default class CovidCommand extends Command {
-	protected args = arg;
-
 	constructor() {
 		super("covid", {
 			aliases: ["covid"],
 			description: "Shows covid stats",
 			category: "Fun",
 			channel: "guild",
-			args: arg,
+			args: [
+				{
+					id: "country",
+					type: "string",
+				},
+			],
 		});
 	}
 

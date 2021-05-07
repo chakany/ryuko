@@ -3,27 +3,23 @@ import { Message, MessageEmbed } from "discord.js";
 
 import Error from "../../utils/error";
 
-const arg = [
-	{
-		id: "type",
-		type: "string",
-	},
-	{
-		id: "status",
-		type: "string",
-	},
-];
-
 export default class StatusCommand extends Command {
-	protected args = arg;
-
 	constructor() {
 		super("status", {
 			aliases: ["status"],
 			description: "Change bot status",
 			category: "Utility",
 			ownerOnly: true,
-			args: arg,
+			args: [
+				{
+					id: "type",
+					type: "string",
+				},
+				{
+					id: "status",
+					type: "string",
+				},
+			],
 		});
 	}
 

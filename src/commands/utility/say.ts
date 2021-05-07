@@ -3,23 +3,19 @@ import { Message } from "discord.js";
 
 import Error from "../../utils/error";
 
-const arg = [
-	{
-		id: "response",
-		type: "string",
-	},
-];
-
 export default class SayCommand extends Command {
-	protected args = arg;
-
 	constructor() {
 		super("say", {
 			aliases: ["say"],
 			description: "Make the bot repeat what you say",
 			category: "Utility",
 			ownerOnly: true,
-			args: arg,
+			args: [
+				{
+					id: "response",
+					type: "string",
+				},
+			],
 		});
 	}
 

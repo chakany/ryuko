@@ -3,21 +3,17 @@ import { Message, MessageEmbed } from "discord.js";
 
 import Error from "../../utils/error";
 
-const arg = [
-	{
-		id: "channel",
-		type: Argument.union("textChannel", "string"),
-	},
-];
-
 export default class LoggingCommand extends Command {
-	protected args = arg;
-
 	constructor() {
 		super("logging", {
 			aliases: ["logging", "log", "logchannel", "loggingchannel"],
 			category: "Configuration",
-			args: arg,
+			args: [
+				{
+					id: "channel",
+					type: Argument.union("textChannel", "string"),
+				},
+			],
 			description: "Changes the Logging Channel",
 			channel: "guild",
 			userPermissions: ["ADMINISTRATOR"],

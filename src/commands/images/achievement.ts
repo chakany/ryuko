@@ -6,23 +6,19 @@ import Error from "../../utils/error";
 
 const { imgApiUrl } = require("../../../config.json");
 
-const args = [
-	{
-		id: "text",
-		type: "string",
-	},
-];
-
 export default class AchievementCommand extends Command {
-	protected args = args;
-
 	constructor() {
 		super("achievement", {
 			aliases: ["achievement"],
 			description:
 				"Generates a Minecraft achivement with the text you input. Supports image attachments.",
 			category: "Fun",
-			args: args,
+			args: [
+				{
+					id: "text",
+					type: "string",
+				},
+			],
 		});
 	}
 

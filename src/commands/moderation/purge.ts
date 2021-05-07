@@ -3,20 +3,7 @@ import { Message, MessageEmbed, Collection } from "discord.js";
 
 import Error from "../../utils/error";
 
-const args = [
-	{
-		id: "count",
-		type: "number",
-	},
-	{
-		id: "user",
-		type: "member",
-	},
-];
-
 export default class PurgeCommand extends Command {
-	protected args = args;
-
 	constructor() {
 		super("purge", {
 			aliases: ["purge"],
@@ -24,7 +11,16 @@ export default class PurgeCommand extends Command {
 			description: "Deletes user messages",
 			clientPermissions: ["MANAGE_MESSAGES"],
 			channel: "guild",
-			args: args,
+			args: [
+				{
+					id: "count",
+					type: "number",
+				},
+				{
+					id: "user",
+					type: "member",
+				},
+			],
 			modOnly: true,
 		});
 	}

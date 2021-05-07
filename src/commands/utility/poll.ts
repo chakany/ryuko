@@ -3,30 +3,26 @@ import { Message, MessageEmbed } from "discord.js";
 
 import Error from "../../utils/error";
 
-const args = [
-	{
-		id: "question",
-		type: "string",
-	},
-	{
-		id: "choice1",
-		type: "string",
-	},
-	{
-		id: "choice2",
-		type: "string",
-	},
-];
-
 export default class PollCommand extends Command {
-	protected args = args;
-
 	constructor() {
 		super("poll", {
 			aliases: ["poll", "makepoll", "newpoll", "createpoll"],
 			description: "Makes a new poll",
 			category: "Utility",
-			args: args,
+			args: [
+				{
+					id: "question",
+					type: "string",
+				},
+				{
+					id: "choice1",
+					type: "string",
+				},
+				{
+					id: "choice2",
+					type: "string",
+				},
+			],
 			userPermissions: ["ADMINISTRATOR"],
 		});
 	}
