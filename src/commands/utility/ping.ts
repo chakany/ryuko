@@ -15,18 +15,14 @@ export default class PingCommand extends Command {
 		return message.channel.send(
 			new MessageEmbed({
 				title: "Pong!",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				thumbnail: {
 					url: "https://media.giphy.com/media/fvA1ieS8rEV8Y/giphy.gif",
 				},
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				fields: [
 					{

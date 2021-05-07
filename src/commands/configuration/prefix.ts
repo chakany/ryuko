@@ -43,15 +43,11 @@ export default class PrefixCommand extends Command {
 		message.channel.send(
 			new MessageEmbed({
 				title: ":white_check_mark: Changed Prefix",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				fields: [
 					{
@@ -83,15 +79,11 @@ export default class PrefixCommand extends Command {
 				.send(
 					new MessageEmbed({
 						title: "Prefix Changed",
-						color: 16716032,
+						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
-						author: {
-							name: message.author.tag + " (" + message.author.id + ")",
-							icon_url: message.author.avatarURL({ dynamic: true }) || "",
-						},
 						footer: {
-							text: message.client.user?.tag,
-							icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+							text: message.author.tag,
+							icon_url: message.author.displayAvatarURL({ dynamic: true }),
 						},
 						fields: [
 							{

@@ -35,11 +35,11 @@ export default class XpMessageCommand extends Command {
 			return message.channel.send(
 				new MessageEmbed({
 					title: ":white_check_mark: Enabled XP Messages",
-					color: 16716032,
+					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }) || "",
+						icon_url: message.author.displayAvatarURL({ dynamic: true }),
 					},
 				})
 			);
@@ -53,11 +53,11 @@ export default class XpMessageCommand extends Command {
 			return message.channel.send(
 				new MessageEmbed({
 					title: ":white_check_mark: Disabled XP Messages",
-					color: 16716032,
+					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }) || "",
+						icon_url: message.author.displayAvatarURL({ dynamic: true }),
 					},
 				})
 			);
@@ -65,12 +65,12 @@ export default class XpMessageCommand extends Command {
 			return message.channel.send(
 				new MessageEmbed({
 					title: "Actions",
-					color: 16716032,
+					color: message.guild?.me?.displayHexColor,
 					description: "**Level Up Messages:** `" + currentSetting + "`",
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }) || "",
+						icon_url: message.author.displayAvatarURL({ dynamic: true }),
 					},
 					fields: [
 						{

@@ -35,16 +35,12 @@ export default class ModroleCommand extends Command {
 			return message.channel.send(
 				new MessageEmbed({
 					title: "Current Mute Role",
-					color: 16716032,
+					color: message.guild?.me?.displayHexColor,
 					description: "`" + currentRole + "`",
 					timestamp: new Date(),
-					author: {
-						name: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }) || "",
-					},
 					footer: {
-						text: message.client.user?.tag,
-						icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+						text: message.author.tag,
+						icon_url: message.author.displayAvatarURL({ dynamic: true }),
 					},
 				})
 			);
@@ -66,15 +62,11 @@ export default class ModroleCommand extends Command {
 		return message.channel.send(
 			new MessageEmbed({
 				title: ":white_check_mark: Changed Mute Role",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				fields: [
 					{

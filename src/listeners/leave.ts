@@ -42,14 +42,15 @@ export default class LeaveListener extends Listener {
 								description:
 									// @ts-ignore
 									"`" + target.tag + "` (`" + target.id + "`) left the server.",
-								color: 16716032,
+								color: member.guild?.me?.displayHexColor,
 								timestamp: new Date(),
 								// @ts-ignore
-								thumbnail: target.avatarURL({ dynamic: true }) || "",
+								thumbnail: target.displayAvatarURL({ dynamic: true }),
 								footer: {
 									text: this.client.user?.tag,
-									icon_url:
-										this.client.user?.avatarURL({ dynamic: true }) || "",
+									icon_url: this.client.user?.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
 							})
 						)
@@ -71,18 +72,19 @@ export default class LeaveListener extends Listener {
 								description:
 									// @ts-ignore
 									"`" + target.tag + "` (`" + target.id + "`) was kicked.",
-								color: 16716032,
+								color: member.guild?.me?.displayHexColor,
 								timestamp: new Date(),
-								// @ts-ignore
-								thumbnail: target.avatarURL({ dynamic: true }) || "",
+								// @ts-ignore.displayAvatarURL({ dynamic: true })
+								thumbnail: target.displayAvatarURL({ dynamic: true }),
 								author: {
 									name: executor.tag + " (" + executor.id + ")",
-									icon_url: executor.avatarURL({ dynamic: true }) || "",
+									icon_url: executor.displayAvatarURL({ dynamic: true }),
 								},
 								footer: {
 									text: this.client.user?.tag,
-									icon_url:
-										this.client.user?.avatarURL({ dynamic: true }) || "",
+									icon_url: this.client.user?.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
 							})
 						)
@@ -99,14 +101,15 @@ export default class LeaveListener extends Listener {
 								description:
 									// @ts-ignore
 									"`" + target.tag + "` (`" + target.id + "`) was kicked.",
-								color: 16716032,
+								color: member.guild?.me?.displayHexColor,
 								timestamp: new Date(),
 								// @ts-ignore
-								thumbnail: target.avatarURL({ dynamic: true }) || "",
+								thumbnail: target.displayAvatarURL({ dynamic: true }),
 								footer: {
 									text: `I couldn't find who kicked this member\n${this.client.user?.tag}`,
-									icon_url:
-										this.client.user?.avatarURL({ dynamic: true }) || "",
+									icon_url: this.client.user?.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
 							})
 						)

@@ -26,16 +26,12 @@ export default class LoggingCommand extends Command {
 			return message.channel.send(
 				new MessageEmbed({
 					title: "Disabled Logging",
-					color: 16716032,
+					color: message.guild?.me?.displayHexColor,
 					description: "Logging is now **off**",
 					timestamp: new Date(),
-					author: {
-						name: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }) || "",
-					},
 					footer: {
-						text: message.client.user?.tag,
-						icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+						text: message.author.tag,
+						icon_url: message.author.displayAvatarURL({ dynamic: true }),
 					},
 				})
 			);
@@ -53,16 +49,12 @@ export default class LoggingCommand extends Command {
 			return message.channel.send(
 				new MessageEmbed({
 					title: "Current Logging Channel",
-					color: 16716032,
+					color: message.guild?.me?.displayHexColor,
 					description: "`" + currentChannel + "`",
 					timestamp: new Date(),
-					author: {
-						name: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }) || "",
-					},
 					footer: {
-						text: message.client.user?.tag,
-						icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+						text: message.author.tag,
+						icon_url: message.author.displayAvatarURL({ dynamic: true }),
 					},
 				})
 			);
@@ -85,15 +77,11 @@ export default class LoggingCommand extends Command {
 		return message.channel.send(
 			new MessageEmbed({
 				title: ":white_check_mark: Changed Logging Channel",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				fields: [
 					{

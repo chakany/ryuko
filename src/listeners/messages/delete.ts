@@ -46,16 +46,17 @@ export default class DeleteListener extends Listener {
 						new MessageEmbed({
 							title: "Message Deleted",
 							description: "```diff\n" + `- "${content}"` + "\n```",
-							color: 16716032,
+							color: message.guild?.me?.displayHexColor,
 							timestamp: new Date(),
 							author: {
 								name: `${message.author.tag} (${message.author.id})`,
-								icon_url: message.author.avatarURL({ dynamic: true }) || "",
+								icon_url: message.author.displayAvatarURL({ dynamic: true }),
 							},
 							footer: {
 								text: `No content ("") means that there was probably an embed there\n${message.client.user?.tag}`,
-								icon_url:
-									message.client.user?.avatarURL({ dynamic: true }) || "",
+								icon_url: message.client.user?.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
 							fields: [
 								{
@@ -92,16 +93,17 @@ export default class DeleteListener extends Listener {
 						new MessageEmbed({
 							title: "Message Deleted",
 							description: "```diff\n" + `- "${content}"` + "\n```",
-							color: 16716032,
+							color: message.guild?.me?.displayHexColor,
 							timestamp: new Date(),
 							author: {
 								name: `${message.author.tag} (${message.author.id})`,
-								icon_url: message.author.avatarURL({ dynamic: true }) || "",
+								icon_url: message.author.displayAvatarURL({ dynamic: true }),
 							},
 							footer: {
 								text: `No content ("") means that there was probably an embed there\n${message.client.user?.tag}`,
-								icon_url:
-									message.client.user?.avatarURL({ dynamic: true }) || "",
+								icon_url: message.client.user?.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
 							fields: [
 								{
@@ -128,16 +130,17 @@ export default class DeleteListener extends Listener {
 						new MessageEmbed({
 							title: "Message Deleted",
 							description: "```diff\n" + `- "${content}"` + "\n```",
-							color: 16716032,
+							color: message.guild?.me?.displayHexColor,
 							timestamp: new Date(),
 							author: {
 								name: `${message.author.tag} (${message.author.id})`,
-								icon_url: message.author.avatarURL({ dynamic: true }) || "",
+								icon_url: message.author.displayAvatarURL({ dynamic: true }),
 							},
 							footer: {
 								text: `No content ("") means that there was probably an embed there\n${message.client.user?.tag}`,
-								icon_url:
-									message.client.user?.avatarURL({ dynamic: true }) || "",
+								icon_url: message.client.user?.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
 							fields: [
 								{

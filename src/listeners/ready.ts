@@ -57,12 +57,13 @@ export default class ReadyListener extends Listener {
 								new MessageEmbed({
 									title: "Member Unmuted",
 									description: `${user}'s mute has expired.`,
-									color: 16716032,
+									color: cachedGuild.me?.displayHexColor,
 									timestamp: new Date(),
 									footer: {
 										text: outer.client.user?.tag,
-										icon_url:
-											outer.client.user?.avatarURL({ dynamic: true }) || "",
+										icon_url: outer.client.user?.displayAvatarURL({
+											dynamic: true,
+										}),
 									},
 								})
 							);

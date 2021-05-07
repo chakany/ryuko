@@ -46,14 +46,14 @@ export default class PollCommand extends Command {
 		if (!args.choice1)
 			pollEmbed = new MessageEmbed({
 				title: args.question,
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				author: {
 					name: "Poll",
 				},
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				fields: [
 					{ name: ":one:", value: "Yes", inline: true },
@@ -63,14 +63,14 @@ export default class PollCommand extends Command {
 		else
 			pollEmbed = new MessageEmbed({
 				title: args.question,
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				author: {
 					name: "Poll",
 				},
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				fields: [
 					{ name: ":one:", value: args.choice1, inline: true },

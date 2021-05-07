@@ -22,18 +22,14 @@ export default class AvatarCommand extends Command {
 			return message.channel.send(
 				new MessageEmbed({
 					title: `${args.user.username}'s Avatar`,
-					color: 16716032,
+					color: message.guild?.me?.displayHexColor,
 					image: {
-						url: args.user.avatarURL({ dynamic: true }) || "",
+						url: args.user.displayAvatarURL({ dynamic: true }),
 					},
 					timestamp: new Date(),
-					author: {
-						name: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }) || "",
-					},
 					footer: {
-						text: message.client.user?.tag,
-						icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+						text: message.author.tag,
+						icon_url: message.author.displayAvatarURL({ dynamic: true }),
 					},
 				})
 			);
@@ -41,18 +37,14 @@ export default class AvatarCommand extends Command {
 		return message.channel.send(
 			new MessageEmbed({
 				title: `${message.author.username}'s Avatar`,
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				image: {
-					url: message.author.avatarURL({ dynamic: true }) || "",
+					url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 			})
 		);

@@ -40,15 +40,11 @@ export default class HelpCommand extends Command {
 					"`\n**View Command Info**: `" +
 					`${prefix}${helpCommand} <${this.args[0].id}>` +
 					"`",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
 				footer: {
-					text: `Only showing avaliable commands\n${message.client.user?.tag}`,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: `Only showing avaliable commands\n${message.author.tag}`,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 			});
 			const modRole = this.client.settings.get(
@@ -92,15 +88,15 @@ export default class HelpCommand extends Command {
 					"`\n**View Command Info**: `" +
 					`${prefix}${helpCommand} <${this.args[0].id}>` +
 					"`",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				footer: {
-					text: `Showing all commands\n${message.client.user?.tag}`,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: `Showing all commands\n${message.author.tag}`,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 			});
 			for (const [key, dvalue] of new Map(message.util?.handler.categories!)) {
@@ -121,15 +117,11 @@ export default class HelpCommand extends Command {
 
 			const helpEmbed = new MessageEmbed({
 				title: "Command: `" + command.id + "`",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 			});
 
@@ -165,15 +157,11 @@ export default class HelpCommand extends Command {
 		} else if (message.util?.handler.categories.get(args.command)) {
 			// If our command argument is all, this gets a list of ALL commands regardless of permission
 			const helpEmbed = new MessageEmbed({
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 			});
 			let commands = "";

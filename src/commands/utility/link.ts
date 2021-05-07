@@ -31,15 +31,11 @@ export default class LinkCommand extends Command {
 						title: ":white_check_mark: Linked!",
 						description:
 							"You have successfully linked your Minecraft and Discord accounts, you can now play on the servers. Have fun!",
-						color: 16716032,
+						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
-						author: {
-							name: message.author.tag,
-							icon_url: message.author.avatarURL({ dynamic: true }) || "",
-						},
 						footer: {
-							text: message.client.user?.tag,
-							icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+							text: message.author.tag,
+							icon_url: message.author.displayAvatarURL({ dynamic: true }),
 						},
 					})
 				);

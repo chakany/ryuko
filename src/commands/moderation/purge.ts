@@ -38,7 +38,7 @@ export default class PurgeCommand extends Command {
 					"You must provide how many messages to delete!"
 				)
 			);
-		if (count > 100)
+		if (count >= 100)
 			return message.channel.send(
 				Error(
 					message,
@@ -82,15 +82,14 @@ export default class PurgeCommand extends Command {
 			if (logchannel === "None") return;
 			let purgeEmbed = new MessageEmbed({
 				title: "Purge",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag + " (" + message.author.id + ")",
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				footer: {
-					text: `No content ("") means that there was probably an embed there\nGreen represents the command that initated the purge\n${message.client.user?.tag}`,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: `No content ("") means that there was probably an embed there\nGreen represents the command that initated the purge`,
 				},
 				fields: [
 					{

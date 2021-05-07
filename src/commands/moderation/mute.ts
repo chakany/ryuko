@@ -141,15 +141,11 @@ export default class MuteCommand extends Command {
 		message.channel.send(
 			new MessageEmbed({
 				title: "Member Muted",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag + " (" + message.author.id + ")",
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
-				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				fields: [
 					{ name: "Muted by", value: `${message.author}`, inline: true },
@@ -184,11 +180,11 @@ export default class MuteCommand extends Command {
 						new MessageEmbed({
 							title: "Member Unmuted",
 							description: `${args.user}'s mute has expired.`,
-							color: 16716032,
+							color: message.guild?.me?.displayHexColor,
 							timestamp: new Date(),
 							footer: {
-								text: outer.client.user?.tag,
-								icon_url: outer.client.user?.avatarURL({ dynamic: true }) || "",
+								text: message.author.tag,
+								icon_url: message.author.displayAvatarURL({ dynamic: true }),
 							},
 						})
 					);
@@ -220,15 +216,11 @@ export default class MuteCommand extends Command {
 				?.send(
 					new MessageEmbed({
 						title: "Member Muted",
-						color: 16716032,
+						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						author: {
 							name: message.author.tag + " (" + message.author.id + ")",
-							icon_url: message.author.avatarURL({ dynamic: true }) || "",
-						},
-						footer: {
-							text: message.client.user?.tag,
-							icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+							icon_url: message.author.displayAvatarURL({ dynamic: true }),
 						},
 						fields: [
 							{ name: "Muted by", value: `${message.author}`, inline: true },

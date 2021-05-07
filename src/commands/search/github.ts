@@ -49,7 +49,7 @@ export default class GithubCommand extends Command {
 				title: repo.name,
 				url: repo.html_url,
 				description: repo.description,
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				author: {
 					name: repo.owner.login,
@@ -57,7 +57,7 @@ export default class GithubCommand extends Command {
 				},
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				fields: [
 					{

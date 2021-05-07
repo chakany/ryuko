@@ -56,16 +56,17 @@ export default class MessageEditListener extends Listener {
 							`\n- "${_oldmessage}"` +
 							`\n+ "${_newmessage}"` +
 							"\n```",
-						color: 16716032,
+						color: oldMessage.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						author: {
 							name: oldMessage.author.tag + " (" + oldMessage.author.id + ")",
-							icon_url: oldMessage.author.avatarURL({ dynamic: true }) || "",
+							icon_url: oldMessage.author.displayAvatarURL({ dynamic: true }),
 						},
 						footer: {
 							text: `No content ("") means that there was probably an embed there\n${oldMessage.client.user?.tag}`,
-							icon_url:
-								oldMessage.client.user?.avatarURL({ dynamic: true }) || "",
+							icon_url: oldMessage.client.user?.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
 					})
 				)

@@ -40,58 +40,61 @@ export default class CovidCommand extends Command {
 					}*** doesn't exist, or data isn't being collected`
 				);
 			}
-
-			const embed = new MessageEmbed()
-				.setTitle(
-					message.util!.parsed?.content
+			await message.channel.send(
+				new MessageEmbed({
+					title: message.util!.parsed?.content
 						? `${message.util!.parsed?.content.toUpperCase()} Stats`
-						: "Total Corona Cases World Wide"
-				)
-				.setColor("#D50000")
-				.addFields(
-					{
-						name: "Total Cases:",
-						value: corona.cases.toLocaleString(),
-						inline: true,
+						: "Total Corona Cases World Wide",
+					color: message.guild?.me?.displayHexColor,
+					timestamp: new Date(),
+					footer: {
+						text: message.author.tag,
+						icon_url: message.author.displayAvatarURL({ dynamic: true }),
 					},
-					{
-						name: "Total Deaths:",
-						value: corona.deaths.toLocaleString(),
-						inline: true,
-					},
-					{
-						name: "Total Recovered:",
-						value: corona.recovered.toLocaleString(),
-						inline: true,
-					},
-					{
-						name: "Active Cases:",
-						value: corona.active.toLocaleString(),
-						inline: true,
-					},
-					{
-						name: "\u200b",
-						value: "\u200b",
-						inline: true,
-					},
-					{
-						name: "Critical Cases:",
-						value: corona.critical.toLocaleString(),
-						inline: true,
-					},
-					{
-						name: "Today Recoveries:",
-						value: corona.todayRecovered.toLocaleString().replace("-", ""),
-						inline: true,
-					},
-					{
-						name: "Todays Deaths:",
-						value: corona.todayDeaths.toLocaleString(),
-						inline: true,
-					}
-				);
-
-			await message.channel.send(embed);
+					fields: [
+						{
+							name: "Total Cases:",
+							value: corona.cases.toLocaleString(),
+							inline: true,
+						},
+						{
+							name: "Total Deaths:",
+							value: corona.deaths.toLocaleString(),
+							inline: true,
+						},
+						{
+							name: "Total Recovered:",
+							value: corona.recovered.toLocaleString(),
+							inline: true,
+						},
+						{
+							name: "Active Cases:",
+							value: corona.active.toLocaleString(),
+							inline: true,
+						},
+						{
+							name: "\u200b",
+							value: "\u200b",
+							inline: true,
+						},
+						{
+							name: "Critical Cases:",
+							value: corona.critical.toLocaleString(),
+							inline: true,
+						},
+						{
+							name: "Today Recoveries:",
+							value: corona.todayRecovered.toLocaleString().replace("-", ""),
+							inline: true,
+						},
+						{
+							name: "Todays Deaths:",
+							value: corona.todayDeaths.toLocaleString(),
+							inline: true,
+						},
+					],
+				})
+			);
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(

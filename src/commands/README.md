@@ -1,5 +1,6 @@
 # Commands
-Adding a new command is a breeze, you just need to know *how*.
+
+Adding a new command is a breeze, you just need to know _how_.
 
 For this, we will use our ping command.
 
@@ -21,18 +22,14 @@ export default class PingCommand extends Command {
 		return message.channel.send(
 			new MessageEmbed({
 				title: "Pong!",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				thumbnail: {
 					url: "https://media.giphy.com/media/fvA1ieS8rEV8Y/giphy.gif",
 				},
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				fields: [
 					{
@@ -46,9 +43,11 @@ export default class PingCommand extends Command {
 	}
 }
 ```
+
 This is our ping command, let's look at each aspect.
 
 ### The class
+
 Classes in JS are very powerful, so we are using them here. Lets take a look at how our command is defined.
 
 `export default class PingCommand extends Command`

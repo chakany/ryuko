@@ -40,15 +40,11 @@ export default class DisableCommand extends Command {
 		if (!toEnable) {
 			const embed = new MessageEmbed({
 				title: "Commands",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 			});
 
@@ -103,15 +99,11 @@ export default class DisableCommand extends Command {
 				new MessageEmbed({
 					title:
 						":white_check_mark: Enabled command: `" + toEnable.aliases[0] + "`",
-					color: 16716032,
+					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
-					author: {
-						name: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }) || "",
-					},
 					footer: {
-						text: message.client.user?.tag,
-						icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+						text: message.author.tag,
+						icon_url: message.author.displayAvatarURL({ dynamic: true }),
 					},
 				})
 			);
@@ -145,15 +137,11 @@ export default class DisableCommand extends Command {
 				);
 				const embed = new MessageEmbed({
 					title: ":white_check_mark: Enabled category: `" + category.id + "`",
-					color: 16716032,
+					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
-					author: {
-						name: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }) || "",
-					},
 					footer: {
-						text: message.client.user?.tag,
-						icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+						text: message.author.tag,
+						icon_url: message.author.displayAvatarURL({ dynamic: true }),
 					},
 					fields: [{ name: "Enabled", value: enabledCommands }],
 				});

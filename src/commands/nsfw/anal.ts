@@ -33,18 +33,14 @@ export default class AnalCommand extends Command {
 		return message.channel.send(
 			new MessageEmbed({
 				title: `Anal`,
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				image: {
 					url: image.url,
 				},
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
 				footer: {
-					text: `Images from nekos.life\n${message.client.user!.tag}`,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 			})
 		);

@@ -54,11 +54,11 @@ export default class DisconnectCommand extends Command {
 			victim.voice.setChannel(null);
 			const sendEmbed = new MessageEmbed({
 				title: "You have been disconnected by a mod",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				fields: [
 					{
@@ -88,15 +88,11 @@ export default class DisconnectCommand extends Command {
 				description:
 					"`" + victim.user.tag + "` `" + victim.user.id + "` was disconnected",
 				thumbnail: victim.user.avatarURL({ dynamic: true }),
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag + " (" + message.author.id + ")",
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
-				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 				fields: [
 					{

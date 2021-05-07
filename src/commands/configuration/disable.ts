@@ -1,10 +1,4 @@
-import {
-	Command,
-	Category,
-	Inhibitor,
-	Listener,
-	Argument,
-} from "discord-akairo";
+import { Command, Argument } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
 import Error from "../../utils/error";
@@ -40,15 +34,11 @@ export default class DisableCommand extends Command {
 		if (!toDisable) {
 			const embed = new MessageEmbed({
 				title: "Commands",
-				color: 16716032,
+				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.avatarURL({ dynamic: true }) || "",
-				},
 				footer: {
-					text: message.client.user?.tag,
-					icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({ dynamic: true }),
 				},
 			});
 
@@ -103,15 +93,11 @@ export default class DisableCommand extends Command {
 						":white_check_mark: Disabled command: `" +
 						toDisable.aliases[0] +
 						"`",
-					color: 16716032,
+					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
-					author: {
-						name: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }) || "",
-					},
 					footer: {
-						text: message.client.user?.tag,
-						icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+						text: message.author.tag,
+						icon_url: message.author.displayAvatarURL({ dynamic: true }),
 					},
 				})
 			);
@@ -142,15 +128,11 @@ export default class DisableCommand extends Command {
 				);
 				const embed = new MessageEmbed({
 					title: ":white_check_mark: Disabled category: `" + category.id + "`",
-					color: 16716032,
+					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
-					author: {
-						name: message.author.tag,
-						icon_url: message.author.avatarURL({ dynamic: true }) || "",
-					},
 					footer: {
-						text: message.client.user?.tag,
-						icon_url: message.client.user?.avatarURL({ dynamic: true }) || "",
+						text: message.author.tag,
+						icon_url: message.author.displayAvatarURL({ dynamic: true }),
 					},
 					fields: [{ name: "Disabled", value: disabledCommands }],
 				});
