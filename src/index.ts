@@ -23,11 +23,13 @@ manager.spawn();
 const app = express();
 
 import home from "./routes/home";
+import commands from "./routes/commands";
 
 app.set("view engine", "ejs");
 app.set("views", "../app/pages");
 
 app.use("/", home);
+app.use("/commands", commands);
 
 app.use(express.static("../app/static"));
 
