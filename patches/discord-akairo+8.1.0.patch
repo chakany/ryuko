@@ -81,6 +81,37 @@ index 1003663..a99f4f7 100644
   * @prop {boolean} [typing=false] - Whether or not to type in channel during execution.
   * @prop {boolean} [editable=true] - Whether or not message edits will run this command.
   * @prop {number} [cooldown] - The command cooldown in milliseconds.
+diff --git a/node_modules/discord-akairo/src/struct/commands/CommandHandler.js b/node_modules/discord-akairo/src/struct/commands/CommandHandler.js
+index 818ddc4..ec2899d 100644
+--- a/node_modules/discord-akairo/src/struct/commands/CommandHandler.js
++++ b/node_modules/discord-akairo/src/struct/commands/CommandHandler.js
+@@ -216,26 +216,6 @@ class CommandHandler extends AkairoHandler {
+          * @name CommandHandler#modules
+          * @type {Collection<string, Command>}
+          */
+-
+-        this.setup();
+-    }
+-
+-    setup() {
+-        this.client.once('ready', () => {
+-            this.client.on('message', async m => {
+-                if (m.partial) await m.fetch();
+-                this.handle(m);
+-            });
+-
+-            if (this.handleEdits) {
+-                this.client.on('messageUpdate', async (o, m) => {
+-                    if (o.partial) await o.fetch();
+-                    if (m.partial) await m.fetch();
+-                    if (o.content === m.content) return;
+-                    if (this.handleEdits) this.handle(m);
+-                });
+-            }
+-        });
+     }
+ 
+     /**
 diff --git a/node_modules/discord-akairo/src/util/Constants.js b/node_modules/discord-akairo/src/util/Constants.js
 index bacd4e1..4d4810e 100644
 --- a/node_modules/discord-akairo/src/util/Constants.js

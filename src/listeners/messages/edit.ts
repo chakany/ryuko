@@ -13,7 +13,15 @@ export default class MessageEditListener extends Listener {
 		this.client = client;
 	}
 
-	exec(oldMessage: Message, newMessage: Message) {
+	async exec(oldMessage: Message, newMessage: Message) {
+		if (oldMessage.partial) await oldMessage.fetch();
+		if (newMessage.partial) await newMessage.fetch();
+		if (oldMessage.content === newMessage.content) return;
+		// @ts-expect-error
+		if (this.client.commandHandler.handleEdits)
+			// @ts-expect-error
+			this.client.commandHandler.handle(newMessage);
+
 		if (oldMessage.content === newMessage.content) return;
 		if (!oldMessage.guild) return;
 		if (oldMessage.author.tag === "GitHub#0000") return;
