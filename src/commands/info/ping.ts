@@ -7,7 +7,7 @@ export default class PingCommand extends Command {
 		super("ping", {
 			aliases: ["ping"],
 			description: "Check bot latency",
-			category: "Utility",
+			category: "Info",
 		});
 	}
 

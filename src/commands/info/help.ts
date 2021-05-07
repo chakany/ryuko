@@ -7,7 +7,7 @@ export default class HelpCommand extends Command {
 	constructor() {
 		super("help", {
 			aliases: ["help", "commands"],
-			category: "Utility",
+			category: "Info",
 			description: "Shows a list of avaliable commands",
 			args: [
 				{
