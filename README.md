@@ -1,10 +1,21 @@
-<h1 align="center">Aina</h1>
-Aina is one of my side-projects.
+<h3 align="center">Aina</h3>
+<h4 align="center">An in-development Discord bot that aims to meet all of your needs!</h4>
+<p align="center" href="https://google.com"><img src="https://github.com/jacany/aina/actions/workflows/ci.yml/badge.svg?branch=master&event=push" /></p>
 
-## Running
-To run Aina, you will need some prerequistes:
-`yarn`, A [lavalink](https://github.com/freyacodes/Lavalink) node, and an instance of MariaDB that is accessable.
+---
 
-You are going to want to make a copy of the config template, and fill in all of the details yourself.
+# Usage
 
-Then, build with `yarn dist`, and then run with `yarn start`.
+To use the bot, you will need some prerequsites:
+
+* A MariaDB Server
+* A Lavalink Node
+* A img-api Server from `ravener/img-api`
+
+Once you have all of these, just use the `config.template.json` to configure the bot.
+
+
+# Building
+1. `yarn` to install packages
+2. `yarn dist` to build all files
+3. `yarn start` to start the bot
