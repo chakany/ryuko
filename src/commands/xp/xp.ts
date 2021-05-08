@@ -22,8 +22,8 @@ export default class XpCommand extends Command {
 			.setAvatar(
 				message.author.displayAvatarURL({ dynamic: false, format: "png" })
 			)
-			.setCurrentXP(user.xp - (user.level - 1) * 500)
-			.setRequiredXP(500)
+			.setCurrentXP(user.xp - (user.level - 1) * 2000)
+			.setRequiredXP(2000)
 			.setStatus(message.author.presence.status)
 			.setProgressBar("#FFFFFF", "COLOR")
 			.setUsername(message.author.username, message.member?.displayHexColor)
