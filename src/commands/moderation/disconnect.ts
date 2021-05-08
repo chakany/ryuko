@@ -1,8 +1,6 @@
 import { Command, Argument } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class DisconnectCommand extends Command {
 	constructor() {
 		super("disconnect", {
@@ -30,7 +28,7 @@ export default class DisconnectCommand extends Command {
 			// Check if the user is valid
 			if (!args.user)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Argument",
@@ -42,7 +40,7 @@ export default class DisconnectCommand extends Command {
 			// Checks if the user is in a voice channel
 			if (!victim.voice.channel)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Usage",
@@ -119,7 +117,7 @@ export default class DisconnectCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				Error(message, this, "An error occurred", error.message)
+				this.client.error(message, this, "An error occurred", error.message)
 			);
 		}
 	}

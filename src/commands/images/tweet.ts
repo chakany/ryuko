@@ -2,8 +2,6 @@ import { Command } from "discord-akairo";
 import { Message, MessageEmbed, MessageAttachment } from "discord.js";
 import axios, { AxiosResponse } from "axios";
 
-import Error from "../../utils/error";
-
 const { imgApiUrl } = require("../../../config.json");
 
 export default class TweetCommand extends Command {
@@ -34,7 +32,12 @@ export default class TweetCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		if (!args.text)
 			return message.channel.send(
-				Error(message, this, "Invalid Arguments", "You must provide some text!")
+				this.client.error(
+					message,
+					this,
+					"Invalid Arguments",
+					"You must provide some text!"
+				)
 			);
 
 		const loadMessage = await message.channel.send(
@@ -66,7 +69,12 @@ export default class TweetCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			message.channel.send(
-				Error(message, this, "An error occurred", "An unknown error occurred")
+				this.client.error(
+					message,
+					this,
+					"An error occurred",
+					"An unknown error occurred"
+				)
 			);
 			return false;
 		}

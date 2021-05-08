@@ -3,8 +3,6 @@ import { Message, MessageEmbed } from "discord.js";
 
 import axios from "axios";
 
-import Error from "../../utils/error";
-
 export default class CovidCommand extends Command {
 	constructor() {
 		super("covid", {
@@ -98,7 +96,7 @@ export default class CovidCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				Error(message, this, "An error occurred", error.message)
+				this.client.error(message, this, "An error occurred", error.message)
 			);
 		}
 	}

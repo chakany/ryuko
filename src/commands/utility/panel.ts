@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 import axios, { AxiosResponse } from "axios";
-import Error from "../../utils/error";
-
 const { pterodactyl } = require("../../../config.json");
 
 export default class PanelCommand extends Command {
@@ -67,7 +65,7 @@ export default class PanelCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		if (!pterodactyl.key || !pterodactyl.url)
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Configuration",
@@ -181,7 +179,7 @@ export default class PanelCommand extends Command {
 				} catch (error) {
 					this.client.log.error(error);
 					message.channel.send(
-						Error(message, this, "An error occurred", error.message)
+						this.client.error(message, this, "An error occurred", error.message)
 					);
 					return false;
 				}
@@ -189,7 +187,7 @@ export default class PanelCommand extends Command {
 			case "start":
 				if (!args.server)
 					return message.channel.send(
-						Error(
+						this.client.error(
 							message,
 							this,
 							"Invalid Arguments",
@@ -201,7 +199,7 @@ export default class PanelCommand extends Command {
 			case "restart":
 				if (!args.server)
 					return message.channel.send(
-						Error(
+						this.client.error(
 							message,
 							this,
 							"Invalid Arguments",
@@ -213,7 +211,7 @@ export default class PanelCommand extends Command {
 			case "stop":
 				if (!args.server)
 					return message.channel.send(
-						Error(
+						this.client.error(
 							message,
 							this,
 							"Invalid Arguments",
@@ -225,7 +223,7 @@ export default class PanelCommand extends Command {
 			case "kill":
 				if (!args.server)
 					return message.channel.send(
-						Error(
+						this.client.error(
 							message,
 							this,
 							"Invalid Arguments",
@@ -307,7 +305,7 @@ export default class PanelCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			message.channel.send(
-				Error(message, this, "An error occurred", error.message)
+				this.client.error(message, this, "An error occurred", error.message)
 			);
 			return false;
 		}

@@ -4,8 +4,9 @@ import {
 	InhibitorHandler,
 	ListenerHandler,
 	SequelizeProvider,
+	Command,
 } from "discord-akairo";
-import { Collection } from "discord.js";
+import { Collection, Message, MessageEmbed } from "discord.js";
 import { Shoukaku } from "shoukaku";
 import bunyan from "bunyan";
 import client from "nekos.life";
@@ -33,6 +34,25 @@ declare module "discord-akairo" {
 		log: bunyan;
 		jobs: Map<string, Map<string, Job>>;
 		hentai: client;
+		error(
+			message: Message,
+			command: Command,
+			error: string,
+			description: string
+		): MessageEmbed;
+	}
+
+	interface Command {
+		args?: any;
+		modOnly: boolean;
+		nsfw: boolean;
+		guild: string[];
+	}
+
+	interface CommandOptions {
+		modOnly?: boolean;
+		nsfw?: boolean;
+		guild?: string[];
 	}
 }
 
@@ -153,5 +173,38 @@ export default class AinaClient extends AkairoClient {
 	async login(token: string) {
 		await this.settings.init();
 		return super.login(token);
+	}
+
+	error(
+		message: Message,
+		command: Command,
+		error: string,
+		description: string
+	) {
+		const prefix = message.util?.parsed?.prefix;
+		let current;
+		let usage: string = `${prefix}${command.id}`;
+		// @ts-ignore
+		if (command.args)
+			// @ts-ignore
+			for (let i = 0; (current = command.args[i]); i++) {
+				usage = usage + ` <${current.id}>`;
+			}
+		return new MessageEmbed({
+			title: ":x:Error: `" + command.id + "`",
+			description: "```diff\n- " + error + "\n+ " + description + "```",
+			color: message.guild?.me?.displayHexColor,
+			timestamp: new Date(),
+			footer: {
+				text: message.author.tag,
+				icon_url: message.author.displayAvatarURL({ dynamic: true }),
+			},
+			fields: [
+				{
+					name: "Usage",
+					value: "`" + usage + "`",
+				},
+			],
+		});
 	}
 }

@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class StopCommand extends Command {
 	constructor() {
 		super("stop", {
@@ -19,7 +17,7 @@ export default class StopCommand extends Command {
 			const serverQueue = message.client.queue.get(message.guild.id);
 			if (serverQueue === undefined)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Usage",
@@ -31,7 +29,7 @@ export default class StopCommand extends Command {
 				message.member?.voice.channel !== serverQueue.voiceChannel
 			)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Usage",
@@ -44,7 +42,7 @@ export default class StopCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				Error(message, this, "An error occurred", error.message)
+				this.client.error(message, this, "An error occurred", error.message)
 			);
 		}
 	}

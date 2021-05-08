@@ -1,8 +1,6 @@
 import { Inhibitor, Command } from "discord-akairo";
 import { Message } from "discord.js";
 
-import Error from "../utils/error";
-
 export default class NsfwInhibitor extends Inhibitor {
 	constructor() {
 		super("nsfw", {

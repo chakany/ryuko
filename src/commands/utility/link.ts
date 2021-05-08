@@ -1,7 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-import Error from "../../utils/error";
 import Db from "../../utils/db";
 
 export default class LinkCommand extends Command {
@@ -41,7 +40,7 @@ export default class LinkCommand extends Command {
 				);
 			} else {
 				waitMessage.edit(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Argument",
@@ -51,7 +50,7 @@ export default class LinkCommand extends Command {
 			}
 		} else {
 			waitMessage.edit(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Account is already linked",

@@ -1,8 +1,6 @@
 import { Command, Argument } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class HelpCommand extends Command {
 	constructor() {
 		super("help", {
@@ -177,7 +175,7 @@ export default class HelpCommand extends Command {
 			return message.channel.send(helpEmbed);
 		} else {
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Argument",

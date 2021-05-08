@@ -1,8 +1,6 @@
 import { Command, Argument } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class DisableCommand extends Command {
 	constructor() {
 		super("disable", {
@@ -68,7 +66,7 @@ export default class DisableCommand extends Command {
 		} else if (toDisable.category) {
 			if (oldSettings && oldSettings.includes(toDisable.id))
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Argument",
@@ -140,7 +138,7 @@ export default class DisableCommand extends Command {
 				return message.channel.send(embed);
 			} else {
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Argument",

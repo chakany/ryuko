@@ -3,7 +3,6 @@ import { Message, MessageEmbed } from "discord.js";
 import { add } from "date-fns";
 import schedule from "node-schedule";
 
-import Error from "../../utils/error";
 import Db from "../../utils/db";
 
 export default class MuteCommand extends Command {
@@ -82,7 +81,7 @@ export default class MuteCommand extends Command {
 		// Argument checks
 		if (!args.user)
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Argument",
@@ -94,7 +93,7 @@ export default class MuteCommand extends Command {
 
 		if (!args.length || endDate === null)
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Argument",
@@ -104,7 +103,12 @@ export default class MuteCommand extends Command {
 
 		if (!args.reason)
 			return message.channel.send(
-				Error(message, this, "Invalid Argument", "You must provide a reason!")
+				this.client.error(
+					message,
+					this,
+					"Invalid Argument",
+					"You must provide a reason!"
+				)
 			);
 		const reason = message.util!.parsed!.content!.split(`${args.length} `)[1];
 
@@ -116,7 +120,7 @@ export default class MuteCommand extends Command {
 		);
 		if (muteRole === null)
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Configuration",
@@ -129,7 +133,12 @@ export default class MuteCommand extends Command {
 		// Check if they are already muted
 		if (this.client.jobs.get(message.guild!.id)?.get(args.user.id)) {
 			return message.channel.send(
-				Error(message, this, "Invalid Usage", "That person is already muted!")
+				this.client.error(
+					message,
+					this,
+					"Invalid Usage",
+					"That person is already muted!"
+				)
 			);
 		}
 

@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class MoveCommand extends Command {
 	constructor() {
 		super("move", {
@@ -33,7 +31,7 @@ export default class MoveCommand extends Command {
 			// Check if the member is provided
 			if (!victim)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Argument",
@@ -44,7 +42,7 @@ export default class MoveCommand extends Command {
 			// Check if the channel is valid
 			if (!Channel)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Argument",
@@ -56,7 +54,7 @@ export default class MoveCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				Error(message, this, "An error occurred", error.message)
+				this.client.error(message, this, "An error occurred", error.message)
 			);
 		}
 	}

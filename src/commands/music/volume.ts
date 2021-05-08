@@ -2,8 +2,6 @@ import { Command } from "discord-akairo";
 import { MessageEmbed } from "discord.js";
 import { Message } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class VolumeCommand extends Command {
 	constructor() {
 		super("volume", {
@@ -27,7 +25,7 @@ export default class VolumeCommand extends Command {
 			const serverQueue = message.client.queue.get(message.guild.id);
 			if (serverQueue === undefined)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Usage",
@@ -39,7 +37,7 @@ export default class VolumeCommand extends Command {
 				message.member?.voice.channel !== serverQueue.voiceChannel
 			)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Usage",
@@ -66,7 +64,7 @@ export default class VolumeCommand extends Command {
 				.catch((error) => {
 					this.client.log.error(error);
 					return message.channel.send(
-						Error(
+						this.client.error(
 							message,
 							this,
 							"An error occurred",
@@ -90,7 +88,7 @@ export default class VolumeCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				Error(message, this, "An error occurred", error.message)
+				this.client.error(message, this, "An error occurred", error.message)
 			);
 		}
 	}

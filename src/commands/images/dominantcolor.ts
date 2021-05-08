@@ -2,8 +2,6 @@ import { Command } from "discord-akairo";
 import { Message, MessageEmbed, MessageAttachment } from "discord.js";
 import axios, { AxiosResponse } from "axios";
 
-import Error from "../../utils/error";
-
 const { imgApiUrl } = require("../../../config.json");
 
 export default class DominantcolorCommand extends Command {
@@ -72,7 +70,12 @@ export default class DominantcolorCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			message.channel.send(
-				Error(message, this, "An error occurred", "An unknown error occurred")
+				this.client.error(
+					message,
+					this,
+					"An error occurred",
+					"An unknown error occurred"
+				)
 			);
 			return false;
 		}

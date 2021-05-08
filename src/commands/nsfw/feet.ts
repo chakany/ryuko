@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class PussyCommand extends Command {
 	constructor() {
 		super("feet", {
@@ -21,7 +19,7 @@ export default class PussyCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"An error occurred",

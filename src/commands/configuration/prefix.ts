@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class PrefixCommand extends Command {
 	constructor() {
 		super("prefix", {
@@ -30,7 +28,7 @@ export default class PrefixCommand extends Command {
 
 		if (!args.prefix) {
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Argument",

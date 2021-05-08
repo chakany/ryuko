@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class StatusCommand extends Command {
 	constructor() {
 		super("status", {
@@ -27,7 +25,7 @@ export default class StatusCommand extends Command {
 		// Check for args
 		if (!args.type)
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Argument",
@@ -37,7 +35,12 @@ export default class StatusCommand extends Command {
 
 		if (!args.status)
 			return message.channel.send(
-				Error(message, this, "Invalid Argument", "You must set a status!")
+				this.client.error(
+					message,
+					this,
+					"Invalid Argument",
+					"You must set a status!"
+				)
 			);
 
 		// Run the actual command
@@ -49,7 +52,7 @@ export default class StatusCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				Error(message, this, "An error occurred", error.message)
+				this.client.error(message, this, "An error occurred", error.message)
 			);
 		}
 

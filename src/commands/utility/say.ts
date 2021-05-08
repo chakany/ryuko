@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class SayCommand extends Command {
 	constructor() {
 		super("say", {
@@ -22,7 +20,7 @@ export default class SayCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		if (!args.response)
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Argument",

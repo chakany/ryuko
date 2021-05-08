@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class ModroleCommand extends Command {
 	constructor() {
 		super("modrole", {
@@ -46,7 +44,7 @@ export default class ModroleCommand extends Command {
 			);
 		} else if (!args.role && currentRole === "None") {
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Configuration",

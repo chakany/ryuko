@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class PollCommand extends Command {
 	constructor() {
 		super("poll", {
@@ -30,11 +28,16 @@ export default class PollCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		if (!args.question)
 			return message.channel.send(
-				Error(message, this, "Invalid Argument", "Please provide a question!")
+				this.client.error(
+					message,
+					this,
+					"Invalid Argument",
+					"Please provide a question!"
+				)
 			);
 		if (args.choice1 && !args.choice2)
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Argument",

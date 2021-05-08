@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class DragCommand extends Command {
 	constructor() {
 		super("drag", {
@@ -30,7 +28,7 @@ export default class DragCommand extends Command {
 			// Check if the user is valid
 			if (!victim)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Argument",
@@ -41,7 +39,7 @@ export default class DragCommand extends Command {
 			// Check if the channel is valid
 			if (!Channel)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Usage",
@@ -52,7 +50,7 @@ export default class DragCommand extends Command {
 			// Checks if the user is in a voice channel
 			if (!victim.voice.channel)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Usage",
@@ -113,7 +111,7 @@ export default class DragCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				Error(message, this, "An error occurred", error.message)
+				this.client.error(message, this, "An error occurred", error.message)
 			);
 		}
 	}

@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class XpMessageCommand extends Command {
 	constructor() {
 		super("xpmessages", {

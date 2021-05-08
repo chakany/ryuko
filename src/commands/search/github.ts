@@ -2,8 +2,6 @@ import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 import axios, { AxiosResponse } from "axios";
 
-import Error from "../../utils/error";
-
 const githubUrl = "https://api.github.com";
 
 export default class GithubCommand extends Command {
@@ -32,7 +30,12 @@ export default class GithubCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		if (!args.repo)
 			return message.channel.send(
-				Error(message, this, "Invalid Arguments", "You must provide a repo!")
+				this.client.error(
+					message,
+					this,
+					"Invalid Arguments",
+					"You must provide a repo!"
+				)
 			);
 		let repo;
 		try {
@@ -40,7 +43,12 @@ export default class GithubCommand extends Command {
 			repo = request.data;
 		} catch (error) {
 			return message.channel.send(
-				Error(message, this, "Invalid Repo", "I could not find that repo!")
+				this.client.error(
+					message,
+					this,
+					"Invalid Repo",
+					"I could not find that repo!"
+				)
 			);
 		}
 

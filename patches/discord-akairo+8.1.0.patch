@@ -1,45 +1,11 @@
-diff --git a/node_modules/discord-akairo/src/index.d.ts b/node_modules/discord-akairo/src/index.d.ts
-index cb4d20a..9471101 100644
---- a/node_modules/discord-akairo/src/index.d.ts
-+++ b/node_modules/discord-akairo/src/index.d.ts
-@@ -153,6 +153,7 @@ declare module 'discord-akairo' {
- 
-         public aliases: string[];
-         public argumentDefaults: DefaultArgumentOptions;
-+        public args?: any;
-         public quoted: boolean;
-         public category: Category<string, Command>;
-         public channel?: string;
-@@ -169,6 +170,9 @@ declare module 'discord-akairo' {
-         public ignoreCooldown?: Snowflake | Snowflake[] | IgnoreCheckPredicate;
-         public ignorePermissions?: Snowflake | Snowflake[] | IgnoreCheckPredicate;
-         public ownerOnly: boolean;
-+        public modOnly: boolean;
-+        public nsfw: boolean;
-+        public guild: string[];
-         public prefix?: string | string[] | PrefixSupplier;
-         public ratelimit: number;
-         public regex: RegExp | RegexSupplier;
-@@ -561,6 +565,9 @@ declare module 'discord-akairo' {
-         lock?: KeySupplier | 'guild' | 'channel' | 'user';
-         optionFlags?: string[];
-         ownerOnly?: boolean;
-+        modOnly?: boolean;
-+        nsfw?: boolean;
-+        guild?: string[];
-         prefix?: string | string[] | PrefixSupplier;
-         ratelimit?: number;
-         regex?: RegExp | RegexSupplier;
 diff --git a/node_modules/discord-akairo/src/struct/commands/Command.js b/node_modules/discord-akairo/src/struct/commands/Command.js
-index 1003663..3035a74 100644
+index 1003663..3d398ce 100644
 --- a/node_modules/discord-akairo/src/struct/commands/Command.js
 +++ b/node_modules/discord-akairo/src/struct/commands/Command.js
-@@ -16,11 +16,14 @@ class Command extends AkairoModule {
- 
+@@ -17,10 +17,13 @@ class Command extends AkairoModule {
          const {
              aliases = [],
--            args = this.args || [],
-+            args = [],
+             args = this.args || [],
 +            guild = [],
              quoted = true,
              separator,

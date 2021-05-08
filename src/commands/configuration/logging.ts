@@ -1,8 +1,6 @@
 import { Command, Argument } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class LoggingCommand extends Command {
 	constructor() {
 		super("logging", {
@@ -60,7 +58,7 @@ export default class LoggingCommand extends Command {
 			);
 		} else if (!args.channel && currentChannel === "None") {
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Configuration",

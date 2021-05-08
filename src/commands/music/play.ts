@@ -5,8 +5,6 @@ import { ShoukakuPlayer } from "shoukaku";
 const { getPreview } = require("spotify-url-info");
 import ystr from "ytsr";
 
-import Error from "../../utils/error";
-
 export default class PlayCommand extends Command {
 	constructor() {
 		super("play", {
@@ -53,7 +51,7 @@ export default class PlayCommand extends Command {
 				return serverQueue.connection.setPaused(false);
 			if (!message.util?.parsed?.content)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Argument",
@@ -63,7 +61,7 @@ export default class PlayCommand extends Command {
 			const voiceChannel = message.member!.voice.channel;
 			if (!voiceChannel)
 				return message.channel.send(
-					Error(
+					this.client.error(
 						message,
 						this,
 						"Invalid Usage",
@@ -85,7 +83,7 @@ export default class PlayCommand extends Command {
 				url = await this._search(message.util?.parsed?.content);
 				if (!url)
 					return message.channel.send(
-						Error(
+						this.client.error(
 							message,
 							this,
 							"Search Failed",
@@ -162,7 +160,7 @@ export default class PlayCommand extends Command {
 					this.client.log.error(err);
 					queue.delete(message.guild!.id);
 					return message.channel.send(
-						Error(message, this, "An error occurred", err.message)
+						this.client.error(message, this, "An error occurred", err.message)
 					);
 				}
 			} else {
@@ -214,7 +212,7 @@ export default class PlayCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				Error(message, this, "An error occurred", error.message)
+				this.client.error(message, this, "An error occurred", error.message)
 			);
 		}
 	}
@@ -258,7 +256,7 @@ export default class PlayCommand extends Command {
 			player.voiceConnection.player.on("error", (error) => {
 				this.client.log.error(error);
 				message.channel.send(
-					Error(message, this, "An error occurred", error.message)
+					this.client.error(message, this, "An error occurred", error.message)
 				);
 				player.disconnect();
 			});
@@ -266,7 +264,7 @@ export default class PlayCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				Error(message, this, "An error occurred", error.message)
+				this.client.error(message, this, "An error occurred", error.message)
 			);
 		}
 	}

@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed, Collection } from "discord.js";
 
-import Error from "../../utils/error";
-
 export default class PurgeCommand extends Command {
 	constructor() {
 		super("purge", {
@@ -31,7 +29,7 @@ export default class PurgeCommand extends Command {
 
 		if (!count)
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Argument",
@@ -40,7 +38,7 @@ export default class PurgeCommand extends Command {
 			);
 		if (count >= 100)
 			return message.channel.send(
-				Error(
+				this.client.error(
 					message,
 					this,
 					"Invalid Argument",
@@ -62,7 +60,7 @@ export default class PurgeCommand extends Command {
 					}
 					if (!deleted.find((sus) => sus.id === message.id))
 						return message.channel.send(
-							Error(
+							this.client.error(
 								message,
 								this,
 								"Invalid Argument",
@@ -128,7 +126,7 @@ export default class PurgeCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				Error(message, this, "An error occurred", error.message)
+				this.client.error(message, this, "An error occurred", error.message)
 			);
 		}
 	}
