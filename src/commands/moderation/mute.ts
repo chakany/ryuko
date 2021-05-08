@@ -112,6 +112,28 @@ export default class MuteCommand extends Command {
 			);
 		const reason = message.util!.parsed!.content!.split(`${args.length} `)[1];
 
+		const modRole = this.client.settings.get(
+			message.guild!.id,
+			"modRole",
+			null
+		);
+
+		// Half-assed, the role hierachy should be checked too.
+		if (
+			modRole &&
+			message.member!.roles.cache.some((role) => role.id === modRole) &&
+			args.user.roles.cache.some((role: any) => role.id === modRole)
+		) {
+			return await message.channel.send(
+				this.client.error(
+					message,
+					this,
+					"Invalid Permissions!",
+					"Discord Mods cannot mute other Discord Mods!"
+				)
+			);
+		}
+
 		// Check if there is a role configured for muted people
 		const muteRole = this.client.settings.get(
 			message.guild!.id,
