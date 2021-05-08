@@ -169,10 +169,10 @@ export default new (class Db {
 
 						// prettier-ignore
 						if (
-							(xp * multiplier + currentXp) % 2000 == 0 ||
-							(xp * multiplier + currentXp > level * 2000 &&
-								xp * multiplier + currentXp < (level + 1) * 2000 &&
-								currentXp < level * 2000)
+							(xp * multiplier + currentXp) % 500 == 0 ||
+							(xp * multiplier + currentXp > level * 500 &&
+								xp * multiplier + currentXp < (level + 1) * 500 &&
+								currentXp < level * 500)
 						) {
 							level = level + 1;
 							leveledUp = true;
