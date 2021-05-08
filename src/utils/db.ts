@@ -3,7 +3,7 @@ import { SequelizeProvider } from "discord-akairo";
 import axios from "axios";
 import bunyan from "bunyan";
 import { Message } from "discord.js";
-import { rejects } from "node:assert";
+
 let log = bunyan.createLogger({
 	name: "db",
 	stream: process.stdout,

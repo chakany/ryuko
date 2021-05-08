@@ -19,7 +19,7 @@ const config = require("../../config.json");
 
 const ShoukakuOptions = {
 	moveOnDisconnect: false,
-	resumable: false,
+	resumable: true,
 	resumableTimeout: 30,
 	reconnectTries: 2,
 	restTimeout: 10000,
@@ -134,19 +134,34 @@ export default class AinaClient extends AkairoClient {
 	}
 
 	_setupShoukakuEvents() {
-		let log = bunyan.createLogger({
-			name: "lavalink",
-			stream: process.stdout,
-			level: "info",
-		});
+		let log: bunyan;
 
-		this.shoukaku.on("ready", (name) => log.info(`${name} is ready to roll!`));
-		this.shoukaku.on("error", (name, error) => log.error(error));
+		if (process.env.NODE_ENV !== "production")
+			log = bunyan.createLogger({
+				name: "lavalink",
+				stream: process.stdout,
+				level: "debug",
+			});
+		else
+			log = bunyan.createLogger({
+				name: "lavalink",
+				stream: process.stdout,
+			});
+
+		this.shoukaku.on("ready", (name) => log.info(`[${name}] Connected.`));
+		this.shoukaku.on("error", (name, error) => log.error(`[${name}]`, error));
 		this.shoukaku.on("close", (name, code, reason) =>
-			log.warn(`${name} Closed, Code ${code}, Reason ${reason || "No reason"}`)
+			log.warn(
+				`[${name}] Connection Closed. Code ${code}. Reason ${
+					reason || "No reason"
+				}`
+			)
 		);
 		this.shoukaku.on("disconnected", (name, reason) =>
-			log.warn(`Disconnected from ${name}, Reason ${reason || "No reason"}`)
+			log.warn(`[${name}] Disconnected. Reason ${reason || "No reason"}`)
+		);
+		this.shoukaku.on("debug", (name, data) =>
+			log.debug(`[${name}] ` + JSON.stringify(data))
 		);
 	}
 
@@ -161,7 +176,7 @@ export default class AinaClient extends AkairoClient {
 	}
 
 	async start(token: string): Promise<this> {
-		this.log.info("Bot is starting...");
+		this.log.info("Starting...");
 		this._setupShoukakuEvents();
 		this._checkImageAPI();
 		this.login(token);
