@@ -27,6 +27,7 @@ const ShoukakuOptions = {
 
 declare module "discord-akairo" {
 	interface AkairoClient {
+		commandHandler: CommandHandler;
 		config: any;
 		settings: SequelizeProvider;
 		shoukaku: Shoukaku;

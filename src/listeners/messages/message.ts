@@ -11,6 +11,26 @@ export default class MessageListener extends Listener {
 	}
 
 	async exec(message: Message) {
+		if (
+			message.content === `<@${this.client.user!.id}>` ||
+			message.content === `<@!${this.client.user!.id}>`
+		) {
+			const prefix = this.client.settings.get(
+				message.guild!.id,
+				"prefix",
+				this.client.config.prefix
+			);
+
+			return message.channel.send(
+				"***psst***, my prefix is `" +
+					prefix +
+					"`. To change it, use the `" +
+					`${prefix}${
+						this.client.commandHandler.findCommand("prefix").aliases[0]
+					}` +
+					"` command."
+			);
+		}
 		if (!message.author.bot) {
 			const level = await db.addXp(message.author.id, 10, message);
 			if (typeof level == "number") {
@@ -29,7 +49,6 @@ export default class MessageListener extends Listener {
 		}
 
 		if (message.partial) await message.fetch();
-		// @ts-expect-error
 		this.client.commandHandler.handle(message);
 	}
 }

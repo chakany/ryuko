@@ -17,9 +17,7 @@ export default class MessageEditListener extends Listener {
 		if (oldMessage.partial) await oldMessage.fetch();
 		if (newMessage.partial) await newMessage.fetch();
 		if (oldMessage.content === newMessage.content) return;
-		// @ts-expect-error
 		if (this.client.commandHandler.handleEdits)
-			// @ts-expect-error
 			this.client.commandHandler.handle(newMessage);
 
 		if (oldMessage.content === newMessage.content) return;
