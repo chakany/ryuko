@@ -128,7 +128,7 @@ export default class MuteCommand extends Command {
 				this.client.error(
 					message,
 					this,
-					"Invalid Permissions!",
+					"Invalid Permissions",
 					"Discord Mods cannot mute other Discord Mods!"
 				)
 			);
