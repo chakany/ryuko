@@ -120,16 +120,14 @@ export default class MuteCommand extends Command {
 
 		// Half-assed, the role hierachy should be checked too.
 		if (
-			modRole &&
-			message.member!.roles.cache.some((role) => role.id === modRole) &&
-			args.user.roles.cache.some((role: any) => role.id === modRole)
+			args.user.roles.highest.position >= message.member!.roles.highest.position
 		) {
 			return await message.channel.send(
 				this.client.error(
 					message,
 					this,
 					"Invalid Permissions",
-					"Discord Mods cannot mute other Discord Mods!"
+					"You cannot mute someone that has the same, or a higher role than you!"
 				)
 			);
 		}
