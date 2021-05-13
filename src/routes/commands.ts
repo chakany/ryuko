@@ -8,7 +8,7 @@ import { manager, weblog } from "../index";
 const router = express.Router();
 
 router.get("/", async function (req, res) {
-	res.redirect("commands/Configuration/disable");
+	res.redirect("Configuration/disable");
 });
 
 router.get("/:category/:command", async function (req, res) {
