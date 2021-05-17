@@ -27,6 +27,7 @@ const ShoukakuOptions = {
 
 declare module "discord-akairo" {
 	interface AkairoClient {
+		db: Db;
 		commandHandler: CommandHandler;
 		config: any;
 		settings: SequelizeProvider;
@@ -58,6 +59,7 @@ declare module "discord-akairo" {
 }
 
 export default class AinaClient extends AkairoClient {
+	public db: Db;
 	public config: any;
 	public settings: SequelizeProvider;
 	public shoukaku: Shoukaku;
@@ -66,9 +68,7 @@ export default class AinaClient extends AkairoClient {
 	public jobs: Collection<string, Map<string, Job>>;
 	public hentai: client;
 	public commandHandler: CommandHandler;
-	// @ts-expect-error
 	private inhibitorHandler: InhibitorHandler;
-	// @ts-expect-error
 	private listenerHandler: ListenerHandler;
 
 	constructor(log: bunyan, full = true) {
@@ -87,7 +87,8 @@ export default class AinaClient extends AkairoClient {
 		this.jobs = new Collection();
 		this.hentai = newHentai;
 
-		this.settings = Db.getSettings();
+		this.db = new Db();
+		this.settings = this.db.getSettings();
 
 		this.shoukaku = new Shoukaku(this, config.lavalink, ShoukakuOptions);
 		this.queue = new Map();
@@ -109,28 +110,26 @@ export default class AinaClient extends AkairoClient {
 			ignorePermissions: config.ownerId,
 			ignoreCooldown: config.ownerId,
 		});
-		if (full) {
-			this.inhibitorHandler = new InhibitorHandler(this, {
-				directory: "./inhibitors",
-			});
+		this.inhibitorHandler = new InhibitorHandler(this, {
+			directory: "./inhibitors",
+		});
 
-			this.listenerHandler = new ListenerHandler(this, {
-				directory: "./listeners",
-			});
+		this.listenerHandler = new ListenerHandler(this, {
+			directory: "./listeners",
+		});
 
-			this.listenerHandler.setEmitters({
-				process: process,
-				commandHandler: this.commandHandler,
-				inhibitorHandler: this.inhibitorHandler,
-				listenerHandler: this.listenerHandler,
-			});
+		this.listenerHandler.setEmitters({
+			process: process,
+			commandHandler: this.commandHandler,
+			inhibitorHandler: this.inhibitorHandler,
+			listenerHandler: this.listenerHandler,
+		});
 
-			this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
-			this.commandHandler.useListenerHandler(this.listenerHandler);
+		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
+		this.commandHandler.useListenerHandler(this.listenerHandler);
 
-			this.listenerHandler.loadAll();
-			this.inhibitorHandler.loadAll();
-		}
+		this.listenerHandler.loadAll();
+		this.inhibitorHandler.loadAll();
 		this.commandHandler.loadAll();
 	}
 

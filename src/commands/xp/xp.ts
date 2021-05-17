@@ -1,8 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageAttachment, MessageEmbed } from "discord.js";
 
-import db from "../../utils/db";
-
 const canvacord = require("canvacord");
 
 export default class XpCommand extends Command {
@@ -15,7 +13,7 @@ export default class XpCommand extends Command {
 	}
 
 	async exec(message: Message) {
-		const user = await db.getUserXp(message.author.id);
+		const user = await this.client.db.getUserXp(message.author.id);
 
 		const rank = new canvacord.Rank()
 			.renderEmojis(true)

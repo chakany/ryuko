@@ -3,8 +3,6 @@ import { Message, MessageEmbed } from "discord.js";
 import { add } from "date-fns";
 import schedule from "node-schedule";
 
-import Db from "../../utils/db";
-
 export default class MuteCommand extends Command {
 	constructor() {
 		super("mute", {
@@ -233,7 +231,7 @@ export default class MuteCommand extends Command {
 		guildJobs?.set(args.user.id, job);
 		this.client.jobs.set(message.guild!.id, guildJobs!);
 
-		Db.muteUser(
+		this.client.db.muteUser(
 			message.guild!.id,
 			"mute",
 			args.user.id,

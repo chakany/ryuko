@@ -1,10 +1,12 @@
 import { ShardingManager } from "discord.js";
 import bunyan from "bunyan";
 import express from "express";
-import db from "./utils/db";
+import Db from "./utils/db";
 const { token, port } = require("../config.json");
 let log = bunyan.createLogger({ name: "shardmanager" });
 let weblog = bunyan.createLogger({ name: "webserver" });
+
+const db = new Db();
 
 db.sync();
 

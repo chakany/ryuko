@@ -2,7 +2,6 @@ import { Listener, AkairoClient } from "discord-akairo";
 import { Collection } from "discord.js";
 import { MessageEmbed } from "discord.js";
 import schedule, { Job } from "node-schedule";
-import db from "../utils/db";
 
 const { prefix } = require("../../config.json");
 
@@ -21,7 +20,7 @@ export default class ReadyListener extends Listener {
 	async exec() {
 		const outer = this;
 		// Schedule Jobs
-		const mutes = await db.getMutedUsers();
+		const mutes = await this.client.db.getMutedUsers();
 		const jobs = this.client.jobs;
 		mutes.forEach(async (mute: any) => {
 			const cachedGuild = await outer.client.guilds.cache.get(mute.guild);

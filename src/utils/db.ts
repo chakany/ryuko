@@ -138,7 +138,8 @@ const users = sequelize.define("users", {
 	},
 });
 
-export default new (class Db {
+export default class Db {
+	constructor() {}
 	getSettings() {
 		return new SequelizeProvider(guild, {
 			idColumn: "id",
@@ -289,4 +290,4 @@ export default new (class Db {
 		//await linked.sync({ alter: true });
 		await punishments.sync({ alter: true });
 	}
-})();
+}

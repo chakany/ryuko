@@ -1,7 +1,6 @@
 import { Listener, Command } from "discord-akairo";
 import { Message } from "discord.js";
 
-import db from "../../utils/db";
 export default class MessageListener extends Listener {
 	constructor() {
 		super("message", {
@@ -32,7 +31,7 @@ export default class MessageListener extends Listener {
 			);
 		}
 		if (!message.author.bot) {
-			const level = await db.addXp(message.author.id, 10, message);
+			const level = await this.client.db.addXp(message.author.id, 10, message);
 			if (typeof level == "number") {
 				const shouldLevelMessage = this.client.settings.get(
 					message.guild!.id,
