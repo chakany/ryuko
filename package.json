@@ -8,7 +8,6 @@
 		"dev": "cd src && npx ts-node-dev --transpile-only . | npx bunyan -o short",
 		"dist": "npx sass src/styles:app/static/styles && npx tsc",
 		"watch": "npx sass --watch src/styles:app/static/styles",
-		"docs": "cd src && npx ts-node-dev --transpile-only docgen.ts | npx bunyan -o short",
 		"postinstall": "patch-package"
 	},
 	"author": "Jack C <30955604+jacany@users.noreply.github.com>",
