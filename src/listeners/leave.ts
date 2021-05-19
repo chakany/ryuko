@@ -32,18 +32,19 @@ export default class LeaveListener extends Listener {
 			// Let's perform a coherence check here and make sure we got *something*
 			if (!kickLog)
 				return (
-					// @ts-ignore
+					// @ts-expect-error
 					this.client.channels.cache
 						.get(logChannel)
-						// @ts-ignore
+						// @ts-expect-error
 						.send(
 							new MessageEmbed({
 								title: "Member Left",
 								description:
-									// @ts-ignore
 									"`" +
+									// @ts-expect-error
 									target.tag +
 									"` (`" +
+									// @ts-expect-error
 									target.id +
 									"`) left the server.",
 								color: member.guild?.me?.displayHexColor,
@@ -77,10 +78,11 @@ export default class LeaveListener extends Listener {
 							new MessageEmbed({
 								title: "Member Kicked",
 								description:
-									// @ts-ignore
 									"`" +
+									// @ts-expect-error
 									target.tag +
 									"` (`" +
+									// @ts-expect-error
 									target.id +
 									"`) was kicked.",
 								color: member.guild?.me?.displayHexColor,
@@ -116,10 +118,11 @@ export default class LeaveListener extends Listener {
 							new MessageEmbed({
 								title: "Member Kicked",
 								description:
-									// @ts-ignore
 									"`" +
+									// @ts-expect-error
 									target.tag +
 									"` (`" +
+									// @ts-expect-error
 									target.id +
 									"`) was kicked.",
 								color: member.guild?.me?.displayHexColor,

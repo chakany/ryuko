@@ -39,8 +39,8 @@ export default class ReadyListener extends Listener {
 					mute.expires,
 					async function () {
 						if (user!.roles.cache.has(muteRole))
-							// @ts-ignore
 							user.roles.remove(
+								// @ts-expect-error
 								cachedGuild?.roles.cache.get(muteRole)
 							);
 
