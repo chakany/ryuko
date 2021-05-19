@@ -41,16 +41,23 @@ export default class LeaveListener extends Listener {
 								title: "Member Left",
 								description:
 									// @ts-ignore
-									"`" + target.tag + "` (`" + target.id + "`) left the server.",
+									"`" +
+									target.tag +
+									"` (`" +
+									target.id +
+									"`) left the server.",
 								color: member.guild?.me?.displayHexColor,
 								timestamp: new Date(),
 								// @ts-ignore
-								thumbnail: target.displayAvatarURL({ dynamic: true }),
+								thumbnail: target.displayAvatarURL({
+									dynamic: true,
+								}),
 								footer: {
 									text: this.client.user?.tag,
-									icon_url: this.client.user?.displayAvatarURL({
-										dynamic: true,
-									}),
+									icon_url:
+										this.client.user?.displayAvatarURL({
+											dynamic: true,
+										}),
 								},
 							})
 						)
@@ -71,20 +78,30 @@ export default class LeaveListener extends Listener {
 								title: "Member Kicked",
 								description:
 									// @ts-ignore
-									"`" + target.tag + "` (`" + target.id + "`) was kicked.",
+									"`" +
+									target.tag +
+									"` (`" +
+									target.id +
+									"`) was kicked.",
 								color: member.guild?.me?.displayHexColor,
 								timestamp: new Date(),
 								// @ts-ignore.displayAvatarURL({ dynamic: true })
-								thumbnail: target.displayAvatarURL({ dynamic: true }),
+								thumbnail: target.displayAvatarURL({
+									dynamic: true,
+								}),
 								author: {
-									name: executor.tag + " (" + executor.id + ")",
-									icon_url: executor.displayAvatarURL({ dynamic: true }),
+									name:
+										executor.tag + " (" + executor.id + ")",
+									icon_url: executor.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
 								footer: {
 									text: this.client.user?.tag,
-									icon_url: this.client.user?.displayAvatarURL({
-										dynamic: true,
-									}),
+									icon_url:
+										this.client.user?.displayAvatarURL({
+											dynamic: true,
+										}),
 								},
 							})
 						)
@@ -100,16 +117,23 @@ export default class LeaveListener extends Listener {
 								title: "Member Kicked",
 								description:
 									// @ts-ignore
-									"`" + target.tag + "` (`" + target.id + "`) was kicked.",
+									"`" +
+									target.tag +
+									"` (`" +
+									target.id +
+									"`) was kicked.",
 								color: member.guild?.me?.displayHexColor,
 								timestamp: new Date(),
 								// @ts-ignore
-								thumbnail: target.displayAvatarURL({ dynamic: true }),
+								thumbnail: target.displayAvatarURL({
+									dynamic: true,
+								}),
 								footer: {
 									text: `I couldn't find who kicked this member\n${this.client.user?.tag}`,
-									icon_url: this.client.user?.displayAvatarURL({
-										dynamic: true,
-									}),
+									icon_url:
+										this.client.user?.displayAvatarURL({
+											dynamic: true,
+										}),
 								},
 							})
 						)

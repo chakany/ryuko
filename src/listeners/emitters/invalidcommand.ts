@@ -11,7 +11,8 @@ export default class InvalidCommandListener extends Listener {
 	}
 
 	async exec(message: Message) {
-		if (!message.content.startsWith(message.util?.parsed?.prefix!)) return true;
+		if (!message.content.startsWith(message.util?.parsed?.prefix!))
+			return true;
 		// When a non-existent command was ran try to use the levenshtein algorithm to find a close match.
 		const distances = [];
 		const usableCommands = message.util?.handler.aliases;
@@ -40,11 +41,15 @@ export default class InvalidCommandListener extends Listener {
 					timestamp: new Date(),
 					author: {
 						name: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 					footer: {
 						text: message.client.user?.tag,
-						icon_url: message.client.user?.displayAvatarURL({ dynamic: true }),
+						icon_url: message.client.user?.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				})
 			);

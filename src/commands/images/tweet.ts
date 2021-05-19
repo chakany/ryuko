@@ -61,7 +61,9 @@ export default class TweetCommand extends Command {
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				}),
 				files: [attachment],

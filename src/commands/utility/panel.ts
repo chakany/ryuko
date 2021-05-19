@@ -82,7 +82,9 @@ export default class PanelCommand extends Command {
 						timestamp: new Date(),
 						footer: {
 							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({ dynamic: true }),
+							icon_url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
 					})
 				);
@@ -92,13 +94,17 @@ export default class PanelCommand extends Command {
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				});
 
 				try {
 					await Promise.all(
-						(await this._getServers()).data.data.map(async (server: any) => {
+						(
+							await this._getServers()
+						).data.data.map(async (server: any) => {
 							const info = server.attributes;
 							let field =
 								"UUID: `" +
@@ -110,7 +116,11 @@ export default class PanelCommand extends Command {
 								await this._getResources(info.identifier)
 							).data.attributes;
 							if (info.description)
-								field = field + "\nDescription:`" + info.description + "`";
+								field =
+									field +
+									"\nDescription:`" +
+									info.description +
+									"`";
 							if (resources.resources.cpu_absolute != 0)
 								field =
 									field +
@@ -123,16 +133,20 @@ export default class PanelCommand extends Command {
 								field =
 									field +
 									"\nMemory: `" +
-									(resources.resources.memory_bytes / (1024 * 1024)).toFixed(
-										4
-									) +
+									(
+										resources.resources.memory_bytes /
+										(1024 * 1024)
+									).toFixed(4) +
 									"`/`" +
 									info.limits.memory +
 									"`MB";
 							field =
 								field +
 								"\nDisk: `" +
-								(resources.resources.disk_bytes / (1024 * 1024)).toFixed(4) +
+								(
+									resources.resources.disk_bytes /
+									(1024 * 1024)
+								).toFixed(4) +
 								"`/`" +
 								info.limits.disk +
 								"`MB";
@@ -179,7 +193,12 @@ export default class PanelCommand extends Command {
 				} catch (error) {
 					this.client.log.error(error);
 					message.channel.send(
-						this.client.error(message, this, "An error occurred", error.message)
+						this.client.error(
+							message,
+							this,
+							"An error occurred",
+							error.message
+						)
 					);
 					return false;
 				}
@@ -194,7 +213,11 @@ export default class PanelCommand extends Command {
 							"You must provide a server!"
 						)
 					);
-				this._powerAction(message, args.server, args.action.toLowerCase());
+				this._powerAction(
+					message,
+					args.server,
+					args.action.toLowerCase()
+				);
 				break;
 			case "restart":
 				if (!args.server)
@@ -206,7 +229,11 @@ export default class PanelCommand extends Command {
 							"You must provide a server!"
 						)
 					);
-				this._powerAction(message, args.server, args.action.toLowerCase());
+				this._powerAction(
+					message,
+					args.server,
+					args.action.toLowerCase()
+				);
 				break;
 			case "stop":
 				if (!args.server)
@@ -218,7 +245,11 @@ export default class PanelCommand extends Command {
 							"You must provide a server!"
 						)
 					);
-				this._powerAction(message, args.server, args.action.toLowerCase());
+				this._powerAction(
+					message,
+					args.server,
+					args.action.toLowerCase()
+				);
 				break;
 			case "kill":
 				if (!args.server)
@@ -230,7 +261,11 @@ export default class PanelCommand extends Command {
 							"You must provide a server!"
 						)
 					);
-				this._powerAction(message, args.server, args.action.toLowerCase());
+				this._powerAction(
+					message,
+					args.server,
+					args.action.toLowerCase()
+				);
 				break;
 			default:
 				return message.channel.send(
@@ -240,7 +275,9 @@ export default class PanelCommand extends Command {
 						timestamp: new Date(),
 						footer: {
 							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({ dynamic: true }),
+							icon_url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
 						fields: [
 							{
@@ -283,7 +320,9 @@ export default class PanelCommand extends Command {
 				timestamp: new Date(),
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 			})
 		);
@@ -293,19 +332,30 @@ export default class PanelCommand extends Command {
 				new MessageEmbed({
 					title: ":white_check_mark: Request Sent!",
 					description:
-						"Sucessfully sent the request to " + state + " `" + server + "`.",
+						"Sucessfully sent the request to " +
+						state +
+						" `" +
+						server +
+						"`.",
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				})
 			);
 		} catch (error) {
 			this.client.log.error(error);
 			message.channel.send(
-				this.client.error(message, this, "An error occurred", error.message)
+				this.client.error(
+					message,
+					this,
+					"An error occurred",
+					error.message
+				)
 			);
 			return false;
 		}

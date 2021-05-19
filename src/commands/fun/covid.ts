@@ -47,7 +47,9 @@ export default class CovidCommand extends Command {
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 					fields: [
 						{
@@ -82,7 +84,9 @@ export default class CovidCommand extends Command {
 						},
 						{
 							name: "Today Recoveries:",
-							value: corona.todayRecovered.toLocaleString().replace("-", ""),
+							value: corona.todayRecovered
+								.toLocaleString()
+								.replace("-", ""),
 							inline: true,
 						},
 						{
@@ -96,7 +100,12 @@ export default class CovidCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				this.client.error(message, this, "An error occurred", error.message)
+				this.client.error(
+					message,
+					this,
+					"An error occurred",
+					error.message
+				)
 			);
 		}
 	}

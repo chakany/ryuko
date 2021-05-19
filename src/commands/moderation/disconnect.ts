@@ -56,7 +56,9 @@ export default class DisconnectCommand extends Command {
 				timestamp: new Date(),
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 				fields: [
 					{
@@ -69,7 +71,12 @@ export default class DisconnectCommand extends Command {
 			if (args.reason)
 				sendEmbed.addField(
 					"Reason",
-					"`" + message.util!.parsed?.content?.replace(args.user[1], "") + "`",
+					"`" +
+						message.util!.parsed?.content?.replace(
+							args.user[1],
+							""
+						) +
+						"`",
 					true
 				);
 			else sendEmbed.addField("Reason", "None Provided", true);
@@ -84,13 +91,19 @@ export default class DisconnectCommand extends Command {
 			const logEmbed = new MessageEmbed({
 				title: "Disconnection",
 				description:
-					"`" + victim.user.tag + "` `" + victim.user.id + "` was disconnected",
+					"`" +
+					victim.user.tag +
+					"` `" +
+					victim.user.id +
+					"` was disconnected",
 				thumbnail: victim.user.avatarURL({ dynamic: true }),
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag + " (" + message.author.id + ")",
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 				fields: [
 					{
@@ -103,7 +116,12 @@ export default class DisconnectCommand extends Command {
 			if (args.reason)
 				logEmbed.addField(
 					"Reason",
-					"`" + message.util!.parsed?.content?.replace(args.user[1], "") + "`",
+					"`" +
+						message.util!.parsed?.content?.replace(
+							args.user[1],
+							""
+						) +
+						"`",
 					true
 				);
 			else logEmbed.addField("Reason", "None Provided", true);
@@ -117,7 +135,12 @@ export default class DisconnectCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				this.client.error(message, this, "An error occurred", error.message)
+				this.client.error(
+					message,
+					this,
+					"An error occurred",
+					error.message
+				)
 			);
 		}
 	}

@@ -26,18 +26,25 @@ export default class QueueCommand extends Command {
 					)
 				);
 			let description =
-				"**Currently Playing:** `" + serverQueue.songs[0].info.title + "`\n";
+				"**Currently Playing:** `" +
+				serverQueue.songs[0].info.title +
+				"`\n";
 			let i;
 			for (i = 1; i < 7; i++) {
 				if (serverQueue.songs[i] && serverQueue.songs.length > 1) {
 					let song = serverQueue.songs[i];
 					description =
-						description + `\n**${i}:**` + " `" + song.info.title + "`";
+						description +
+						`\n**${i}:**` +
+						" `" +
+						song.info.title +
+						"`";
 				}
 			}
 			if (serverQueue.songs.length > 6)
 				description =
-					description + `\nand **${serverQueue.songs.length - 6}** more.`;
+					description +
+					`\nand **${serverQueue.songs.length - 6}** more.`;
 			return message.channel.send(
 				new MessageEmbed({
 					title: "Song Queue",
@@ -46,14 +53,21 @@ export default class QueueCommand extends Command {
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				})
 			);
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				this.client.error(message, this, "An error occurred", error.message)
+				this.client.error(
+					message,
+					this,
+					"An error occurred",
+					error.message
+				)
 			);
 		}
 	}

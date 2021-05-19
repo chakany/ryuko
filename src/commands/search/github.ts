@@ -65,7 +65,9 @@ export default class GithubCommand extends Command {
 				},
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 				fields: [
 					{

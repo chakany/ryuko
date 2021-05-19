@@ -41,7 +41,10 @@ export default class AchievementCommand extends Command {
 			const image = await this._getImage(
 				messageAttachment
 					? messageAttachment.url
-					: message.author.avatarURL({ dynamic: true, format: "png" }) || "",
+					: message.author.avatarURL({
+							dynamic: true,
+							format: "png",
+					  }) || "",
 				message.util?.parsed?.content!
 			);
 
@@ -59,7 +62,9 @@ export default class AchievementCommand extends Command {
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				}),
 				files: [attachment],

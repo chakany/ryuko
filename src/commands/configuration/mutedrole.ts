@@ -38,7 +38,9 @@ export default class ModroleCommand extends Command {
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				})
 			);
@@ -56,7 +58,11 @@ export default class ModroleCommand extends Command {
 			);
 		}
 
-		await this.client.settings.set(message.guild!.id, "muteRole", args.role.id);
+		await this.client.settings.set(
+			message.guild!.id,
+			"muteRole",
+			args.role.id
+		);
 		return message.channel.send(
 			new MessageEmbed({
 				title: ":white_check_mark: Changed Mute Role",
@@ -64,7 +70,9 @@ export default class ModroleCommand extends Command {
 				timestamp: new Date(),
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 				fields: [
 					{

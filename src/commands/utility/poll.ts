@@ -56,7 +56,9 @@ export default class PollCommand extends Command {
 				},
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 				fields: [
 					{ name: ":one:", value: "Yes", inline: true },
@@ -73,7 +75,9 @@ export default class PollCommand extends Command {
 				},
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 				fields: [
 					{ name: ":one:", value: args.choice1, inline: true },

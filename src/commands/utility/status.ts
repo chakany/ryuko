@@ -44,7 +44,10 @@ export default class StatusCommand extends Command {
 			);
 
 		// Run the actual command
-		const content = message.util!.parsed!.content!.replace(`${args.type} `, "");
+		const content = message.util!.parsed!.content!.replace(
+			`${args.type} `,
+			""
+		);
 		try {
 			this.client.shard!.broadcastEval(
 				`this.user.setActivity('${content}', { type: '${args.type.toUpperCase()}' })`
@@ -52,7 +55,12 @@ export default class StatusCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				this.client.error(message, this, "An error occurred", error.message)
+				this.client.error(
+					message,
+					this,
+					"An error occurred",
+					error.message
+				)
 			);
 		}
 
@@ -62,12 +70,17 @@ export default class StatusCommand extends Command {
 				color: message.guild?.me?.displayHexColor,
 				description:
 					"Changed to `" +
-					message.util!.parsed!.content!.replace(`${args.type} `, "") +
+					message.util!.parsed!.content!.replace(
+						`${args.type} `,
+						""
+					) +
 					"`.",
 				timestamp: new Date(),
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 			})
 		);

@@ -37,7 +37,11 @@ export default class PrefixCommand extends Command {
 			);
 		}
 
-		await this.client.settings.set(message.guild!.id, "prefix", args.prefix);
+		await this.client.settings.set(
+			message.guild!.id,
+			"prefix",
+			args.prefix
+		);
 		message.channel.send(
 			new MessageEmbed({
 				title: ":white_check_mark: Changed Prefix",
@@ -45,7 +49,9 @@ export default class PrefixCommand extends Command {
 				timestamp: new Date(),
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 				fields: [
 					{
@@ -81,7 +87,9 @@ export default class PrefixCommand extends Command {
 						timestamp: new Date(),
 						footer: {
 							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({ dynamic: true }),
+							icon_url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
 						fields: [
 							{

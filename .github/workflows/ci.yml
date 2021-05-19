@@ -3,50 +3,50 @@
 name: CI
 
 on:
-  push:
-    branches: [master]
-  workflow_dispatch:
+    push:
+        branches: [master]
+    workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        name: "Setup Node"
-        with:
-          node-version: "14"
-      - name: "Install Dependencies"
-        run: yarn
-      - name: "Build"
-        run: yarn dist
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              name: "Setup Node"
+              with:
+                  node-version: "14"
+            - name: "Install Dependencies"
+              run: yarn
+            - name: "Build"
+              run: yarn dist
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
+    deploy:
+        runs-on: ubuntu-latest
+        needs: build
 
-    steps:
-      - name: Set deployment status to Started
-        uses: bobheadxi/deployments@v0.4.3
-        id: deployment
-        with:
-          step: start
-          token: ${{ secrets.GITHUB_TOKEN }}
-          env: Release
+        steps:
+            - name: Set deployment status to Started
+              uses: bobheadxi/deployments@v0.4.3
+              id: deployment
+              with:
+                  step: start
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  env: Release
 
-      - uses: satak/webrequest-action@master
-        with:
-          url: ${{ secrets.PTERODACTYL_URL }}/api/client/servers/461408fc/power
-          method: POST
-          payload: '{"signal": "restart"}'
-          headers: '{"Authorization": "Bearer ${{ secrets.PTERODACTYL_SECRET }}"}'
+            - uses: satak/webrequest-action@master
+              with:
+                  url: ${{ secrets.PTERODACTYL_URL }}/api/client/servers/461408fc/power
+                  method: POST
+                  payload: '{"signal": "restart"}'
+                  headers: '{"Authorization": "Bearer ${{ secrets.PTERODACTYL_SECRET }}"}'
 
-      - name: Set deployment status to Finished
-        uses: bobheadxi/deployments@v0.4.3
-        if: always()
-        with:
-          step: finish
-          token: ${{ secrets.GITHUB_TOKEN }}
-          status: ${{ job.status }}
-          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+            - name: Set deployment status to Finished
+              uses: bobheadxi/deployments@v0.4.3
+              if: always()
+              with:
+                  step: finish
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  status: ${{ job.status }}
+                  deployment_id: ${{ steps.deployment.outputs.deployment_id }}

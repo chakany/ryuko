@@ -53,7 +53,9 @@ export default class MoveCommand extends Command {
 					"Invalid Configuration",
 					`You must have a muted role set!\n+ Use ${
 						message.util?.parsed?.prefix
-					}${this.handler.findCommand("muterole").aliases[0]} to set one.`
+					}${
+						this.handler.findCommand("muterole").aliases[0]
+					} to set one.`
 				)
 			);
 
@@ -71,7 +73,9 @@ export default class MoveCommand extends Command {
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag + " (" + message.author.id + ")",
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 			})
 		);
@@ -93,7 +97,9 @@ export default class MoveCommand extends Command {
 						timestamp: new Date(),
 						footer: {
 							text: this.client.user?.tag,
-							icon_url: this.client.user?.displayAvatarURL({ dynamic: true }),
+							icon_url: this.client.user?.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
 					})
 				);

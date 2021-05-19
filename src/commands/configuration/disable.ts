@@ -27,7 +27,8 @@ export default class DisableCommand extends Command {
 			null
 		);
 
-		if (typeof oldSettings === "string") oldSettings = JSON.parse(oldSettings);
+		if (typeof oldSettings === "string")
+			oldSettings = JSON.parse(oldSettings);
 
 		if (!toDisable) {
 			const embed = new MessageEmbed({
@@ -36,18 +37,23 @@ export default class DisableCommand extends Command {
 				timestamp: new Date(),
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 			});
 
 			let enabledCommands = "";
-			for (const [key, dvalue] of new Map(message.util?.handler.categories!)) {
+			for (const [key, dvalue] of new Map(
+				message.util?.handler.categories!
+			)) {
 				// For each category
 				for (const [key2, fvalue] of new Map(dvalue)) {
 					// For each command in that category
 					// Add it to the variable commands
 					if (!oldSettings || !oldSettings.includes(fvalue.id))
-						enabledCommands = enabledCommands + " `" + fvalue.aliases[0] + "`";
+						enabledCommands =
+							enabledCommands + " `" + fvalue.aliases[0] + "`";
 				}
 			}
 			embed.addField("Enabled", enabledCommands);
@@ -57,7 +63,8 @@ export default class DisableCommand extends Command {
 				let current;
 				for (let i = 0; (current = oldSettings[i]); i++) {
 					const command = this.handler.findCommand(current);
-					disabledCommands = disabledCommands + "`" + command.aliases[0] + "` ";
+					disabledCommands =
+						disabledCommands + "`" + command.aliases[0] + "` ";
 				}
 				embed.addField("Disabled", disabledCommands);
 			}
@@ -95,7 +102,9 @@ export default class DisableCommand extends Command {
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				})
 			);
@@ -113,10 +122,12 @@ export default class DisableCommand extends Command {
 				for (const [key, value] of new Map(category)) {
 					if (oldSettings && !oldSettings.includes(key)) {
 						commands.push(key);
-						disabledCommands = disabledCommands + "`" + value.aliases[0] + "` ";
+						disabledCommands =
+							disabledCommands + "`" + value.aliases[0] + "` ";
 					} else if (!oldSettings) {
 						commands.push(key);
-						disabledCommands = disabledCommands + "`" + value.aliases[0] + "` ";
+						disabledCommands =
+							disabledCommands + "`" + value.aliases[0] + "` ";
 					}
 				}
 				this.client.settings.set(
@@ -125,12 +136,17 @@ export default class DisableCommand extends Command {
 					JSON.stringify(commands)
 				);
 				const embed = new MessageEmbed({
-					title: ":white_check_mark: Disabled category: `" + category.id + "`",
+					title:
+						":white_check_mark: Disabled category: `" +
+						category.id +
+						"`",
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 					fields: [{ name: "Disabled", value: disabledCommands }],
 				});

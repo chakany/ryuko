@@ -23,7 +23,9 @@ router.get("/:category/:command", async function (req, res) {
 					req.params.category.charAt(0).toUpperCase() +
 						req.params.category.slice(1)
 			)) ||
-			!(await (await manager.fetchClientValues("commandHandler.categories"))[0]
+			!(await (
+				await manager.fetchClientValues("commandHandler.categories")
+			)[0]
 				.find(
 					(category: any) =>
 						category[0].categoryID ===
@@ -37,8 +39,12 @@ router.get("/:category/:command", async function (req, res) {
 			categories: (
 				await manager.fetchClientValues("commandHandler.categories")
 			)[0],
-			username: await (await manager.fetchClientValues("user"))[0].username,
-			avatar: await (await manager.fetchClientValues("user"))[0].avatarURL,
+			username: await (
+				await manager.fetchClientValues("user")
+			)[0].username,
+			avatar: await (
+				await manager.fetchClientValues("user")
+			)[0].avatarURL,
 			prefix: prefix,
 			command: await (
 				await manager.fetchClientValues("commandHandler.categories")

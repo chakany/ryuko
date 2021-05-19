@@ -18,13 +18,19 @@ export default class XpCommand extends Command {
 		const rank = new canvacord.Rank()
 			.renderEmojis(true)
 			.setAvatar(
-				message.author.displayAvatarURL({ dynamic: false, format: "png" })
+				message.author.displayAvatarURL({
+					dynamic: false,
+					format: "png",
+				})
 			)
 			.setCurrentXP(user.xp - (user.level - 1) * 500)
 			.setRequiredXP(500)
 			.setStatus(message.author.presence.status)
 			.setProgressBar("#FFFFFF", "COLOR")
-			.setUsername(message.author.username, message.member?.displayHexColor)
+			.setUsername(
+				message.author.username,
+				message.member?.displayHexColor
+			)
 			.setRank(1, "RANK", false)
 			.setLevel(user.level, "LEVEL")
 			.setDiscriminator(message.author.discriminator);

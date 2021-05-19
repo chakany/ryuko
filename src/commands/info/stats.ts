@@ -30,7 +30,9 @@ export default class PingCommand extends Command {
 				timestamp: new Date(),
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 				description:
 					"```asciidoc\n" +
@@ -43,9 +45,11 @@ export default class PingCommand extends Command {
 					}MB\nUptime :: ${uptime}\nNode.js Version :: ${
 						process.version
 					}\nDiscord.js Version :: ${
-						require("../../../node_modules/discord.js/package.json").version
+						require("../../../node_modules/discord.js/package.json")
+							.version
 					}\nAkairo Version :: ${
-						require("../../../node_modules/discord-akairo/package.json").version
+						require("../../../node_modules/discord-akairo/package.json")
+							.version
 					}\nBot Version :: ${
 						require("../../../package.json").version
 					}\nDatabase :: MariaDB` +

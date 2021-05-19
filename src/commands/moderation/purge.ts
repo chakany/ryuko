@@ -53,7 +53,8 @@ export default class PurgeCommand extends Command {
 					// Fetches the messages
 					if (victim) {
 						deleted = messages.filter(
-							(m) => m.author.id === victim.id || m.id === message.id
+							(m) =>
+								m.author.id === victim.id || m.id === message.id
 						);
 					} else {
 						deleted = messages;
@@ -84,7 +85,9 @@ export default class PurgeCommand extends Command {
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag + " (" + message.author.id + ")",
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 				footer: {
 					text: `No content ("") means that there was probably an embed there\nGreen represents the command that initated the purge`,
@@ -126,7 +129,12 @@ export default class PurgeCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				this.client.error(message, this, "An error occurred", error.message)
+				this.client.error(
+					message,
+					this,
+					"An error occurred",
+					error.message
+				)
 			);
 		}
 	}

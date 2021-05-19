@@ -28,7 +28,11 @@ export default class XpMessageCommand extends Command {
 		);
 
 		if (args.value == "enable" && currentSetting !== true) {
-			await this.client.settings.set(message.guild!.id, "levelUpMessage", true);
+			await this.client.settings.set(
+				message.guild!.id,
+				"levelUpMessage",
+				true
+			);
 
 			return message.channel.send(
 				new MessageEmbed({
@@ -37,7 +41,9 @@ export default class XpMessageCommand extends Command {
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				})
 			);
@@ -55,7 +61,9 @@ export default class XpMessageCommand extends Command {
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				})
 			);
@@ -64,11 +72,14 @@ export default class XpMessageCommand extends Command {
 				new MessageEmbed({
 					title: "Actions",
 					color: message.guild?.me?.displayHexColor,
-					description: "**Level Up Messages:** `" + currentSetting + "`",
+					description:
+						"**Level Up Messages:** `" + currentSetting + "`",
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 					fields: [
 						{

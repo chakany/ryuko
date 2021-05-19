@@ -83,14 +83,22 @@ export default class DragCommand extends Command {
 							color: message.guild?.me?.displayHexColor,
 							timestamp: new Date(),
 							author: {
-								name: message.author.tag + " (" + message.author.id + ")",
-								icon_url: message.author.displayAvatarURL({ dynamic: true }),
+								name:
+									message.author.tag +
+									" (" +
+									message.author.id +
+									")",
+								icon_url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
 							footer: {
 								text: message.client.user?.tag,
-								icon_url: message.client.user?.displayAvatarURL({
-									dynamic: true,
-								}),
+								icon_url: message.client.user?.displayAvatarURL(
+									{
+										dynamic: true,
+									}
+								),
 							},
 							fields: [
 								{
@@ -111,7 +119,12 @@ export default class DragCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				this.client.error(message, this, "An error occurred", error.message)
+				this.client.error(
+					message,
+					this,
+					"An error occurred",
+					error.message
+				)
 			);
 		}
 	}

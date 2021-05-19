@@ -21,12 +21,15 @@ export default class PingCommand extends Command {
 				},
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 				fields: [
 					{
 						name: "API Latency",
-						value: "`" + `${Math.round(this.client.ws.ping)}ms` + "`",
+						value:
+							"`" + `${Math.round(this.client.ws.ping)}ms` + "`",
 						inline: true,
 					},
 				],

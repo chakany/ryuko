@@ -25,13 +25,18 @@ export default class MessageListener extends Listener {
 					prefix +
 					"`. To change it, use the `" +
 					`${prefix}${
-						this.client.commandHandler.findCommand("prefix").aliases[0]
+						this.client.commandHandler.findCommand("prefix")
+							.aliases[0]
 					}` +
 					"` command."
 			);
 		}
 		if (!message.author.bot) {
-			const level = await this.client.db.addXp(message.author.id, 10, message);
+			const level = await this.client.db.addXp(
+				message.author.id,
+				10,
+				message
+			);
 			if (typeof level == "number") {
 				const shouldLevelMessage = this.client.settings.get(
 					message.guild!.id,

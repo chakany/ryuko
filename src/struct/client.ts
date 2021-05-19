@@ -98,7 +98,11 @@ export default class AinaClient extends AkairoClient {
 			prefix: (message) => {
 				if (message.guild) {
 					// The third param is the default.
-					return this.settings.get(message.guild.id, "prefix", config.prefix);
+					return this.settings.get(
+						message.guild.id,
+						"prefix",
+						config.prefix
+					);
 				}
 
 				return config.prefix;
@@ -149,7 +153,9 @@ export default class AinaClient extends AkairoClient {
 			});
 
 		this.shoukaku.on("ready", (name) => log.info(`[${name}] Connected.`));
-		this.shoukaku.on("error", (name, error) => log.error(`[${name}]`, error));
+		this.shoukaku.on("error", (name, error) =>
+			log.error(`[${name}]`, error)
+		);
 		this.shoukaku.on("close", (name, code, reason) =>
 			log.warn(
 				`[${name}] Connection Closed. Code ${code}. Reason ${

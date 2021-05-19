@@ -54,7 +54,9 @@ export default class VolumeCommand extends Command {
 						timestamp: new Date(),
 						footer: {
 							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({ dynamic: true }),
+							icon_url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
 					})
 				);
@@ -76,19 +78,30 @@ export default class VolumeCommand extends Command {
 				new MessageEmbed({
 					title: `Volume Changed!`,
 					description:
-						"`" + oldVolume + "` :arrow_right: `" + args.volume + "`",
+						"`" +
+						oldVolume +
+						"` :arrow_right: `" +
+						args.volume +
+						"`",
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				})
 			);
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				this.client.error(message, this, "An error occurred", error.message)
+				this.client.error(
+					message,
+					this,
+					"An error occurred",
+					error.message
+				)
 			);
 		}
 	}

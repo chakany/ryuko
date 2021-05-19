@@ -160,7 +160,9 @@ export default class Db {
 						},
 					})
 					.then(async (user) => {
-						const currentXp = user[0] ? <number>user[0].get("xp") : 0;
+						const currentXp = user[0]
+							? <number>user[0].get("xp")
+							: 0;
 						const multiplier = user[0]
 							? <number>user[0].get("xpMultiplier")
 							: 1;

@@ -108,7 +108,9 @@ export default class MuteCommand extends Command {
 					"You must provide a reason!"
 				)
 			);
-		const reason = message.util!.parsed!.content!.split(`${args.length} `)[1];
+		const reason = message.util!.parsed!.content!.split(
+			`${args.length} `
+		)[1];
 
 		const modRole = this.client.settings.get(
 			message.guild!.id,
@@ -118,7 +120,8 @@ export default class MuteCommand extends Command {
 
 		// Half-assed, the role hierachy should be checked too.
 		if (
-			args.user.roles.highest.position >= message.member!.roles.highest.position
+			args.user.roles.highest.position >=
+			message.member!.roles.highest.position
 		) {
 			return await message.channel.send(
 				this.client.error(
@@ -144,7 +147,9 @@ export default class MuteCommand extends Command {
 					"Invalid Configuration",
 					`You must have a muted role set!\n+ Use ${
 						message.util?.parsed?.prefix
-					}${this.handler.findCommand("muterole").aliases[0]} to set one.`
+					}${
+						this.handler.findCommand("muterole").aliases[0]
+					} to set one.`
 				)
 			);
 
@@ -182,12 +187,26 @@ export default class MuteCommand extends Command {
 				timestamp: new Date(),
 				author: {
 					name: message.author.tag + " (" + message.author.id + ")",
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 				fields: [
-					{ name: "Muted by", value: `${message.author}`, inline: true },
-					{ name: "Muted Member", value: `${args.user}`, inline: true },
-					{ name: "Length", value: "`" + args.length + "`", inline: true },
+					{
+						name: "Muted by",
+						value: `${message.author}`,
+						inline: true,
+					},
+					{
+						name: "Muted Member",
+						value: `${args.user}`,
+						inline: true,
+					},
+					{
+						name: "Length",
+						value: "`" + args.length + "`",
+						inline: true,
+					},
 					{ name: "Reason", value: "`" + `${reason}` + "`" },
 				],
 			})
@@ -199,7 +218,9 @@ export default class MuteCommand extends Command {
 		const job = schedule.scheduleJob(endDate, function () {
 			if (args.user.roles.cache.has(muteRole))
 				// @ts-ignore
-				args.user.roles.remove(message.guild?.roles.cache.get(muteRole));
+				args.user.roles.remove(
+					message.guild?.roles.cache.get(muteRole)
+				);
 
 			outer.client.jobs.get(message.guild!.id)?.delete(args.user.id);
 
@@ -221,7 +242,9 @@ export default class MuteCommand extends Command {
 							timestamp: new Date(),
 							footer: {
 								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({ dynamic: true }),
+								icon_url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
 						})
 					);
@@ -256,13 +279,31 @@ export default class MuteCommand extends Command {
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						author: {
-							name: message.author.tag + " (" + message.author.id + ")",
-							icon_url: message.author.displayAvatarURL({ dynamic: true }),
+							name:
+								message.author.tag +
+								" (" +
+								message.author.id +
+								")",
+							icon_url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
 						fields: [
-							{ name: "Muted by", value: `${message.author}`, inline: true },
-							{ name: "Muted Member", value: `${args.user}`, inline: true },
-							{ name: "Length", value: "`" + args.length + "`", inline: true },
+							{
+								name: "Muted by",
+								value: `${message.author}`,
+								inline: true,
+							},
+							{
+								name: "Muted Member",
+								value: `${args.user}`,
+								inline: true,
+							},
+							{
+								name: "Length",
+								value: "`" + args.length + "`",
+								inline: true,
+							},
 							{ name: "Reason", value: "`" + `${reason}` + "`" },
 						],
 					})

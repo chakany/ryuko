@@ -35,38 +35,48 @@ export default class ReadyListener extends Listener {
 				null
 			);
 			if (user!.roles.cache.has(muteRole)) {
-				const job = schedule.scheduleJob(mute.expires, async function () {
-					if (user!.roles.cache.has(muteRole))
-						// @ts-ignore
-						user.roles.remove(cachedGuild?.roles.cache.get(muteRole));
-
-					outer.client.jobs.get(cachedGuild!.id)?.delete(user!.id);
-
-					const logChannel = outer.client.settings.get(
-						cachedGuild!.id,
-						"loggingChannel",
-						null
-					);
-
-					if (logChannel)
-						cachedGuild?.channels.cache
-							.get(`${logChannel}`)
+				const job = schedule.scheduleJob(
+					mute.expires,
+					async function () {
+						if (user!.roles.cache.has(muteRole))
 							// @ts-ignore
-							?.send(
-								new MessageEmbed({
-									title: "Member Unmuted",
-									description: `${user}'s mute has expired.`,
-									color: cachedGuild.me?.displayHexColor,
-									timestamp: new Date(),
-									footer: {
-										text: outer.client.user?.tag,
-										icon_url: outer.client.user?.displayAvatarURL({
-											dynamic: true,
-										}),
-									},
-								})
+							user.roles.remove(
+								cachedGuild?.roles.cache.get(muteRole)
 							);
-				});
+
+						outer.client.jobs
+							.get(cachedGuild!.id)
+							?.delete(user!.id);
+
+						const logChannel = outer.client.settings.get(
+							cachedGuild!.id,
+							"loggingChannel",
+							null
+						);
+
+						if (logChannel)
+							cachedGuild?.channels.cache
+								.get(`${logChannel}`)
+								// @ts-ignore
+								?.send(
+									new MessageEmbed({
+										title: "Member Unmuted",
+										description: `${user}'s mute has expired.`,
+										color: cachedGuild.me?.displayHexColor,
+										timestamp: new Date(),
+										footer: {
+											text: outer.client.user?.tag,
+											icon_url:
+												outer.client.user?.displayAvatarURL(
+													{
+														dynamic: true,
+													}
+												),
+										},
+									})
+								);
+					}
+				);
 
 				this.client.jobs.set(
 					mute.guild,
@@ -81,13 +91,19 @@ export default class ReadyListener extends Listener {
 			"guilds.cache.size"
 		);
 		if (serverCount > 1) {
-			this.client.user!.setActivity(`${serverCount} servers! | ${prefix}help`, {
-				type: "WATCHING",
-			});
+			this.client.user!.setActivity(
+				`${serverCount} servers! | ${prefix}help`,
+				{
+					type: "WATCHING",
+				}
+			);
 		} else {
-			this.client.user!.setActivity(`${serverCount} server! | ${prefix}help`, {
-				type: "WATCHING",
-			});
+			this.client.user!.setActivity(
+				`${serverCount} server! | ${prefix}help`,
+				{
+					type: "WATCHING",
+				}
+			);
 		}
 	}
 }

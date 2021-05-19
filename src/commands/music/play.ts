@@ -47,7 +47,11 @@ export default class PlayCommand extends Command {
 			const queue = message.client.queue;
 			const guild = message.guild;
 			const serverQueue = queue.get(message.guild!.id);
-			if (serverQueue !== undefined && serverQueue.connection && !args.song)
+			if (
+				serverQueue !== undefined &&
+				serverQueue.connection &&
+				!args.song
+			)
 				return serverQueue.connection.setPaused(false);
 			if (!message.util?.parsed?.content)
 				return message.channel.send(
@@ -126,7 +130,9 @@ export default class PlayCommand extends Command {
 								timestamp: new Date(),
 								footer: {
 									text: message.author.tag,
-									icon_url: message.author.displayAvatarURL({ dynamic: true }),
+									icon_url: message.author.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
 								fields: [
 									{
@@ -146,7 +152,9 @@ export default class PlayCommand extends Command {
 								timestamp: new Date(),
 								footer: {
 									text: message.author.tag,
-									icon_url: message.author.displayAvatarURL({ dynamic: true }),
+									icon_url: message.author.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
 								fields: [
 									{
@@ -160,7 +168,12 @@ export default class PlayCommand extends Command {
 					this.client.log.error(err);
 					queue.delete(message.guild!.id);
 					return message.channel.send(
-						this.client.error(message, this, "An error occurred", err.message)
+						this.client.error(
+							message,
+							this,
+							"An error occurred",
+							err.message
+						)
 					);
 				}
 			} else {
@@ -178,7 +191,9 @@ export default class PlayCommand extends Command {
 							timestamp: new Date(),
 							footer: {
 								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({ dynamic: true }),
+								icon_url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
 							fields: [
 								{
@@ -198,7 +213,9 @@ export default class PlayCommand extends Command {
 							timestamp: new Date(),
 							footer: {
 								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({ dynamic: true }),
+								icon_url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
 							fields: [
 								{
@@ -212,7 +229,12 @@ export default class PlayCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				this.client.error(message, this, "An error occurred", error.message)
+				this.client.error(
+					message,
+					this,
+					"An error occurred",
+					error.message
+				)
 			);
 		}
 	}
@@ -229,7 +251,11 @@ export default class PlayCommand extends Command {
 					deaf: true,
 				});
 				player.setVolume(
-					await this.client.settings.get(message.guild!.id, "volume", 100)
+					await this.client.settings.get(
+						message.guild!.id,
+						"volume",
+						100
+					)
 				);
 				for (const event of ["end", "closed", "nodeDisconnect"]) {
 					// @ts-ignore
@@ -237,13 +263,21 @@ export default class PlayCommand extends Command {
 						serverQueue.songs.shift();
 						if (event === "end")
 							if (serverQueue.songs[0] !== undefined) {
-								this._play(message, serverQueue.songs[0], node, player);
+								this._play(
+									message,
+									serverQueue.songs[0],
+									node,
+									player
+								);
 							} else {
 								player.disconnect();
 								queue.delete(message.guild!.id);
 								return;
 							}
-						else if (event === "closed" || event === "nodeDisconnect") {
+						else if (
+							event === "closed" ||
+							event === "nodeDisconnect"
+						) {
 							player.disconnect();
 							queue.delete(message.guild!.id);
 							return;
@@ -256,7 +290,12 @@ export default class PlayCommand extends Command {
 			player.voiceConnection.player.on("error", (error) => {
 				this.client.log.error(error);
 				message.channel.send(
-					this.client.error(message, this, "An error occurred", error.message)
+					this.client.error(
+						message,
+						this,
+						"An error occurred",
+						error.message
+					)
 				);
 				player.disconnect();
 			});
@@ -264,7 +303,12 @@ export default class PlayCommand extends Command {
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
-				this.client.error(message, this, "An error occurred", error.message)
+				this.client.error(
+					message,
+					this,
+					"An error occurred",
+					error.message
+				)
 			);
 		}
 	}

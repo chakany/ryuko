@@ -57,8 +57,14 @@ export default class MessageEditListener extends Listener {
 						color: oldMessage.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						author: {
-							name: oldMessage.author.tag + " (" + oldMessage.author.id + ")",
-							icon_url: oldMessage.author.displayAvatarURL({ dynamic: true }),
+							name:
+								oldMessage.author.tag +
+								" (" +
+								oldMessage.author.id +
+								")",
+							icon_url: oldMessage.author.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
 						footer: {
 							text: `No content ("") means that there was probably an embed there\n${oldMessage.client.user?.tag}`,

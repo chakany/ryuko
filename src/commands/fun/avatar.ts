@@ -5,7 +5,8 @@ export default class AvatarCommand extends Command {
 	constructor() {
 		super("avatar", {
 			aliases: ["avatar", "ava", "pfp"],
-			description: "Get's the user's avatar or the person who is mentioned.",
+			description:
+				"Get's the user's avatar or the person who is mentioned.",
 			category: "Fun",
 			channel: "guild",
 			args: [
@@ -29,7 +30,9 @@ export default class AvatarCommand extends Command {
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				})
 			);
@@ -44,7 +47,9 @@ export default class AvatarCommand extends Command {
 				timestamp: new Date(),
 				footer: {
 					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({ dynamic: true }),
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
 				},
 			})
 		);

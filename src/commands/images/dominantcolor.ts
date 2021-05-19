@@ -43,7 +43,10 @@ export default class DominantcolorCommand extends Command {
 			const dominantColor = await this._getDominantColor(
 				messageAttachment
 					? messageAttachment.url
-					: message.author.avatarURL({ dynamic: true, format: "png" }) || ""
+					: message.author.avatarURL({
+							dynamic: true,
+							format: "png",
+					  }) || ""
 			);
 
 			const image = await this._getImage(dominantColor.data.hex);
@@ -62,7 +65,9 @@ export default class DominantcolorCommand extends Command {
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({ dynamic: true }),
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
 					},
 				}),
 				files: [attachment],
