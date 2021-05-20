@@ -10,7 +10,7 @@ export default class BeautifulCommand extends Command {
 			aliases: ["beautiful"],
 			description:
 				"Generates an image with a man pointing to an image and saying it is beautiful. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

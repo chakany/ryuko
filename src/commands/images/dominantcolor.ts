@@ -10,7 +10,7 @@ export default class DominantcolorCommand extends Command {
 			aliases: ["dominantcolor"],
 			description:
 				"Outputs the most dominant color in an image. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

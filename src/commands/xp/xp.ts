@@ -8,7 +8,7 @@ export default class XpCommand extends Command {
 		super("xp", {
 			aliases: ["xp"],
 			description: "Gets your xp information",
-			category: "Fun",
+			category: "Info",
 		});
 	}
 

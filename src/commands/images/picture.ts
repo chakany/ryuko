@@ -10,7 +10,7 @@ export default class PictureCommand extends Command {
 			aliases: ["picture"],
 			description:
 				"Generates an 'I love this picture.' meme. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

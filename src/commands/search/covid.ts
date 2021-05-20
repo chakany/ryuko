@@ -8,7 +8,7 @@ export default class CovidCommand extends Command {
 		super("covid", {
 			aliases: ["covid"],
 			description: "Shows covid stats",
-			category: "Fun",
+			category: "Search",
 			channel: "guild",
 			args: [
 				{

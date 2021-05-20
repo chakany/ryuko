@@ -10,7 +10,7 @@ export default class TweetCommand extends Command {
 			aliases: ["tweet", "trumptweet"],
 			description:
 				"Generates a trump tweet, with the contents being your inputted text.",
-			category: "Fun",
+			category: "Images",
 			args: [
 				{
 					id: "text",

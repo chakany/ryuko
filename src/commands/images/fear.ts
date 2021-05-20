@@ -10,7 +10,7 @@ export default class FearCommand extends Command {
 			aliases: ["fear"],
 			description:
 				"Generates an image with TF2 Heavy talking about his fears. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

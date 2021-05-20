@@ -10,7 +10,7 @@ export default class PaintingCommand extends Command {
 			aliases: ["painting"],
 			description:
 				"Generates a Painting that Kills you meme. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

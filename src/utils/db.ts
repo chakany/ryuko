@@ -286,7 +286,6 @@ export default class Db {
 	}
 
 	async sync() {
-		log.info("Syncing");
 		await guild.sync({ alter: true });
 		await users.sync({ alter: true });
 		//await linked.sync({ alter: true });

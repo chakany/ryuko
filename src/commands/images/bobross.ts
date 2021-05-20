@@ -10,7 +10,7 @@ export default class BobrossCommand extends Command {
 			aliases: ["bobross"],
 			description:
 				"Generates a Bob Ross meme. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

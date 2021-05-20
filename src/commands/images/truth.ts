@@ -10,7 +10,7 @@ export default class TruthCommand extends Command {
 			aliases: ["truth"],
 			description:
 				"Generates a Spongebob 'the truth is under this paper' meme. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

@@ -7,7 +7,7 @@ export default class AvatarCommand extends Command {
 			aliases: ["avatar", "ava", "pfp"],
 			description:
 				"Get's the user's avatar or the person who is mentioned.",
-			category: "Fun",
+			category: "Utility",
 			channel: "guild",
 			args: [
 				{

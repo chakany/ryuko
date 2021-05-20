@@ -109,15 +109,17 @@ export default class HelpCommand extends Command {
 			for (const [key, dvalue] of new Map(
 				message.util?.handler.categories!
 			)) {
-				// For each category
-				let commands = "";
-				for (const [key2, fvalue] of new Map(dvalue)) {
-					// For each command in that category
-					// Add it to the variable commands
-					commands = commands + " `" + fvalue.aliases[0] + "`";
+				if (dvalue.first() != null) {
+					// For each category
+					let commands = "";
+					for (const [key2, fvalue] of new Map(dvalue)) {
+						// For each command in that category
+						// Add it to the variable commands
+						commands = commands + " `" + fvalue.aliases[0] + "`";
+					}
+					// Add it to the embed
+					helpEmbed.addField(key, commands, true);
 				}
-				// Add it to the embed
-				helpEmbed.addField(key, commands, true);
 			}
 			return message.channel.send(helpEmbed);
 		} else if (args.command.id) {
@@ -166,7 +168,14 @@ export default class HelpCommand extends Command {
 			}
 			helpEmbed.addField("Usage", "`" + usage + "`");
 			return message.channel.send(helpEmbed);
-		} else if (message.util?.handler.categories.get(args.command)) {
+		} else if (
+			message.util?.handler.categories
+				.get(
+					args.command.charAt(0).toUpperCase() +
+						args.command.substring(1).toLowerCase()
+				)
+				?.first()
+		) {
 			// If our command argument is all, this gets a list of ALL commands regardless of permission
 			const helpEmbed = new MessageEmbed({
 				color: message.guild?.me?.displayHexColor,
@@ -180,7 +189,8 @@ export default class HelpCommand extends Command {
 			});
 			let commands = "";
 			const category = message.util?.handler.categories.get(
-				args.command
+				args.command.charAt(0).toUpperCase() +
+					args.command.substring(1).toLowerCase()
 			)!;
 			for (const [key2, fvalue] of new Map(category)) {
 				// For each command in that category

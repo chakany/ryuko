@@ -9,7 +9,7 @@ export default class ColorCommand extends Command {
 		super("color", {
 			aliases: ["color"],
 			description: "Generates an image of a color from your input.",
-			category: "Fun",
+			category: "Utility",
 			args: [
 				{
 					id: "hexcode",

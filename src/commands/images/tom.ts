@@ -10,7 +10,7 @@ export default class TomCommand extends Command {
 			aliases: ["tom"],
 			description:
 				"Generates an image of Tom from Tom and Jerry about to accidentally shoot himself, trust me it isn't as morbid as it sounds. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

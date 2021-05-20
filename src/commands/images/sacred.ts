@@ -10,7 +10,7 @@ export default class SacredCommand extends Command {
 			aliases: ["sacred"],
 			description:
 				"Generates a sacred texts meme. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

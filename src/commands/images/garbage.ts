@@ -10,7 +10,7 @@ export default class GarbageCommand extends Command {
 			aliases: ["garbage"],
 			description:
 				"Generates a photo of an image in a trash can. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

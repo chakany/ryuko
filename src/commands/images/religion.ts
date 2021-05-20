@@ -10,7 +10,7 @@ export default class ReligionCommand extends Command {
 			aliases: ["religion"],
 			description:
 				"Generates a text conversation that involved someone showing their 'religion' to another person, the religion being represented by an image. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

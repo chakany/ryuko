@@ -10,7 +10,7 @@ export default class DeleteCommand extends Command {
 			aliases: ["delete"],
 			description:
 				"Generates a windows dialog asking if you would like to delete an image. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

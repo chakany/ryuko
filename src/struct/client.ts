@@ -10,7 +10,6 @@ import { Collection, Message, MessageEmbed } from "discord.js";
 import { Shoukaku } from "shoukaku";
 import bunyan from "bunyan";
 import client from "nekos.life";
-import axios from "axios";
 import { Job } from "node-schedule";
 
 import Db from "../utils/db";
@@ -171,20 +170,9 @@ export default class AinaClient extends AkairoClient {
 		);
 	}
 
-	async _checkImageAPI() {
-		try {
-			await axios.get(config.imgApiUrl + "/ping");
-		} catch (error) {
-			this.log.warn(
-				"Connecting to the image api failed, most fun commands will error out as a result."
-			);
-		}
-	}
-
 	async start(token: string): Promise<this> {
 		this.log.info("Starting...");
 		this._setupShoukakuEvents();
-		this._checkImageAPI();
 		this.login(token);
 		this.on("disconnect", () => this.log.warn("Disconnected!"));
 

@@ -10,7 +10,7 @@ export default class DipshitCommand extends Command {
 			aliases: ["dipshit"],
 			description:
 				"Generates a google 'did you mean dipshit' meme, with the search being your inputted text.",
-			category: "Fun",
+			category: "Images",
 			args: [
 				{
 					id: "text",

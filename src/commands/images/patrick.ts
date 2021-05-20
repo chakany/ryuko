@@ -10,7 +10,7 @@ export default class PatrickCommand extends Command {
 			aliases: ["patrick"],
 			description:
 				"Generates an image of patrick screaming after seeing a photo. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 

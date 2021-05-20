@@ -10,7 +10,7 @@ export default class AchievementCommand extends Command {
 			aliases: ["achievement"],
 			description:
 				"Generates a Minecraft achivement with the text you input. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 			args: [
 				{
 					id: "text",

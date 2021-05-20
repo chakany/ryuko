@@ -10,7 +10,7 @@ export default class RespectCommand extends Command {
 			aliases: ["respect"],
 			description:
 				"Generates a press F to pay respects meme. Supports image attachments.",
-			category: "Fun",
+			category: "Images",
 		});
 	}
 
