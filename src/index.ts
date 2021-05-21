@@ -138,28 +138,31 @@ void (async function () {
 			shardArgs,
 		});
 
-	manager.on("shardCreate", (shard) =>
-		log.info(`Launched shard ${shard.id}`)
-	);
+	manager.on("shardCreate", (shard) => {
+		log.info(`Launched shard ${shard.id}`);
+		if (shard.id == 0) {
+			shard.once("ready", () => {
+				const app = express();
+
+				try {
+					app.set("view engine", "ejs");
+					app.set("views", "../app/pages");
+
+					app.use("/", home);
+					app.use("/commands", commands);
+
+					app.use(express.static("../app/static"));
+
+					app.listen(port, () => {
+						weblog.info(`Bound to port ${port}`);
+					});
+				} catch (error) {
+					weblog.error(error);
+				}
+			});
+		}
+	});
 	manager.spawn();
-
-	const app = express();
-
-	try {
-		app.set("view engine", "ejs");
-		app.set("views", "../app/pages");
-
-		app.use("/", home);
-		app.use("/commands", commands);
-
-		app.use(express.static("../app/static"));
-
-		app.listen(port, () => {
-			weblog.info(`Bound to port ${port}`);
-		});
-	} catch (error) {
-		weblog.error(error);
-	}
 })();
 
 export { manager, weblog };
