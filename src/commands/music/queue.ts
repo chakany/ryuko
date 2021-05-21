@@ -14,8 +14,7 @@ export default class QueueCommand extends Command {
 
 	async exec(message: Message): Promise<any> {
 		try {
-			// @ts-ignore
-			const serverQueue = message.client.queue.get(message.guild!.id);
+			const serverQueue = this.client.queue.get(message.guild!.id);
 			if (!serverQueue)
 				return message.channel.send(
 					this.client.error(
@@ -27,24 +26,26 @@ export default class QueueCommand extends Command {
 				);
 			let description =
 				"**Currently Playing:** `" +
-				serverQueue.songs[0].info.title +
+				serverQueue.tracks[0].info.title +
 				"`\n";
 			let i;
 			for (i = 1; i < 7; i++) {
-				if (serverQueue.songs[i] && serverQueue.songs.length > 1) {
-					let song = serverQueue.songs[i];
+				if (serverQueue.tracks[i] && serverQueue.tracks.length > 1) {
+					let song = serverQueue.tracks[i];
 					description =
 						description +
 						`\n**${i}:**` +
-						" `" +
+						" [`" +
 						song.info.title +
-						"`";
+						"`](" +
+						song.info.uri +
+						")";
 				}
 			}
-			if (serverQueue.songs.length > 6)
+			if (serverQueue.tracks.length > 6)
 				description =
 					description +
-					`\nand **${serverQueue.songs.length - 6}** more.`;
+					`\nand **${serverQueue.tracks.length - 6}** more.`;
 			return message.channel.send(
 				new MessageEmbed({
 					title: "Song Queue",

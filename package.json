@@ -49,8 +49,7 @@
 		"node-schedule": "^2.0.0",
 		"sequelize": "^6.6.2",
 		"shoukaku": "1.5.2",
-		"spotify-url-info": "^2.2.0",
-		"urban-dictionary": "^3.0.0",
-		"ytsr": "^3.4.0"
+		"spotify-url-info": "^2.2.3",
+		"urban-dictionary": "^3.0.0"
 	}
 }

@@ -21,8 +21,7 @@ export default class VolumeCommand extends Command {
 
 	async exec(message: Message, args: any): Promise<any> {
 		try {
-			// @ts-ignore
-			const serverQueue = message.client.queue.get(message.guild.id);
+			const serverQueue = this.client.queue.get(message.guild!.id);
 			if (serverQueue === undefined)
 				return message.channel.send(
 					this.client.error(
@@ -34,7 +33,8 @@ export default class VolumeCommand extends Command {
 				);
 			if (
 				!message.member?.voice.channel ||
-				message.member?.voice.channel !== serverQueue.voiceChannel
+				message.member?.voice.channelID !==
+					serverQueue.player?.voiceConnection.voiceChannelID
 			)
 				return message.channel.send(
 					this.client.error(
@@ -44,7 +44,7 @@ export default class VolumeCommand extends Command {
 						"You have to be in the voice channel to change the volume!"
 					)
 				);
-			const oldVolume = serverQueue.connection.volume;
+			const oldVolume = serverQueue.player.volume;
 			if (!args.volume || typeof args.volume !== "number")
 				return message.channel.send(
 					new MessageEmbed({
@@ -60,7 +60,7 @@ export default class VolumeCommand extends Command {
 						},
 					})
 				);
-			serverQueue.connection.setVolume(args.volume);
+			serverQueue.player.setVolume(args.volume);
 			await this.client.settings
 				.set(message.guild!.id, "volume", args.volume)
 				.catch((error) => {

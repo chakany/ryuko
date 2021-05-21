@@ -7,7 +7,7 @@ import {
 	Command,
 } from "discord-akairo";
 import { Collection, Message, MessageEmbed } from "discord.js";
-import { Shoukaku } from "shoukaku";
+import { Shoukaku, ShoukakuPlayer, ShoukakuTrack } from "shoukaku";
 import bunyan from "bunyan";
 import client from "nekos.life";
 import { Job } from "node-schedule";
@@ -24,6 +24,13 @@ const ShoukakuOptions = {
 	restTimeout: 10000,
 };
 
+interface Queue {
+	player: ShoukakuPlayer | null;
+	tracks: ShoukakuTrack[];
+	paused: boolean;
+	loop: boolean;
+}
+
 declare module "discord-akairo" {
 	interface AkairoClient {
 		db: Db;
@@ -31,7 +38,7 @@ declare module "discord-akairo" {
 		config: any;
 		settings: SequelizeProvider;
 		shoukaku: Shoukaku;
-		queue: any;
+		queue: Collection<string, Queue>;
 		log: bunyan;
 		jobs: Map<string, Map<string, Job>>;
 		hentai: client;
@@ -62,7 +69,7 @@ export default class AinaClient extends AkairoClient {
 	public config: any;
 	public settings: SequelizeProvider;
 	public shoukaku: Shoukaku;
-	public queue;
+	public queue: Collection<string, Queue>;
 	public log: bunyan;
 	public jobs: Collection<string, Map<string, Job>>;
 	public hentai: client;
@@ -90,7 +97,7 @@ export default class AinaClient extends AkairoClient {
 		this.settings = this.db.getSettings();
 
 		this.shoukaku = new Shoukaku(this, config.lavalink, ShoukakuOptions);
-		this.queue = new Map();
+		this.queue = new Collection();
 
 		this.commandHandler = new CommandHandler(this, {
 			directory: "./commands",

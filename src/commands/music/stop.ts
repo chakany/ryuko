@@ -13,8 +13,7 @@ export default class StopCommand extends Command {
 
 	async exec(message: Message): Promise<any> {
 		try {
-			// @ts-ignore
-			const serverQueue = message.client.queue.get(message.guild.id);
+			const serverQueue = this.client.queue.get(message.guild!.id);
 			if (serverQueue === undefined)
 				return message.channel.send(
 					this.client.error(
@@ -26,7 +25,8 @@ export default class StopCommand extends Command {
 				);
 			if (
 				!message.member?.voice.channel ||
-				message.member?.voice.channel !== serverQueue.voiceChannel
+				message.member?.voice.channelID !==
+					serverQueue.player?.voiceConnection.voiceChannelID
 			)
 				return message.channel.send(
 					this.client.error(
@@ -36,7 +36,7 @@ export default class StopCommand extends Command {
 						"You have to be in the voice channel to stop the music!"
 					)
 				);
-			serverQueue.connection.disconnect();
+			serverQueue.player.disconnect();
 			// @ts-ignore
 			message.client.queue.delete(message.guild!.id);
 		} catch (error) {

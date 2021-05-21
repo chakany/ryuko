@@ -1,9 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
-import { any } from "sequelize/types/lib/operators";
-import { ShoukakuPlayer } from "shoukaku";
-const { getPreview } = require("spotify-url-info");
-import ystr from "ytsr";
+import spotify from "spotify-url-info";
 
 export default class PlayCommand extends Command {
 	constructor() {
@@ -32,262 +29,318 @@ export default class PlayCommand extends Command {
 		}
 	}
 
-	private async _search(query: string): Promise<string> {
-		// @ts-ignore
-		const searchResults = await ystr(query, {
-			limit: 2,
-		});
-		// @ts-ignore
-		return searchResults.items[0].url;
-	}
-
 	async exec(message: Message, args: any): Promise<any> {
-		try {
-			// @ts-ignore
-			const queue = message.client.queue;
-			const guild = message.guild;
-			const serverQueue = queue.get(message.guild!.id);
-			if (
-				serverQueue !== undefined &&
-				serverQueue.connection &&
-				!args.song
-			)
-				return serverQueue.connection.setPaused(false);
-			if (!message.util?.parsed?.content)
-				return message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"Invalid Argument",
-						"You must provide something to play! It can be a URL or a search query."
-					)
-				);
-			const voiceChannel = message.member!.voice.channel;
-			if (!voiceChannel)
-				return message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"Invalid Usage",
-						"You are not in a voice channel!"
-					)
-				);
-			let url;
-			if (this._checkURL(args.song)) {
-				if (args.song.startsWith("https://open.spotify.com/")) {
-					const spotifyResponse = await getPreview(args.song);
-					if (spotifyResponse.type === "track")
-						url = await this._search(
-							`${spotifyResponse.track} - ${spotifyResponse.artist}`
-						);
-				} else {
-					url = args.song;
-				}
-			} else {
-				url = await this._search(message.util?.parsed?.content);
-				if (!url)
-					return message.channel.send(
-						this.client.error(
-							message,
-							this,
-							"Search Failed",
-							"I could not find that on YouTube"
-						)
-					);
-			}
-			const node = this.client.shoukaku.getNode();
-			let data = await node.rest.resolve(url);
-			if (!data) return;
-			const tracks = data.tracks;
+		const queue = this.client.queue;
 
-			if (!serverQueue) {
-				const queueContruct = {
-					textChannel: message.channel,
-					voiceChannel: voiceChannel,
-					connection: null,
-					songs: [],
-					playing: true,
-				};
-				// @ts-ignore
-				queueContruct.voiceChannel = message.member?.voice.channel;
-
-				queue.set(message.guild!.id, queueContruct);
-
-				tracks.forEach((track: any) => {
-					// @ts-ignore
-					queueContruct.songs.push(track);
-				});
-
-				try {
-					this._play(message, queueContruct.songs[0], node);
-					if (data.type === "PLAYLIST")
-						await message.channel.send(
-							new MessageEmbed({
-								title: `Now Playing Playlist`,
-								description: "`" + data.playlistName + "`",
-								url: args.song,
-								color: message.guild?.me?.displayHexColor,
-								timestamp: new Date(),
-								footer: {
-									text: message.author.tag,
-									icon_url: message.author.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								fields: [
-									{
-										name: "Suggested by:",
-										value: `<@${message.author.id}>`,
-									},
-								],
-							})
-						);
-					else
-						await message.channel.send(
-							new MessageEmbed({
-								title: `Now Playing`,
-								description: "`" + tracks[0].info.title + "`",
-								url: tracks[0].info.uri,
-								color: message.guild?.me?.displayHexColor,
-								timestamp: new Date(),
-								footer: {
-									text: message.author.tag,
-									icon_url: message.author.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								fields: [
-									{
-										name: "Suggested by:",
-										value: `<@${message.author.id}>`,
-									},
-								],
-							})
-						);
-				} catch (err) {
-					this.client.log.error(err);
-					queue.delete(message.guild!.id);
-					return message.channel.send(
-						this.client.error(
-							message,
-							this,
-							"An error occurred",
-							err.message
-						)
-					);
-				}
-			} else {
-				tracks.forEach((track: any) => {
-					// @ts-ignore
-					serverQueue.songs.push(track);
-				});
-				if (data.type === "PLAYLIST")
-					await message.channel.send(
-						new MessageEmbed({
-							title: `Added Playlist to Queue!`,
-							description: "`" + data.playlistName + "`",
-							url: args.song,
-							color: message.guild?.me?.displayHexColor,
-							timestamp: new Date(),
-							footer: {
-								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-							fields: [
-								{
-									name: "Suggested by:",
-									value: `<@${message.author.id}>`,
-								},
-							],
-						})
-					);
-				else
-					await message.channel.send(
-						new MessageEmbed({
-							title: `Added to Queue!`,
-							description: "`" + tracks[0].info.title + "`",
-							url: tracks[0].info.uri,
-							color: message.guild?.me?.displayHexColor,
-							timestamp: new Date(),
-							footer: {
-								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-							fields: [
-								{
-									name: "Suggested by:",
-									value: `<@${message.author.id}>`,
-								},
-							],
-						})
-					);
-			}
-		} catch (error) {
-			this.client.log.error(error);
+		if (!args.song)
 			return message.channel.send(
 				this.client.error(
 					message,
 					this,
-					"An error occurred",
-					error.message
+					"Invalid Arguments",
+					"You must provide a search query, or a URL!"
 				)
 			);
-		}
-	}
-	// @ts-ignore
-	async _play(message: Message, track, node, player: ShoukakuPlayer = null) {
-		try {
-			// @ts-ignore
-			const queue = message.client.queue;
-			const serverQueue = queue.get(message.guild!.id);
-			if (!player) {
-				player = await node.joinVoiceChannel({
-					guildID: message.guild!.id,
-					voiceChannelID: message.member!.voice.channelID,
-					deaf: true,
-				});
-				player.setVolume(
-					await this.client.settings.get(
-						message.guild!.id,
-						"volume",
-						100
-					)
-				);
-				for (const event of ["end", "closed", "nodeDisconnect"]) {
-					// @ts-ignore
-					player.on(event, () => {
-						serverQueue.songs.shift();
-						if (event === "end")
-							if (serverQueue.songs[0] !== undefined) {
-								this._play(
-									message,
-									serverQueue.songs[0],
-									node,
-									player
-								);
-							} else {
-								player.disconnect();
-								queue.delete(message.guild!.id);
-								return;
-							}
-						else if (
-							event === "closed" ||
-							event === "nodeDisconnect"
-						) {
-							player.disconnect();
-							queue.delete(message.guild!.id);
-							return;
-						}
-					});
-				}
+		else if (
+			queue.get(message.guild!.id) &&
+			queue.get(message.guild!.id)?.paused == true
+		) {
+			const guild = queue.get(message.guild!.id);
+			guild!.paused = false;
+		} else if (message.member!.voice.channelID == null)
+			return message.channel.send(
+				this.client.error(
+					message,
+					this,
+					"Invalid Usage",
+					"You must join a voice channel first!"
+				)
+			);
+		else if (
+			queue.get(message.guild!.id) &&
+			queue.get(message.guild!.id)?.player?.voiceConnection
+				.voiceChannelID !== message.member?.voice.channelID
+		)
+			return message.channel.send(
+				this.client.error(
+					message,
+					this,
+					"Invalid Usage",
+					"You must be in the same voice channel as the bot!"
+				)
+			);
+		const node = this.client.shoukaku.getNode();
+
+		if (!queue.get(message.guild!.id))
+			queue.set(message.guild!.id, {
+				player: null,
+				tracks: [],
+				paused: true,
+				loop: false,
+			});
+
+		const guildQueue = queue.get(message.guild!.id)!;
+		const embedToSend = new MessageEmbed({
+			title: "Now Playing",
+			color: message.guild?.me?.displayHexColor,
+			timestamp: new Date(),
+			footer: {
+				text: message.author.tag,
+				icon_url: message.author.displayAvatarURL({
+					dynamic: true,
+				}),
+			},
+		});
+		if (
+			this._checkURL(args.song) &&
+			args.song.startsWith("https://open.spotify.com")
+		) {
+			const req = await spotify.getData(args.song);
+			switch (req.type) {
+				case "track":
+					const data = await node.rest.resolve(
+						`${req.name} - ${req.artists[0].name}`,
+						"youtube"
+					);
+					if (data?.tracks[0])
+						guildQueue.tracks.push(data?.tracks[0]);
+					embedToSend.setAuthor(
+						req.artists[0].name,
+						undefined,
+						req.artists[0].external_urls.spotify
+					);
+					embedToSend.setDescription(
+						"[`" +
+							data?.tracks[0].info.title +
+							"`](" +
+							data?.tracks[0].info.uri +
+							")"
+					);
+					embedToSend.setURL(data?.tracks[0].info.uri!);
+					embedToSend.setThumbnail(req.album.images[0].url);
+					break;
+				case "playlist":
+					let playlistCount = 0;
+					const playlistMessage = message.channel.send(
+						new MessageEmbed({
+							title: "<a:loading:837775261373956106> *Please wait..*",
+							description: `I am adding all songs in this playlist to the queue, give me a minute. **${playlistCount}**/**${req.tracks.items.length} Added**`,
+							color: message.guild?.me?.displayHexColor,
+							timestamp: new Date(),
+							footer: {
+								text: message.author.tag,
+								icon_url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+						})
+					);
+					let playlistDescription = "";
+					embedToSend.setAuthor(
+						`${req.name} - ${req.owner.display_name}`,
+						undefined,
+						req.owner.external_urls.spotify
+					);
+					console.log(req);
+					embedToSend.setThumbnail(req.images[0].url);
+					embedToSend.setURL(req.external_urls.spotify);
+					for await (const song of req.tracks.items) {
+						const data = await node.rest.resolve(
+							`${song.track.name} - ${song.track.artists[0].name}`,
+							"youtube"
+						);
+						if (data?.tracks[0])
+							guildQueue.tracks.push(data?.tracks[0]);
+						playlistCount++;
+						await (
+							await playlistMessage
+						).edit(
+							new MessageEmbed({
+								title: "<a:loading:837775261373956106> *Please wait..*",
+								description: `I am adding all songs in this playlist to the queue, give me a minute. **${playlistCount}**/**${req.tracks.items.length} Added**`,
+								color: message.guild?.me?.displayHexColor,
+								timestamp: new Date(),
+								footer: {
+									text: message.author.tag,
+									icon_url: message.author.displayAvatarURL({
+										dynamic: true,
+									}),
+								},
+							})
+						);
+						if (playlistCount == 0)
+							playlistDescription =
+								playlistDescription +
+								"[`" +
+								data?.tracks[0].info.title +
+								"`](" +
+								data?.tracks[0].info.uri +
+								")";
+						else if (playlistCount < 7)
+							playlistDescription =
+								playlistDescription +
+								`\n**${playlistCount}:** ` +
+								"[`" +
+								data?.tracks[0].info.title +
+								"`](" +
+								data?.tracks[0].info.uri +
+								")";
+						else if (playlistCount == 7)
+							playlistDescription =
+								playlistDescription +
+								`\nand **${req.tracks.total - 6}** more.`;
+					}
+					(await playlistMessage).delete();
+					embedToSend.setThumbnail(req.images[0].url);
+					embedToSend.setDescription(playlistDescription);
+					break;
+				case "album":
+					let albumCount = 0;
+					const albumMessage = message.channel.send(
+						new MessageEmbed({
+							title: "<a:loading:837775261373956106> *Please wait..*",
+							description: `I am adding all songs in this album to the queue, give me a minute. **${albumCount}**/**${req.tracks.items.length} Added**`,
+							color: message.guild?.me?.displayHexColor,
+							timestamp: new Date(),
+							footer: {
+								text: message.author.tag,
+								icon_url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+						})
+					);
+					let albumDescription = "";
+					embedToSend.setAuthor(
+						`${req.name} - ${req.artists[0].name}`,
+						undefined,
+						req.artists[0].external_urls.spotify
+					);
+					embedToSend.setThumbnail(req.images[0].url);
+					embedToSend.setURL(req.external_urls.spotify);
+					for await (const song of req.tracks.items) {
+						const data = await node.rest.resolve(
+							`${song.name} - ${song.artists[0].name}`,
+							"youtube"
+						);
+						if (data?.tracks[0])
+							guildQueue.tracks.push(data?.tracks[0]);
+						albumCount++;
+						(await albumMessage).edit(
+							new MessageEmbed({
+								title: "<a:loading:837775261373956106> *Please wait..*",
+								description: `I am adding all songs in this album to the queue, give me a minute. **${albumCount}**/**${req.tracks.items.length} Added**`,
+								color: message.guild?.me?.displayHexColor,
+								timestamp: new Date(),
+								footer: {
+									text: message.author.tag,
+									icon_url: message.author.displayAvatarURL({
+										dynamic: true,
+									}),
+								},
+							})
+						);
+						if (albumCount == 0)
+							albumDescription =
+								albumDescription +
+								"[`" +
+								data?.tracks[0].info.title +
+								"`](" +
+								data?.tracks[0].info.uri +
+								")";
+						else if (albumCount < 7)
+							albumDescription =
+								albumDescription +
+								`\n**${albumCount}:** ` +
+								"[`" +
+								data?.tracks[0].info.title +
+								"`](" +
+								data?.tracks[0].info.uri +
+								")";
+						else if (albumCount == 7)
+							albumDescription =
+								albumDescription +
+								`\nand **${req.tracks.total - 6}** more.`;
+					}
+					await (await albumMessage).delete();
+					embedToSend.setDescription(albumDescription);
 			}
-			serverQueue.connection = player;
-			player.voiceConnection.selfDeaf = true;
-			player.voiceConnection.player.on("error", (error) => {
+		} else if (!this._checkURL(args.song)) {
+			const data = await node.rest.resolve(
+				message.util?.parsed?.content!,
+				"youtube"
+			);
+			if (data?.tracks[0]) guildQueue.tracks.push(data?.tracks[0]);
+			embedToSend.setDescription("`" + data?.tracks[0].info.title + "`");
+			embedToSend.setThumbnail(
+				`https://img.youtube.com/vi/${data?.tracks[0].info.identifier}/default.jpg`
+			);
+			embedToSend.setURL(data?.tracks[0].info.uri!);
+		} else {
+			const data = await node.rest.resolve(
+				message.util?.parsed?.content!
+			);
+			if (data?.playlistName) {
+				let playlistCount = 0;
+				let playlistDescription = "";
+				for await (let track of data?.tracks) {
+					if (playlistCount == 0)
+						playlistDescription =
+							playlistDescription +
+							"[`" +
+							track.info.title +
+							"`](" +
+							track.info.uri +
+							")\n";
+					else if (playlistCount < 7)
+						playlistDescription =
+							playlistDescription +
+							`\n**${playlistCount}:** ` +
+							"[`" +
+							track.info.title +
+							"`](" +
+							track.info.uri +
+							")";
+					else if (playlistCount == 7)
+						playlistDescription =
+							playlistDescription +
+							`\nand **${data?.tracks.length - 6}** more.`;
+					playlistCount++;
+				}
+				guildQueue.tracks = [...data?.tracks];
+				embedToSend.setDescription(playlistDescription);
+			} else if (data?.tracks[0]) {
+				embedToSend.setDescription(
+					"`" + data?.tracks[0].info.title + "`"
+				);
+				guildQueue.tracks.push(data?.tracks[0]);
+			}
+			if (data?.tracks[0].info.uri?.startsWith("https://www.youtube.com"))
+				embedToSend.setThumbnail(
+					`https://img.youtube.com/vi/${data?.tracks[0].info.identifier}/default.jpg`
+				);
+			embedToSend.setURL(data?.tracks[0].info.uri!);
+		}
+
+		if (guildQueue.paused == true) {
+			const player = await node.joinVoiceChannel({
+				guildID: message.guild!.id,
+				voiceChannelID: message.member!.voice.channelID!,
+				deaf: true,
+			});
+
+			guildQueue.player = player;
+			player.playTrack(guildQueue.tracks[0]);
+
+			player.on("end", (reason) => {
+				if (!guildQueue.loop) guildQueue.tracks.shift();
+				if (guildQueue.tracks[0])
+					return player.playTrack(guildQueue.tracks[0]);
+				player.disconnect();
+				return queue.delete(message.guild!.id);
+			});
+
+			player.on("error", (error) => {
 				this.client.log.error(error);
 				message.channel.send(
 					this.client.error(
@@ -298,18 +351,13 @@ export default class PlayCommand extends Command {
 					)
 				);
 				player.disconnect();
+				return queue.delete(message.guild!.id);
 			});
-			await player.playTrack(track);
-		} catch (error) {
-			this.client.log.error(error);
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"An error occurred",
-					error.message
-				)
-			);
+
+			return message.channel.send(embedToSend);
+		} else {
+			embedToSend.setTitle("Added to Queue");
+			return message.channel.send(embedToSend);
 		}
 	}
 }
