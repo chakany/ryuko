@@ -97,6 +97,7 @@ void (async function () {
 			shardArgs.push("--disable-NSFW");
 			checkStatus.push({ imgApi: colors.red("Failed") });
 		}
+		console.log(checkStatus.toString());
 	} else {
 		log.warn(
 			"Skipping pre-initialization checks; NODE_ENV is not 'production'"
@@ -107,15 +108,15 @@ void (async function () {
 		checkStatus.push({ "img-api": colors.yellow("Skipped") });
 		checkStatus.push({ pterodactyl: colors.yellow("Skipped") });
 		checkStatus.push({ "nekos.life": colors.yellow("Skipped") });
-		await db.sync();
+		console.log(checkStatus.toString());
+		try {
+			await db.sync();
+		} catch (error) {
+			dberror = error;
+		}
 	}
 
-	console.log(checkStatus.toString());
-
-	if (
-		checkStatus.find((value) => value.db == colors.red("Failed")) !==
-		undefined
-	) {
+	if (dberror) {
 		log.error("Could not connect to the database!", {
 			err: dberror.message,
 		});
