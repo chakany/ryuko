@@ -34,26 +34,59 @@ export default class PingCommand extends Command {
 						dynamic: true,
 					}),
 				},
-				description:
-					"```asciidoc\n" +
-					`Servers :: ${await this.client.shard!.fetchClientValues(
-						"guilds.cache.size"
-					)}\nShard :: ${message.guild?.shardID} of ${
-						this.client.shard?.count
-					}\nMemory :: ${Math.round(used * 100) / 100}MB of ${
-						os.totalmem() / 1024 / 1024
-					}MB\nUptime :: ${uptime}\nNode.js Version :: ${
-						process.version
-					}\nDiscord.js Version :: ${
-						require("../../../node_modules/discord.js/package.json")
-							.version
-					}\nAkairo Version :: ${
-						require("../../../node_modules/discord-akairo/package.json")
-							.version
-					}\nBot Version :: ${
-						require("../../../package.json").version
-					}\nDatabase :: MariaDB` +
-					"```",
+				fields: [
+					{
+						name: "Total Guilds",
+						value: await this.client.shard!.fetchClientValues(
+							"guilds.cache.size"
+						),
+						inline: true,
+					},
+					{
+						name: "Current Shard",
+						value: `${message.guild?.shardID}/${this.client.shard?.count}`,
+						inline: true,
+					},
+					{
+						name: "Memory",
+						value: `${Math.round(used * 100) / 100}MB of ${
+							os.totalmem() / 1024 / 1024
+						}MB`,
+						inline: true,
+					},
+					{ name: "Uptime", value: uptime, inline: true },
+					{
+						name: "Node.js Version",
+						value: process.version,
+						inline: true,
+					},
+					{
+						name: "Akairo Version",
+						value: `v${
+							require("../../../node_modules/discord-akairo/package.json")
+								.version
+						}`,
+						inline: true,
+					},
+					{
+						name: "Discord.js Version",
+						value: `v${
+							require("../../../node_modules/discord.js/package.json")
+								.version
+						}`,
+						inline: true,
+					},
+					{
+						name: "Bot Version",
+						value: `v${require("../../../package.json").version}`,
+						inline: true,
+					},
+					{
+						name: "Database",
+						value: "MariaDB",
+						inline: true,
+					},
+				],
 			})
 		);
 	}
