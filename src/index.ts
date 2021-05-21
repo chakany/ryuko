@@ -55,27 +55,37 @@ void (async function () {
 		}
 
 		// image api check
-		try {
-			await axios.get(imgApiUrl + "/ping");
-			checkStatus.push({ "img-api": colors.green("Passed") });
-		} catch (error) {
+		if (imgApiUrl !== "")
+			try {
+				await axios.get(imgApiUrl + "/ping");
+				checkStatus.push({ "img-api": colors.green("Passed") });
+			} catch (error) {
+				shardArgs.push("--disable-Images");
+				checkStatus.push({ "img-api": colors.red("Failed") });
+			}
+		else {
 			shardArgs.push("--disable-Images");
-			checkStatus.push({ "img-api": colors.red("Failed") });
+			checkStatus.push({ "img-api": colors.yellow("Skipped") });
 		}
 
 		// pterodactyl panel check
-		try {
-			await axios.get(pterodactyl.url + `/api/client/`, {
-				headers: {
-					Authorization: `Bearer ${pterodactyl.key}`,
-					"Content-Type": "application/json",
-					Accept: "Application/vnd.pterodactyl.v1+json",
-				},
-			});
-			checkStatus.push({ pterodactyl: colors.green("Passed") });
-		} catch (error) {
+		if (pterodactyl.url && pterodactyl.key)
+			try {
+				await axios.get(pterodactyl.url + `/api/client/`, {
+					headers: {
+						Authorization: `Bearer ${pterodactyl.key}`,
+						"Content-Type": "application/json",
+						Accept: "Application/vnd.pterodactyl.v1+json",
+					},
+				});
+				checkStatus.push({ pterodactyl: colors.green("Passed") });
+			} catch (error) {
+				shardArgs.push("--disable-panel");
+				checkStatus.push({ pterodactyl: colors.red("Failed") });
+			}
+		else {
 			shardArgs.push("--disable-panel");
-			checkStatus.push({ pterodactyl: colors.red("Failed") });
+			checkStatus.push({ pterodactyl: colors.yellow("Skipped") });
 		}
 
 		// nekos.life api check
