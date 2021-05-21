@@ -62,6 +62,7 @@ export default class GithubCommand extends Command {
 				author: {
 					name: repo.owner.login,
 					icon_url: repo.owner.avatar_url,
+					url: repo.owner.html_url,
 				},
 				footer: {
 					text: message.author.tag,
