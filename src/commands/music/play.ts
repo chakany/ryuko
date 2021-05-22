@@ -141,7 +141,6 @@ export default class PlayCommand extends Command {
 						undefined,
 						req.owner.external_urls.spotify
 					);
-					console.log(req);
 					embedToSend.setThumbnail(req.images[0].url);
 					embedToSend.setURL(req.external_urls.spotify);
 					for await (const song of req.tracks.items) {
