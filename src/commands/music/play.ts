@@ -32,7 +32,13 @@ export default class PlayCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		const queue = this.client.queue;
 
-		if (!args.song)
+		if (
+			queue.get(message.guild!.id) &&
+			queue.get(message.guild!.id)?.paused == true
+		) {
+			const guild = queue.get(message.guild!.id);
+			guild!.paused = false;
+		} else if (!args.song)
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -41,13 +47,7 @@ export default class PlayCommand extends Command {
 					"You must provide a search query, or a URL!"
 				)
 			);
-		else if (
-			queue.get(message.guild!.id) &&
-			queue.get(message.guild!.id)?.paused == true
-		) {
-			const guild = queue.get(message.guild!.id);
-			guild!.paused = false;
-		} else if (message.member!.voice.channelID == null)
+		else if (message.member!.voice.channelID == null)
 			return message.channel.send(
 				this.client.error(
 					message,
