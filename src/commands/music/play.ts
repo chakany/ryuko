@@ -38,6 +38,7 @@ export default class PlayCommand extends Command {
 		) {
 			const guild = queue.get(message.guild!.id);
 			guild!.paused = false;
+			return guild!.player?.setPaused(false);
 		} else if (!args.song)
 			return message.channel.send(
 				this.client.error(
