@@ -95,7 +95,7 @@ void (async function () {
 			checkStatus.push({ "nekos.life": colors.green("Passed") });
 		} catch (error) {
 			shardArgs.push("--disable-NSFW");
-			checkStatus.push({ imgApi: colors.red("Failed") });
+			checkStatus.push({ "nekos.life": colors.red("Failed") });
 		}
 		console.log(checkStatus.toString());
 	} else {
