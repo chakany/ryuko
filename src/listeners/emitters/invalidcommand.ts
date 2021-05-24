@@ -39,15 +39,9 @@ export default class InvalidCommandListener extends Listener {
 						"'?```",
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
-					author: {
-						name: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
 					footer: {
-						text: message.client.user?.tag,
-						icon_url: message.client.user?.displayAvatarURL({
+						text: message.author.tag,
+						icon_url: message.author.displayAvatarURL({
 							dynamic: true,
 						}),
 					},
