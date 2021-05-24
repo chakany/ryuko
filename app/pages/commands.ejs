@@ -21,7 +21,8 @@
 				"
 			>
 				<div class="position-sticky pt-3">
-					<% for( let i = 0; i < categories.length; i++ ) { %>
+					<% for( let i = 0; i < categories.length; i++ ) { %> <%
+					if(categories[i][0]) { %>
 					<h6
 						class="
 							sidebar-heading
@@ -35,12 +36,17 @@
 						"
 					>
 						<span><%= categories[i][0].categoryID %></span>
-						<a class="link-secondary" href="#" aria-label="Add a new report">
+						<a
+							class="link-secondary"
+							href="#"
+							aria-label="Add a new report"
+						>
 							<span data-feather="plus-circle"></span>
 						</a>
 					</h6>
 					<ul class="nav flex-column mb-2">
-						<% for( let index = 0; index < categories[i].length; index++ ) { %>
+						<% for( let index = 0; index < categories[i].length;
+						index++ ) { %>
 						<li class="nav-item">
 							<!--
                                 Don't worry, the onclick still works, and this doesn't break anything despite what your
@@ -51,13 +57,14 @@
 								href="/commands/<%= categories[i][index].categoryID %>/<%= categories[i][index].id %>"
 							>
 								<span data-feather="file-text"></span>
-								<%= categories[i][index].aliases[0].charAt(0).toUpperCase() +
-								categories[i][index].aliases[0].slice(1) %>
+								<%=
+								categories[i][index].aliases[0].charAt(0).toUpperCase()
+								+ categories[i][index].aliases[0].slice(1) %>
 							</a>
 						</li>
 						<% } %>
 					</ul>
-					<% } %>
+					<% } %> <% } %>
 				</div>
 			</nav>
 

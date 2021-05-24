@@ -19,18 +19,20 @@ router.get("/:category/:command", async function (req, res) {
 				await manager.fetchClientValues("commandHandler.categories")
 			)[0].find(
 				(category: any) =>
+					category[0] &&
 					category[0].categoryID ===
-					req.params.category.charAt(0).toUpperCase() +
-						req.params.category.slice(1)
+						req.params.category.charAt(0).toUpperCase() +
+							req.params.category.slice(1)
 			)) ||
 			!(await (
 				await manager.fetchClientValues("commandHandler.categories")
 			)[0]
 				.find(
 					(category: any) =>
+						category[0] &&
 						category[0].categoryID ===
-						req.params.category.charAt(0).toUpperCase() +
-							req.params.category.slice(1)
+							req.params.category.charAt(0).toUpperCase() +
+								req.params.category.slice(1)
 				)
 				.find((command: Command) => command.id === req.params.command))
 		)
@@ -51,9 +53,10 @@ router.get("/:category/:command", async function (req, res) {
 			)[0]
 				.find(
 					(category: any) =>
+						category[0] &&
 						category[0].categoryID ===
-						req.params.category.charAt(0).toUpperCase() +
-							req.params.category.slice(1)
+							req.params.category.charAt(0).toUpperCase() +
+								req.params.category.slice(1)
 				)
 				.find((command: Command) => command.id === req.params.command),
 		});
