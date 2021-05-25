@@ -5,9 +5,12 @@ import colors from "colors";
 import table from "cli-table";
 import axios from "axios";
 import nekos from "nekos.life";
+import bodyParser from "body-parser";
+
 import Db from "./utils/db";
 import home from "./routes/home";
 import commands from "./routes/commands";
+import verify from "./routes/verify";
 
 const { token, port, imgApiUrl, pterodactyl } = require("../config.json");
 let log = bunyan.createLogger({ name: "shardmanager" });
@@ -147,9 +150,12 @@ void (async function () {
 				try {
 					app.set("view engine", "ejs");
 					app.set("views", "../app/pages");
+					app.use(bodyParser.urlencoded({ extended: true }));
+					app.use(bodyParser.json());
 
 					app.use("/", home);
 					app.use("/commands", commands);
+					app.use("/verify", verify);
 
 					app.use(express.static("../app/static"));
 

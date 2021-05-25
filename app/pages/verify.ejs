@@ -1,0 +1,25 @@
+<% if (verified == true) { %>
+    Verification Completed
+    </br>
+    You can now close this window
+<% } else { %>
+    <head>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    </head>
+
+    <script>
+        function submitForm() {
+            var form = document.getElementById("captcha-container");
+            form.submit();
+        }
+    </script>
+
+    <form id="captcha-container" action="" method="POST">
+        <div
+            name="g-recaptcha-response"
+            class="g-recaptcha"
+            data-sitekey="<%= siteKey %>"
+            data-callback="submitForm"
+        ></div>
+    </form>
+<% } %>
