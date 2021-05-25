@@ -31,6 +31,7 @@ export default class MessageListener extends Listener {
 					"` command."
 			);
 		}
+		/*
 		if (!message.author.bot) {
 			const level = await this.client.db.addXp(
 				message.author.id,
@@ -51,6 +52,7 @@ export default class MessageListener extends Listener {
 				}
 			}
 		}
+		*/
 
 		if (message.partial) await message.fetch();
 		this.client.commandHandler.handle(message);
