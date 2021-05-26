@@ -83,7 +83,9 @@ export default class PanelCommand extends Command {
 			case "list":
 				const listMessage = await message.channel.send(
 					new MessageEmbed({
-						title: "<a:loading:837775261373956106> *Please wait..*",
+						title:
+							this.client.config.emojis.loading +
+							" *Please wait..*",
 						description: "Requesting information from panel.",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
@@ -161,35 +163,35 @@ export default class PanelCommand extends Command {
 							switch (resources.current_state) {
 								case "running":
 									embed.addField(
-										`<:online:837773674580017213> ${info.name}`,
+										`${this.client.config.emojis.online} ${info.name}`,
 										field,
 										true
 									);
 									break;
 								case "starting":
 									embed.addField(
-										`<:startingorstopping:837773674181689387> ${info.name}`,
+										`${this.client.config.emojis.idle} ${info.name}`,
 										field,
 										true
 									);
 									break;
 								case "stopping":
 									embed.addField(
-										`<:startingorstopping:837773674181689387> ${info.name}`,
+										`${this.client.config.emojis.idle} ${info.name}`,
 										field,
 										true
 									);
 									break;
 								case "offline":
 									embed.addField(
-										`<:offline:837773674492067860> ${info.name}`,
+										`${this.client.config.emojis.dnd} ${info.name}`,
 										field,
 										true
 									);
 									break;
 								default:
 									embed.addField(
-										`<:unknown:837773675503288401> ${info.name}`,
+										`${this.client.config.emojis.invisible} ${info.name}`,
 										field,
 										true
 									);
@@ -321,7 +323,7 @@ export default class PanelCommand extends Command {
 	): Promise<boolean> {
 		const startMessage = await message.channel.send(
 			new MessageEmbed({
-				title: "<a:loading:837775261373956106> *Please wait..*",
+				title: this.client.config.emojis.loading + " *Please wait..*",
 				description: "Sending command to panel.",
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),

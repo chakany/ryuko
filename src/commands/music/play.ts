@@ -124,7 +124,9 @@ export default class PlayCommand extends Command {
 					let playlistCount = 0;
 					const playlistMessage = message.channel.send(
 						new MessageEmbed({
-							title: "<a:loading:837775261373956106> *Please wait..*",
+							title:
+								this.client.config.emojis.loading +
+								"*Please wait..*",
 							description: `I am adding all songs in this playlist to the queue, give me a minute. **${playlistCount}**/**${req.tracks.items.length} Added**`,
 							color: message.guild?.me?.displayHexColor,
 							timestamp: new Date(),
@@ -156,7 +158,9 @@ export default class PlayCommand extends Command {
 							await playlistMessage
 						).edit(
 							new MessageEmbed({
-								title: "<a:loading:837775261373956106> *Please wait..*",
+								title:
+									this.client.config.emojis.loading +
+									"*Please wait..*",
 								description: `I am adding all songs in this playlist to the queue, give me a minute. **${playlistCount}**/**${req.tracks.items.length} Added**`,
 								color: message.guild?.me?.displayHexColor,
 								timestamp: new Date(),
@@ -198,7 +202,9 @@ export default class PlayCommand extends Command {
 					let albumCount = 0;
 					const albumMessage = message.channel.send(
 						new MessageEmbed({
-							title: "<a:loading:837775261373956106> *Please wait..*",
+							title:
+								this.client.config.emojis.loading +
+								"*Please wait..*",
 							description: `I am adding all songs in this album to the queue, give me a minute. **${albumCount}**/**${req.tracks.items.length} Added**`,
 							color: message.guild?.me?.displayHexColor,
 							timestamp: new Date(),
@@ -228,7 +234,9 @@ export default class PlayCommand extends Command {
 						albumCount++;
 						(await albumMessage).edit(
 							new MessageEmbed({
-								title: "<a:loading:837775261373956106> *Please wait..*",
+								title:
+									this.client.config.emojis.loading +
+									"*Please wait..*",
 								description: `I am adding all songs in this album to the queue, give me a minute. **${albumCount}**/**${req.tracks.items.length} Added**`,
 								color: message.guild?.me?.displayHexColor,
 								timestamp: new Date(),
