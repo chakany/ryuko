@@ -55,8 +55,17 @@ export default class MessageListener extends Listener {
 					"` command."
 			);
 		}
-		// Eh, don't await this; this should run alongside the command.
+
+		if (message.partial) await message.fetch();
+		this.client.commandHandler.handle(message);
+
 		if (!message.author.bot) {
+			if (
+				this.client.settings.get(message.guild!.id, "volume", null) ==
+				null
+			)
+				this.client.settings.set(message.guild!.id, "volume", 100);
+
 			const level = await this.client.db.addXp(
 				message.author.id,
 				message.guild!.id,
@@ -77,8 +86,5 @@ export default class MessageListener extends Listener {
 				}
 			}
 		}
-
-		if (message.partial) await message.fetch();
-		this.client.commandHandler.handle(message);
 	}
 }

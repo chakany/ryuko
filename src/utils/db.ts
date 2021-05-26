@@ -265,6 +265,10 @@ export default class Db {
 	}
 
 	async sync() {
-		sequelize.sync({ alter: true });
+		try {
+			sequelize.sync({ alter: true });
+		} catch (error) {
+			throw new Error(error);
+		}
 	}
 }

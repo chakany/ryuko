@@ -9,7 +9,5 @@ export default class GuildCreateListener extends Listener {
 		});
 	}
 
-	exec(guild: Guild) {
-		this.client.settings.set(guild.id, "volume", 100);
-	}
+	exec(guild: Guild) {}
 }
