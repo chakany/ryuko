@@ -73,37 +73,43 @@ export default class GithubCommand extends Command {
 				fields: [
 					{
 						name: "Language",
-						value: "`" + repo.language + "`",
+						value: repo.language ? `[${repo.language}](${new URL(
+							`https://www.google.com/search?q=${repo.language} Programming Language`
+						)})` : "None",
 						inline: true,
 					},
 					{
 						name: "Forks",
-						value: "`" + repo.forks_count + "`",
+						value: `[${repo.forks_count}](${repo.html_url}/network/members)`,
 						inline: true,
 					},
 					{
 						name: "Stars",
-						value: "`" + repo.stargazers_count + "`",
+						value: `[${repo.stargazers_count}](${repo.html_url}/stargazers)`,
 						inline: true,
 					},
 					{
 						name: "Watchers",
-						value: "`" + repo.watchers_count + "`",
+						value: `[${repo.watchers_count}](${repo.html_url}/watchers)`,
 						inline: true,
 					},
 					{
 						name: "Open Issues",
-						value: "`" + repo.open_issues_count + "`",
+						value: `[${repo.open_issues_count}](${repo.html_url}/issues)`,
 						inline: true,
 					},
 					{
 						name: "License",
-						value: "`" + repo.license.name + "`",
+						value: `${
+							repo.license
+								? `[${repo.license.name}](https://opensource.org/licenses/${repo.license.spdx_id})`
+								: "None"
+						}`,
 						inline: true,
 					},
 					{
 						name: "Default Branch",
-						value: "`" + repo.default_branch + "`",
+						value: `[${repo.default_branch}](${repo.html_url}/tree/${repo.default_branch})`,
 						inline: true,
 					},
 				],

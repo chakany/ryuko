@@ -57,40 +57,34 @@ export default class NpmCommand extends Command {
 				fields: [
 					{
 						name: "Version",
-						value: "`" + data.collected.metadata.version + "`",
+						value: data.collected.metadata.version,
 						inline: true,
 					},
 					{
 						name: "License",
 						value: data.collected.metadata.license
-							? "[`" +
-							  data.collected.metadata.license +
-							  "`](https://opensource.org/licenses/${data.collected.metadata.license})"
+							? `[${data.collected.metadata.license}](https://opensource.org/licenses/${data.collected.metadata.license})`
 							: "None",
 						inline: true,
 					},
 					{
 						name: "Dependency Count",
 						value:
-							"`" +
 							Object.keys(
 								data.collected.metadata.dependencies
 									? data.collected.metadata.dependencies
 									: {}
-							).length +
-							"`",
+							).length,
 						inline: true,
 					},
 					{
 						name: "Dev Dependency Count",
 						value:
-							"`" +
 							Object.keys(
 								data.collected.metadata.devDependencies
 									? data.collected.metadata.devDependencies
 									: {}
-							).length +
-							"`",
+							).length,
 						inline: true,
 					},
 				],
@@ -116,31 +110,5 @@ export default class NpmCommand extends Command {
 				)
 			);
 		}
-		/*
-		return message.channel.send(
-			new MessageEmbed({
-				title: "Pong!",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				thumbnail: {
-					url: "https://media.giphy.com/media/fvA1ieS8rEV8Y/giphy.gif",
-				},
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
-					{
-						name: "API Latency",
-						value:
-							"`" + `${Math.round(this.client.ws.ping)}ms` + "`",
-						inline: true,
-					},
-				],
-			})
-		);
-        */
 	}
 }
