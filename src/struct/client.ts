@@ -216,8 +216,8 @@ export default class AinaClient extends AkairoClient {
 				icon_url: message.author.displayAvatarURL({ dynamic: true }),
 			},
 			author: {
-				name: ":x: Error: `" + command.id + "`",
-				url: `https://${this.config.siteUrl}/${command.categoryID}/${command.id}`,
+				name: `❌ Error: ${command.id}`,
+				url: `${this.config.siteUrl}/commands/${command.categoryID}/${command.id}`,
 			},
 			fields: [
 				{
