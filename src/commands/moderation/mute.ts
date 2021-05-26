@@ -86,8 +86,8 @@ export default class MuteCommand extends Command {
 					"You must provide a user to mute!"
 				)
 			);
-
-		const endDate = this._resolveTime(args.length);
+		let endDate: Date | null = null;
+		if (args.length) endDate = this._resolveTime(args.length);
 
 		if (!args.length || endDate === null)
 			return message.channel.send(
@@ -95,7 +95,7 @@ export default class MuteCommand extends Command {
 					message,
 					this,
 					"Invalid Argument",
-					"You must provide a valid length to mute for!\n+ It must be specified too! Ex: '10m' is 10 minutes"
+					"You must provide a valid length to mute for!\nIt must be specified too! Ex: '10m' is 10 minutes"
 				)
 			);
 

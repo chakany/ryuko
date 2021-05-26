@@ -21,9 +21,12 @@ export default class ReadyListener extends Listener {
 		const mutes = await this.client.db.getMutedUsers();
 		const jobs = this.client.jobs;
 		mutes.forEach(async (mute: any) => {
-			const cachedGuild = await outer.client.guilds.cache.get(mute.guild);
-			if (!cachedGuild || jobs.get(mute.guild)?.get(mute.id)) return;
-			const user = await cachedGuild?.members.fetch(mute.id);
+			const cachedGuild = await outer.client.guilds.cache.get(
+				mute.guildId
+			);
+			if (!cachedGuild || jobs.get(mute.guildId)?.get(mute.victimId))
+				return;
+			const user = await cachedGuild?.members.fetch(mute.victimId);
 			if (user === undefined) {
 				return;
 			}
@@ -77,8 +80,8 @@ export default class ReadyListener extends Listener {
 				);
 
 				this.client.jobs.set(
-					mute.guild,
-					new Collection<string, Job>().set(mute.id, job)
+					mute.guildId,
+					new Collection<string, Job>().set(mute.victimId, job)
 				);
 			}
 		});

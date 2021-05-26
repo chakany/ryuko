@@ -31,13 +31,14 @@ export default class MessageListener extends Listener {
 					"` command."
 			);
 		}
-		/*
+
 		if (!message.author.bot) {
 			const level = await this.client.db.addXp(
 				message.author.id,
 				10,
 				message
 			);
+			/*
 			if (typeof level == "number") {
 				const shouldLevelMessage = this.client.settings.get(
 					message.guild!.id,
@@ -51,8 +52,8 @@ export default class MessageListener extends Listener {
 					);
 				}
 			}
+			*/
 		}
-		*/
 
 		if (message.partial) await message.fetch();
 		this.client.commandHandler.handle(message);

@@ -73,9 +73,11 @@ export default class GithubCommand extends Command {
 				fields: [
 					{
 						name: "Language",
-						value: repo.language ? `[${repo.language}](${new URL(
-							`https://www.google.com/search?q=${repo.language} Programming Language`
-						)})` : "None",
+						value: repo.language
+							? `[${repo.language}](${new URL(
+									`https://www.google.com/search?q=${repo.language} Programming Language`
+							  )})`
+							: "None",
 						inline: true,
 					},
 					{

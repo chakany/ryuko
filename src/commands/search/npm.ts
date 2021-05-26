@@ -69,22 +69,20 @@ export default class NpmCommand extends Command {
 					},
 					{
 						name: "Dependency Count",
-						value:
-							Object.keys(
-								data.collected.metadata.dependencies
-									? data.collected.metadata.dependencies
-									: {}
-							).length,
+						value: Object.keys(
+							data.collected.metadata.dependencies
+								? data.collected.metadata.dependencies
+								: {}
+						).length,
 						inline: true,
 					},
 					{
 						name: "Dev Dependency Count",
-						value:
-							Object.keys(
-								data.collected.metadata.devDependencies
-									? data.collected.metadata.devDependencies
-									: {}
-							).length,
+						value: Object.keys(
+							data.collected.metadata.devDependencies
+								? data.collected.metadata.devDependencies
+								: {}
+						).length,
 						inline: true,
 					},
 				],

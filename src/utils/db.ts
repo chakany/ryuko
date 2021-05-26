@@ -29,30 +29,12 @@ else
 	});
 
 // Our Models
-const linked = sequelize.define(
-	"linked",
-	{
-		mc: {
-			type: DataTypes.STRING,
-			allowNull: false,
-			unique: "mc",
-		},
-		discord: {
-			type: DataTypes.STRING,
-			allowNull: false,
-			unique: "discord",
-		},
-	},
-	{
-		freezeTableName: true,
-	}
-);
-
-const guild = sequelize.define("guild", {
+const guilds = sequelize.define("guilds", {
 	id: {
 		type: DataTypes.STRING,
 		allowNull: false,
 		primaryKey: true,
+		unique: "id",
 	},
 	prefix: {
 		type: DataTypes.STRING,
@@ -85,27 +67,35 @@ const guild = sequelize.define("guild", {
 });
 
 const punishments = sequelize.define("punishments", {
-	punishmentId: {
+	id: {
 		type: DataTypes.INTEGER,
 		allowNull: false,
 		autoIncrement: true,
 		primaryKey: true,
 	},
-	guild: {
+	guildId: {
 		type: DataTypes.STRING,
 		allowNull: false,
+		references: {
+			model: "guilds",
+			key: "id",
+		},
 	},
 	type: {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
-	id: {
-		type: DataTypes.STRING,
+	victimId: {
+		type: DataTypes.BIGINT,
 		allowNull: false,
 	},
-	admin: {
-		type: DataTypes.STRING,
+	adminId: {
+		type: DataTypes.BIGINT,
 		allowNull: false,
+		references: {
+			model: "users",
+			key: "id",
+		},
 	},
 	reason: {
 		type: DataTypes.STRING,
@@ -141,7 +131,7 @@ const users = sequelize.define("users", {
 export default class Db {
 	constructor() {}
 	getSettings() {
-		return new SequelizeProvider(guild, {
+		return new SequelizeProvider(guilds, {
 			idColumn: "id",
 		});
 	}
@@ -215,65 +205,30 @@ export default class Db {
 		});
 	}
 
-	async checkLinkedUser(id: string) {
-		try {
-			const account: any = (
-				await linked.findAll({
-					where: {
-						discord: id,
-					},
-				})
-			).map((el) => el.get({ plain: true }));
-			if (!account[0]) return false;
-
-			return true;
-		} catch (err) {
-			log.error(err);
-			throw err;
-		}
-	}
-
-	async linkUser(id: string, mcUser: string) {
-		try {
-			const uuid = await axios.get(
-				`https://api.mojang.com/users/profiles/minecraft/${mcUser}`
-			);
-			await linked.create({
-				mc: uuid.data.id,
-				discord: id,
-			});
-
-			return true;
-		} catch (err) {
-			log.error(err);
-			throw err;
-		}
-	}
-
 	async getMutedUsers() {
 		let guilds = new Map();
 		const date = new Date();
 		const mutes = await sequelize.query(
-			"SELECT guild,id,expires,createdAt FROM punishments WHERE NOW() <= expires;"
+			"SELECT guildId,victimId,expires,createdAt FROM punishments WHERE NOW() <= expires;"
 		);
 
 		return mutes[0];
 	}
 
 	async muteUser(
-		guild: string,
+		guildId: string,
 		type: string,
-		id: string,
-		admin: string,
+		victimId: string,
+		adminId: string,
 		reason: string,
 		expires: Date
 	) {
 		try {
 			await punishments.create({
-				guild,
+				guildId,
 				type,
-				id,
-				admin,
+				victimId,
+				adminId,
 				reason,
 				expires,
 			});
@@ -286,9 +241,6 @@ export default class Db {
 	}
 
 	async sync() {
-		await guild.sync({ alter: true });
-		await users.sync({ alter: true });
-		//await linked.sync({ alter: true });
-		await punishments.sync({ alter: true });
+		sequelize.sync({ alter: true });
 	}
 }
