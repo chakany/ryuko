@@ -12,8 +12,6 @@ export default class BlacklistInhibitor extends Inhibitor {
 		// Update this with a db function or some shit
 
 		const blacklist = [
-			"210838050920595458",
-			"332590503176437771",
 			"601654201814220810",
 		];
 		return blacklist.includes(message.author.id);
