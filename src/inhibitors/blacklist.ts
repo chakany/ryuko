@@ -4,14 +4,18 @@ import { Message } from "discord.js";
 export default class BlacklistInhibitor extends Inhibitor {
 	constructor() {
 		super("blacklist", {
-			reason: "You are blacklisted from using commands",
+			reason: "You are blacklisted from using commands, contact jacany#0001 to resolve this.",
 		});
 	}
 
 	exec(message: Message) {
 		// Update this with a db function or some shit
 
-		const blacklist = [""];
+		const blacklist = [
+			"210838050920595458",
+			"332590503176437771",
+			"601654201814220810",
+		];
 		return blacklist.includes(message.author.id);
 	}
 }
