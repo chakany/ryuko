@@ -1,8 +1,6 @@
-import { Sequelize, Model, DataTypes, Op } from "sequelize";
+import { Sequelize, DataTypes, QueryTypes } from "sequelize";
 import { SequelizeProvider } from "discord-akairo";
-import axios from "axios";
 import bunyan from "bunyan";
-import { Message } from "discord.js";
 
 let log = bunyan.createLogger({
 	name: "db",
@@ -86,14 +84,14 @@ const punishments = sequelize.define("punishments", {
 		allowNull: false,
 	},
 	victimId: {
-		type: DataTypes.BIGINT,
+		type: DataTypes.STRING,
 		allowNull: false,
 	},
 	adminId: {
-		type: DataTypes.BIGINT,
+		type: DataTypes.STRING,
 		allowNull: false,
 		references: {
-			model: "users",
+			model: "members",
 			key: "id",
 		},
 	},
@@ -107,26 +105,51 @@ const punishments = sequelize.define("punishments", {
 	},
 });
 
-const users = sequelize.define("users", {
+const members = sequelize.define("members", {
 	id: {
-		type: DataTypes.BIGINT,
+		type: DataTypes.STRING,
 		allowNull: false,
 		primaryKey: true,
 		unique: "id",
-	},
-	level: {
-		type: DataTypes.INTEGER,
-		defaultValue: 1,
-	},
-	xp: {
-		type: DataTypes.INTEGER,
-		defaultValue: 0,
 	},
 	xpMultiplier: {
 		type: DataTypes.FLOAT,
 		defaultValue: 1.0,
 	},
 });
+
+const guildXp = sequelize.define(
+	"xp",
+	{
+		memberId: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			primaryKey: true,
+			references: {
+				model: "members",
+				key: "id",
+			},
+		},
+		guildId: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			primaryKey: true,
+			references: {
+				model: "guilds",
+				key: "id",
+			},
+		},
+		level: {
+			type: DataTypes.INTEGER,
+			defaultValue: 1,
+		},
+		xp: {
+			type: DataTypes.INTEGER,
+			defaultValue: 0,
+		},
+	},
+	{ freezeTableName: true }
+);
 
 export default class Db {
 	constructor() {}
@@ -137,72 +160,73 @@ export default class Db {
 	}
 
 	async addXp(
-		id: string,
-		xp: number,
-		message?: Message
+		memberId: string,
+		guildId: string,
+		xp: number
 	): Promise<number | boolean> {
 		return new Promise(async (resolve, reject) => {
 			try {
-				await users
+				await members
 					.findAll({
 						where: {
-							id,
+							id: memberId,
 						},
 					})
 					.then(async (user) => {
-						const currentXp = user[0]
-							? <number>user[0].get("xp")
-							: 0;
 						const multiplier = user[0]
 							? <number>user[0].get("xpMultiplier")
 							: 1;
-						let level = user[0] ? <number>user[0].get("level") : 1;
 
-						let leveledUp = false;
+						const query = await sequelize.query(
+							"INSERT INTO `xp` (`memberId`,`guildId`,`level`,`xp`,`createdAt`,`updatedAt`) VALUES (:memberId,:guildId,TRUNCATE(:xp / 500, 0) + 1,:xp,NOW(),NOW()) ON DUPLICATE KEY UPDATE `memberId`=VALUES(`memberId`), `guildId`=VALUES(`guildId`), `xp`=xp + (VALUES(`xp`) * :multiplier), `level`=TRUNCATE(xp / 500, 0) + 1, `updatedAt`=VALUES(`updatedAt`) RETURNING *;",
+							{
+								replacements: {
+									memberId,
+									guildId,
+									xp,
+									multiplier,
+								},
+								type: QueryTypes.SELECT,
+							}
+						);
+						// @ts-expect-error
+						const oldXp = query[0].xp - xp * multiplier;
+						const level = Math.trunc(
+							(oldXp - xp * multiplier) / 500
+						);
 
-						// prettier-ignore
-						if (
-							(xp * multiplier + currentXp) % 500 == 0 ||
-							(xp * multiplier + currentXp > level * 500 &&
-								xp * multiplier + currentXp < (level + 1) * 500 &&
-								currentXp < level * 500)
-						) {
-							level = level + 1;
-							leveledUp = true;
-						}
-
-						await users.upsert({
-							id,
-							xp: currentXp + xp * multiplier,
-							level,
-						});
-						if (leveledUp) resolve(level);
-						else resolve(false);
+						resolve(
+							(xp * multiplier + oldXp) % 500 == 0 ||
+								(xp * multiplier + oldXp > level * 500 &&
+									xp * multiplier + oldXp <
+										(level + 1) * 500 &&
+									oldXp < level * 500)
+								? // @ts-expect-error
+								  query[0].level
+								: false
+						);
 					});
 			} catch (error) {
-				log.error(error);
 				reject(error);
 			}
 		});
 	}
 
-	async getUserXp(id: string): Promise<any> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				await users
-					.findAll({
-						where: {
-							id,
-						},
-					})
-					.then(async (user) => {
-						resolve(user[0]);
-					});
-			} catch (error) {
-				log.error(error);
-				reject(error);
-			}
-		});
+	async getMemberXp(memberId: string, guildId: string): Promise<any> {
+		let results: any;
+
+		try {
+			results = await guildXp.findAll({
+				where: {
+					memberId,
+					guildId,
+				},
+			});
+		} catch (error) {
+			log.error(error);
+		}
+
+		return results[0];
 	}
 
 	async getMutedUsers() {

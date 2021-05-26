@@ -13,7 +13,10 @@ export default class XpCommand extends Command {
 	}
 
 	async exec(message: Message) {
-		const user = await this.client.db.getUserXp(message.author.id);
+		const user = await this.client.db.getMemberXp(
+			message.author.id,
+			message.guild!.id
+		);
 
 		const rank = new canvacord.Rank()
 			.renderEmojis(true)
