@@ -2,8 +2,6 @@ import { Command } from "discord-akairo";
 import { Message, MessageEmbed, MessageAttachment } from "discord.js";
 import axios, { AxiosResponse } from "axios";
 
-const { imgApiUrl } = require("../../../config.json");
-
 export default class BobrossCommand extends Command {
 	constructor() {
 		super("bobross", {
@@ -15,7 +13,7 @@ export default class BobrossCommand extends Command {
 	}
 
 	async _getImage(image: string): Promise<AxiosResponse> {
-		return axios.get(imgApiUrl + "/bobross", {
+		return axios.get(this.client.config.imgApiUrl + "/bobross", {
 			params: {
 				avatar: image,
 			},

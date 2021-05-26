@@ -1,7 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 import axios, { AxiosResponse } from "axios";
-const { pterodactyl } = require("../../../config.json");
 
 export default class PanelCommand extends Command {
 	constructor() {
@@ -24,21 +23,25 @@ export default class PanelCommand extends Command {
 	}
 
 	async _getServers(): Promise<AxiosResponse> {
-		return await axios.get(pterodactyl.url + "/api/client/", {
-			headers: {
-				Authorization: `Bearer ${pterodactyl.key}`,
-				"Content-Type": "application/json",
-				Accept: "Application/vnd.pterodactyl.v1+json",
-			},
-		});
+		return await axios.get(
+			this.client.config.pterodactyl.url + "/api/client/",
+			{
+				headers: {
+					Authorization: `Bearer ${this.client.config.pterodactyl.key}`,
+					"Content-Type": "application/json",
+					Accept: "Application/vnd.pterodactyl.v1+json",
+				},
+			}
+		);
 	}
 
 	async _getResources(server: string): Promise<AxiosResponse> {
 		return await axios.get(
-			pterodactyl.url + `/api/client/servers/${server}/resources`,
+			this.client.config.pterodactyl.url +
+				`/api/client/servers/${server}/resources`,
 			{
 				headers: {
-					Authorization: `Bearer ${pterodactyl.key}`,
+					Authorization: `Bearer ${this.client.config.pterodactyl.key}`,
 					"Content-Type": "application/json",
 					Accept: "Application/vnd.pterodactyl.v1+json",
 				},
@@ -48,13 +51,14 @@ export default class PanelCommand extends Command {
 
 	async _setPower(server: string, state: string): Promise<AxiosResponse> {
 		return axios.post(
-			pterodactyl.url + `/api/client/servers/${server}/power`,
+			this.client.config.pterodactyl.url +
+				`/api/client/servers/${server}/power`,
 			{
 				signal: state,
 			},
 			{
 				headers: {
-					Authorization: `Bearer ${pterodactyl.key}`,
+					Authorization: `Bearer ${this.client.config.pterodactyl.key}`,
 					"Content-Type": "application/json",
 					Accept: "Application/vnd.pterodactyl.v1+json",
 				},
@@ -63,7 +67,10 @@ export default class PanelCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		if (!pterodactyl.key || !pterodactyl.url)
+		if (
+			!this.client.config.pterodactyl.key ||
+			!this.client.config.pterodactyl.url
+		)
 			return message.channel.send(
 				this.client.error(
 					message,

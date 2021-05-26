@@ -207,13 +207,17 @@ export default class AinaClient extends AkairoClient {
 				usage = usage + ` <${current.id}>`;
 			}
 		return new MessageEmbed({
-			title: ":x:Error: `" + command.id + "`",
-			description: "```diff\n- " + error + "\n+ " + description + "```",
+			title: error,
+			description: description,
 			color: message.guild?.me?.displayHexColor,
 			timestamp: new Date(),
 			footer: {
 				text: message.author.tag,
 				icon_url: message.author.displayAvatarURL({ dynamic: true }),
+			},
+			author: {
+				name: ":x: Error: `" + command.id + "`",
+				url: `https://${this.config.siteUrl}/${command.categoryID}/${command.id}`,
 			},
 			fields: [
 				{

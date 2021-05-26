@@ -3,8 +3,6 @@ import { Collection } from "discord.js";
 import { MessageEmbed } from "discord.js";
 import schedule, { Job } from "node-schedule";
 
-const { prefix } = require("../../config.json");
-
 export default class ReadyListener extends Listener {
 	client: AkairoClient;
 
@@ -92,14 +90,14 @@ export default class ReadyListener extends Listener {
 		);
 		if (serverCount > 1) {
 			this.client.user!.setActivity(
-				`${serverCount} servers! | ${prefix}help`,
+				`${serverCount} servers! | ${this.client.config.prefix}help`,
 				{
 					type: "WATCHING",
 				}
 			);
 		} else {
 			this.client.user!.setActivity(
-				`${serverCount} server! | ${prefix}help`,
+				`${serverCount} server! | ${this.client.config.prefix}help`,
 				{
 					type: "WATCHING",
 				}

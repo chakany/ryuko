@@ -2,8 +2,6 @@ import { Command } from "discord-akairo";
 import { Message, MessageEmbed, MessageAttachment } from "discord.js";
 import axios, { AxiosResponse } from "axios";
 
-const { imgApiUrl } = require("../../../config.json");
-
 export default class AchievementCommand extends Command {
 	constructor() {
 		super("achievement", {
@@ -21,7 +19,7 @@ export default class AchievementCommand extends Command {
 	}
 
 	async _getImage(image: string, text: string): Promise<AxiosResponse> {
-		return axios.get(imgApiUrl + "/achievement", {
+		return axios.get(this.client.config.imgApiUrl + "/achievement", {
 			params: {
 				avatar: image,
 				text: text,
