@@ -167,9 +167,28 @@ export default class PlayCommand extends Command {
 								);
 						}
 						embedToSend.setURL(args.song);
+						break;
+					case "LOAD_FAILED":
+					case "NO_MATCHES":
+						return message.channel.send(
+							this.client.error(
+								message,
+								this,
+								"An error occurred",
+								"I could not play that, try again?"
+							)
+						);
 				}
 			} catch (error) {
 				this.client.log.error(error);
+				return message.channel.send(
+					this.client.error(
+						message,
+						this,
+						"An error occurred",
+						"I could not play that, try again?"
+					)
+				);
 			}
 		} else if (!this._checkURL(args.song)) {
 			const data = await node.rest.resolve(
