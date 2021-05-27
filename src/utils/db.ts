@@ -234,6 +234,20 @@ export default class Db {
 		return results[0];
 	}
 
+	async getGuildXp(guildId: string): Promise<any> {
+		try {
+			const results: any[] = await guildXp.findAll({
+				where: {
+					guildId,
+				},
+			});
+
+			return results?.sort((a, b) => b.xp - a.xp);
+		} catch (error) {
+			throw new Error(error);
+		}
+	}
+
 	async getMutedUsers() {
 		let guilds = new Map();
 		const date = new Date();
