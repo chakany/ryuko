@@ -1939,14 +1939,14 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shoukaku@1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/shoukaku/-/shoukaku-1.5.2.tgz#797576ebf40a4979fedf9ff2dd46e712034bde80"
-  integrity sha512-sRb6j78RHVfdy96/DdhBA1emZWdPnFH2+5JZ9t3TThjMvfiBa/AaMJMyVBpYH8svI+xOZnXEsfQyqN9BJ15oqA==
+shoukaku@1.6.4:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/shoukaku/-/shoukaku-1.6.4.tgz#23710b221239505aaa2d9bc3c20c2ad26b52bb91"
+  integrity sha512-qDtaqJ4zLQKOb2/Z+4NBAna9g70ZAX1JbRSlmAnZXI2Ayh+d+6pCNIUg0MWWGP6zBWJgLf+dzzfSdRIUFtDRzw==
   dependencies:
     abort-controller "^3.0.0"
     node-fetch "^2.6.1"
-    ws "^7.3.1"
+    ws "^7.4.4"
 
 signal-exit@^3.0.0:
   version "3.0.3"
@@ -2294,7 +2294,7 @@ wrappy@1:
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
-ws@^7.3.1, ws@^7.4.4:
+ws@^7.4.4:
   version "7.4.4"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.4.tgz#383bc9742cb202292c9077ceab6f6047b17f2d59"
   integrity sha512-Qm8k8ojNQIMx7S+Zp8u/uHOx7Qazv3Yv4q68MiWWWOJhiwG5W3x7iqmRtJo8xxrciZUY4vRxUTJCKuRnF28ZZw==
