@@ -8,6 +8,7 @@ import {
 } from "discord-akairo";
 import { Collection, Message, MessageEmbed } from "discord.js";
 import { Shoukaku, ShoukakuPlayer, ShoukakuTrack } from "shoukaku";
+import { LavasfyClient } from "lavasfy";
 import bunyan from "bunyan";
 import client from "nekos.life";
 import { Job } from "node-schedule";
@@ -38,6 +39,7 @@ declare module "discord-akairo" {
 		config: any;
 		settings: SequelizeProvider;
 		shoukaku: Shoukaku;
+		lavasfy: LavasfyClient;
 		queue: Collection<string, Queue>;
 		log: bunyan;
 		jobs: Map<string, Map<string, Job>>;
@@ -69,6 +71,7 @@ export default class AinaClient extends AkairoClient {
 	public config: any;
 	public settings: SequelizeProvider;
 	public shoukaku: Shoukaku;
+	public lavasfy: LavasfyClient;
 	public queue: Collection<string, Queue>;
 	public log: bunyan;
 	public jobs: Collection<string, Map<string, Job>>;
@@ -97,6 +100,21 @@ export default class AinaClient extends AkairoClient {
 		this.settings = this.db.getSettings();
 
 		this.shoukaku = new Shoukaku(this, config.lavalink, ShoukakuOptions);
+		const lavalinkConfig = (): any[] => {
+			let nodes = []
+			let node;
+			for (let i = 0; node = config.lavalink[i]; i++) {
+				nodes.push({
+					id: node.name,
+					host: node.host,
+					port: node.port,
+					password: node.auth
+				})
+			}
+
+			return nodes
+		}
+		this.lavasfy = new LavasfyClient(config.spotify, lavalinkConfig());
 		this.queue = new Collection();
 
 		this.commandHandler = new CommandHandler(this, {
