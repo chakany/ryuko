@@ -110,7 +110,6 @@ export default class PlayCommand extends Command {
 
 				switch (response?.loadType) {
 					case "TRACK_LOADED":
-						console.log();
 						guildQueue.tracks.push(
 							new ShoukakuTrack(response.tracks[0])
 						);
@@ -256,7 +255,6 @@ export default class PlayCommand extends Command {
 
 			guildQueue.player = player;
 			player.playTrack(guildQueue.tracks[0]);
-			console.log(guildQueue.tracks);
 
 			player.on("end", (reason) => {
 				if (!guildQueue.loop) guildQueue.tracks.shift();
