@@ -20,6 +20,11 @@
 			"auth": ""
 		}
 	],
+	"spotify": {
+		"clientID": "",
+		"clientSecret": "",
+		"useSpotifyMetadata": true
+	},
 	"pterodactyl": {
 		"url": "",
 		"key": ""
