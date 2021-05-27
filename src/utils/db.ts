@@ -166,15 +166,20 @@ export default class Db {
 	): Promise<number | boolean> {
 		return new Promise(async (resolve, reject) => {
 			try {
-				await members
-					.findAll({
-						where: {
-							id: memberId,
-						},
-					})
+				await sequelize
+					.query(
+						"INSERT IGNORE INTO `members` (`id`,`createdAt`,`updatedAt`) VALUES (:id,NOW(),NOW()) RETURNING *;",
+						{
+							replacements: {
+								id: memberId,
+							},
+							type: QueryTypes.SELECT,
+						}
+					)
 					.then(async (user) => {
 						const multiplier = user[0]
-							? <number>user[0].get("xpMultiplier")
+							? // @ts-expect-error
+							  <number>user[0].xpMultiplier
 							: 1;
 
 						const query = await sequelize.query(
