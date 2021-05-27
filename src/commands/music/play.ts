@@ -84,6 +84,21 @@ export default class PlayCommand extends Command {
 			});
 
 		const guildQueue = queue.get(message.guild!.id)!;
+		const sentMessage = await message.channel.send(
+			new MessageEmbed({
+				title: `${this.client.config.emojis.loading} *Please Wait..*`,
+				description:
+					"I am searching for your song(s), if you queued a big playlist this will take a minute!",
+				color: message.guild?.me?.displayHexColor,
+				timestamp: new Date(),
+				footer: {
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
+				},
+			})
+		);
 		const embedToSend = new MessageEmbed({
 			title: "Now Playing",
 			color: message.guild?.me?.displayHexColor,
@@ -121,6 +136,9 @@ export default class PlayCommand extends Command {
 								`(${response.tracks[0].info.uri})`
 						);
 						embedToSend.setURL(response.tracks[0].info.uri);
+						embedToSend.setThumbnail(
+							response.spotifyMetadata.album.images[0].url
+						);
 						break;
 					case "PLAYLIST_LOADED":
 						guildQueue.tracks = [
@@ -155,17 +173,9 @@ export default class PlayCommand extends Command {
 							playlistCount++;
 						}
 						embedToSend.setDescription(playlistDescription);
-						switch (response.spotifyMetadata.type) {
-							case "album":
-								embedToSend.setThumbnail(
-									response.spotifyMetadata.images[0].url
-								);
-								break;
-							case "playlist":
-								embedToSend.setThumbnail(
-									response.spotifyMetadata.images[0].url
-								);
-						}
+						embedToSend.setThumbnail(
+							response.spotifyMetadata.images[0].url
+						);
 						embedToSend.setURL(args.song);
 						break;
 					case "LOAD_FAILED":
@@ -181,7 +191,7 @@ export default class PlayCommand extends Command {
 				}
 			} catch (error) {
 				this.client.log.error(error);
-				return message.channel.send(
+				return sentMessage.edit(
 					this.client.error(
 						message,
 						this,
@@ -280,10 +290,10 @@ export default class PlayCommand extends Command {
 				return queue.delete(message.guild!.id);
 			});
 
-			return message.channel.send(embedToSend);
+			return sentMessage.edit(embedToSend);
 		} else {
 			embedToSend.setTitle("Added to Queue");
-			return message.channel.send(embedToSend);
+			return sentMessage.edit(embedToSend);
 		}
 	}
 }
