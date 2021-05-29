@@ -62,6 +62,9 @@ const guilds = sequelize.define("guilds", {
 	loggingChannel: {
 		type: DataTypes.STRING,
 	},
+	someDumbFuckingSetting: {
+		type: DataTypes.BOOLEAN,
+	}
 });
 
 const punishments = sequelize.define("punishments", {

@@ -61,10 +61,17 @@ export default class MessageListener extends Listener {
 
 		if (!message.author.bot) {
 			if (
-				this.client.settings.get(message.guild!.id, "volume", null) ==
-				null
+				this.client.settings.get(
+					message.guild!.id,
+					"someDumbFuckingSetting",
+					null
+				) == null
 			)
-				this.client.settings.set(message.guild!.id, "volume", 100);
+				this.client.settings.set(
+					message.guild!.id,
+					"someDumbFuckingSetting",
+					true
+				);
 
 			const level = await this.client.db.addXp(
 				message.author.id,
