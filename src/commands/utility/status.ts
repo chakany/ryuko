@@ -5,7 +5,7 @@ export default class StatusCommand extends Command {
 	constructor() {
 		super("status", {
 			aliases: ["status"],
-			description: "Change bot status",
+			description: "Change my status",
 			category: "Utility",
 			ownerOnly: true,
 			args: [
