@@ -172,12 +172,7 @@ export default class HelpCommand extends Command {
 			helpEmbed.addField("Usage", "`" + usage + "`");
 			return message.channel.send(helpEmbed);
 		} else if (
-			message.util?.handler.categories
-				.get(
-					args.command.charAt(0).toUpperCase() +
-						args.command.substring(1).toLowerCase()
-				)
-				?.first()
+			message.util?.handler.categories.get(args.command)?.first()
 		) {
 			// If our command argument is all, this gets a list of ALL commands regardless of permission
 			const helpEmbed = new MessageEmbed({
@@ -193,8 +188,7 @@ export default class HelpCommand extends Command {
 			});
 			let commands = "";
 			const category = message.util?.handler.categories.get(
-				args.command.charAt(0).toUpperCase() +
-					args.command.substring(1).toLowerCase()
+				args.command
 			)!;
 			for (const [key2, fvalue] of new Map(category)) {
 				// For each command in that category
