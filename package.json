@@ -34,7 +34,7 @@
 		"axios": "^0.21.1",
 		"bootstrap": "^5.0.1",
 		"bunyan": "^1.8.15",
-		"canvacord": "^5.2.0",
+		"canvacord": "^5.2.1",
 		"cli-table": "^0.3.6",
 		"colors": "^1.4.0",
 		"date-fns": "^2.22.0",
