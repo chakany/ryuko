@@ -2208,10 +2208,10 @@ type-is@~1.6.17, type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
-typescript@^4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"
-  integrity sha512-qOcYwxaByStAWrBf4x0fibwZvMRG+r4cQoTjbPtUlrWjBHbmCAww1i448U0GJ+3cNNEtebDteo/cHOR3xJ4wEw==
+typescript@^4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.2.tgz#399ab18aac45802d6f2498de5054fcbbe716a805"
+  integrity sha512-zZ4hShnmnoVnAHpVHWpTcxdv7dWP60S2FsydQLV8V5PbS3FifjWFFRiHSWpDJahly88PRyV5teTSLoq4eG7mKw==
 
 universalify@^0.1.0:
   version "0.1.2"
@@ -2223,10 +2223,10 @@ unpipe@1.0.0, unpipe@~1.0.0:
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
   integrity sha1-sr9O6FFKrmFltIF4KdIbLvSZBOw=
 
-urban-dictionary@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/urban-dictionary/-/urban-dictionary-3.0.0.tgz#1d19c62959d6846c5efdeea67dc9b24f1e27730b"
-  integrity sha512-euKs6avVc3mWm8Id+HhFH2MudplP8ERkz8lwkHRw98aDiMc8nXDxqoHq1qS4NNbj8yAuMkOuAduxsod/PkAuDA==
+urban-dictionary@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/urban-dictionary/-/urban-dictionary-3.0.1.tgz#37ac49af76c71fefa38caa3f4e53b152fc5f0b08"
+  integrity sha512-69p3tBrhcwhai/07ki83nncKhdBcYJLnLlfPheZl0XAA/Og+icJGoFBEseee19x6omIUJqd5pUzV/+yVrocRcg==
 
 util-deprecate@~1.0.1:
   version "1.0.2"
