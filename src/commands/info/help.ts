@@ -38,7 +38,7 @@ export default class HelpCommand extends Command {
 					"`\n**View Command Info**: `" +
 					`${prefix}${helpCommand} <${this.args[0].id}>` +
 					"`",
-				url: "https://aina.chaker.xyz/commands",
+				url: `${this.client.config.siteUrl}/commands`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
@@ -92,7 +92,7 @@ export default class HelpCommand extends Command {
 					"`\n**View Command Info**: `" +
 					`${prefix}${helpCommand} <${this.args[0].id}>` +
 					"`",
-				url: "https://aina.chaker.xyz/commands",
+				url: `${this.client.config.siteUrl}/commands`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				author: {
@@ -130,7 +130,7 @@ export default class HelpCommand extends Command {
 
 			const helpEmbed = new MessageEmbed({
 				title: "Command: `" + command.id + "`",
-				url: `https://aina.chaker.xyz/commands/${command.categoryID}/${command.id}`,
+				url: `${this.client.config.siteUrl}/commands/${command.categoryID}/${command.id}`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
@@ -172,17 +172,12 @@ export default class HelpCommand extends Command {
 			helpEmbed.addField("Usage", "`" + usage + "`");
 			return message.channel.send(helpEmbed);
 		} else if (
-			message.util?.handler.categories
-				.get(
-					args.command.charAt(0).toUpperCase() +
-						args.command.substring(1).toLowerCase()
-				)
-				?.first()
+			message.util?.handler.categories.get(args.command)?.first()
 		) {
 			// If our command argument is all, this gets a list of ALL commands regardless of permission
 			const helpEmbed = new MessageEmbed({
 				color: message.guild?.me?.displayHexColor,
-				url: "https://aina.chaker.xyz/commands",
+				url: `${this.client.config.siteUrl}/commands`,
 				timestamp: new Date(),
 				footer: {
 					text: message.author.tag,
@@ -193,8 +188,7 @@ export default class HelpCommand extends Command {
 			});
 			let commands = "";
 			const category = message.util?.handler.categories.get(
-				args.command.charAt(0).toUpperCase() +
-					args.command.substring(1).toLowerCase()
+				args.command
 			)!;
 			for (const [key2, fvalue] of new Map(category)) {
 				// For each command in that category

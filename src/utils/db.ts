@@ -1,8 +1,6 @@
-import { Sequelize, Model, DataTypes, Op } from "sequelize";
+import { Sequelize, DataTypes, QueryTypes } from "sequelize";
 import { SequelizeProvider } from "discord-akairo";
-import axios from "axios";
 import bunyan from "bunyan";
-import { Message } from "discord.js";
 
 let log = bunyan.createLogger({
 	name: "db",
@@ -29,30 +27,12 @@ else
 	});
 
 // Our Models
-const linked = sequelize.define(
-	"linked",
-	{
-		mc: {
-			type: DataTypes.STRING,
-			allowNull: false,
-			unique: "mc",
-		},
-		discord: {
-			type: DataTypes.STRING,
-			allowNull: false,
-			unique: "discord",
-		},
-	},
-	{
-		freezeTableName: true,
-	}
-);
-
-const guild = sequelize.define("guild", {
+const guilds = sequelize.define("guilds", {
 	id: {
 		type: DataTypes.STRING,
 		allowNull: false,
 		primaryKey: true,
+		unique: "id",
 	},
 	prefix: {
 		type: DataTypes.STRING,
@@ -82,30 +62,41 @@ const guild = sequelize.define("guild", {
 	loggingChannel: {
 		type: DataTypes.STRING,
 	},
+	someDumbFuckingSetting: {
+		type: DataTypes.BOOLEAN,
+	},
 });
 
 const punishments = sequelize.define("punishments", {
-	punishmentId: {
+	id: {
 		type: DataTypes.INTEGER,
 		allowNull: false,
 		autoIncrement: true,
 		primaryKey: true,
 	},
-	guild: {
+	guildId: {
 		type: DataTypes.STRING,
 		allowNull: false,
+		references: {
+			model: "guilds",
+			key: "id",
+		},
 	},
 	type: {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
-	id: {
+	victimId: {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
-	admin: {
+	adminId: {
 		type: DataTypes.STRING,
 		allowNull: false,
+		references: {
+			model: "members",
+			key: "id",
+		},
 	},
 	reason: {
 		type: DataTypes.STRING,
@@ -117,20 +108,12 @@ const punishments = sequelize.define("punishments", {
 	},
 });
 
-const users = sequelize.define("users", {
+const members = sequelize.define("members", {
 	id: {
-		type: DataTypes.BIGINT,
+		type: DataTypes.STRING,
 		allowNull: false,
 		primaryKey: true,
 		unique: "id",
-	},
-	level: {
-		type: DataTypes.INTEGER,
-		defaultValue: 1,
-	},
-	xp: {
-		type: DataTypes.INTEGER,
-		defaultValue: 0,
 	},
 	xpMultiplier: {
 		type: DataTypes.FLOAT,
@@ -138,115 +121,133 @@ const users = sequelize.define("users", {
 	},
 });
 
+const guildXp = sequelize.define(
+	"xp",
+	{
+		memberId: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			primaryKey: true,
+			references: {
+				model: "members",
+				key: "id",
+			},
+		},
+		guildId: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			primaryKey: true,
+			references: {
+				model: "guilds",
+				key: "id",
+			},
+		},
+		level: {
+			type: DataTypes.INTEGER,
+			defaultValue: 1,
+		},
+		xp: {
+			type: DataTypes.INTEGER,
+			defaultValue: 0,
+		},
+	},
+	{ freezeTableName: true }
+);
+
 export default class Db {
 	constructor() {}
 	getSettings() {
-		return new SequelizeProvider(guild, {
+		return new SequelizeProvider(guilds, {
 			idColumn: "id",
 		});
 	}
 
 	async addXp(
-		id: string,
-		xp: number,
-		message?: Message
+		memberId: string,
+		guildId: string,
+		xp: number
 	): Promise<number | boolean> {
 		return new Promise(async (resolve, reject) => {
 			try {
-				await users
-					.findAll({
-						where: {
-							id,
-						},
-					})
-					.then(async (user) => {
-						const currentXp = user[0]
-							? <number>user[0].get("xp")
-							: 0;
-						const multiplier = user[0]
-							? <number>user[0].get("xpMultiplier")
-							: 1;
-						let level = user[0] ? <number>user[0].get("level") : 1;
-
-						let leveledUp = false;
-
-						// prettier-ignore
-						if (
-							(xp * multiplier + currentXp) % 500 == 0 ||
-							(xp * multiplier + currentXp > level * 500 &&
-								xp * multiplier + currentXp < (level + 1) * 500 &&
-								currentXp < level * 500)
-						) {
-							level = level + 1;
-							leveledUp = true;
+				await sequelize
+					.query(
+						"INSERT IGNORE INTO `members` (`id`,`createdAt`,`updatedAt`) VALUES (:id,NOW(),NOW()) RETURNING *;",
+						{
+							replacements: {
+								id: memberId,
+							},
+							type: QueryTypes.SELECT,
 						}
-
-						await users.upsert({
-							id,
-							xp: currentXp + xp * multiplier,
-							level,
-						});
-						if (leveledUp) resolve(level);
-						else resolve(false);
-					});
-			} catch (error) {
-				log.error(error);
-				reject(error);
-			}
-		});
-	}
-
-	async getUserXp(id: string): Promise<any> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				await users
-					.findAll({
-						where: {
-							id,
-						},
-					})
+					)
 					.then(async (user) => {
-						resolve(user[0]);
+						const multiplier = user[0]
+							? // @ts-expect-error
+							  <number>user[0].xpMultiplier
+							: 1;
+
+						const query = await sequelize.query(
+							"INSERT INTO `xp` (`memberId`,`guildId`,`level`,`xp`,`createdAt`,`updatedAt`) VALUES (:memberId,:guildId,TRUNCATE(:xp / 500, 0) + 1,:xp,NOW(),NOW()) ON DUPLICATE KEY UPDATE `memberId`=VALUES(`memberId`), `guildId`=VALUES(`guildId`), `xp`=xp + (VALUES(`xp`) * :multiplier), `level`=TRUNCATE(xp / 500, 0) + 1, `updatedAt`=VALUES(`updatedAt`) RETURNING *;",
+							{
+								replacements: {
+									memberId,
+									guildId,
+									xp,
+									multiplier,
+								},
+								type: QueryTypes.SELECT,
+							}
+						);
+						// @ts-expect-error
+						const oldXp = query[0].xp - xp * multiplier;
+						const level = Math.trunc(
+							(oldXp - xp * multiplier) / 500
+						);
+
+						resolve(
+							(xp * multiplier + oldXp) % 500 == 0 ||
+								(xp * multiplier + oldXp > level * 500 &&
+									xp * multiplier + oldXp <
+										(level + 1) * 500 &&
+									oldXp < level * 500)
+								? // @ts-expect-error
+								  query[0].level
+								: false
+						);
 					});
 			} catch (error) {
-				log.error(error);
 				reject(error);
 			}
 		});
 	}
 
-	async checkLinkedUser(id: string) {
-		try {
-			const account: any = (
-				await linked.findAll({
-					where: {
-						discord: id,
-					},
-				})
-			).map((el) => el.get({ plain: true }));
-			if (!account[0]) return false;
+	async getMemberXp(memberId: string, guildId: string): Promise<any> {
+		let results: any;
 
-			return true;
-		} catch (err) {
-			log.error(err);
-			throw err;
+		try {
+			results = await guildXp.findAll({
+				where: {
+					memberId,
+					guildId,
+				},
+			});
+		} catch (error) {
+			log.error(error);
 		}
+
+		return results[0];
 	}
 
-	async linkUser(id: string, mcUser: string) {
+	async getGuildXp(guildId: string): Promise<any> {
 		try {
-			const uuid = await axios.get(
-				`https://api.mojang.com/users/profiles/minecraft/${mcUser}`
-			);
-			await linked.create({
-				mc: uuid.data.id,
-				discord: id,
+			const results: any[] = await guildXp.findAll({
+				where: {
+					guildId,
+				},
 			});
 
-			return true;
-		} catch (err) {
-			log.error(err);
-			throw err;
+			return results?.sort((a, b) => b.xp - a.xp);
+		} catch (error) {
+			throw new Error(error);
 		}
 	}
 
@@ -254,26 +255,26 @@ export default class Db {
 		let guilds = new Map();
 		const date = new Date();
 		const mutes = await sequelize.query(
-			"SELECT guild,id,expires,createdAt FROM punishments WHERE NOW() <= expires;"
+			"SELECT guildId,victimId,expires,createdAt FROM punishments WHERE NOW() <= expires;"
 		);
 
 		return mutes[0];
 	}
 
 	async muteUser(
-		guild: string,
+		guildId: string,
 		type: string,
-		id: string,
-		admin: string,
+		victimId: string,
+		adminId: string,
 		reason: string,
 		expires: Date
 	) {
 		try {
 			await punishments.create({
-				guild,
+				guildId,
 				type,
-				id,
-				admin,
+				victimId,
+				adminId,
 				reason,
 				expires,
 			});
@@ -286,9 +287,10 @@ export default class Db {
 	}
 
 	async sync() {
-		await guild.sync({ alter: true });
-		await users.sync({ alter: true });
-		//await linked.sync({ alter: true });
-		await punishments.sync({ alter: true });
+		try {
+			sequelize.sync({ alter: true });
+		} catch (error) {
+			throw new Error(error);
+		}
 	}
 }

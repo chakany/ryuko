@@ -2,8 +2,6 @@ import { Command } from "discord-akairo";
 import { Message, MessageEmbed, MessageAttachment } from "discord.js";
 import axios, { AxiosResponse } from "axios";
 
-const { imgApiUrl } = require("../../../config.json");
-
 export default class PictureCommand extends Command {
 	constructor() {
 		super("picture", {
@@ -15,7 +13,7 @@ export default class PictureCommand extends Command {
 	}
 
 	async _getImage(image: string): Promise<AxiosResponse> {
-		return axios.get(imgApiUrl + "/picture", {
+		return axios.get(this.client.config.imgApiUrl + "/picture", {
 			params: {
 				avatar: image,
 			},
@@ -25,7 +23,7 @@ export default class PictureCommand extends Command {
 
 	async exec(message: Message) {
 		const loadMessage = await message.channel.send(
-			"<a:loading:837775261373956106> *Please wait..*"
+			this.client.config.emojis.loading + "*Please wait..*"
 		);
 
 		try {

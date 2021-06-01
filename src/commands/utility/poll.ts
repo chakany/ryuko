@@ -5,7 +5,7 @@ export default class PollCommand extends Command {
 	constructor() {
 		super("poll", {
 			aliases: ["poll", "makepoll", "newpoll", "createpoll"],
-			description: "Makes a new poll",
+			description: "Makes a poll",
 			category: "Utility",
 			args: [
 				{

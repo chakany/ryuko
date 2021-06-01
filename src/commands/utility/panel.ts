@@ -1,7 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 import axios, { AxiosResponse } from "axios";
-const { pterodactyl } = require("../../../config.json");
 
 export default class PanelCommand extends Command {
 	constructor() {
@@ -24,21 +23,25 @@ export default class PanelCommand extends Command {
 	}
 
 	async _getServers(): Promise<AxiosResponse> {
-		return await axios.get(pterodactyl.url + "/api/client/", {
-			headers: {
-				Authorization: `Bearer ${pterodactyl.key}`,
-				"Content-Type": "application/json",
-				Accept: "Application/vnd.pterodactyl.v1+json",
-			},
-		});
+		return await axios.get(
+			this.client.config.pterodactyl.url + "/api/client/",
+			{
+				headers: {
+					Authorization: `Bearer ${this.client.config.pterodactyl.key}`,
+					"Content-Type": "application/json",
+					Accept: "Application/vnd.pterodactyl.v1+json",
+				},
+			}
+		);
 	}
 
 	async _getResources(server: string): Promise<AxiosResponse> {
 		return await axios.get(
-			pterodactyl.url + `/api/client/servers/${server}/resources`,
+			this.client.config.pterodactyl.url +
+				`/api/client/servers/${server}/resources`,
 			{
 				headers: {
-					Authorization: `Bearer ${pterodactyl.key}`,
+					Authorization: `Bearer ${this.client.config.pterodactyl.key}`,
 					"Content-Type": "application/json",
 					Accept: "Application/vnd.pterodactyl.v1+json",
 				},
@@ -48,13 +51,14 @@ export default class PanelCommand extends Command {
 
 	async _setPower(server: string, state: string): Promise<AxiosResponse> {
 		return axios.post(
-			pterodactyl.url + `/api/client/servers/${server}/power`,
+			this.client.config.pterodactyl.url +
+				`/api/client/servers/${server}/power`,
 			{
 				signal: state,
 			},
 			{
 				headers: {
-					Authorization: `Bearer ${pterodactyl.key}`,
+					Authorization: `Bearer ${this.client.config.pterodactyl.key}`,
 					"Content-Type": "application/json",
 					Accept: "Application/vnd.pterodactyl.v1+json",
 				},
@@ -63,7 +67,10 @@ export default class PanelCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		if (!pterodactyl.key || !pterodactyl.url)
+		if (
+			!this.client.config.pterodactyl.key ||
+			!this.client.config.pterodactyl.url
+		)
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -76,7 +83,9 @@ export default class PanelCommand extends Command {
 			case "list":
 				const listMessage = await message.channel.send(
 					new MessageEmbed({
-						title: "<a:loading:837775261373956106> *Please wait..*",
+						title:
+							this.client.config.emojis.loading +
+							" *Please wait..*",
 						description: "Requesting information from panel.",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
@@ -154,35 +163,35 @@ export default class PanelCommand extends Command {
 							switch (resources.current_state) {
 								case "running":
 									embed.addField(
-										`<:online:837773674580017213> ${info.name}`,
+										`${this.client.config.emojis.online} ${info.name}`,
 										field,
 										true
 									);
 									break;
 								case "starting":
 									embed.addField(
-										`<:startingorstopping:837773674181689387> ${info.name}`,
+										`${this.client.config.emojis.idle} ${info.name}`,
 										field,
 										true
 									);
 									break;
 								case "stopping":
 									embed.addField(
-										`<:startingorstopping:837773674181689387> ${info.name}`,
+										`${this.client.config.emojis.idle} ${info.name}`,
 										field,
 										true
 									);
 									break;
 								case "offline":
 									embed.addField(
-										`<:offline:837773674492067860> ${info.name}`,
+										`${this.client.config.emojis.dnd} ${info.name}`,
 										field,
 										true
 									);
 									break;
 								default:
 									embed.addField(
-										`<:unknown:837773675503288401> ${info.name}`,
+										`${this.client.config.emojis.invisible} ${info.name}`,
 										field,
 										true
 									);
@@ -314,7 +323,7 @@ export default class PanelCommand extends Command {
 	): Promise<boolean> {
 		const startMessage = await message.channel.send(
 			new MessageEmbed({
-				title: "<a:loading:837775261373956106> *Please wait..*",
+				title: this.client.config.emojis.loading + " *Please wait..*",
 				description: "Sending command to panel.",
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),

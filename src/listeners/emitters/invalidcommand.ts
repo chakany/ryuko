@@ -29,14 +29,18 @@ export default class InvalidCommandListener extends Listener {
 		distances.sort((a, b) => a.dist - b.dist);
 
 		if (distances[0].dist > 0 && distances[0].dist <= 2) {
+			const command = this.client.commandHandler.findCommand(
+				distances[0].cmd[0]
+			);
 			return message.channel.send(
 				new MessageEmbed({
-					title: ":x:Error: `" + message.util?.parsed?.alias + "`",
+					title: "Invalid Command",
 					description:
-						"```diff\n- Invalid Command\n+ Did you mean '" +
+						"Did you mean [`" +
 						message.util?.parsed?.prefix +
 						distances[0].cmd[0] +
-						"'?```",
+						"`" +
+						`](${this.client.config.siteUrl}/commands/${command.categoryID}/${command.id})?`,
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
@@ -44,6 +48,9 @@ export default class InvalidCommandListener extends Listener {
 						icon_url: message.author.displayAvatarURL({
 							dynamic: true,
 						}),
+					},
+					author: {
+						name: `❌ Error: ${message.util?.parsed?.alias}`,
 					},
 				})
 			);

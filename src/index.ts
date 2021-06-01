@@ -20,7 +20,7 @@ let manager: ShardingManager;
 
 // make this async because so steps are performed in order
 void (async function () {
-	let shardArgs: string[] = ["--disable-xp"];
+	let shardArgs: string[] = [];
 
 	// Pre-Initialization Checks
 	const db = new Db();

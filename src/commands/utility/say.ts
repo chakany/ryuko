@@ -5,7 +5,7 @@ export default class SayCommand extends Command {
 	constructor() {
 		super("say", {
 			aliases: ["say"],
-			description: "Make the bot repeat what you say",
+			description: "Make the me repeat what you say",
 			category: "Utility",
 			ownerOnly: true,
 			args: [

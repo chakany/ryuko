@@ -8,7 +8,8 @@
 	"prefix": "!",
 	"port": 1204,
 	"ownerId": "",
-	"imgApiUrl": "no trailing slash",
+	"siteUrl": "https://aina.chaker.xyz",
+	"imgApiUrl": "",
 	"db": {
 		"host": "",
 		"port": 3306,
@@ -24,8 +25,20 @@
 			"auth": ""
 		}
 	],
+	"spotify": {
+		"clientID": "",
+		"clientSecret": "",
+		"useSpotifyMetadata": true
+	},
 	"pterodactyl": {
-		"url": "no trailing slash",
-		"key": "must be a user key"
+		"url": "",
+		"key": ""
+	},
+	"emojis": {
+		"loading": "<a:loading:837775261373956106>",
+		"online": "<:online:837773674580017213>",
+		"idle": "<:startingorstopping:837773674181689387>",
+		"dnd": "<:offline:837773674492067860>",
+		"invisible": "<:unknown:837773675503288401>"
 	}
 }

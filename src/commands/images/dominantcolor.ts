@@ -2,8 +2,6 @@ import { Command } from "discord-akairo";
 import { Message, MessageEmbed, MessageAttachment } from "discord.js";
 import axios, { AxiosResponse } from "axios";
 
-const { imgApiUrl } = require("../../../config.json");
-
 export default class DominantcolorCommand extends Command {
 	constructor() {
 		super("dominantcolor", {
@@ -15,7 +13,7 @@ export default class DominantcolorCommand extends Command {
 	}
 
 	async _getDominantColor(image: string): Promise<AxiosResponse> {
-		return axios.get(imgApiUrl + "/dominantColor", {
+		return axios.get(this.client.config.imgApiUrl + "/dominantColor", {
 			params: {
 				avatar: image,
 			},
@@ -24,7 +22,7 @@ export default class DominantcolorCommand extends Command {
 	}
 
 	async _getImage(color: string): Promise<AxiosResponse> {
-		return axios.get(imgApiUrl + "/color", {
+		return axios.get(this.client.config.imgApiUrl + "/color", {
 			params: {
 				color: color,
 			},
@@ -34,7 +32,7 @@ export default class DominantcolorCommand extends Command {
 
 	async exec(message: Message) {
 		const loadMessage = await message.channel.send(
-			"<a:loading:837775261373956106> *Please wait..*"
+			this.client.config.emojis.loading + "*Please wait..*"
 		);
 
 		try {

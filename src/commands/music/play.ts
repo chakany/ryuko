@@ -1,11 +1,14 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
-import spotify from "spotify-url-info";
+import { LavalinkTrack } from "lavasfy";
+
+// using import just imported a fucking type, don't listen to what the typescript 'compiler' tells you
+const ShoukakuTrack = require("../../../node_modules/shoukaku/src/constants/ShoukakuTrack.js");
 
 export default class PlayCommand extends Command {
 	constructor() {
 		super("play", {
-			aliases: ["play"],
+			aliases: ["play", "p"],
 			description:
 				"Play music into your Voice Channel! Enter a search query, youtube, or spotify url!",
 			category: "Music",
@@ -67,7 +70,7 @@ export default class PlayCommand extends Command {
 					message,
 					this,
 					"Invalid Usage",
-					"You must be in the same voice channel as the bot!"
+					"You must be in the same voice channel as me!"
 				)
 			);
 		const node = this.client.shoukaku.getNode();
@@ -81,6 +84,21 @@ export default class PlayCommand extends Command {
 			});
 
 		const guildQueue = queue.get(message.guild!.id)!;
+		const sentMessage = await message.channel.send(
+			new MessageEmbed({
+				title: `${this.client.config.emojis.loading} *Please Wait..*`,
+				description:
+					"I am searching for your song(s), if you queued a big playlist this will take a minute!",
+				color: message.guild?.me?.displayHexColor,
+				timestamp: new Date(),
+				footer: {
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
+				},
+			})
+		);
 		const embedToSend = new MessageEmbed({
 			title: "Now Playing",
 			color: message.guild?.me?.displayHexColor,
@@ -92,178 +110,94 @@ export default class PlayCommand extends Command {
 				}),
 			},
 		});
+
+		// Make embeds more stylish lolol
 		if (
 			this._checkURL(args.song) &&
 			args.song.startsWith("https://open.spotify.com")
 		) {
-			const req = await spotify.getData(args.song);
-			switch (req.type) {
-				case "track":
-					const data = await node.rest.resolve(
-						`${req.name} - ${req.artists[0].name}`,
-						"youtube"
-					);
-					if (data?.tracks[0])
-						guildQueue.tracks.push(data?.tracks[0]);
-					embedToSend.setAuthor(
-						req.artists[0].name,
-						undefined,
-						req.artists[0].external_urls.spotify
-					);
-					embedToSend.setDescription(
-						"[`" +
-							data?.tracks[0].info.title +
-							"`](" +
-							data?.tracks[0].info.uri +
-							")"
-					);
-					embedToSend.setURL(data?.tracks[0].info.uri!);
-					embedToSend.setThumbnail(req.album.images[0].url);
-					break;
-				case "playlist":
-					let playlistCount = 0;
-					const playlistMessage = message.channel.send(
-						new MessageEmbed({
-							title: "<a:loading:837775261373956106> *Please wait..*",
-							description: `I am adding all songs in this playlist to the queue, give me a minute. **${playlistCount}**/**${req.tracks.items.length} Added**`,
-							color: message.guild?.me?.displayHexColor,
-							timestamp: new Date(),
-							footer: {
-								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-						})
-					);
-					let playlistDescription = "";
-					embedToSend.setAuthor(
-						`${req.name} - ${req.owner.display_name}`,
-						undefined,
-						req.owner.external_urls.spotify
-					);
-					embedToSend.setThumbnail(req.images[0].url);
-					embedToSend.setURL(req.external_urls.spotify);
-					for await (const song of req.tracks.items) {
-						const data = await node.rest.resolve(
-							`${song.track.name} - ${song.track.artists[0].name}`,
-							"youtube"
+			try {
+				const lavasfy = this.client.lavasfy;
+				await lavasfy.requestToken();
+				const lavasfyNode = lavasfy.nodes.get(node.name);
+
+				const response = await lavasfyNode?.load(args.song);
+
+				switch (response?.loadType) {
+					case "TRACK_LOADED":
+						guildQueue.tracks.push(
+							new ShoukakuTrack(response.tracks[0])
 						);
-						if (data?.tracks[0])
-							guildQueue.tracks.push(data?.tracks[0]);
-						playlistCount++;
-						await (
-							await playlistMessage
-						).edit(
-							new MessageEmbed({
-								title: "<a:loading:837775261373956106> *Please wait..*",
-								description: `I am adding all songs in this playlist to the queue, give me a minute. **${playlistCount}**/**${req.tracks.items.length} Added**`,
-								color: message.guild?.me?.displayHexColor,
-								timestamp: new Date(),
-								footer: {
-									text: message.author.tag,
-									icon_url: message.author.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-							})
+						embedToSend.setDescription(
+							"[`" +
+								`${response.tracks[0].info.title} - ${response?.tracks[0].info.author}` +
+								"`]" +
+								`(${response.tracks[0].info.uri})`
 						);
-						if (playlistCount == 0)
-							playlistDescription =
-								playlistDescription +
-								"[`" +
-								data?.tracks[0].info.title +
-								"`](" +
-								data?.tracks[0].info.uri +
-								")";
-						else if (playlistCount < 7)
-							playlistDescription =
-								playlistDescription +
-								`\n**${playlistCount}:** ` +
-								"[`" +
-								data?.tracks[0].info.title +
-								"`](" +
-								data?.tracks[0].info.uri +
-								")";
-						else if (playlistCount == 7)
-							playlistDescription =
-								playlistDescription +
-								`\nand **${req.tracks.total - 6}** more.`;
-					}
-					(await playlistMessage).delete();
-					embedToSend.setThumbnail(req.images[0].url);
-					embedToSend.setDescription(playlistDescription);
-					break;
-				case "album":
-					let albumCount = 0;
-					const albumMessage = message.channel.send(
-						new MessageEmbed({
-							title: "<a:loading:837775261373956106> *Please wait..*",
-							description: `I am adding all songs in this album to the queue, give me a minute. **${albumCount}**/**${req.tracks.items.length} Added**`,
-							color: message.guild?.me?.displayHexColor,
-							timestamp: new Date(),
-							footer: {
-								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-						})
-					);
-					let albumDescription = "";
-					embedToSend.setAuthor(
-						`${req.name} - ${req.artists[0].name}`,
-						undefined,
-						req.artists[0].external_urls.spotify
-					);
-					embedToSend.setThumbnail(req.images[0].url);
-					embedToSend.setURL(req.external_urls.spotify);
-					for await (const song of req.tracks.items) {
-						const data = await node.rest.resolve(
-							`${song.name} - ${song.artists[0].name}`,
-							"youtube"
+						embedToSend.setURL(response.tracks[0].info.uri);
+						embedToSend.setThumbnail(
+							response.spotifyMetadata.album.images[0].url
 						);
-						if (data?.tracks[0])
-							guildQueue.tracks.push(data?.tracks[0]);
-						albumCount++;
-						(await albumMessage).edit(
-							new MessageEmbed({
-								title: "<a:loading:837775261373956106> *Please wait..*",
-								description: `I am adding all songs in this album to the queue, give me a minute. **${albumCount}**/**${req.tracks.items.length} Added**`,
-								color: message.guild?.me?.displayHexColor,
-								timestamp: new Date(),
-								footer: {
-									text: message.author.tag,
-									icon_url: message.author.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-							})
+						break;
+					case "PLAYLIST_LOADED":
+						guildQueue.tracks = [
+							...response.tracks.map((d) => new ShoukakuTrack(d)),
+						];
+						let playlistCount = 0;
+						let playlistDescription = "";
+						for await (let track of response.tracks) {
+							if (playlistCount == 0)
+								playlistDescription =
+									playlistDescription +
+									"[`" +
+									track.info.title +
+									"`](" +
+									track.info.uri +
+									")\n";
+							else if (playlistCount < 7)
+								playlistDescription =
+									playlistDescription +
+									`\n**${playlistCount}:** ` +
+									"[`" +
+									track.info.title +
+									"`](" +
+									track.info.uri +
+									")";
+							else if (playlistCount == 7)
+								playlistDescription =
+									playlistDescription +
+									`\nand **${
+										response.tracks.length - 6
+									}** more.`;
+							playlistCount++;
+						}
+						embedToSend.setDescription(playlistDescription);
+						embedToSend.setThumbnail(
+							response.spotifyMetadata.images[0].url
 						);
-						if (albumCount == 0)
-							albumDescription =
-								albumDescription +
-								"[`" +
-								data?.tracks[0].info.title +
-								"`](" +
-								data?.tracks[0].info.uri +
-								")";
-						else if (albumCount < 7)
-							albumDescription =
-								albumDescription +
-								`\n**${albumCount}:** ` +
-								"[`" +
-								data?.tracks[0].info.title +
-								"`](" +
-								data?.tracks[0].info.uri +
-								")";
-						else if (albumCount == 7)
-							albumDescription =
-								albumDescription +
-								`\nand **${req.tracks.total - 6}** more.`;
-					}
-					await (await albumMessage).delete();
-					embedToSend.setDescription(albumDescription);
+						embedToSend.setURL(args.song);
+						break;
+					case "LOAD_FAILED":
+					case "NO_MATCHES":
+						return message.channel.send(
+							this.client.error(
+								message,
+								this,
+								"An error occurred",
+								"I could not play that, try again?"
+							)
+						);
+				}
+			} catch (error) {
+				this.client.log.error(error);
+				return sentMessage.edit(
+					this.client.error(
+						message,
+						this,
+						"An error occurred",
+						"I could not play that, try again?"
+					)
+				);
 			}
 		} else if (!this._checkURL(args.song)) {
 			const data = await node.rest.resolve(
@@ -354,10 +288,10 @@ export default class PlayCommand extends Command {
 				return queue.delete(message.guild!.id);
 			});
 
-			return message.channel.send(embedToSend);
+			return sentMessage.edit(embedToSend);
 		} else {
 			embedToSend.setTitle("Added to Queue");
-			return message.channel.send(embedToSend);
+			return sentMessage.edit(embedToSend);
 		}
 	}
 }

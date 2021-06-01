@@ -8,12 +8,15 @@ export default class XpCommand extends Command {
 		super("xp", {
 			aliases: ["xp"],
 			description: "Gets your xp information",
-			category: "Info",
+			category: "Xp",
 		});
 	}
 
 	async exec(message: Message) {
-		const user = await this.client.db.getUserXp(message.author.id);
+		const user = await this.client.db.getMemberXp(
+			message.author.id,
+			message.guild!.id
+		);
 
 		const rank = new canvacord.Rank()
 			.renderEmojis(true)
