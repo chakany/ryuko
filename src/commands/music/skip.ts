@@ -4,7 +4,7 @@ import { Message } from "discord.js";
 export default class SkipCommand extends Command {
 	constructor() {
 		super("skip", {
-			aliases: ["skip"],
+			aliases: ["skip", "s"],
 			description: "Skips the currently playing song",
 			category: "Music",
 			channel: "guild",

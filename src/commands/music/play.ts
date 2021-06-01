@@ -8,7 +8,7 @@ const ShoukakuTrack = require("../../../node_modules/shoukaku/src/constants/Shou
 export default class PlayCommand extends Command {
 	constructor() {
 		super("play", {
-			aliases: ["play"],
+			aliases: ["play", "p"],
 			description:
 				"Play music into your Voice Channel! Enter a search query, youtube, or spotify url!",
 			category: "Music",
