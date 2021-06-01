@@ -19,8 +19,8 @@ jobs:
                   node-version: "14"
             - name: "Install Dependencies"
               run: yarn
-            - name: "Build"
-              run: yarn dist
+            - name: "Build Bot"
+              run: ./build.mjs bot
 
     deploy:
         runs-on: ubuntu-latest
