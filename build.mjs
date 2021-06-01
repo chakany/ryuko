@@ -4,7 +4,23 @@ const discord = require("discord.js");
 const { AkairoClient, CommandHandler } = require("discord-akairo");
 const ejs = require("ejs");
 
-const config = require("./config.json");
+let config = null;
+
+try {
+	config = require("./config.json");
+} catch (error) {
+	config = null;
+}
+
+// Make sure the config is present, if not do NOT build if we are not building JUST the bot
+if (!config && process.argv.slice(-1)[0] !== "bot") {
+	console.log(
+		`${chalk.bgRed.white(
+			"Error"
+		)}: there is no config present, please refer to the README on configuring the bot.`
+	);
+	await $`exit 1`;
+}
 
 // Set zx paramaters
 $.verbose = false;
