@@ -101,19 +101,19 @@ export default class AinaClient extends AkairoClient {
 
 		this.shoukaku = new Shoukaku(this, config.lavalink, ShoukakuOptions);
 		const lavalinkConfig = (): any[] => {
-			let nodes = []
+			let nodes = [];
 			let node;
-			for (let i = 0; node = config.lavalink[i]; i++) {
+			for (let i = 0; (node = config.lavalink[i]); i++) {
 				nodes.push({
 					id: node.name,
 					host: node.host,
 					port: node.port,
-					password: node.auth
-				})
+					password: node.auth,
+				});
 			}
 
-			return nodes
-		}
+			return nodes;
+		};
 		this.lavasfy = new LavasfyClient(config.spotify, lavalinkConfig());
 		this.queue = new Collection();
 

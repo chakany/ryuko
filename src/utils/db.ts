@@ -64,7 +64,7 @@ const guilds = sequelize.define("guilds", {
 	},
 	someDumbFuckingSetting: {
 		type: DataTypes.BOOLEAN,
-	}
+	},
 });
 
 const punishments = sequelize.define("punishments", {
