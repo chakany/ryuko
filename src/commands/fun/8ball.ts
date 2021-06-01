@@ -7,20 +7,27 @@ export default class CoinflipCommand extends Command {
 			aliases: ["8ball"],
 			description: "Ask the Magic 8 Ball a question!",
 			category: "Fun",
-            args: [
-                {
-                    id: "question",
-                    type: "string"
-                }
-            ]
+			args: [
+				{
+					id: "question",
+					type: "string",
+				},
+			],
 		});
 	}
 
 	exec(message: Message, args: any): any {
-        if (!args.question)
-            return message.channel.send(this.client.error(message, this, "Invalid Argument", "You must ask a question!"));
+		if (!args.question)
+			return message.channel.send(
+				this.client.error(
+					message,
+					this,
+					"Invalid Argument",
+					"You must ask a question!"
+				)
+			);
 
-        const responses = [
+		const responses = [
 			"It is certain.",
 			"It is decidedly so.",
 			"Without a doubt.",
@@ -43,7 +50,7 @@ export default class CoinflipCommand extends Command {
 			"Very doubtful.",
 		];
 
-        const number = Math.floor(Math.random() * responses.length);
+		const number = Math.floor(Math.random() * responses.length);
 
 		return message.channel.send(
 			new MessageEmbed({
