@@ -6,6 +6,7 @@ import table from "cli-table";
 import axios from "axios";
 import nekos from "nekos.life";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 
 import Db from "./utils/db";
 import Redis from "./utils/redis";
@@ -172,6 +173,7 @@ void (async function () {
 					app.set("views", "../app/pages");
 					app.use(bodyParser.urlencoded({ extended: true }));
 					app.use(bodyParser.json());
+					app.use(cookieParser());
 
 					app.use("/", home);
 					app.use("/commands", commands);

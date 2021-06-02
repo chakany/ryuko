@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, QueryTypes } from "sequelize";
+import { Sequelize, DataTypes, QueryTypes, Op } from "sequelize";
 import { SequelizeProvider } from "discord-akairo";
 import bunyan from "bunyan";
 
@@ -45,7 +45,7 @@ const guilds = sequelize.define("guilds", {
 	},
 	volume: {
 		type: DataTypes.INTEGER,
-		defaultValue: 100,
+		defaultValue: 80,
 	},
 	modRole: {
 		type: DataTypes.STRING,
@@ -60,6 +60,13 @@ const guilds = sequelize.define("guilds", {
 		type: DataTypes.JSON,
 	},
 	loggingChannel: {
+		type: DataTypes.STRING,
+	},
+	verification: {
+		type: DataTypes.BOOLEAN,
+		defaultValue: false,
+	},
+	verifiedRole: {
 		type: DataTypes.STRING,
 	},
 	someDumbFuckingSetting: {
@@ -115,6 +122,12 @@ const members = sequelize.define("members", {
 		primaryKey: true,
 		unique: "id",
 	},
+	cookieId: {
+		type: DataTypes.STRING,
+	},
+	ipAddress: {
+		type: DataTypes.STRING,
+	},
 	xpMultiplier: {
 		type: DataTypes.FLOAT,
 		defaultValue: 1.0,
@@ -159,6 +172,23 @@ export default class Db {
 	getSettings() {
 		return new SequelizeProvider(guilds, {
 			idColumn: "id",
+		});
+	}
+
+	async addMember(id: string, cookieId: string, ipAddress: string) {
+		return members.upsert({
+			id,
+			cookieId,
+			ipAddress,
+		});
+	}
+
+	async getMembersByIdentifier(cookieId = "", ipAddress = ""): Promise<any> {
+		return members.findOne({
+			attributes: ["id", "ipAddress", "cookieId"],
+			where: {
+				[Op.or]: [{ cookieId }, { ipAddress }],
+			},
 		});
 	}
 

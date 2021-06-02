@@ -1,12 +1,17 @@
 import express from "express";
 import axios from "axios";
+import bcrypt from "bcrypt";
+
+import Db from "../utils/db";
+
+const db = new Db();
 
 import { manager, weblog, redis } from "../index";
 
 const {
 	clientID,
 	clientSecret,
-	verificationRedirect,
+	siteUrl,
 	recaptchaSecret,
 	recaptchaSiteKey,
 } = require("../../config.json");
@@ -28,7 +33,7 @@ async function getTokens(code: any): Promise<TokenResponse> {
 				client_secret: clientSecret,
 				code,
 				grant_type: "authorization_code",
-				redirect_uri: verificationRedirect,
+				redirect_uri: `${siteUrl}/verify`,
 				scope: "identify",
 			})
 		);
@@ -63,7 +68,7 @@ router.get("/", async (req, res) => {
 	if (!req.query.code) {
 		res.redirect(
 			new URL(
-				`https://discord.com/oauth2/authorize?client_id=${clientID}&redirect_uri=${verificationRedirect}&response_type=code&scope=identify%20guilds&state=${req.query.state}`
+				`https://discord.com/oauth2/authorize?client_id=${clientID}&redirect_uri=${siteUrl}/verify&response_type=code&scope=identify%20guilds&state=${req.query.state}`
 			).toString()
 		);
 	} else if (req.query.code) {
@@ -89,6 +94,7 @@ router.get("/", async (req, res) => {
 					error: null,
 					siteKey: recaptchaSiteKey,
 					state: req.query.state,
+					id: redisRes.userId,
 				});
 		} catch (error) {
 			weblog.error(error);
@@ -98,18 +104,55 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-	if (!req.body["g-recaptcha-response"] || !req.body.state)
+	if (!req.body["g-recaptcha-response"] || !req.body.state || !req.body.id)
 		return res.status(400).send("Missing Parameters");
 
 	try {
 		const results = await checkCaptcha(req.body["g-recaptcha-response"]);
 
 		if (results.success) {
-			res.render("verify", {
-				verified: true,
-				error: null,
-			});
-			redis.publish(`verification-${req.body.state}`, "verified");
+			const fetchedMember = await db.getMembersByIdentifier(
+				req.cookies._verificationId,
+				req.socket.remoteAddress
+			);
+			if (
+				(fetchedMember?.ipAddress &&
+					fetchedMember.cookieId &&
+					!(await bcrypt.compare(
+						req.body.id,
+						fetchedMember?.cookieId
+					))) ||
+				(fetchedMember?.ipAddress == req.socket.remoteAddress &&
+					fetchedMember?.id !== req.body.id)
+			) {
+				// Chances are this user is an alt. Appropriate action should be taken depending on the user's settings.
+				res.render("verify", {
+					verified: false,
+					error: "Alternate account detected. If you believe this is an error, please contact the owner of the server you are trying to join.",
+				});
+				redis.publish(
+					`verification-${req.body.state}`,
+					JSON.stringify({
+						message: "alt",
+						originalAccount: fetchedMember?.id,
+					})
+				);
+			} else {
+				const salt = await bcrypt.genSalt(10);
+				const hash = await bcrypt.hash(req.body.id, salt);
+
+				db.addMember(req.body.id, hash, req.socket.remoteAddress!);
+				res.cookie("_verificationId", hash).render("verify", {
+					verified: true,
+					error: null,
+				});
+				redis.publish(
+					`verification-${req.body.state}`,
+					JSON.stringify({
+						message: "verified",
+					})
+				);
+			}
 			redis.removeVerification(req.body.state);
 		}
 	} catch (error) {
