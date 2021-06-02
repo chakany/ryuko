@@ -1,7 +1,7 @@
 import express from "express";
 import axios from "axios";
 
-import { manager, weblog } from "../index";
+import { manager, weblog, redis } from "../index";
 
 const {
 	clientID,
@@ -57,13 +57,16 @@ const router = express.Router();
 
 // Our main route
 router.get("/", async (req, res) => {
-	if (req.query.id) {
+	if (!req.query.state) return res.status(404).send("404 Missing Paramaters");
+	let redisRes = await redis.getVerificationKey(req.query.state);
+	if (!redisRes.userId) return res.status(404).send("404 Invalid Paramaters");
+	if (!req.query.code) {
 		res.redirect(
 			new URL(
-				`https://discord.com/oauth2/authorize?client_id=${clientID}&redirect_uri=${verificationRedirect}&response_type=code&scope=identify%20guilds&state=${req.query.id}`
+				`https://discord.com/oauth2/authorize?client_id=${clientID}&redirect_uri=${verificationRedirect}&response_type=code&scope=identify%20guilds&state=${req.query.state}`
 			).toString()
 		);
-	} else if (req.query.state && req.query.code) {
+	} else if (req.query.code) {
 		let tokens: TokenResponse;
 		try {
 			tokens = await getTokens(req.query.code);
@@ -74,31 +77,41 @@ router.get("/", async (req, res) => {
 				},
 			});
 
-			res.render("verify", {
-				user: user.data,
-				verified: false,
-				siteKey: recaptchaSiteKey,
-			});
+			if (user.data.id !== redisRes.userId)
+				res.render("verify", {
+					verified: false,
+					error: "You signed in with a different account than the one you initiated the verification with. Please make sure you login with the same account.",
+				});
+			else
+				res.render("verify", {
+					user: user.data,
+					verified: false,
+					error: null,
+					siteKey: recaptchaSiteKey,
+					state: req.query.state,
+				});
 		} catch (error) {
 			weblog.error(error);
 			res.status(500).send("500 Internal Server Error");
 		}
-	} else {
-		res.status(400).send("Missing Parameters");
-	}
+	} else return res.status(404);
 });
 
 router.post("/", async (req, res) => {
-	if (!req.body["g-recaptcha-response"])
-		res.status(400).send("Missing Parameters");
+	if (!req.body["g-recaptcha-response"] || !req.body.state)
+		return res.status(400).send("Missing Parameters");
 
 	try {
 		const results = await checkCaptcha(req.body["g-recaptcha-response"]);
 
-		if (results.success)
+		if (results.success) {
 			res.render("verify", {
 				verified: true,
+				error: null,
 			});
+			redis.publish(`verification-${req.body.state}`, "verified");
+			redis.removeVerification(req.body.state);
+		}
 	} catch (error) {
 		weblog.error(error);
 		res.status(500).send("500 Internal Server Error");

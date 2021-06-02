@@ -8,6 +8,7 @@ import nekos from "nekos.life";
 import bodyParser from "body-parser";
 
 import Db from "./utils/db";
+import Redis from "./utils/redis";
 import home from "./routes/home";
 import commands from "./routes/commands";
 import verify from "./routes/verify";
@@ -15,8 +16,10 @@ import verify from "./routes/verify";
 const { token, port, imgApiUrl, pterodactyl } = require("../config.json");
 let log = bunyan.createLogger({ name: "shardmanager" });
 let weblog = bunyan.createLogger({ name: "webserver" });
+let redislog = bunyan.createLogger({ name: "redis" });
 
 let manager: ShardingManager;
+let redis: Redis;
 
 // make this async because so steps are performed in order
 void (async function () {
@@ -55,6 +58,15 @@ void (async function () {
 		} catch (error) {
 			checkStatus.push({ db: colors.red("Failed") });
 			dberror = error;
+		}
+
+		// redis check
+		try {
+			redis = new Redis(redislog);
+			checkStatus.push({ redis: colors.green("Passed") });
+		} catch (error) {
+			checkStatus.push({ redis: colors.red("Failed") });
+			redislog.error(error);
 		}
 
 		// image api check
@@ -108,6 +120,9 @@ void (async function () {
 		checkStatus.push({
 			db: colors.yellow("Skipped"),
 		});
+		checkStatus.push({
+			redis: colors.yellow("Skipped"),
+		});
 		checkStatus.push({ "img-api": colors.yellow("Skipped") });
 		checkStatus.push({ pterodactyl: colors.yellow("Skipped") });
 		checkStatus.push({ "nekos.life": colors.yellow("Skipped") });
@@ -116,6 +131,11 @@ void (async function () {
 			await db.sync();
 		} catch (error) {
 			dberror = error;
+		}
+		try {
+			redis = new Redis(redislog);
+		} catch (error) {
+			redislog.error(error);
 		}
 	}
 
@@ -171,4 +191,4 @@ void (async function () {
 	manager.spawn();
 })();
 
-export { manager, weblog };
+export { manager, weblog, redis };
