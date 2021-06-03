@@ -8,6 +8,7 @@ export default class PingCommand extends Command {
 			aliases: ["verify"],
 			clientPermissions: ["MANAGE_ROLES"],
 			description: "account",
+			guild: ["796140447260737536"],
 		});
 	}
 
@@ -67,14 +68,16 @@ export default class PingCommand extends Command {
 
 		const miCallback = (channel: any, recieved: any) => {
 			if (channel !== `verification-${key}`) return;
-			let call = JSON.parse(recieved)
+			let call = JSON.parse(recieved);
 
 			if (call.message == "verified") {
 				sentMessage.edit("Verified successfully!");
+				/*
 				message.member!.roles.add(
 					// @ts-expect-error 2345
 					message.guild!.roles.cache.get(verifiedRole)
 				);
+				*/
 			} else if (call.message == "alt") {
 				sentMessage.edit(
 					`Why are you alting, <@!${call.originalAccount}>`

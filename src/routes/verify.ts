@@ -113,8 +113,10 @@ router.post("/", async (req, res) => {
 		if (results.success) {
 			const fetchedMember = await db.getMembersByIdentifier(
 				req.cookies._verificationId,
-				req.socket.remoteAddress
+				req.ip
 			);
+			const current = new Date();
+			current.setDate(current.getDate() - 14);
 			if (
 				(fetchedMember?.ipAddress &&
 					fetchedMember.cookieId &&
@@ -122,8 +124,9 @@ router.post("/", async (req, res) => {
 						req.body.id,
 						fetchedMember?.cookieId
 					))) ||
-				(fetchedMember?.ipAddress == req.socket.remoteAddress &&
-					fetchedMember?.id !== req.body.id)
+				(fetchedMember?.ipAddress == req.ip &&
+					fetchedMember?.id !== req.body.id &&
+					fetchedMember?.updatedAt > current)
 			) {
 				// Chances are this user is an alt. Appropriate action should be taken depending on the user's settings.
 				res.render("verify", {
@@ -141,7 +144,7 @@ router.post("/", async (req, res) => {
 				const salt = await bcrypt.genSalt(10);
 				const hash = await bcrypt.hash(req.body.id, salt);
 
-				db.addMember(req.body.id, hash, req.socket.remoteAddress!);
+				db.addMember(req.body.id, hash, req.ip!);
 				res.cookie("_verificationId", hash).render("verify", {
 					verified: true,
 					error: null,

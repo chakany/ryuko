@@ -185,7 +185,7 @@ export default class Db {
 
 	async getMembersByIdentifier(cookieId = "", ipAddress = ""): Promise<any> {
 		return members.findOne({
-			attributes: ["id", "ipAddress", "cookieId"],
+			attributes: ["id", "ipAddress", "cookieId", "updatedAt"],
 			where: {
 				[Op.or]: [{ cookieId }, { ipAddress }],
 			},
