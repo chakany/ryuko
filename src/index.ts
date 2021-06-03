@@ -196,7 +196,9 @@ void (async function () {
 				try {
 					app.set("view engine", "ejs");
 					app.set("views", "../app/pages");
+					// @ts-expect-error 2769
 					app.use(bodyParser.urlencoded({ extended: true }));
+					// @ts-expect-error 2769
 					app.use(bodyParser.json());
 					app.use(cookieParser());
 
