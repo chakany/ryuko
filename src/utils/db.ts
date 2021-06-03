@@ -66,6 +66,10 @@ const guilds = sequelize.define("guilds", {
 		type: DataTypes.BOOLEAN,
 		defaultValue: false,
 	},
+	verificationLevel: {
+		type: DataTypes.STRING,
+		defaultValue: "low",
+	},
 	verifiedRole: {
 		type: DataTypes.STRING,
 	},
@@ -282,13 +286,31 @@ export default class Db {
 	}
 
 	async getMutedUsers() {
-		let guilds = new Map();
-		const date = new Date();
 		const mutes = await sequelize.query(
 			"SELECT guildId,victimId,expires,createdAt FROM punishments WHERE NOW() <= expires;"
 		);
 
 		return mutes[0];
+	}
+
+	async getUserPunishments(
+		memberId: string,
+		guildId: string,
+		excludeExpired = false
+	): Promise<any[]> {
+		const punishments = await sequelize.query(
+			`SELECT * FROM punishments WHERE victimId LIKE :memberId AND guildId LIKE :guildId${
+				excludeExpired ? " AND NOW() <= expires" : ""
+			};`,
+			{
+				replacements: {
+					memberId,
+					guildId,
+				},
+			}
+		);
+
+		return punishments;
 	}
 
 	async muteUser(

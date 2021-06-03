@@ -12,12 +12,17 @@ export default class Redis extends driver {
 		this.log = log;
 	}
 
-	async addNewVerification(guildId: string, userId: string, key: string) {
+	async addNewVerification(
+		guildId: string,
+		userId: string,
+		level: string,
+		key: string
+	) {
 		return this.pipeline()
 			.hset(`verification:${key}`, {
 				guildId,
 				userId,
-				verified: 0,
+				level,
 			})
 			.expire(`verification:${key}`, 600)
 			.exec();

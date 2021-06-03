@@ -111,6 +111,8 @@ router.post("/", async (req, res) => {
 		const results = await checkCaptcha(req.body["g-recaptcha-response"]);
 
 		if (results.success) {
+			let redisRes = await redis.getVerificationKey(req.body.state);
+
 			const fetchedMember = await db.getMembersByIdentifier(
 				req.cookies._verificationId,
 				req.ip
@@ -128,10 +130,9 @@ router.post("/", async (req, res) => {
 					fetchedMember?.id !== req.body.id &&
 					fetchedMember?.updatedAt > current)
 			) {
-				// Chances are this user is an alt. Appropriate action should be taken depending on the user's settings.
 				res.render("verify", {
-					verified: false,
-					error: "Alternate account detected. If you believe this is an error, please contact the owner of the server you are trying to join.",
+					verified: true,
+					error: null,
 				});
 				redis.publish(
 					`verification-${req.body.state}`,
