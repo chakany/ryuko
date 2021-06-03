@@ -68,6 +68,7 @@ switch (process.argv.slice(-1)[0]) {
 }
 
 async function buildBot() {
+	await fs.rm("./dist", { recursive: true, force: true });
 	// Start a timer to collect how long it takes to build
 	let label = `${chalk.green("Finished")}: bot in`;
 	console.log(`${chalk.yellow("Starting")}: bot`);
@@ -85,7 +86,6 @@ async function buildSite() {
 	console.log(`${chalk.yellow("Starting")}: site`);
 	console.time(label);
 
-	await fs.rm("./dist/pages", { recursive: true, force: true });
 	await fs.mkdir("./dist/pages");
 
 	// Build all

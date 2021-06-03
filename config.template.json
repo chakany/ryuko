@@ -2,7 +2,6 @@
 	"token": "",
 	"clientID": "",
 	"clientSecret": "",
-	"verificationRedirect": "",
 	"recaptchaSecret": "",
 	"recaptchaSiteKey": "",
 	"prefix": "!",
