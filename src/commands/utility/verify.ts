@@ -7,8 +7,9 @@ export default class VerifyCommand extends Command {
 		super("verify", {
 			aliases: ["verify"],
 			clientPermissions: ["MANAGE_ROLES"],
-			description: "account",
-			guild: ["796140447260737536"],
+			description:
+				"Verify your user account, requires user verification to be setup in the guild with the 'verification' command",
+			category: "Utility",
 		});
 	}
 
