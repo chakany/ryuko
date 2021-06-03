@@ -1,0 +1,29 @@
+$body-bg: #222;
+$body-color: white;
+:root {
+	--bs-font-sans-serif: "Roboto", sans-serif;
+}
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+body {
+	font-size: 0.875rem;
+	font: 1rem/1.5 var(--bs-font-sans-serif);
+	background-color: $body-bg;
+	color: $body-color;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	text-align: center;
+	padding-top: 25px;
+	margin-top: 25px;
+}
+
+#captcha-container {
+	align-self: center;
+	align-items: center;
+}
+
+.g-recaptcha {
+	padding-top: 10px;
+	display: inline-block;
+}

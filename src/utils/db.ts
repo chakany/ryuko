@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, QueryTypes } from "sequelize";
+import { Sequelize, DataTypes, QueryTypes, Op } from "sequelize";
 import { SequelizeProvider } from "discord-akairo";
 import bunyan from "bunyan";
 
@@ -45,7 +45,7 @@ const guilds = sequelize.define("guilds", {
 	},
 	volume: {
 		type: DataTypes.INTEGER,
-		defaultValue: 100,
+		defaultValue: 80,
 	},
 	modRole: {
 		type: DataTypes.STRING,
@@ -60,6 +60,17 @@ const guilds = sequelize.define("guilds", {
 		type: DataTypes.JSON,
 	},
 	loggingChannel: {
+		type: DataTypes.STRING,
+	},
+	verification: {
+		type: DataTypes.BOOLEAN,
+		defaultValue: false,
+	},
+	verificationLevel: {
+		type: DataTypes.STRING,
+		defaultValue: "low",
+	},
+	verifiedRole: {
 		type: DataTypes.STRING,
 	},
 	someDumbFuckingSetting: {
@@ -115,6 +126,12 @@ const members = sequelize.define("members", {
 		primaryKey: true,
 		unique: "id",
 	},
+	cookieId: {
+		type: DataTypes.STRING,
+	},
+	ipAddress: {
+		type: DataTypes.STRING,
+	},
 	xpMultiplier: {
 		type: DataTypes.FLOAT,
 		defaultValue: 1.0,
@@ -159,6 +176,23 @@ export default class Db {
 	getSettings() {
 		return new SequelizeProvider(guilds, {
 			idColumn: "id",
+		});
+	}
+
+	async addMember(id: string, cookieId: string, ipAddress: string) {
+		return members.upsert({
+			id,
+			cookieId,
+			ipAddress,
+		});
+	}
+
+	async getMembersByIdentifier(cookieId = "", ipAddress = ""): Promise<any> {
+		return members.findOne({
+			attributes: ["id", "ipAddress", "cookieId", "updatedAt"],
+			where: {
+				[Op.or]: [{ cookieId }, { ipAddress }],
+			},
 		});
 	}
 
@@ -252,13 +286,31 @@ export default class Db {
 	}
 
 	async getMutedUsers() {
-		let guilds = new Map();
-		const date = new Date();
 		const mutes = await sequelize.query(
 			"SELECT guildId,victimId,expires,createdAt FROM punishments WHERE NOW() <= expires;"
 		);
 
 		return mutes[0];
+	}
+
+	async getUserPunishments(
+		memberId: string,
+		guildId: string,
+		excludeExpired = false
+	): Promise<any[]> {
+		const punishments = await sequelize.query(
+			`SELECT * FROM punishments WHERE victimId LIKE :memberId AND guildId LIKE :guildId${
+				excludeExpired ? " AND NOW() <= expires" : ""
+			};`,
+			{
+				replacements: {
+					memberId,
+					guildId,
+				},
+			}
+		);
+
+		return punishments;
 	}
 
 	async muteUser(

@@ -14,6 +14,7 @@ import client from "nekos.life";
 import { Job } from "node-schedule";
 
 import Db from "../utils/db";
+import Redis from "../utils/redis";
 
 const config = require("../../config.json");
 
@@ -35,6 +36,7 @@ interface Queue {
 declare module "discord-akairo" {
 	interface AkairoClient {
 		db: Db;
+		redis: Redis;
 		commandHandler: CommandHandler;
 		config: any;
 		settings: SequelizeProvider;
@@ -68,6 +70,7 @@ declare module "discord-akairo" {
 
 export default class AinaClient extends AkairoClient {
 	public db: Db;
+	public redis: Redis;
 	public config: any;
 	public settings: SequelizeProvider;
 	public shoukaku: Shoukaku;
@@ -97,6 +100,11 @@ export default class AinaClient extends AkairoClient {
 		this.hentai = newHentai;
 
 		this.db = new Db();
+		const redislog = bunyan.createLogger({ name: "redis" });
+		this.redis = new Redis(redislog);
+		this.redis.on("error", (error: any) => {
+			redislog.error(error);
+		});
 		this.settings = this.db.getSettings();
 
 		this.shoukaku = new Shoukaku(this, config.lavalink, ShoukakuOptions);

@@ -1,5 +1,9 @@
 {
 	"token": "",
+	"clientID": "",
+	"clientSecret": "",
+	"recaptchaSecret": "",
+	"recaptchaSiteKey": "",
 	"prefix": "!",
 	"port": 1204,
 	"ownerId": "",
@@ -11,6 +15,13 @@
 		"database": "",
 		"username": "",
 		"password": ""
+	},
+	"redis": {
+		"host": "",
+		"port": 3306,
+		"family": 4,
+		"password": "",
+		"db": 0
 	},
 	"lavalink": [
 		{
