@@ -49,6 +49,7 @@ void (async function () {
 		},
 	});
 	let dberror: any;
+	let rediserror: any;
 	if (process.env.NODE_ENV == "production") {
 		log.info("Running pre-initialization checks");
 
@@ -62,13 +63,20 @@ void (async function () {
 		}
 
 		// redis check
-		try {
+		await new Promise((resolve) => {
 			redis = new Redis(redislog);
-			checkStatus.push({ redis: colors.green("Passed") });
-		} catch (error) {
-			checkStatus.push({ redis: colors.red("Failed") });
-			redislog.error(error);
-		}
+			redis.on("error", (err) => {
+				if (!rediserror)
+					checkStatus.push({ redis: colors.red("Failed") });
+				rediserror = err;
+				resolve(false);
+			});
+
+			redis.on("connect", (err) => {
+				checkStatus.push({ redis: colors.green("Passed") });
+				resolve(true);
+			});
+		});
 
 		// image api check
 		if (imgApiUrl !== "")
@@ -133,16 +141,33 @@ void (async function () {
 		} catch (error) {
 			dberror = error;
 		}
-		try {
+		// redis check
+		await new Promise((resolve) => {
 			redis = new Redis(redislog);
-		} catch (error) {
-			redislog.error(error);
-		}
+			redis.on("error", (err) => {
+				if (!rediserror)
+					checkStatus.push({ redis: colors.red("Failed") });
+				rediserror = err;
+				resolve(false);
+			});
+
+			redis.on("connect", (err) => {
+				checkStatus.push({ redis: colors.green("Passed") });
+				resolve(true);
+			});
+		});
 	}
 
 	if (dberror) {
 		log.error("Could not connect to the database!", {
 			err: dberror.message,
+		});
+		process.exit(1);
+	}
+
+	if (rediserror) {
+		log.error("Could not connect to redis", {
+			err: rediserror.message,
 		});
 		process.exit(1);
 	}
