@@ -100,7 +100,11 @@ export default class AinaClient extends AkairoClient {
 		this.hentai = newHentai;
 
 		this.db = new Db();
-		this.redis = new Redis(bunyan.createLogger({ name: "redis" }));
+		const redislog = bunyan.createLogger({ name: "redis" });
+		this.redis = new Redis(redislog);
+		this.redis.on("error", (error: any) => {
+			redislog.error(error);
+		});
 		this.settings = this.db.getSettings();
 
 		this.shoukaku = new Shoukaku(this, config.lavalink, ShoukakuOptions);
