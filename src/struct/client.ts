@@ -146,6 +146,20 @@ export default class AinaClient extends AkairoClient {
 			ignorePermissions: config.ownerId,
 			ignoreCooldown: config.ownerId,
 		});
+
+		// Custom types
+
+		this.commandHandler.resolver.addType("category", (message, phrase) => {
+			if (!phrase) return null;
+
+			for (const [name, category] of this.commandHandler.categories) {
+				if (category.id.toLowerCase() === phrase.toLowerCase())
+					return category;
+			}
+
+			return null;
+		});
+
 		this.inhibitorHandler = new InhibitorHandler(this, {
 			directory: "./inhibitors",
 		});

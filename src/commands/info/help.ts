@@ -1,4 +1,4 @@
-import { Command, Argument } from "discord-akairo";
+import { Command, Argument, Category } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
 export default class HelpCommand extends Command {
@@ -9,16 +9,24 @@ export default class HelpCommand extends Command {
 			description: "Shows a list of avaliable commands",
 			args: [
 				{
-					id: "command",
-					type: Argument.union("commandAlias", "string"),
+					id: "command|category",
+					type: Argument.union(
+						"commandAlias",
+						"command",
+						"category",
+						"string"
+					),
 				},
 			],
 		});
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
+		const input = <Command | Category<string, Command> | string>(
+			args["command|category"]
+		);
 		const prefix = message.util?.parsed?.prefix;
-		const helpCommand = message.util?.parsed?.alias;
+		const alias = message.util?.parsed?.alias;
 		let disabledCommands = this.client.settings.get(
 			message.guild!.id,
 			"disabledCommands",
@@ -26,111 +34,34 @@ export default class HelpCommand extends Command {
 		);
 		if (typeof disabledCommands === "string")
 			disabledCommands = JSON.parse(disabledCommands);
-		if (!args.command) {
-			// If there are no command arguments, this will show all commands that are accessible to the user based on their permissions, roles, and owner status.
-			const helpEmbed = new MessageEmbed({
-				title: `${message.client.user!.username}'s Commands`,
-				description:
-					"**Prefix**: `" +
-					prefix +
-					"`\n**View All Commands**: `" +
-					`${prefix}${helpCommand} all` +
-					"`\n**View Command Info**: `" +
-					`${prefix}${helpCommand} <${this.args[0].id}>` +
-					"`",
-				url: `${this.client.config.siteUrl}/commands`,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: `Only showing commands that you are allowed to run\n${message.author.tag}`,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			});
-			const modRole = this.client.settings.get(
-				message.guild!.id,
-				"modRole",
-				"None"
-			);
-			for (const [key, dvalue] of new Map(
-				message.util?.handler.categories!
-			)) {
-				// For each category
-				let commands = "";
-				for (const [key2, fvalue] of new Map(dvalue)) {
-					// For each command in that category
-					// Check if the user has the permissions to use that command
-					if (
-						(fvalue.ownerOnly &&
-							!this.client.isOwner(message.author)) ||
-						(fvalue.modOnly &&
-							!message.member!.roles.cache.some(
-								(role) => role.id === modRole
-							)) ||
-						(!fvalue.guild.includes(message.guild!.id) &&
-							fvalue.guild.length != 0) ||
-						(disabledCommands && disabledCommands.includes(key2))
-					) {
-						// The user does not have the permissions to use this command, do not display it.
-					} else {
-						// The user does have the permission to use it, add it to the commands variable.
-						commands = commands + " `" + fvalue.aliases[0] + "`";
-					}
-				}
-				// If the commands variable has any value, add it to the embed
-				if (commands) helpEmbed.addField(key, commands, true);
-			}
-			return message.channel.send(helpEmbed);
-		} else if (args.command === "all") {
-			// If our command argument is all, this gets a list of ALL commands regardless of permission
-			const helpEmbed = new MessageEmbed({
-				title: `${message.client.user!.username}'s Commands`,
-				description:
-					"**Prefix**: `" +
-					prefix +
-					"`\n**View Command Info**: `" +
-					`${prefix}${helpCommand} <${this.args[0].id}>` +
-					"`",
-				url: `${this.client.config.siteUrl}/commands`,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				author: {
-					name: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				footer: {
-					text: `Showing all commands\n${message.author.tag}`,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			});
-			for (const [key, dvalue] of new Map(
-				message.util?.handler.categories!
-			)) {
-				if (dvalue.first() != null) {
-					// For each category
-					let commands = "";
-					for (const [key2, fvalue] of new Map(dvalue)) {
-						// For each command in that category
-						// Add it to the variable commands
-						commands = commands + " `" + fvalue.aliases[0] + "`";
-					}
-					// Add it to the embed
-					helpEmbed.addField(key, commands, true);
-				}
-			}
-			return message.channel.send(helpEmbed);
-		} else if (args.command.id) {
-			const command = args.command;
-			let usage: string = `${prefix}${command.id}`;
 
-			const helpEmbed = new MessageEmbed({
-				title: "Command: `" + command.id + "`",
-				url: `${this.client.config.siteUrl}/commands/${command.categoryID}/${command.id}`,
+		if (!input || typeof input == "string") {
+			const embed = new MessageEmbed({
+				title: `${this.client.user!.username}'s Commands`,
+				url: `${this.client.config.siteUrl}/commands`,
+				color: message.guild?.me?.displayHexColor,
+				timestamp: new Date(),
+				footer: {
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
+				},
+			});
+			for (const [name, category] of this.handler.categories) {
+				embed.addField(
+					category.id,
+					`\`${prefix}${alias} ${category.id}\`\n[See category on website](${this.client.config.siteUrl}/commands/${category.id} "${this.client.config.siteUrl}/commands/${category.id}")`,
+					true
+				);
+			}
+
+			return message.channel.send(embed);
+		} else if (input instanceof Command) {
+			const embed = new MessageEmbed({
+				title: `${input.aliases[0]} Command`,
+				url: `${this.client.config.siteUrl}/commands/${input.categoryID}/${input.id}`,
+				description: input.description,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
@@ -141,43 +72,43 @@ export default class HelpCommand extends Command {
 				},
 			});
 
-			if (command.description !== "")
-				helpEmbed.setDescription(command.description);
-			if (command.cooldown)
-				helpEmbed.addField("Cooldown", command.cooldown);
-			if (command.clientPermissions)
-				helpEmbed.addField(
-					"Required Bot Permissions",
-					command.clientPermissions
-				);
+			// Various fields to add depending if they exist or not
+			embed.addField("Category", input.categoryID, true);
+			if (input.aliases[1])
+				embed.addField("Aliases", input.aliases, true);
 			if (
-				command.userPermissions &&
-				typeof command.userPermissions !== "function"
+				input.userPermissions &&
+				typeof input.userPermissions != "function"
 			)
-				helpEmbed.addField(
+				embed.addField(
 					"Required User Permissions",
-					command.userPermissions
+					input.userPermissions,
+					true
 				);
-			if (command.aliases.length > 1)
-				helpEmbed.addField("Aliases", command.aliases.splice(1));
-			if (command.ownerOnly) helpEmbed.addField("Owner Only", "Yes");
-			if (disabledCommands && disabledCommands.includes(command.id))
-				helpEmbed.addField("Disabled", "Yes");
-			if (command.args) {
-				let current;
-				for (let i = 0; (current = command.args[i]); i++) {
-					usage = usage + ` <${current.id}>`;
-				}
-			}
-			helpEmbed.addField("Usage", "`" + usage + "`");
-			return message.channel.send(helpEmbed);
-		} else if (
-			message.util?.handler.categories.get(args.command)?.first()
-		) {
-			// If our command argument is all, this gets a list of ALL commands regardless of permission
-			const helpEmbed = new MessageEmbed({
+			if (input.clientPermissions)
+				embed.addField(
+					"Required Bot Permissions",
+					input.clientPermissions,
+					true
+				);
+			if (input.nsfw) embed.addField("NSFW", "Yes", true);
+			if (input.modOnly) embed.addField("Moderator Only", "Yes", true);
+			if (input.ownerOnly) embed.addField("Owner Only", "Yes", true);
+			if (input.cooldown)
+				embed.addField("Cooldown", `${input.cooldown} ms`, true);
+			if (input.ratelimit != 1 && input.cooldown)
+				embed.addField(
+					"Ratelimit",
+					`${input.ratelimit} uses per ${input.cooldown} ms`,
+					true
+				);
+
+			return message.channel.send(embed);
+		} else if (input instanceof Category) {
+			const embed = new MessageEmbed({
+				title: `${input.id} Category`,
+				url: `${this.client.config.siteUrl}/commands/${input.id}`,
 				color: message.guild?.me?.displayHexColor,
-				url: `${this.client.config.siteUrl}/commands`,
 				timestamp: new Date(),
 				footer: {
 					text: message.author.tag,
@@ -186,28 +117,15 @@ export default class HelpCommand extends Command {
 					}),
 				},
 			});
-			let commands = "";
-			const category = message.util?.handler.categories.get(
-				args.command
-			)!;
-			for (const [key2, fvalue] of new Map(category)) {
-				// For each command in that category
-				// Add it to the variable commands
-				commands = commands + " `" + fvalue.aliases[0] + "`";
+			let description = `Use \`${prefix}${alias} <command>\` to learn about a command\n\n`;
+
+			for (const [name, command] of input) {
+				description = description + `\`${command.aliases[0]}\` `;
 			}
-			// Add it to the embed
-			helpEmbed.setTitle("Category: `" + category.id + "`");
-			helpEmbed.setDescription(commands);
-			return message.channel.send(helpEmbed);
-		} else {
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					`You must provide a valid command, use ${prefix}${helpCommand} on it's own, or use ${prefix}${helpCommand} all.`
-				)
-			);
+
+			embed.setDescription(description);
+
+			return message.channel.send(embed);
 		}
 	}
 }
