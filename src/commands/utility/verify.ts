@@ -10,6 +10,7 @@ export default class VerifyCommand extends Command {
 			description:
 				"Verify your user account, requires user verification to be setup in the guild with the 'verification' command",
 			category: "Utility",
+			cooldown: 600000,
 		});
 	}
 
