@@ -61,14 +61,22 @@ switch (process.argv.slice(-1)[0]) {
 	case "web":
 		await buildSite();
 		break;
+	case "clean":
+		await clean();
+		console.log(`${chalk.green("Finished")}: clean`);
+		break;
 	case "all":
 	default:
 		await buildBot();
 		await buildSite();
 }
 
+async function clean() {
+	return await fs.rm("./dist", { recursive: true, force: true });
+}
+
 async function buildBot() {
-	await fs.rm("./dist", { recursive: true, force: true });
+	await clean();
 	// Start a timer to collect how long it takes to build
 	let label = `${chalk.green("Finished")}: bot in`;
 	console.log(`${chalk.yellow("Starting")}: bot`);
