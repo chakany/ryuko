@@ -1,18 +1,14 @@
-import { Listener, AkairoClient } from "discord-akairo";
+import { Listener } from "discord-akairo";
 import { Collection } from "discord.js";
 import { MessageEmbed } from "discord.js";
 import schedule, { Job } from "node-schedule";
 
 export default class ReadyListener extends Listener {
-	client: AkairoClient;
-
-	constructor(client: AkairoClient) {
+	constructor() {
 		super("ready", {
 			emitter: "client",
 			event: "ready",
 		});
-
-		this.client = client;
 	}
 
 	async exec() {

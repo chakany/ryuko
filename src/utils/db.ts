@@ -62,6 +62,12 @@ const guilds = sequelize.define("guilds", {
 	loggingChannel: {
 		type: DataTypes.STRING,
 	},
+	messageLogChannel: {
+		type: DataTypes.STRING,
+	},
+	memberLogChannel: {
+		type: DataTypes.STRING,
+	},
 	verification: {
 		type: DataTypes.BOOLEAN,
 		defaultValue: false,
