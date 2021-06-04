@@ -23,11 +23,15 @@ export default class MessageEditListener extends Listener {
 
 		const logChannel = this.client.settings.get(
 			oldMessage.guild.id,
-			"messageLogChannel",
+			"loggingChannel",
 			null
 		);
 
-		if (!logChannel) return;
+		if (
+			!logChannel ||
+			!this.client.settings.get(oldMessage.guild!.id, "logging", false)
+		)
+			return;
 		if (oldMessage.author.bot) return;
 
 		// Concatinate our message content if it is too long

@@ -211,7 +211,7 @@ export default class VerificationCommand extends Command {
 				const oldRole = this.client.settings.get(
 					message.guild!.id,
 					"verifiedRole",
-					"None"
+					null
 				);
 
 				this.client.settings.set(
@@ -234,7 +234,7 @@ export default class VerificationCommand extends Command {
 						fields: [
 							{
 								name: "Before",
-								value: `<@&${oldRole}>`,
+								value: oldRole ? `<@&${oldRole}>` : "None",
 								inline: true,
 							},
 							{

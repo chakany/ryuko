@@ -15,10 +15,14 @@ export default class DeleteListener extends Listener {
 
 		const logChannelId = this.client.settings.get(
 			message.guild.id,
-			"messageLogChannel",
+			"loggingChannel",
 			null
 		);
-		if (!logChannelId) return;
+		if (
+			!logChannelId ||
+			!this.client.settings.get(message.guild!.id, "logging", false)
+		)
+			return;
 
 		const fetchedLogs = await message.guild.fetchAuditLogs({
 			limit: 1,

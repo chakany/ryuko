@@ -50,7 +50,14 @@ export default class ReadyListener extends Listener {
 							null
 						);
 
-						if (logChannel)
+						if (
+							logChannel &&
+							outer.client.settings.get(
+								cachedGuild!.id,
+								"logging",
+								false
+							)
+						)
 							cachedGuild?.channels.cache
 								.get(`${logChannel}`)
 								// @ts-ignore

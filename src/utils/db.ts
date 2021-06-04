@@ -59,13 +59,11 @@ const guilds = sequelize.define("guilds", {
 	disabledCommands: {
 		type: DataTypes.JSON,
 	},
+	logging: {
+		type: DataTypes.BOOLEAN,
+		defaultValue: false,
+	},
 	loggingChannel: {
-		type: DataTypes.STRING,
-	},
-	messageLogChannel: {
-		type: DataTypes.STRING,
-	},
-	memberLogChannel: {
 		type: DataTypes.STRING,
 	},
 	verification: {
@@ -297,7 +295,7 @@ export default class Db {
 
 	async getMutedUsers() {
 		const mutes = await sequelize.query(
-			"SELECT guildId,victimId,expires,createdAt FROM punishments WHERE NOW() <= expires;"
+			"SELECT guildId,memberId,expires,createdAt FROM punishments WHERE NOW() <= expires;"
 		);
 
 		return mutes[0];

@@ -85,9 +85,13 @@ export default class DisconnectCommand extends Command {
 			const logchannel = this.client.settings.get(
 				message.guild!.id,
 				"loggingChannel",
-				"None"
+				null
 			);
-			if (logchannel === "None") return;
+			if (
+				!logchannel ||
+				!this.client.settings.get(message.guild!.id, "logging", false)
+			)
+				return;
 			const logEmbed = new MessageEmbed({
 				title: "Disconnection",
 				description:

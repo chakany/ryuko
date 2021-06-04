@@ -87,7 +87,10 @@ export default class MoveCommand extends Command {
 			null
 		);
 
-		if (logChannel)
+		if (
+			logChannel &&
+			this.client.settings.get(message.guild!.id, "logging", false)
+		)
 			message
 				.guild!.channels.cache.get(`${logChannel}`)
 				// @ts-ignore

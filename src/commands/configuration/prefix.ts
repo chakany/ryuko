@@ -72,9 +72,13 @@ export default class PrefixCommand extends Command {
 		const logchannel = this.client.settings.get(
 			message.guild!.id,
 			"loggingChannel",
-			"None"
+			null
 		);
-		if (logchannel === "None") return;
+		if (
+			!logchannel ||
+			!this.client.settings.get(message.guild!.id, "logging", false)
+		)
+			return;
 		return (
 			// @ts-ignore
 			this.client.channels.cache

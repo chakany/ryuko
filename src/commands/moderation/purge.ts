@@ -76,9 +76,13 @@ export default class PurgeCommand extends Command {
 			const logchannel = this.client.settings.get(
 				message.guild!.id,
 				"loggingChannel",
-				"None"
+				null
 			);
-			if (logchannel === "None") return;
+			if (
+				!logchannel ||
+				!this.client.settings.get(message.guild!.id, "logging", false)
+			)
+				return;
 			let purgeEmbed = new MessageEmbed({
 				title: "Purge",
 				color: message.guild?.me?.displayHexColor,

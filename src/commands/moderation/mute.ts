@@ -230,7 +230,10 @@ export default class MuteCommand extends Command {
 				null
 			);
 
-			if (logChannel)
+			if (
+				logChannel &&
+				outer.client.settings.get(message.guild!.id, "logging", false)
+			)
 				message
 					.guild!.channels.cache.get(`${logChannel}`)
 					// @ts-ignore
@@ -269,7 +272,10 @@ export default class MuteCommand extends Command {
 			null
 		);
 
-		if (logChannel)
+		if (
+			logChannel &&
+			this.client.settings.get(message.guild!.id, "logging", false)
+		)
 			message
 				.guild!.channels.cache.get(`${logChannel}`)
 				// @ts-ignore

@@ -12,10 +12,14 @@ export default class MemberLeaveListener extends Listener {
 	async exec(member: GuildMember) {
 		const logChannelId = this.client.settings.get(
 			member.guild.id,
-			"memberLogChannel",
+			"loggingChannel",
 			null
 		);
-		if (!logChannelId) return;
+		if (
+			!logChannelId ||
+			!this.client.settings.get(member.guild!.id, "logging", false)
+		)
+			return;
 
 		const fetchedLogs = await member.guild.fetchAuditLogs({
 			limit: 1,

@@ -8,6 +8,10 @@ export default class LoggingCommand extends Command {
 			category: "Configuration",
 			args: [
 				{
+					id: "action",
+					type: "string",
+				},
+				{
 					id: "channel",
 					type: Argument.union("textChannel", "string"),
 				},
@@ -19,88 +23,128 @@ export default class LoggingCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		if (args.channel === "disable" || args.channel === "off") {
-			this.client.settings.set(message.guild!.id, "loggingChannel", null);
-			return message.channel.send(
-				new MessageEmbed({
-					title: "Disabled Logging",
-					color: message.guild?.me?.displayHexColor,
-					description: "Logging is now **off**",
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-				})
-			);
+		switch (args.action) {
+			default:
+				return message.channel.send(
+					new MessageEmbed({
+						title: "Pong!",
+						color: message.guild?.me?.displayHexColor,
+						timestamp: new Date(),
+						footer: {
+							text: message.author.tag,
+							icon_url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
+						fields: [
+							{
+								name: "`enable`",
+								value: "Enable logging",
+							},
+							{
+								name: "`disable`",
+								value: "Disable logging",
+							},
+							{
+								name: "`channel <value>`",
+								value: "Channel to send logs into",
+							},
+						],
+					})
+				);
+				break;
+			case "enable":
+				this.client.settings.set(message.guild!.id, "logging", true);
+
+				return message.channel.send(
+					new MessageEmbed({
+						title: ":white_check_mark: Enabled Logging",
+						description: "Logging has been enabled",
+						color: message.guild?.me?.displayHexColor,
+						timestamp: new Date(),
+						footer: {
+							text: message.author.tag,
+							icon_url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
+					})
+				);
+				break;
+			case "disable":
+				this.client.settings.set(message.guild!.id, "logging", false);
+
+				return message.channel.send(
+					new MessageEmbed({
+						title: ":white_check_mark: Disabled Logging",
+						description: "Logging has been disabled",
+						color: message.guild?.me?.displayHexColor,
+						timestamp: new Date(),
+						footer: {
+							text: message.author.tag,
+							icon_url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
+					})
+				);
+				break;
+			case "channel":
+				const oldChannel = this.client.settings.get(
+					message.guild!.id,
+					"loggingChannel",
+					null
+				);
+				console.log(oldChannel);
+
+				if (!args.channel)
+					return message.channel.send(
+						new MessageEmbed({
+							title: "Current Logging Channel",
+							description: oldChannel
+								? `The current channel for logging is <#${oldChannel}>`
+								: "There is no current channel for logging",
+							color: message.guild?.me?.displayHexColor,
+							timestamp: new Date(),
+							footer: {
+								text: message.author.tag,
+								icon_url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+						})
+					);
+				this.client.settings.set(
+					message.guild!.id,
+					"loggingChannel",
+					args.channel.id
+				);
+
+				return message.channel.send(
+					new MessageEmbed({
+						title: ":white_check_mark: Changed Logging Channel",
+						color: message.guild?.me?.displayHexColor,
+						timestamp: new Date(),
+						footer: {
+							text: message.author.tag,
+							icon_url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
+						fields: [
+							{
+								name: "Before",
+								value: oldChannel ? `<#${oldChannel}>` : "None",
+								inline: true,
+							},
+							{
+								name: "After",
+								value: args.channel,
+								inline: true,
+							},
+						],
+					})
+				);
 		}
-		const prefix = message.util?.parsed?.prefix;
-
-		// The third param is the default.
-		const currentChannel = this.client.settings.get(
-			message.guild!.id,
-			"loggingChannel",
-			"None"
-		);
-
-		if (!args.channel && currentChannel !== "None") {
-			return message.channel.send(
-				new MessageEmbed({
-					title: "Current Logging Channel",
-					color: message.guild?.me?.displayHexColor,
-					description: "`" + currentChannel + "`",
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-				})
-			);
-		} else if (!args.channel && currentChannel === "None") {
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Configuration",
-					"There is no logging channel set."
-				)
-			);
-		}
-
-		await this.client.settings.set(
-			message.guild!.id,
-			"loggingChannel",
-			args.channel.id
-		);
-		return message.channel.send(
-			new MessageEmbed({
-				title: ":white_check_mark: Changed Logging Channel",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
-					{
-						name: "From",
-						value: "`" + currentChannel + "`",
-						inline: true,
-					},
-					{
-						name: "To",
-						// @ts-ignore
-						value: "`" + args.channel.id + "`",
-						inline: true,
-					},
-				],
-			})
-		);
 	}
 }
