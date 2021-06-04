@@ -3,11 +3,11 @@ import { Message, MessageAttachment, MessageEmbed } from "discord.js";
 
 const canvacord = require("canvacord");
 
-export default class XpCommand extends Command {
+export default class RankcardCommand extends Command {
 	constructor() {
-		super("xp", {
-			aliases: ["xp"],
-			description: "Gets your xp information",
+		super("rankcard", {
+			aliases: ["rankcard"],
+			description: "Gets your xp rankcard",
 			category: "Xp",
 		});
 	}

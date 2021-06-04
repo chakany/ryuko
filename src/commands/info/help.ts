@@ -52,7 +52,7 @@ export default class HelpCommand extends Command {
 			for (const [name, category] of this.handler.categories) {
 				embed.addField(
 					category.id,
-					`\`${prefix}${alias} ${category.id}\`\n[See category on website](${this.client.config.siteUrl}/commands/${category.id} "${this.client.config.siteUrl}/commands/${category.id}")`,
+					`\`${prefix}${alias} ${category.id}\`\n[See category on website](${this.client.config.siteUrl}/commands/${category.id} "${this.client.config.siteUrl}/commands/${category.id}") (Not working)`,
 					true
 				);
 			}
@@ -66,11 +66,7 @@ export default class HelpCommand extends Command {
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
-					text: `${
-						this.client.config.supportInvite
-							? `Need help? Join my [Support Server](${this.client.config.supportInvite} "Join Support Server")!\n`
-							: ""
-					}${message.author.tag}`,
+					text: message.author.tag,
 					icon_url: message.author.displayAvatarURL({
 						dynamic: true,
 					}),
@@ -116,11 +112,7 @@ export default class HelpCommand extends Command {
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
-					text: `${
-						this.client.config.supportInvite
-							? `Need help? Join my [Support Server](${this.client.config.supportInvite} "Join Support Server")!\n`
-							: ""
-					}${message.author.tag}`,
+					text: message.author.tag,
 					icon_url: message.author.displayAvatarURL({
 						dynamic: true,
 					}),
