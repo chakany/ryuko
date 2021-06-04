@@ -202,6 +202,9 @@ void (async function () {
 					app.use(bodyParser.json());
 					app.use(cookieParser());
 
+					// Check if we are in prod, if we are trust the reverse proxy, used for getting user IPs on verification.
+					if (process.env.NODE_ENV === "production") app.set('trust proxy', true)
+
 					app.use("/", home);
 					app.use("/commands", commands);
 					app.use("/verify", verify);
