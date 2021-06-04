@@ -65,6 +65,8 @@ export default class MoveCommand extends Command {
 
 		this.client.jobs.set(message.guild!.id, mutedMembers);
 
+		this.client.db.unpunishMember(args.user.id, message.guild!.id, "mute");
+
 		message.channel.send(
 			new MessageEmbed({
 				title: "Member Unmuted",

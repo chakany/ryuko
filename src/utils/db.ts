@@ -103,7 +103,7 @@ const punishments = sequelize.define("punishments", {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
-	victimId: {
+	memberId: {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
@@ -114,6 +114,10 @@ const punishments = sequelize.define("punishments", {
 			model: "members",
 			key: "id",
 		},
+	},
+	unpunished: {
+		type: DataTypes.BOOLEAN,
+		defaultValue: false,
 	},
 	reason: {
 		type: DataTypes.STRING,
@@ -299,30 +303,26 @@ export default class Db {
 		return mutes[0];
 	}
 
-	async getUserPunishments(
+	async getCurrentUserPunishments(
 		memberId: string,
-		guildId: string,
-		excludeExpired = false
+		guildId: string
 	): Promise<any[]> {
-		const punishments = await sequelize.query(
-			`SELECT * FROM punishments WHERE victimId LIKE :memberId AND guildId LIKE :guildId${
-				excludeExpired ? " AND NOW() <= expires" : ""
-			};`,
-			{
-				replacements: {
-					memberId,
-					guildId,
+		return await punishments.findAll({
+			where: {
+				memberId,
+				guildId,
+				unpunished: false,
+				expires: {
+					[Op.gte]: new Date(),
 				},
-			}
-		);
-
-		return punishments;
+			},
+		});
 	}
 
 	async muteUser(
 		guildId: string,
 		type: string,
-		victimId: string,
+		memberId: string,
 		adminId: string,
 		reason: string,
 		expires: Date
@@ -331,7 +331,7 @@ export default class Db {
 			await punishments.create({
 				guildId,
 				type,
-				victimId,
+				memberId,
 				adminId,
 				reason,
 				expires,
@@ -342,6 +342,29 @@ export default class Db {
 			log.error(err);
 			throw err;
 		}
+	}
+
+	async unpunishMember(
+		memberId: string,
+		guildId: string,
+		type: string
+	): Promise<any[]> {
+		return await punishments.update(
+			{
+				unpunished: true,
+			},
+			{
+				where: {
+					memberId,
+					guildId,
+					type,
+					unpunished: false,
+					expires: {
+						[Op.gte]: new Date(),
+					},
+				},
+			}
+		);
 	}
 
 	async sync() {

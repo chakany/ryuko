@@ -13,13 +13,12 @@ export default class ReadyListener extends Listener {
 
 	async exec() {
 		const outer = this;
+
 		// Schedule Jobs
 		const mutes = await this.client.db.getMutedUsers();
 		const jobs = this.client.jobs;
 		mutes.forEach(async (mute: any) => {
-			const cachedGuild = await outer.client.guilds.cache.get(
-				mute.guildId
-			);
+			const cachedGuild = outer.client.guilds.cache.get(mute.guildId);
 			if (!cachedGuild || jobs.get(mute.guildId)?.get(mute.victimId))
 				return;
 			const user = await cachedGuild?.members.fetch(mute.victimId);

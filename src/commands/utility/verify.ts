@@ -151,10 +151,9 @@ export default class VerifyCommand extends Command {
 						break;
 					case "medium":
 						const userPunishments =
-							await this.client.db.getUserPunishments(
+							await this.client.db.getCurrentUserPunishments(
 								message.author.id,
-								message.guild!.id,
-								true
+								message.guild!.id
 							);
 
 						if (userPunishments[0].victimId) {
