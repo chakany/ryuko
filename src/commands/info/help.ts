@@ -39,6 +39,7 @@ export default class HelpCommand extends Command {
 			const embed = new MessageEmbed({
 				title: `${this.client.user!.username}'s Commands`,
 				url: `${this.client.config.siteUrl}/commands`,
+				description: `Need help? Join my [Support Server](${this.client.config.supportInvite} "Join support server")`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
@@ -65,7 +66,11 @@ export default class HelpCommand extends Command {
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
-					text: message.author.tag,
+					text: `${
+						this.client.config.supportInvite
+							? `Need help? Join my [Support Server](${this.client.config.supportInvite} "Join Support Server")!\n`
+							: ""
+					}${message.author.tag}`,
 					icon_url: message.author.displayAvatarURL({
 						dynamic: true,
 					}),
@@ -111,7 +116,11 @@ export default class HelpCommand extends Command {
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
-					text: message.author.tag,
+					text: `${
+						this.client.config.supportInvite
+							? `Need help? Join my [Support Server](${this.client.config.supportInvite} "Join Support Server")!\n`
+							: ""
+					}${message.author.tag}`,
 					icon_url: message.author.displayAvatarURL({
 						dynamic: true,
 					}),

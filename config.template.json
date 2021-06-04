@@ -9,6 +9,7 @@
 	"ownerId": "",
 	"siteUrl": "https://aina.chaker.xyz",
 	"imgApiUrl": "",
+	"supportInvite": "https://discord.gg/c3AppSbaDM",
 	"db": {
 		"host": "",
 		"port": 3306,

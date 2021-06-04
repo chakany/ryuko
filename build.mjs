@@ -122,12 +122,17 @@ async function buildPages() {
 
 	await fs.mkdir("dist/pages/commands");
 
+	let support = "/";
+
+	if (config) support = config.supportInvite;
+
 	fs.writeFile(
 		`./dist/pages/index.html`,
 		await ejs.renderFile("./app/pages/index.ejs", {
 			totalServers: bot.guilds.cache.size,
 			avatar,
 			username: bot.user.username,
+			support,
 		})
 	);
 
