@@ -19,9 +19,9 @@ export default class ReadyListener extends Listener {
 		const jobs = this.client.jobs;
 		mutes.forEach(async (mute: any) => {
 			const cachedGuild = outer.client.guilds.cache.get(mute.guildId);
-			if (!cachedGuild || jobs.get(mute.guildId)?.get(mute.victimId))
+			if (!cachedGuild || jobs.get(mute.guildId)?.get(mute.memberId))
 				return;
-			const user = await cachedGuild?.members.fetch(mute.victimId);
+			const user = await cachedGuild?.members.fetch(mute.memberId);
 			if (user === undefined) {
 				return;
 			}
@@ -83,7 +83,7 @@ export default class ReadyListener extends Listener {
 
 				this.client.jobs.set(
 					mute.guildId,
-					new Collection<string, Job>().set(mute.victimId, job)
+					new Collection<string, Job>().set(mute.memberId, job)
 				);
 			}
 		});

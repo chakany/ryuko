@@ -156,7 +156,7 @@ export default class VerifyCommand extends Command {
 								message.guild!.id
 							);
 
-						if (userPunishments[0].victimId) {
+						if (userPunishments[0].memberId) {
 							message.member?.ban({
 								reason: `Alternate Account of User ID '${call.originalAccount}'`,
 							});
