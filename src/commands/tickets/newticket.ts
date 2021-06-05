@@ -17,16 +17,19 @@ export default class TicketCommand extends Command {
 	}
 
 	async exec(message: Message): Promise<any> {
-		/*
 		if (!this.client.settings.get(message.guild!.id, "tickets", false))
 			return message.channel.send(
 				this.client.error(
 					message,
 					this,
 					"Invalid Configuration",
-					"Ticketing is not currently setup, please set it up with the "
+					`Ticketing is not currently setup, please set it up with the \`${
+						message.util?.parsed?.prefix
+					}${
+						this.handler.findCommand("ticketing").aliases[0]
+					}\` command!`
 				)
-			);*/
+			);
 
 		let perms: OverwriteResolvable[] = [
 			{
@@ -94,10 +97,16 @@ export default class TicketCommand extends Command {
 		channel!.send(
 			new MessageEmbed({
 				title: "Ticket Opened",
-				description: `I opened a new channel for you, the following command can be used to manage this ticket\n\`${
+				description: `**The following commands can be used to manage this ticket:**\n\`${
 					message.util?.parsed?.prefix
 				}${this.handler.findCommand("closeticket").aliases[0]}\` ${
 					this.handler.findCommand("closeticket").description
+				}\n\`${message.util?.parsed?.prefix}${
+					this.handler.findCommand("addmember").aliases[0]
+				}\` ${this.handler.findCommand("addmember").description}\n\`${
+					message.util?.parsed?.prefix
+				}${this.handler.findCommand("removemember").aliases[0]}\` ${
+					this.handler.findCommand("removemember").description
 				}`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
