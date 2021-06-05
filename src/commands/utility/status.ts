@@ -66,7 +66,7 @@ export default class StatusCommand extends Command {
 
 		return message.channel.send(
 			new MessageEmbed({
-				title: ":white_check_mark: Changed the bot's status successfully!",
+				title: `${this.client.config.emojis.greenCheck} Changed the bot's status successfully!`,
 				color: message.guild?.me?.displayHexColor,
 				description:
 					"Changed to `" +

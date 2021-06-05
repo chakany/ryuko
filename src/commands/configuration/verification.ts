@@ -81,7 +81,7 @@ export default class VerificationCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: ":white_check_mark: Enabled User Verification",
+						title: `${this.client.config.emojis.greenCheck} Enabled User Verification`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
@@ -112,7 +112,7 @@ export default class VerificationCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: ":white_check_mark: Disabled User Verification",
+						title: `${this.client.config.emojis.greenCheck} Disabled User Verification`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
@@ -172,7 +172,7 @@ export default class VerificationCommand extends Command {
 
 						return message.channel.send(
 							new MessageEmbed({
-								title: ":white_check_mark: Set verification level",
+								title: `${this.client.config.emojis.greenCheck} Set verification level`,
 								color: message.guild?.me?.displayHexColor,
 								timestamp: new Date(),
 								footer: {
@@ -222,7 +222,7 @@ export default class VerificationCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: ":white_check_mark: Set Verification Role",
+						title: `${this.client.config.emojis.greenCheck} Set Verification Role`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {

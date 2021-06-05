@@ -339,7 +339,7 @@ export default class PanelCommand extends Command {
 			await this._setPower(server, state);
 			startMessage.edit(
 				new MessageEmbed({
-					title: ":white_check_mark: Request Sent!",
+					title: `${this.client.config.emojis.greenCheck} Request Sent!`,
 					description:
 						"Sucessfully sent the request to " +
 						state +

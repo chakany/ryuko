@@ -77,10 +77,53 @@ const guilds = sequelize.define("guilds", {
 	verifiedRole: {
 		type: DataTypes.STRING,
 	},
+	tickets: {
+		type: DataTypes.BOOLEAN,
+		defaultValue: false,
+	},
+	ticketRole: {
+		type: DataTypes.STRING,
+	},
+	ticketCategory: {
+		type: DataTypes.STRING,
+	},
 	someDumbFuckingSetting: {
 		type: DataTypes.BOOLEAN,
 	},
 });
+
+const tickets = sequelize.define(
+	"tickets",
+	{
+		id: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+			autoIncrement: true,
+			primaryKey: true,
+		},
+		guildId: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			references: {
+				model: "guilds",
+				key: "id",
+			},
+		},
+		memberId: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			references: {
+				model: "members",
+				key: "id",
+			},
+		},
+		channelId: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+	},
+	{ paranoid: true }
+);
 
 const punishments = sequelize.define("punishments", {
 	id: {
@@ -187,7 +230,35 @@ export default class Db {
 		});
 	}
 
-	async addMember(id: string, cookieId: string, ipAddress: string) {
+	addTicket(guildId: string, memberId: string, channelId: string) {
+		return tickets.create({
+			guildId,
+			memberId,
+			channelId,
+		});
+	}
+
+	findTicket(guildId: string, channelId: string): Promise<any> {
+		return tickets.findOne({
+			attributes: ["memberId"],
+			where: {
+				guildId,
+				channelId,
+			},
+		});
+	}
+
+	deleteTicket(guildId: string, memberId: string, channelId: string) {
+		return tickets.destroy({
+			where: {
+				guildId,
+				memberId,
+				channelId,
+			},
+		});
+	}
+
+	addMember(id: string, cookieId: string, ipAddress: string) {
 		return members.upsert({
 			id,
 			cookieId,
@@ -195,7 +266,7 @@ export default class Db {
 		});
 	}
 
-	async getMembersByIdentifier(cookieId = "", ipAddress = ""): Promise<any> {
+	getMembersByIdentifier(cookieId = "", ipAddress = ""): Promise<any> {
 		return members.findOne({
 			attributes: ["id", "ipAddress", "cookieId", "updatedAt"],
 			where: {

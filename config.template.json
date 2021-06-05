@@ -46,6 +46,7 @@
 		"online": "<:online:837773674580017213>",
 		"idle": "<:startingorstopping:837773674181689387>",
 		"dnd": "<:offline:837773674492067860>",
-		"invisible": "<:unknown:837773675503288401>"
+		"invisible": "<:unknown:837773675503288401>",
+		"greenCheck": ":white_check_mark:"
 	}
 }

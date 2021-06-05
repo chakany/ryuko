@@ -64,7 +64,7 @@ export default class ModroleCommand extends Command {
 		);
 		return message.channel.send(
 			new MessageEmbed({
-				title: ":white_check_mark: Changed Mod Role",
+				title: `${this.client.config.emojis.greenCheck} Changed Mod Role`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {

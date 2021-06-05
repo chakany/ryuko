@@ -36,7 +36,7 @@ export default class XpMessageCommand extends Command {
 
 			return message.channel.send(
 				new MessageEmbed({
-					title: ":white_check_mark: Enabled XP Messages",
+					title: `${this.client.config.emojis.greenCheck} Enabled XP Messages`,
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
@@ -56,7 +56,7 @@ export default class XpMessageCommand extends Command {
 
 			return message.channel.send(
 				new MessageEmbed({
-					title: ":white_check_mark: Disabled XP Messages",
+					title: `${this.client.config.emojis.greenCheck} Disabled XP Messages`,
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {

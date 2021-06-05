@@ -27,7 +27,7 @@ export default class LoggingCommand extends Command {
 			default:
 				return message.channel.send(
 					new MessageEmbed({
-						title: "Pong!",
+						title: "Logging",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
@@ -58,7 +58,7 @@ export default class LoggingCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: ":white_check_mark: Enabled Logging",
+						title: `${this.client.config.emojis.greenCheck} Enabled Logging`,
 						description: "Logging has been enabled",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
@@ -76,7 +76,7 @@ export default class LoggingCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: ":white_check_mark: Disabled Logging",
+						title: `${this.client.config.emojis.greenCheck} Disabled Logging`,
 						description: "Logging has been disabled",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
@@ -95,7 +95,6 @@ export default class LoggingCommand extends Command {
 					"loggingChannel",
 					null
 				);
-				console.log(oldChannel);
 
 				if (!args.channel)
 					return message.channel.send(
@@ -122,7 +121,7 @@ export default class LoggingCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: ":white_check_mark: Changed Logging Channel",
+						title: `${this.client.config.emojis.greenCheck} Changed Logging Channel`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {

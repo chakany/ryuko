@@ -44,7 +44,7 @@ export default class PrefixCommand extends Command {
 		);
 		message.channel.send(
 			new MessageEmbed({
-				title: ":white_check_mark: Changed Prefix",
+				title: `${this.client.config.emojis.greenCheck} Changed Prefix`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
