@@ -62,30 +62,36 @@ export default class TicketCommand extends Command {
 
 		// Try catch assuming that we have all of the permissions, and that the error is related to the category.
 		try {
-			channel = await message.guild?.channels.create("my-ticket", {
-				topic: `Opened on ${new Date().toString()} by ${
-					message.member
-				}`,
-				reason: `${message.author.username}#${
-					message.author.discriminator
-				} opened a ticket on ${new Date().toString()}`,
-				permissionOverwrites: perms,
-				parent: this.client.settings.get(
-					message.guild!.id,
-					"ticketCategory",
-					undefined
-				),
-			});
+			channel = await message.guild?.channels.create(
+				`ticket-${message.author.username}`,
+				{
+					topic: `Opened on ${new Date().toString()} by ${
+						message.member
+					}`,
+					reason: `${message.author.username}#${
+						message.author.discriminator
+					} opened a ticket on ${new Date().toString()}`,
+					permissionOverwrites: perms,
+					parent: this.client.settings.get(
+						message.guild!.id,
+						"ticketCategory",
+						undefined
+					),
+				}
+			);
 		} catch (error) {
-			channel = await message.guild?.channels.create("my-ticket", {
-				topic: `Opened on ${new Date().toString()} by ${
-					message.member
-				}`,
-				reason: `${message.author.username}#${
-					message.author.discriminator
-				} opened a ticket on ${new Date().toString()}`,
-				permissionOverwrites: perms,
-			});
+			channel = await message.guild?.channels.create(
+				`ticket-${message.author.username}`,
+				{
+					topic: `Opened on ${new Date().toString()} by ${
+						message.member
+					}`,
+					reason: `${message.author.username}#${
+						message.author.discriminator
+					} opened a ticket on ${new Date().toString()}`,
+					permissionOverwrites: perms,
+				}
+			);
 		}
 
 		await this.client.db.addTicket(
