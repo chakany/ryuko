@@ -19,8 +19,7 @@ export default class StealEmojiCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		if (
 			!args.emoji ||
-			!args.emoji.startsWith("<:") ||
-			!args.emoji.startsWith("<a:")
+			(!args.emoji.startsWith("<:") && !args.emoji.startsWith("<a:"))
 		)
 			return message.channel.send(
 				this.client.error(
