@@ -30,15 +30,6 @@ export default class StealEmojiCommand extends Command {
 				)
 			);
 		try {
-			console.log(
-				args.emoji.startsWith("<a")
-					? `https://cdn.discordapp.com/emojis/${args.emoji
-							.split(":")[2]
-							.slice(0, -1)}.gif`
-					: `https://cdn.discordapp.com/emojis/${args.emoji
-							.split(":")[2]
-							.slice(0, -1)}.png`
-			);
 			const emoji = await message.guild!.emojis.create(
 				args.emoji.startsWith("<a")
 					? `https://cdn.discordapp.com/emojis/${args.emoji
