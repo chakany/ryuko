@@ -20,7 +20,7 @@ const config = require("../../config.json");
 
 const ShoukakuOptions = {
 	moveOnDisconnect: false,
-	resumable: true,
+	resumable: false,
 	resumableTimeout: 30,
 	reconnectTries: 2,
 	restTimeout: 10000,
