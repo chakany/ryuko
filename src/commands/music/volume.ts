@@ -60,6 +60,15 @@ export default class VolumeCommand extends Command {
 						},
 					})
 				);
+			if (args.volume > 100)
+				return message.channel.send(
+					this.client.error(
+						message,
+						this,
+						"Invalid Argument",
+						"You cannot set a volume greater than 100!"
+					)
+				);
 			serverQueue.player.setVolume(args.volume);
 			await this.client.settings
 				.set(message.guild!.id, "volume", args.volume)
