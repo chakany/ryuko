@@ -88,6 +88,12 @@ export default class ReadyListener extends Listener {
 			}
 		});
 
+		this.client.guilds.cache.forEach((g) => {
+			g.fetchInvites().then((guildInvites) => {
+				this.client.invites.set(g.id, guildInvites);
+			});
+		});
+
 		// Set Discord Status
 		this.client.log.info(`${this.client.user!.username} is ready to roll!`);
 		const serverCount: any = await this.client.shard!.fetchClientValues(

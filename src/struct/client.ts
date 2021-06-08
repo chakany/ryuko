@@ -46,6 +46,7 @@ declare module "discord-akairo" {
 		log: bunyan;
 		jobs: Map<string, Map<string, Job>>;
 		hentai: client;
+		invites: Collection<string, any>;
 		error(
 			message: Message,
 			command: Command,
@@ -78,6 +79,7 @@ export default class AinaClient extends AkairoClient {
 	public queue: Collection<string, Queue>;
 	public log: bunyan;
 	public jobs: Collection<string, Map<string, Job>>;
+	public invites: Collection<string, any>;
 	public hentai: client;
 	public commandHandler: CommandHandler;
 	private inhibitorHandler: InhibitorHandler;
@@ -97,6 +99,7 @@ export default class AinaClient extends AkairoClient {
 		this.config = config;
 		this.log = log;
 		this.jobs = new Collection();
+		this.invites = new Collection();
 		this.hentai = newHentai;
 
 		this.db = new Db();
