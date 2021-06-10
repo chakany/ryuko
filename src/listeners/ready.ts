@@ -22,7 +22,7 @@ export default class ReadyListener extends Listener {
 			if (!cachedGuild || jobs.get(mute.guildId)?.get(mute.memberId))
 				return;
 			const user = await cachedGuild?.members.fetch(mute.memberId);
-			if (user === undefined) {
+			if (!user) {
 				return;
 			}
 			const muteRole = outer.client.settings.get(
