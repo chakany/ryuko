@@ -234,7 +234,10 @@ export default class Db {
 		});
 	}
 
-	addTicket(guildId: string, memberId: string, channelId: string) {
+	async addTicket(guildId: string, memberId: string, channelId: string) {
+		await members.upsert({
+			id: memberId,
+		});
 		return tickets.create({
 			guildId,
 			memberId,
