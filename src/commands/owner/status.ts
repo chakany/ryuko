@@ -6,7 +6,7 @@ export default class StatusCommand extends Command {
 		super("status", {
 			aliases: ["status"],
 			description: "Change my status",
-			category: "Utility",
+			category: "Owner",
 			ownerOnly: true,
 			args: [
 				{

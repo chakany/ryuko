@@ -7,7 +7,7 @@ export default class PanelCommand extends Command {
 		super("panel", {
 			aliases: ["panel", "pterodactyl"],
 			description: "Execute functions on the Pterodactyl panel.",
-			category: "Utility",
+			category: "Owner",
 			args: [
 				{
 					id: "action",

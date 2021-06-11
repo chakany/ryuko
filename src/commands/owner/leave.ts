@@ -6,7 +6,7 @@ export default class LeaveCommand extends Command {
 		super("leave", {
 			aliases: ["leave"],
 			description: "Make me leave the server",
-			category: "Utility",
+			category: "Owner",
 			ownerOnly: true,
 		});
 	}

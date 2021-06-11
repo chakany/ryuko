@@ -6,7 +6,7 @@ export default class SayCommand extends Command {
 		super("say", {
 			aliases: ["say"],
 			description: "Make the me repeat what you say",
-			category: "Utility",
+			category: "Owner",
 			ownerOnly: true,
 			args: [
 				{
