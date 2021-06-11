@@ -100,12 +100,6 @@ export default class MoveCommand extends Command {
 						description: `${args.user} has been unmuted by ${message.author}.`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
-						footer: {
-							text: this.client.user?.tag,
-							icon_url: this.client.user?.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
 					})
 				);
 	}
