@@ -147,6 +147,10 @@ const punishments = sequelize.define("punishments", {
 	memberId: {
 		type: DataTypes.STRING,
 		allowNull: false,
+		references: {
+			model: "members",
+			key: "id",
+		},
 	},
 	adminId: {
 		type: DataTypes.STRING,
@@ -337,7 +341,7 @@ export default class Db {
 		let results: any;
 
 		try {
-			results = await guildXp.findAll({
+			results = await guildXp.findOne({
 				where: {
 					memberId,
 					guildId,
@@ -347,7 +351,7 @@ export default class Db {
 			log.error(error);
 		}
 
-		return results[0];
+		return results;
 	}
 
 	async getGuildXp(guildId: string): Promise<any> {
@@ -397,6 +401,10 @@ export default class Db {
 		expires: Date
 	) {
 		try {
+			await members.upsert({
+				id: memberId,
+			});
+
 			await punishments.create({
 				guildId,
 				type,
