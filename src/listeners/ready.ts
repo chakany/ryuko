@@ -1,6 +1,5 @@
 import { Listener } from "discord-akairo";
-import { Collection } from "discord.js";
-import { MessageEmbed } from "discord.js";
+import { MessageEmbed, TextChannel } from "discord.js";
 import schedule, { Job } from "node-schedule";
 
 export default class ReadyListener extends Listener {
@@ -15,83 +14,64 @@ export default class ReadyListener extends Listener {
 		const outer = this;
 
 		// Schedule Jobs
-		const mutes = await this.client.db.getMutedUsers();
-		const jobs = this.client.jobs;
-		mutes.forEach(async (mute: any) => {
-			const cachedGuild = outer.client.guilds.cache.get(mute.guildId);
-			if (!cachedGuild || jobs.get(mute.guildId)?.get(mute.memberId))
-				return;
-			const user = await cachedGuild?.members.fetch(mute.memberId);
-			if (!user) {
-				return;
-			}
-			const muteRole = outer.client.settings.get(
-				cachedGuild!.id,
-				"muteRole",
-				null
-			);
-			if (user!.roles.cache.has(muteRole)) {
-				const job = schedule.scheduleJob(
-					mute.expires,
-					async function () {
-						if (user!.roles.cache.has(muteRole))
-							user.roles.remove(
-								// @ts-expect-error
-								cachedGuild?.roles.cache.get(muteRole)
-							);
+		this.client.log.info("Scheduling Jobs");
 
-						outer.client.jobs
-							.get(cachedGuild!.id)
-							?.delete(user!.id);
-
-						const logChannel = outer.client.settings.get(
-							cachedGuild!.id,
-							"loggingChannel",
-							null
-						);
-
-						if (
-							logChannel &&
-							outer.client.settings.get(
-								cachedGuild!.id,
-								"logging",
-								false
-							)
-						)
-							cachedGuild?.channels.cache
-								.get(`${logChannel}`)
-								// @ts-ignore
-								?.send(
-									new MessageEmbed({
-										title: "Member Unmuted",
-										description: `${user}'s mute has expired.`,
-										color: cachedGuild.me?.displayHexColor,
-										timestamp: new Date(),
-										footer: {
-											text: outer.client.user?.tag,
-											icon_url:
-												outer.client.user?.displayAvatarURL(
-													{
-														dynamic: true,
-													}
-												),
-										},
-									})
-								);
-					}
-				);
-
-				this.client.jobs.set(
-					mute.guildId,
-					new Collection<string, Job>().set(mute.memberId, job)
-				);
-			}
-		});
-
-		this.client.guilds.cache.forEach((g) => {
+		this.client.guilds.cache.forEach(async (g) => {
+			// Get all guild invites, save to collection
 			g.fetchInvites().then((guildInvites) => {
 				this.client.invites.set(g.id, guildInvites);
 			});
+
+			// Get all members that are muted, check if they are still muted
+			const muteRole = g.roles.cache.get(
+				this.client.settings.get(g.id, "muteRole", null)
+			);
+			if (muteRole)
+				for (const [probablyId, member] of muteRole.members) {
+					const mute = await this.client.db.getCurrentUserMutes(
+						member.id,
+						g.id
+					);
+					if (!mute) member.roles.remove(muteRole);
+					else if (mute) {
+						const job = schedule.scheduleJob(
+							mute.expires,
+							function () {
+								if (member.roles.cache.has(muteRole.id))
+									// @ts-ignore
+									member.roles.remove(muteRole);
+
+								outer.client.jobs.get(g.id)?.delete(member.id);
+
+								const logChannel = outer.client.settings.get(
+									g.id,
+									"loggingChannel",
+									null
+								);
+
+								if (
+									logChannel &&
+									outer.client.settings.get(
+										g.id,
+										"logging",
+										false
+									)
+								)
+									(<TextChannel>(
+										g.channels.cache.get(`${logChannel}`)
+									))?.send(
+										new MessageEmbed({
+											title: "Member Unmuted",
+											description: `${member}'s mute has expired.`,
+											color: g.me?.displayHexColor,
+											timestamp: new Date(),
+										})
+									);
+							}
+						);
+						outer.client.jobs.get(g.id)?.set(member.id, job);
+					}
+				}
 		});
 
 		// Set Discord Status

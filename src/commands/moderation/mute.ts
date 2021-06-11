@@ -243,12 +243,6 @@ export default class MuteCommand extends Command {
 							description: `${args.user}'s mute has expired.`,
 							color: message.guild?.me?.displayHexColor,
 							timestamp: new Date(),
-							footer: {
-								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
 						})
 					);
 		});

@@ -371,14 +371,6 @@ export default class Db {
 		}
 	}
 
-	async getMutedUsers() {
-		const mutes = await sequelize.query(
-			"SELECT guildId,memberId,expires,createdAt FROM punishments WHERE NOW() <= expires;"
-		);
-
-		return mutes[0];
-	}
-
 	async getCurrentUserPunishments(
 		memberId: string,
 		guildId: string
@@ -387,6 +379,20 @@ export default class Db {
 			where: {
 				memberId,
 				guildId,
+				unpunished: false,
+				expires: {
+					[Op.gte]: new Date(),
+				},
+			},
+		});
+	}
+
+	async getCurrentUserMutes(memberId: string, guildId: string): Promise<any> {
+		return punishments.findOne({
+			where: {
+				memberId,
+				guildId,
+				type: "mute",
 				unpunished: false,
 				expires: {
 					[Op.gte]: new Date(),

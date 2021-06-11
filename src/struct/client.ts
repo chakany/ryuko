@@ -85,7 +85,7 @@ export default class AinaClient extends AkairoClient {
 	private inhibitorHandler: InhibitorHandler;
 	private listenerHandler: ListenerHandler;
 
-	constructor(log: bunyan, full = true) {
+	constructor(log: bunyan) {
 		super(
 			{
 				ownerID: config.ownerId,
@@ -224,7 +224,6 @@ export default class AinaClient extends AkairoClient {
 		this.log.info("Starting...");
 		this._setupShoukakuEvents();
 		this.login(token);
-		this.on("disconnect", () => this.log.warn("Disconnected!"));
 
 		return this;
 	}
