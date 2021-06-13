@@ -54,7 +54,8 @@ router.get("/:category", async function (req, res) {
 
 			res.sendFile(
 				`${process.cwd()}/pages/commands/${
-					req.params.category
+					req.params.category.toLowerCase().charAt(0).toUpperCase() +
+								req.params.category.toLowerCase().slice(1)
 				}/theFuckingIndex123131312.html`
 			);
 		}
