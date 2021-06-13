@@ -1,0 +1,36 @@
+<style>
+	body {
+		overflow-y: auto;
+	}
+
+	.title {
+		padding-top: 20px;
+	}
+</style>
+<h1 class="title"><%= category[0].categoryID %> Category</h1>
+
+<ul>
+	<!-- prettier-ignore -->
+	<% category.forEach(leCommand => { %>
+	<li>
+		<a href="<%= leCommand.id %>" style="color: inherit"
+			><%= leCommand.aliases[0] %></a
+		>
+		- <%= leCommand.description %>
+	</li>
+	<% }) %>
+</ul>
+
+<style>
+	.footer {
+		padding-top: 20px;
+		text-align: center !important;
+	}
+</style>
+
+<div class="footer">
+	<footer>
+		Note: This website is under construction!<br />Made with ❤️ by
+		<a href="https://chaker.xyz" target="_blank">Jack C</a>
+	</footer>
+</div>

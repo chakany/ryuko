@@ -35,7 +35,13 @@
 							text-muted
 						"
 					>
-						<span><%= categories[i][0].categoryID %></span>
+						<span
+							><a
+								href="/commands/<%= categories[i][0].categoryID %>"
+								style="color: inherit; text-decoration: none"
+								><%= categories[i][0].categoryID %></a
+							></span
+						>
 						<a
 							class="link-secondary"
 							href="#"
@@ -72,7 +78,12 @@
 				id="content-container"
 				class="col-md-9 ms-sm-auto col-lg-10 px-md-4"
 			>
-				<%- include('../components/command.ejs') %>
+				<!-- prettier-ignore -->
+				<% if (!command) { %>
+					<%- include('../components/category.ejs') %>
+				<% } else { %>
+					<%- include('../components/command.ejs') %>
+				<% } %>
 			</main>
 		</div>
 	</div>
