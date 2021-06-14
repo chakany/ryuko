@@ -7,7 +7,7 @@ export default class BlowjobCommand extends Command {
 			aliases: ["blowjob", "bj"],
 			description: "Shows an NSFW image",
 			category: "NSFW",
-			channel: "guild",
+
 			nsfw: true,
 		});
 	}

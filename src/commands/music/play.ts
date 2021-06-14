@@ -19,7 +19,6 @@ export default class PlayCommand extends Command {
 					type: "string",
 				},
 			],
-			channel: "guild",
 		});
 	}
 

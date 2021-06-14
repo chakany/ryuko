@@ -19,7 +19,7 @@ export default class DisableCommand extends Command {
 				},
 			],
 			description: "Enable commands on the bot",
-			channel: "guild",
+
 			userPermissions: ["ADMINISTRATOR"],
 		});
 	}

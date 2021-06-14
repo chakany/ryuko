@@ -7,7 +7,7 @@ export default class TrapCommand extends Command {
 			aliases: ["trap"],
 			description: "Shows an image of traps",
 			category: "NSFW",
-			channel: "guild",
+
 			nsfw: true,
 		});
 	}

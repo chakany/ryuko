@@ -7,7 +7,7 @@ export default class AnalCommand extends Command {
 			aliases: ["anal"],
 			description: "Shows an image of anal",
 			category: "NSFW",
-			channel: "guild",
+
 			nsfw: true,
 		});
 	}

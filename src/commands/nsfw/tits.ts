@@ -7,7 +7,7 @@ export default class PussyCommand extends Command {
 			aliases: ["tits"],
 			description: "Shows an image of some tits",
 			category: "NSFW",
-			channel: "guild",
+
 			nsfw: true,
 		});
 	}

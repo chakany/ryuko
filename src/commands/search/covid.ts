@@ -9,7 +9,7 @@ export default class CovidCommand extends Command {
 			aliases: ["covid"],
 			description: "Shows covid stats",
 			category: "Search",
-			channel: "guild",
+
 			args: [
 				{
 					id: "country",

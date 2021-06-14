@@ -13,7 +13,7 @@ export default class PrefixCommand extends Command {
 				},
 			],
 			description: "Change the prefix of the bot",
-			channel: "guild",
+
 			userPermissions: ["ADMINISTRATOR"],
 		});
 	}

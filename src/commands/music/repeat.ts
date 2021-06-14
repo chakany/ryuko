@@ -7,7 +7,7 @@ export default class RepeatCommand extends Command {
 			aliases: ["repeat", "loop"],
 			description: "Loops the currently playing song",
 			category: "Music",
-			channel: "guild",
+
 			args: [
 				{
 					id: "on|off",

@@ -7,7 +7,6 @@ export default class PauseCommand extends Command {
 			aliases: ["pause"],
 			description: "Pauses the currently playing song",
 			category: "Music",
-			channel: "guild",
 		});
 	}
 

@@ -8,7 +8,7 @@ export default class AvatarCommand extends Command {
 			description:
 				"Get's the user's avatar or the person who is mentioned.",
 			category: "Utility",
-			channel: "guild",
+
 			args: [
 				{
 					id: "user",

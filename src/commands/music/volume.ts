@@ -8,7 +8,7 @@ export default class VolumeCommand extends Command {
 			aliases: ["volume", "vol"],
 			description: "Changes the volume of the currently playing song",
 			category: "Music",
-			channel: "guild",
+
 			args: [
 				{
 					id: "volume",

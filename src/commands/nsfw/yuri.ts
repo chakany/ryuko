@@ -7,7 +7,7 @@ export default class PussyCommand extends Command {
 			aliases: ["yuri"],
 			description: "Shows an NSFW Image",
 			category: "NSFW",
-			channel: "guild",
+
 			nsfw: true,
 		});
 	}

@@ -7,7 +7,7 @@ export default class RewindCommand extends Command {
 			aliases: ["rewind", "rw"],
 			description: "Rewind a song",
 			category: "Music",
-			channel: "guild",
+
 			args: [
 				{
 					id: "seconds",

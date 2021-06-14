@@ -17,7 +17,7 @@ export default class TicketingCommand extends Command {
 				},
 			],
 			description: "Configure tickets",
-			channel: "guild",
+
 			userPermissions: ["ADMINISTRATOR"],
 		});
 	}

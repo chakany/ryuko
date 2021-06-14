@@ -7,7 +7,7 @@ export default class BoobCommand extends Command {
 			aliases: ["boobs"],
 			description: "Shows an image of some boobs",
 			category: "NSFW",
-			channel: "guild",
+
 			nsfw: true,
 		});
 	}

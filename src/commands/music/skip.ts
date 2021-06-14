@@ -7,7 +7,7 @@ export default class SkipCommand extends Command {
 			aliases: ["skip", "s"],
 			description: "Skips the currently playing song",
 			category: "Music",
-			channel: "guild",
+
 			args: [
 				{
 					id: "track",

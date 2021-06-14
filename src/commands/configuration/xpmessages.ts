@@ -14,7 +14,7 @@ export default class XpMessageCommand extends Command {
 			],
 			description:
 				"Change whether the bot will send messages when a user levels up",
-			channel: "guild",
+
 			userPermissions: ["ADMINISTRATOR"],
 		});
 	}

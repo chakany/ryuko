@@ -8,7 +8,6 @@ export default class QueueCommand extends Command {
 			aliases: ["queue", "nowplaying"],
 			description: "Gets the Song Queue",
 			category: "Music",
-			channel: "guild",
 		});
 	}
 

@@ -7,7 +7,6 @@ export default class StopCommand extends Command {
 			aliases: ["stop"],
 			description: "Stops the currently playing song",
 			category: "Music",
-			channel: "guild",
 		});
 	}
 

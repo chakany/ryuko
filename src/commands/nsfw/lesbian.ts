@@ -7,7 +7,7 @@ export default class LesbianCommand extends Command {
 			aliases: ["lesbian"],
 			description: "Shows an image of lesbian hentai",
 			category: "NSFW",
-			channel: "guild",
+
 			nsfw: true,
 		});
 	}

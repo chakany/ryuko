@@ -8,7 +8,8 @@ export default class PurgeCommand extends Command {
 			category: "Moderation",
 			description: "Deletes user messages",
 			clientPermissions: ["MANAGE_MESSAGES"],
-			channel: "guild",
+			userPermissions: ["MANAGE_MESSAGES"],
+
 			args: [
 				{
 					id: "count",

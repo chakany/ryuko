@@ -7,7 +7,7 @@ export default class FutaCommand extends Command {
 			aliases: ["futa", "futanari"],
 			description: "Shows a futa NSFW Image",
 			category: "NSFW",
-			channel: "guild",
+
 			nsfw: true,
 		});
 	}

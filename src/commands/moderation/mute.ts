@@ -10,7 +10,8 @@ export default class MuteCommand extends Command {
 			category: "Moderation",
 			description: "Mutes a member",
 			clientPermissions: ["MANAGE_ROLES"],
-			channel: "guild",
+			userPermissions: ["MANAGE_ROLES"],
+
 			args: [
 				{
 					id: "user",

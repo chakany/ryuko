@@ -8,7 +8,8 @@ export default class MoveCommand extends Command {
 			category: "Moderation",
 			description: "Move members into another voice channel",
 			clientPermissions: ["MOVE_MEMBERS"],
-			channel: "guild",
+			userPermissions: ["MOVE_MEMBERS"],
+
 			args: [
 				{
 					id: "user",

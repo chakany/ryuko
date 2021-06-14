@@ -146,7 +146,18 @@ export default class AinaClient extends AkairoClient {
 			allowMention: true,
 			handleEdits: true,
 			commandUtil: true,
-			ignorePermissions: config.ownerId,
+			ignorePermissions: (message: Message, command: Command) => {
+				if (config.ownerId.includes(message.author.id)) return true;
+				else if (
+					command.modOnly &&
+					command.userPermissions &&
+					message.member!.roles.cache.has(
+						this.settings.get(message.guild!.id, "modRole", null)
+					)
+				)
+					return true;
+				else return false;
+			},
 			ignoreCooldown: config.ownerId,
 		});
 

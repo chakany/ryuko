@@ -8,7 +8,8 @@ export default class DisconnectCommand extends Command {
 			category: "Moderation",
 			description: "Disconnect users that are in a channel",
 			clientPermissions: ["MOVE_MEMBERS"],
-			channel: "guild",
+			userPermissions: ["MOVE_MEMBERS"],
+
 			args: [
 				{
 					id: "user",

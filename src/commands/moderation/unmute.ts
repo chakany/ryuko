@@ -7,8 +7,9 @@ export default class MoveCommand extends Command {
 			aliases: ["unmute"],
 			category: "Moderation",
 			description: "Unmute a member",
-			clientPermissions: ["MOVE_MEMBERS"],
-			channel: "guild",
+			clientPermissions: ["MANAGE_ROLES"],
+			userPermissions: ["MANAGE_ROLES"],
+
 			args: [
 				{
 					id: "user",

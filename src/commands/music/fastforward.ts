@@ -7,7 +7,7 @@ export default class FastforwardCommand extends Command {
 			aliases: ["fastforward", "ff"],
 			description: "Fasts Forward in a song",
 			category: "Music",
-			channel: "guild",
+
 			args: [
 				{
 					id: "seconds",
