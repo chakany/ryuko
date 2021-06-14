@@ -38,7 +38,6 @@ export default class PlayCommand extends Command {
 			queue.get(message.guild!.id) &&
 			queue.get(message.guild!.id)?.paused == true
 		) {
-			console.log("we unpausing???");
 			const guild = queue.get(message.guild!.id);
 			guild!.paused = false;
 			return guild!.player?.setPaused(false);
