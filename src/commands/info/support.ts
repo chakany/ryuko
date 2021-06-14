@@ -14,7 +14,7 @@ export default class SupportCommand extends Command {
 		return message.channel.send(
 			new MessageEmbed({
 				title: "Support",
-				description: `Need help? [Join my Support Server](${this.client.config.supportUrl} "${this.client.config.supportUrl}")`,
+				description: `Need help? Join my [Support Server](${this.client.config.supportInvite} "Join support server")`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
