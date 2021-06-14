@@ -136,9 +136,21 @@ async function buildPages() {
 		})
 	);
 
-	// Render all commands
+	// Render all commands and categories
 	for await (let [categoryId, category] of bot.commandHandler.categories) {
 		await fs.mkdir(`dist/pages/commands/${categoryId}`);
+
+		fs.writeFile(
+			`./dist/pages/commands/${categoryId}/theFuckingIndex123131312.html`,
+			await ejs.renderFile("./app/pages/commands.ejs", {
+				categories,
+				username: bot.user.username,
+				avatar,
+				prefix: config.prefix,
+				command: null,
+				category: Array.from(category.values()),
+			})
+		);
 
 		for await (let [commandId, command] of category) {
 			fs.writeFile(

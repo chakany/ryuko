@@ -52,7 +52,11 @@ export default class HelpCommand extends Command {
 			for (const [name, category] of this.handler.categories) {
 				embed.addField(
 					category.id,
-					`\`${prefix}${alias} ${category.id}\`\n[See category on website](${this.client.config.siteUrl}/commands/${category.id} "${this.client.config.siteUrl}/commands/${category.id}") (Not working)`,
+					`\`${prefix}${alias} ${category.id.toLowerCase()}\`\n[See category on website](${
+						this.client.config.siteUrl
+					}/commands/${category.id} "${
+						this.client.config.siteUrl
+					}/commands/${category.id}")`,
 					true
 				);
 			}
