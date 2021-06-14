@@ -1,5 +1,5 @@
 import { Listener } from "discord-akairo";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { MessageEmbed, TextChannel, ActivityType } from "discord.js";
 import schedule, { Job } from "node-schedule";
 
 export default class ReadyListener extends Listener {
@@ -74,25 +74,31 @@ export default class ReadyListener extends Listener {
 				}
 		});
 
-		// Set Discord Status
 		this.client.log.info(`${this.client.user!.username} is ready to roll!`);
-		const serverCount: any = await this.client.shard!.fetchClientValues(
-			"guilds.cache.size"
-		);
-		if (serverCount > 1) {
-			this.client.user!.setActivity(
-				`${serverCount} servers! | ${this.client.config.prefix}help`,
-				{
-					type: "WATCHING",
-				}
-			);
-		} else {
-			this.client.user!.setActivity(
-				`${serverCount} server! | ${this.client.config.prefix}help`,
-				{
-					type: "WATCHING",
-				}
-			);
-		}
+
+		// Set Discord Status
+		const statuses = [
+			{
+				type: "WATCHING",
+				text: `${await this.client.shard!.fetchClientValues(
+					"guilds.cache.size"
+				)} servers! | ${this.client.config.prefix}help`,
+			},
+			{
+				type: "PLAYING",
+				text: `with ${await this.client.shard!.fetchClientValues(
+					"users.cache.size"
+				)} members! | ${this.client.config.prefix}help`,
+			},
+		];
+		let i = 0;
+		setInterval(() => {
+			if (i + 1 == statuses.length) i = 0;
+			else i++;
+
+			this.client.user!.setActivity(statuses[i].text, {
+				type: <ActivityType>statuses[i].type,
+			});
+		}, 15000);
 	}
 }
