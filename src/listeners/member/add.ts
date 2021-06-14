@@ -15,7 +15,9 @@ export default class MemberAddListener extends Listener {
 			"loggingChannel",
 			null
 		);
-		if (this.client.db.getCurrentUserMutes(member.id, member.guild.id)) {
+		if (
+			await this.client.db.getCurrentUserMutes(member.id, member.guild.id)
+		) {
 			const muteRole = member.guild.roles.cache.get(
 				this.client.settings.get(member.guild.id, "muteRole", null)
 			);
