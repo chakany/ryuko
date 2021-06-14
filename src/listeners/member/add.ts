@@ -48,7 +48,6 @@ export default class MemberAddListener extends Listener {
 					(i) => ei.get(i.code).uses < i.uses!
 				);
 
-				console.log(invite?.code);
 				return logChannel.send(
 					new MessageEmbed({
 						title: "Member Joined",
