@@ -53,10 +53,7 @@ router.get("/:category", async function (req, res) {
 			if (!req.params.category || !req.params.command) res.status(404);
 
 			res.sendFile(
-				`${process.cwd()}/pages/commands/${
-					req.params.category.toLowerCase().charAt(0).toUpperCase() +
-								req.params.category.toLowerCase().slice(1)
-				}/theFuckingIndex123131312.html`
+				`${process.cwd()}/pages/commands/${req.params.category.toLowerCase()}/theFuckingIndex123131312.html`
 			);
 		}
 	} catch (err) {
@@ -122,7 +119,7 @@ router.get("/:category/:command", async function (req, res) {
 			if (!req.params.category || !req.params.command) res.status(404);
 
 			res.sendFile(
-				`${process.cwd()}/pages/commands/${req.params.category}/${
+				`${process.cwd()}/pages/commands/${req.params.category.toLowerCase()}/${
 					req.params.command
 				}.html`
 			);

@@ -138,10 +138,11 @@ async function buildPages() {
 
 	// Render all commands and categories
 	for await (let [categoryId, category] of bot.commandHandler.categories) {
-		await fs.mkdir(`dist/pages/commands/${categoryId}`);
+		const categoryName = categoryId.toLowerCase();
+		await fs.mkdir(`dist/pages/commands/${categoryName}`);
 
 		fs.writeFile(
-			`./dist/pages/commands/${categoryId}/theFuckingIndex123131312.html`,
+			`./dist/pages/commands/${categoryName}/theFuckingIndex123131312.html`,
 			await ejs.renderFile("./app/pages/commands.ejs", {
 				categories,
 				username: bot.user.username,
@@ -154,7 +155,7 @@ async function buildPages() {
 
 		for await (let [commandId, command] of category) {
 			fs.writeFile(
-				`./dist/pages/commands/${categoryId}/${commandId}.html`,
+				`./dist/pages/commands/${categoryName}/${commandId}.html`,
 				await ejs.renderFile("./app/pages/commands.ejs", {
 					categories,
 					username: bot.user.username,
