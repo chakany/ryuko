@@ -80,13 +80,6 @@ export default class DeleteListener extends Listener {
 					},
 					color: message.guild.me?.displayHexColor,
 					timestamp: new Date(),
-					author: {
-						name: (<User>executor).tag,
-						icon_url: (<User>executor).displayAvatarURL({
-							dynamic: true,
-						}),
-						url: `https://discord.com/users/${(<User>executor).id}`,
-					},
 					fields: [
 						{
 							name: "Content",

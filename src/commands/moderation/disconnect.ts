@@ -104,12 +104,6 @@ export default class DisconnectCommand extends Command {
 				thumbnail: victim.user.avatarURL({ dynamic: true }),
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag + " (" + message.author.id + ")",
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
 				fields: [
 					{
 						name: "From",

@@ -88,16 +88,15 @@ export default class PurgeCommand extends Command {
 				title: "Purge",
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag + " (" + message.author.id + ")",
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
 				footer: {
 					text: `No content ("") means that there was probably an embed there\nGreen represents the command that initated the purge`,
 				},
 				fields: [
+					{
+						name: "Purged By",
+						value: message.member,
+						inline: true,
+					},
 					{
 						name: "Channel",
 						value: `<#${message.channel.id}>`,
