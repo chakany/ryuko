@@ -5,26 +5,16 @@ import bunyan from "bunyan";
 let log = bunyan.createLogger({
 	name: "db",
 	stream: process.stdout,
-	level: "debug",
+	level: process.env.NODE_ENV !== "production" ? "debug" : "info",
 });
 
-let sequelize: Sequelize;
-
 const { db, prefix } = require("../../config.json");
-if (process.env.NODE_ENV !== "production")
-	sequelize = new Sequelize(db.database, db.username, db.password, {
-		host: db.host,
-		dialect: "mariadb",
-		port: db.port,
-		logging: (msg) => log.debug(msg),
-	});
-else
-	sequelize = new Sequelize(db.database, db.username, db.password, {
-		host: db.host,
-		dialect: "mariadb",
-		port: db.port,
-		logging: false,
-	});
+const sequelize = new Sequelize(db.database, db.username, db.password, {
+	host: db.host,
+	dialect: "mariadb",
+	port: db.port,
+	logging: (msg) => log.debug(msg),
+});
 
 // Our Models
 const guilds = sequelize.define("guilds", {

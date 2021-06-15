@@ -50,7 +50,18 @@ router.get("/:category", async function (req, res) {
 				),
 			});
 		} else {
-			if (!req.params.category || !req.params.command) res.status(404);
+			if (
+				!(await (
+					await manager.fetchClientValues("commandHandler.categories")
+				)[0].find(
+					(category: any) =>
+						category[0] &&
+						category[0].categoryID ===
+							req.params.category.charAt(0).toUpperCase() +
+								req.params.category.slice(1)
+				))
+			)
+				return res.status(404).send("404 Not Found");
 
 			res.sendFile(
 				`${process.cwd()}/pages/commands/${req.params.category.toLowerCase()}/theFuckingIndex123131312.html`
@@ -116,7 +127,31 @@ router.get("/:category/:command", async function (req, res) {
 					),
 			});
 		} else {
-			if (!req.params.category || !req.params.command) res.status(404);
+			if (
+				!(await (
+					await manager.fetchClientValues("commandHandler.categories")
+				)[0].find(
+					(category: any) =>
+						category[0] &&
+						category[0].categoryID ===
+							req.params.category.charAt(0).toUpperCase() +
+								req.params.category.slice(1)
+				)) ||
+				(await (
+					await manager.fetchClientValues("commandHandler.categories")
+				)[0]
+					.find(
+						(category: any) =>
+							category[0] &&
+							category[0].categoryID ===
+								req.params.category.charAt(0).toUpperCase() +
+									req.params.category.slice(1)
+					)
+					.find(
+						(command: Command) => command.id === req.params.command
+					))
+			)
+				return res.status(404).send("404 Not Found");
 
 			res.sendFile(
 				`${process.cwd()}/pages/commands/${req.params.category.toLowerCase()}/${
