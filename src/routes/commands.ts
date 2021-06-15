@@ -137,7 +137,7 @@ router.get("/:category/:command", async function (req, res) {
 							req.params.category.charAt(0).toUpperCase() +
 								req.params.category.slice(1)
 				)) ||
-				(await (
+				!(await (
 					await manager.fetchClientValues("commandHandler.categories")
 				)[0]
 					.find(
