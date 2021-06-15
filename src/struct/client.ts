@@ -12,6 +12,8 @@ import { LavasfyClient } from "lavasfy";
 import bunyan from "bunyan";
 import client from "nekos.life";
 import { Job } from "node-schedule";
+import ms from "ms";
+import moment from "moment";
 
 import Db from "../utils/db";
 import Redis from "../utils/redis";
@@ -172,6 +174,12 @@ export default class AinaClient extends AkairoClient {
 			}
 
 			return null;
+		});
+
+		this.commandHandler.resolver.addType("future", (message, phrase) => {
+			if (!phrase) return null;
+
+			return moment().add(ms(phrase), "ms");
 		});
 
 		this.inhibitorHandler = new InhibitorHandler(this, {

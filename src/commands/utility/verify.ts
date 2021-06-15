@@ -152,11 +152,18 @@ export default class VerifyCommand extends Command {
 					case "medium":
 						const userPunishments =
 							await this.client.db.getCurrentUserPunishments(
-								message.author.id,
+								call.originalAccount
+									? call.originalAccount
+									: null,
 								message.guild!.id
 							);
 
-						if (userPunishments[0].memberId) {
+						if (
+							userPunishments[0]?.memberId ||
+							(await message.guild!.fetchBans()).has(
+								call.originalAccount
+							)
+						) {
 							message.member?.ban({
 								reason: `Alternate Account of User ID '${call.originalAccount}'`,
 							});

@@ -1,7 +1,7 @@
-import { Command } from "discord-akairo";
+import { Command, Argument } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
-import { add } from "date-fns";
 import schedule from "node-schedule";
+import ms from "ms";
 
 export default class MuteCommand extends Command {
 	constructor() {
@@ -11,15 +11,14 @@ export default class MuteCommand extends Command {
 			description: "Mutes a member",
 			clientPermissions: ["MANAGE_ROLES"],
 			userPermissions: ["MANAGE_ROLES"],
-
 			args: [
 				{
-					id: "user",
+					id: "member",
 					type: "member",
 				},
 				{
 					id: "length",
-					type: "string",
+					type: Argument.product("future", "string"),
 				},
 				{
 					id: "reason",
@@ -30,55 +29,9 @@ export default class MuteCommand extends Command {
 		});
 	}
 
-	// Input anything and spit it back out in milliseconds
-	_resolveTime(input: any): Date | null {
-		let length = input.replace(/[^\d]/g, "");
-		if (
-			input.endsWith("s") ||
-			input.endsWith("sec") ||
-			input.endsWith("second") ||
-			input.endsWith("seconds")
-		)
-			return add(new Date(), { seconds: length });
-		else if (input.endsWith("m") || input.endsWith("min"))
-			return add(new Date(), { minutes: length });
-		else if (
-			input.endsWith("h") ||
-			input.endsWith("hour") ||
-			input.endsWith("hours")
-		)
-			return add(new Date(), { hours: length });
-		else if (
-			input.endsWith("d") ||
-			input.endsWith("day") ||
-			input.endsWith("days")
-		)
-			return add(new Date(), { days: length });
-		else if (
-			input.endsWith("w") ||
-			input.endsWith("week") ||
-			input.endsWith("weeks")
-		)
-			return add(new Date(), { weeks: length });
-		else if (
-			input.endsWith("mo") ||
-			input.endsWith("mon") ||
-			input.endsWith("month") ||
-			input.endsWith("months")
-		)
-			return add(new Date(), { months: length });
-		else if (
-			input.endsWith("y") ||
-			input.endsWith("year") ||
-			input.endsWith("years")
-		)
-			return add(new Date(), { years: length });
-		else return null;
-	}
-
 	async exec(message: Message, args: any): Promise<any> {
 		// Argument checks
-		if (!args.user)
+		if (!args.member)
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -87,10 +40,8 @@ export default class MuteCommand extends Command {
 					"You must provide a user to mute!"
 				)
 			);
-		let endDate: Date | null = null;
-		if (args.length) endDate = this._resolveTime(args.length);
 
-		if (!args.length || endDate === null)
+		if (!args.length[0])
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -110,7 +61,7 @@ export default class MuteCommand extends Command {
 				)
 			);
 		const reason = message.util!.parsed!.content!.split(
-			`${args.length} `
+			`${args.length[1]} `
 		)[1];
 
 		const modRole = this.client.settings.get(
@@ -119,12 +70,12 @@ export default class MuteCommand extends Command {
 			null
 		);
 
-		// Half-assed, the role hierachy should be checked too.
+		// Check role hierarchy
 		if (
-			args.user.roles.highest.position >=
+			args.member.roles.highest.position >=
 			message.member!.roles.highest.position
-		) {
-			return await message.channel.send(
+		)
+			return message.channel.send(
 				this.client.error(
 					message,
 					this,
@@ -132,7 +83,6 @@ export default class MuteCommand extends Command {
 					"You cannot mute someone that has the same, or a higher role than you!"
 				)
 			);
-		}
 
 		// Check if there is a role configured for muted people
 		const muteRole = this.client.settings.get(
@@ -155,7 +105,7 @@ export default class MuteCommand extends Command {
 			);
 
 		// Check if they are already muted
-		if (this.client.jobs.get(message.guild!.id)?.get(args.user.id)) {
+		if (this.client.jobs.get(message.guild!.id)?.get(args.member.id)) {
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -166,7 +116,7 @@ export default class MuteCommand extends Command {
 			);
 		}
 		try {
-			args.user.roles.add(
+			args.member.roles.add(
 				// @ts-ignore
 				message.guild?.roles.cache.get(muteRole)
 			);
@@ -186,29 +136,25 @@ export default class MuteCommand extends Command {
 				title: "Member Muted",
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag + " (" + message.author.id + ")",
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
 				fields: [
 					{
-						name: "Muted by",
-						value: `${message.author}`,
+						name: "Member",
+						value: args.member,
 						inline: true,
 					},
 					{
-						name: "Muted Member",
-						value: `${args.user}`,
+						name: "Muted by",
+						value: message.member,
 						inline: true,
 					},
 					{
 						name: "Length",
-						value: "`" + args.length + "`",
+						value: ms(<any>ms(args.length[1]), {
+							long: true,
+						}),
 						inline: true,
 					},
-					{ name: "Reason", value: "`" + `${reason}` + "`" },
+					{ name: "Reason", value: reason },
 				],
 			})
 		);
@@ -216,14 +162,14 @@ export default class MuteCommand extends Command {
 		const outer = this;
 
 		// Assign them the mute
-		const job = schedule.scheduleJob(endDate, function () {
-			if (args.user.roles.cache.has(muteRole))
+		const job = schedule.scheduleJob(args.length[0].toDate(), function () {
+			if (args.member.roles.cache.has(muteRole))
 				// @ts-ignore
-				args.user.roles.remove(
+				args.member.roles.remove(
 					message.guild?.roles.cache.get(muteRole)
 				);
 
-			outer.client.jobs.get(message.guild!.id)?.delete(args.user.id);
+			outer.client.jobs.get(message.guild!.id)?.delete(args.member.id);
 
 			const logChannel = outer.client.settings.get(
 				message.guild!.id,
@@ -241,7 +187,7 @@ export default class MuteCommand extends Command {
 					?.send(
 						new MessageEmbed({
 							title: "Member Unmuted",
-							description: `${args.user}'s mute has expired.`,
+							description: `${args.member}'s mute has expired.`,
 							color: message.guild?.me?.displayHexColor,
 							timestamp: new Date(),
 						})
@@ -249,16 +195,16 @@ export default class MuteCommand extends Command {
 		});
 		let guildJobs = this.client.jobs.get(message.guild!.id);
 		if (!guildJobs) guildJobs = new Map();
-		guildJobs?.set(args.user.id, job);
+		guildJobs?.set(args.member.id, job);
 		this.client.jobs.set(message.guild!.id, guildJobs!);
 
 		this.client.db.muteUser(
 			message.guild!.id,
 			"mute",
-			args.user.id,
+			args.member.id,
 			message.author.id,
 			reason,
-			endDate
+			args.length[0]
 		);
 
 		const logChannel = outer.client.settings.get(
@@ -278,34 +224,31 @@ export default class MuteCommand extends Command {
 					new MessageEmbed({
 						title: "Member Muted",
 						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						author: {
-							name:
-								message.author.tag +
-								" (" +
-								message.author.id +
-								")",
-							icon_url: message.author.displayAvatarURL({
+						thumbnail: {
+							url: args.member.user.displayAvatarURL({
 								dynamic: true,
 							}),
 						},
+						timestamp: new Date(),
 						fields: [
 							{
-								name: "Muted by",
-								value: `${message.author}`,
+								name: "Member",
+								value: args.member,
 								inline: true,
 							},
 							{
-								name: "Muted Member",
-								value: `${args.user}`,
+								name: "Muted by",
+								value: message.author,
 								inline: true,
 							},
 							{
 								name: "Length",
-								value: "`" + args.length + "`",
+								value: ms(<any>ms(args.length[1]), {
+									long: true,
+								}),
 								inline: true,
 							},
-							{ name: "Reason", value: "`" + `${reason}` + "`" },
+							{ name: "Reason", value: reason },
 						],
 					})
 				);
