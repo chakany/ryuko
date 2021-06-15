@@ -264,6 +264,7 @@ export default class PlayCommand extends Command {
 
 			guildQueue.player = player;
 			player.playTrack(guildQueue.tracks[0]);
+			guildQueue.paused = false;
 
 			player.on("end", (reason) => {
 				if (!guildQueue.loop) guildQueue.tracks.shift();

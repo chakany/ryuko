@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message, MessageEmbed, TextChannel } from "discord.js";
 import crypto from "crypto";
 
 export default class VerifyCommand extends Command {
@@ -122,6 +122,39 @@ export default class VerifyCommand extends Command {
 						},
 					})
 				);
+				if (
+					this.client.settings.get(
+						message.guild!.id,
+						"logging",
+						false
+					)
+				)
+					(<TextChannel>(
+						message.guild!.channels.cache.get(
+							this.client.settings.get(
+								message.guild!.id,
+								"loggingChannel",
+								null
+							)
+						)
+					)).send(
+						new MessageEmbed({
+							title: "Member Verified",
+							thumbnail: {
+								url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							color: message.guild?.me?.displayHexColor,
+							timestamp: new Date(),
+							fields: [
+								{
+									name: "Member",
+									value: message.member,
+								},
+							],
+						})
+					);
 				message.member!.roles.add(
 					// @ts-expect-error 2345
 					message.guild!.roles.cache.get(verifiedRole)
@@ -130,7 +163,7 @@ export default class VerifyCommand extends Command {
 				switch (level) {
 					case "strict":
 						message.member?.ban({
-							reason: `Alternate Account of User ID '${call.originalAccount}'`,
+							reason: `Alternate Account of User <@!${call.originalAccount}>`,
 						});
 						sentMessage.edit(
 							new MessageEmbed({
@@ -165,7 +198,7 @@ export default class VerifyCommand extends Command {
 							)
 						) {
 							message.member?.ban({
-								reason: `Alternate Account of User ID '${call.originalAccount}'`,
+								reason: `Alternate Account of User <@!${call.originalAccount}>`,
 							});
 							sentMessage.edit(
 								new MessageEmbed({
@@ -206,6 +239,40 @@ export default class VerifyCommand extends Command {
 									},
 								})
 							);
+							if (
+								this.client.settings.get(
+									message.guild!.id,
+									"logging",
+									false
+								)
+							)
+								(<TextChannel>(
+									message.guild!.channels.cache.get(
+										this.client.settings.get(
+											message.guild!.id,
+											"loggingChannel",
+											null
+										)
+									)
+								)).send(
+									new MessageEmbed({
+										title: "Member Verified",
+										thumbnail: {
+											url: message.author.displayAvatarURL(
+												{ dynamic: true }
+											),
+										},
+										color: message.guild?.me
+											?.displayHexColor,
+										timestamp: new Date(),
+										fields: [
+											{
+												name: "Member",
+												value: message.member,
+											},
+										],
+									})
+								);
 						}
 						break;
 					case "low":
@@ -229,6 +296,39 @@ export default class VerifyCommand extends Command {
 								},
 							})
 						);
+						if (
+							this.client.settings.get(
+								message.guild!.id,
+								"logging",
+								false
+							)
+						)
+							(<TextChannel>(
+								message.guild!.channels.cache.get(
+									this.client.settings.get(
+										message.guild!.id,
+										"loggingChannel",
+										null
+									)
+								)
+							)).send(
+								new MessageEmbed({
+									title: "Member Verified",
+									thumbnail: {
+										url: message.author.displayAvatarURL({
+											dynamic: true,
+										}),
+									},
+									color: message.guild?.me?.displayHexColor,
+									timestamp: new Date(),
+									fields: [
+										{
+											name: "Member",
+											value: message.member,
+										},
+									],
+								})
+							);
 				}
 			}
 			completed = true;

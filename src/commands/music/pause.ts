@@ -36,6 +36,7 @@ export default class PauseCommand extends Command {
 					)
 				);
 			serverQueue.player.setPaused(true);
+			serverQueue.paused = true;
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
