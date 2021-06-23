@@ -181,6 +181,40 @@ export default class VerifyCommand extends Command {
 								},
 							})
 						);
+						if (
+							this.client.settings.get(
+								message.guild!.id,
+								"logging",
+								false
+							)
+						)
+							(<TextChannel>(
+								message.guild!.channels.cache.get(
+									this.client.settings.get(
+										message.guild!.id,
+										"loggingChannel",
+										null
+									)
+								)
+							)).send(
+								new MessageEmbed({
+									title: "Member Failed Verification",
+									description: "and have been banned",
+									thumbnail: {
+										url: message.author.displayAvatarURL({
+											dynamic: true,
+										}),
+									},
+									color: message.guild?.me?.displayHexColor,
+									timestamp: new Date(),
+									fields: [
+										{
+											name: "Member",
+											value: message.member,
+										},
+									],
+								})
+							);
 						break;
 					case "medium":
 						const userPunishments =
@@ -217,6 +251,41 @@ export default class VerifyCommand extends Command {
 									},
 								})
 							);
+							if (
+								this.client.settings.get(
+									message.guild!.id,
+									"logging",
+									false
+								)
+							)
+								(<TextChannel>(
+									message.guild!.channels.cache.get(
+										this.client.settings.get(
+											message.guild!.id,
+											"loggingChannel",
+											null
+										)
+									)
+								)).send(
+									new MessageEmbed({
+										title: "Member Failed Verification",
+										description: "and have been banned",
+										thumbnail: {
+											url: message.author.displayAvatarURL(
+												{ dynamic: true }
+											),
+										},
+										color: message.guild?.me
+											?.displayHexColor,
+										timestamp: new Date(),
+										fields: [
+											{
+												name: "Member",
+												value: message.member,
+											},
+										],
+									})
+								);
 						} else {
 							message.member!.roles.add(
 								// @ts-expect-error 2345

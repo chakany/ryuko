@@ -54,6 +54,8 @@ export default class GuildBanAddListener extends Listener {
 
 		const { executor, target } = banLog;
 
+		if (executor == guild.me?.user) return;
+
 		if ((<User>target).id === user.id) {
 			return logChannel.send(
 				new MessageEmbed({
