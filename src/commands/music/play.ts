@@ -36,7 +36,8 @@ export default class PlayCommand extends Command {
 
 		if (
 			queue.get(message.guild!.id) &&
-			queue.get(message.guild!.id)?.paused == true
+			queue.get(message.guild!.id)?.paused == true &&
+			!args.song
 		) {
 			const guild = queue.get(message.guild!.id);
 			guild!.paused = false;
