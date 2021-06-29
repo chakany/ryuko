@@ -90,6 +90,10 @@ export default class ReadyListener extends Listener {
 					"users.cache.size"
 				)} members! | ${this.client.config.prefix}help`,
 			},
+			{
+				type: "PLAYING",
+				text: `with deez | ${this.client.config.prefix}help`,
+			},
 		];
 		let i = 0;
 		setInterval(() => {
