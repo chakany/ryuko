@@ -133,6 +133,9 @@ async function buildPages() {
 			avatar,
 			username: bot.user.username,
 			support,
+			invite: await bot.generateInvite({
+				permissions: "ADMINISTRATOR",
+			}),
 		})
 	);
 
