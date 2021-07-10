@@ -1,6 +1,6 @@
-<h3 align="center">Aina</h3>
+<h3 align="center">Ryuko</h3>
 <h4 align="center">An in-development Discord bot that aims to meet all of your needs!</h4>
-<p align="center" href="https://google.com"><img src="https://github.com/jacany/aina/actions/workflows/ci.yml/badge.svg?branch=master&event=push" /></p>
+<p align="center" href="https://google.com"><img src="https://github.com/jacany/ryuko/actions/workflows/ci.yml/badge.svg?branch=master&event=push" /></p>
 
 ---
 
@@ -17,7 +17,7 @@ Once you have all of these, rename `config.template.json` to `config.json`, and 
 
 # Running
 
-Running Aina is a breeze!
+Running Ryuko is a breeze!
 If you wan to normally start the bot, make sure you [fully built it](#building) (building everything). Then run `yarn start`
 
 To run it in developer mode (restarts on file change) run `yarn dev` for the bot, and `yarn watch` for stylesheets.

@@ -71,7 +71,7 @@ declare module "discord-akairo" {
 	}
 }
 
-export default class AinaClient extends AkairoClient {
+export default class RyukoClient extends AkairoClient {
 	public db: Db;
 	public redis: Redis;
 	public config: any;

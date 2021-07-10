@@ -5,13 +5,13 @@ let log: bunyan;
 
 if (process.env.NODE_ENV !== "production")
 	log = bunyan.createLogger({
-		name: "aina",
+		name: "bot",
 		stream: process.stdout,
 		level: "debug",
 	});
 else
 	log = bunyan.createLogger({
-		name: "aina",
+		name: "bot",
 		stream: process.stdout,
 	});
 
