@@ -4,7 +4,7 @@
 	"clientSecret": "",
 	"recaptchaSecret": "",
 	"recaptchaSiteKey": "",
-	"prefix": "!",
+	"prefix": "r!",
 	"port": 1204,
 	"ownerId": "",
 	"siteUrl": "https://ryuko.chaker.net",
