@@ -12,8 +12,7 @@ export default class DisableCommand extends Command {
 					type: Argument.union("commandAlias", "command", "string"),
 				},
 			],
-			description: "Disable commands on the bot",
-
+			description: "Disable commands or categories",
 			userPermissions: ["ADMINISTRATOR"],
 		});
 	}

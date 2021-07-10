@@ -14,7 +14,6 @@ export default class ModroleCommand extends Command {
 			],
 			description:
 				"Changes the muted user role, this setting is required if you want to use the `mute` and `unmute` commands.",
-
 			userPermissions: ["ADMINISTRATOR"],
 		});
 	}
@@ -26,15 +25,14 @@ export default class ModroleCommand extends Command {
 		const currentRole = this.client.settings.get(
 			message.guild!.id,
 			"muteRole",
-			"None"
+			null
 		);
 
-		if (!args.role && currentRole !== "None") {
+		if (!args.role && currentRole) {
 			return message.channel.send(
 				new MessageEmbed({
 					title: "Current Mute Role",
 					color: message.guild?.me?.displayHexColor,
-					description: "`" + currentRole + "`",
 					timestamp: new Date(),
 					footer: {
 						text: message.author.tag,
@@ -42,9 +40,15 @@ export default class ModroleCommand extends Command {
 							dynamic: true,
 						}),
 					},
+					fields: [
+						{
+							name: "Role",
+							value: currentRole ? `<&${currentRole}>` : "None",
+						},
+					],
 				})
 			);
-		} else if (!args.role && currentRole === "None") {
+		} else if (!args.role && !currentRole) {
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -63,6 +67,7 @@ export default class ModroleCommand extends Command {
 			"muteRole",
 			args.role.id
 		);
+
 		return message.channel.send(
 			new MessageEmbed({
 				title: `${this.client.config.emojis.greenCheck} Changed Mute Role`,
@@ -76,14 +81,13 @@ export default class ModroleCommand extends Command {
 				},
 				fields: [
 					{
-						name: "From",
-						value: "`" + currentRole + "`",
+						name: "Before",
+						value: currentRole ? `<@&${currentRole}>` : "None",
 						inline: true,
 					},
 					{
-						name: "To",
-						// @ts-ignore
-						value: "`" + args.role.id + "`",
+						name: "After",
+						value: args.role,
 						inline: true,
 					},
 				],

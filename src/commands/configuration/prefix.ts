@@ -12,8 +12,7 @@ export default class PrefixCommand extends Command {
 					type: "string",
 				},
 			],
-			description: "Change the prefix of the bot",
-
+			description: "Change my prefix",
 			userPermissions: ["ADMINISTRATOR"],
 		});
 	}
@@ -23,17 +22,28 @@ export default class PrefixCommand extends Command {
 		const oldPrefix = this.client.settings.get(
 			message.guild!.id,
 			"prefix",
-			"!"
+			this.client.config.prefix
 		);
 
 		if (!args.prefix) {
 			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"You must provide a prefix to use!"
-				)
+				new MessageEmbed({
+					title: `Current Prefix`,
+					color: message.guild?.me?.displayHexColor,
+					timestamp: new Date(),
+					footer: {
+						text: message.author.tag,
+						icon_url: message.author.displayAvatarURL({
+							dynamic: true,
+						}),
+					},
+					fields: [
+						{
+							name: "Prefix",
+							value: `\`${oldPrefix}\``,
+						},
+					],
+				})
 			);
 		}
 
@@ -42,6 +52,7 @@ export default class PrefixCommand extends Command {
 			"prefix",
 			args.prefix
 		);
+
 		message.channel.send(
 			new MessageEmbed({
 				title: `${this.client.config.emojis.greenCheck} Changed Prefix`,
@@ -55,61 +66,17 @@ export default class PrefixCommand extends Command {
 				},
 				fields: [
 					{
-						name: "From",
-						value: "`" + oldPrefix + "`",
+						name: "Before",
+						value: `\`${oldPrefix}\``,
 						inline: true,
 					},
 					{
-						name: "To",
-						// @ts-ignore
-						value: "`" + args.prefix + "`",
+						name: "After",
+						value: `\`${args.prefix}\``,
 						inline: true,
 					},
 				],
 			})
-		);
-
-		const logchannel = this.client.settings.get(
-			message.guild!.id,
-			"loggingChannel",
-			null
-		);
-		if (
-			!logchannel ||
-			!this.client.settings.get(message.guild!.id, "logging", false)
-		)
-			return;
-		return (
-			// @ts-ignore
-			this.client.channels.cache
-				.get(logchannel)
-				// @ts-ignore
-				.send(
-					new MessageEmbed({
-						title: "Prefix Changed",
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-						fields: [
-							{
-								name: "From",
-								value: "`" + oldPrefix + "`",
-								inline: true,
-							},
-							{
-								name: "To",
-								// @ts-ignore
-								value: "`" + args.prefix + "`",
-								inline: true,
-							},
-						],
-					})
-				)
 		);
 	}
 }
