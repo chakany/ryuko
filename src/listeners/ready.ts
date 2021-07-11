@@ -86,7 +86,7 @@ export default class ReadyListener extends Listener {
 			},
 			{
 				type: "LISTENING",
-				text: `for your commands. | ${this.client.config.prefix}help`,
+				text: `your commands. | ${this.client.config.prefix}help`,
 			},
 			{
 				type: "PLAYING",
@@ -100,7 +100,7 @@ export default class ReadyListener extends Listener {
 			},
 			{
 				type: "LISTENING",
-				text: `to kanye. | ${this.client.config.prefix}help`,
+				text: `kanye. | ${this.client.config.prefix}help`,
 			},
 		];
 		let i = 0;
