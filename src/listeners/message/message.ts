@@ -18,7 +18,9 @@ export default class MessageListener extends Listener {
 			return message.channel.send(
 				new MessageEmbed({
 					title: "Invalid Channel",
-					description: `Sorry, commands cannot be used in DMs! Please [add me to your server](${this.client.config.siteUrl}) to use my commands.`,
+					description: `Sorry, commands cannot be used in DMs! Please [add me to your server](${await this.client.generateInvite(
+						{ permissions: "ADMINISTRATOR" }
+					)} "Add me to your server!") to use my commands.`,
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
