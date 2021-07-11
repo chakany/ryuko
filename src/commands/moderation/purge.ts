@@ -124,7 +124,6 @@ export default class PurgeCommand extends Command {
 
 			setTimeout(() => tempMessage.delete(), 5000);
 		} catch (error) {
-			this.client.log.error(error);
 			return message.channel.send(
 				this.client.error(
 					message,

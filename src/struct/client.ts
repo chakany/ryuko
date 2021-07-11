@@ -273,7 +273,9 @@ export default class RyukoClient extends AkairoClient {
 			color: message.guild?.me?.displayHexColor,
 			timestamp: new Date(),
 			footer: {
-				text: message.author.tag,
+				text: `Use the "${message.util?.parsed?.prefix}${
+					command.handler.findCommand("support").aliases[0]
+				}" command if you need assistance\n${message.author.tag}`,
 				icon_url: message.author.displayAvatarURL({ dynamic: true }),
 			},
 			author: {
