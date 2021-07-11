@@ -38,7 +38,7 @@ export default class TicketCommand extends Command {
 				message.member!.roles.cache.find(
 					(role) => role.id == ticketRole
 				)) ||
-			message.member!.permissions.has("ADMINISTRATOR") ||
+			message.member!.permissions.has("MANAGE_CHANNELS") ||
 			message.author.id == ticketResult?.memberId
 		) {
 			message.channel.delete(

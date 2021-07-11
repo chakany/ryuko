@@ -13,7 +13,7 @@ export default class DisableCommand extends Command {
 				},
 			],
 			description: "Disable commands or categories",
-			userPermissions: ["ADMINISTRATOR"],
+			userPermissions: ["MANAGE_GUILD"],
 		});
 	}
 

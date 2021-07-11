@@ -14,7 +14,7 @@ export default class ModroleCommand extends Command {
 			],
 			description:
 				"Changes the muted user role, this setting is required if you want to use the `mute` and `unmute` commands.",
-			userPermissions: ["ADMINISTRATOR"],
+			userPermissions: ["MANAGE_GUILD"],
 		});
 	}
 

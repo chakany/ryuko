@@ -21,7 +21,7 @@ export default class PollCommand extends Command {
 					type: "string",
 				},
 			],
-			userPermissions: ["ADMINISTRATOR"],
+			userPermissions: ["MANAGE_MESSAGES"],
 		});
 	}
 

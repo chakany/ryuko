@@ -18,7 +18,7 @@ export default class LoggingCommand extends Command {
 			],
 			description: "Changes the Logging Channel",
 
-			userPermissions: ["ADMINISTRATOR"],
+			userPermissions: ["MANAGE_GUILD"],
 		});
 	}
 

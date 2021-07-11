@@ -54,7 +54,7 @@ export default class AddMemberCommand extends Command {
 				message.member!.roles.cache.find(
 					(role) => role.id == ticketRole
 				)) ||
-			message.member!.permissions.has("ADMINISTRATOR")
+			message.member!.permissions.has("MANAGE_CHANNELS")
 		) {
 			// for some reason updateOverwrite didn't exist unless i casted...
 			(<TextChannel>message.channel).updateOverwrite(args.member.id, {
@@ -93,7 +93,7 @@ export default class AddMemberCommand extends Command {
 					message,
 					this,
 					"Invalid Permissions",
-					`Only Administrators${
+					`Only Channel Managers${
 						ticketRole
 							? `, and members with the <@&${ticketRole}> role`
 							: ""

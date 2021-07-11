@@ -7,7 +7,7 @@ export default class VerificationCommand extends Command {
 			aliases: ["verification"],
 			description: "Configure user verification",
 			category: "Configuration",
-			userPermissions: ["ADMINISTRATOR"],
+			userPermissions: ["MANAGE_GUILD"],
 			args: [
 				{
 					id: "action",

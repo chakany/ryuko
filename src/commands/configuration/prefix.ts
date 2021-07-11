@@ -13,7 +13,7 @@ export default class PrefixCommand extends Command {
 				},
 			],
 			description: "Change my prefix",
-			userPermissions: ["ADMINISTRATOR"],
+			userPermissions: ["MANAGE_GUILD"],
 		});
 	}
 

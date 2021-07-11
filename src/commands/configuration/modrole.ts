@@ -15,7 +15,7 @@ export default class ModroleCommand extends Command {
 			description:
 				"Changes the Mod Role, setting this is required if you want to use Moderation commands.",
 
-			userPermissions: ["ADMINISTRATOR"],
+			userPermissions: ["MANAGE_GUILD"],
 		});
 	}
 
