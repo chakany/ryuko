@@ -85,6 +85,10 @@ export default class ReadyListener extends Listener {
 				)} servers! | ${this.client.config.prefix}help`,
 			},
 			{
+				type: "LISTENING",
+				text: `for your commands. | ${this.client.config.prefix}help`,
+			},
+			{
 				type: "PLAYING",
 				text: `with ${await this.client.shard!.fetchClientValues(
 					"users.cache.size"
@@ -92,7 +96,11 @@ export default class ReadyListener extends Listener {
 			},
 			{
 				type: "PLAYING",
-				text: `with deez | ${this.client.config.prefix}help`,
+				text: `https://ryuko.cc | ${this.client.config.prefix}help`,
+			},
+			{
+				type: "LISTENING",
+				text: `to kanye. | ${this.client.config.prefix}help`,
 			},
 		];
 		let i = 0;
