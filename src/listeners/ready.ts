@@ -77,32 +77,40 @@ export default class ReadyListener extends Listener {
 		this.client.log.info(`${this.client.user!.username} is ready to roll!`);
 
 		// Set Discord Status
-		const statuses = [
-			{
-				type: "WATCHING",
-				text: `${await this.client.shard!.fetchClientValues(
-					"guilds.cache.size"
-				)} servers! | ${this.client.config.prefix}help`,
-			},
-			{
-				type: "LISTENING",
-				text: `your commands. | ${this.client.config.prefix}help`,
-			},
-			{
-				type: "PLAYING",
-				text: `with ${await this.client.shard!.fetchClientValues(
-					"users.cache.size"
-				)} members! | ${this.client.config.prefix}help`,
-			},
-			{
-				type: "PLAYING",
-				text: `https://ryuko.cc | ${this.client.config.prefix}help`,
-			},
-			{
-				type: "LISTENING",
-				text: `kanye. | ${this.client.config.prefix}help`,
-			},
-		];
+		const statuses =
+			process.env.NODE_ENV !== "production"
+				? [
+						{
+							type: "PLAYING",
+							text: `Visual Studio Code`,
+						},
+				  ]
+				: [
+						{
+							type: "WATCHING",
+							text: `${await this.client.shard!.fetchClientValues(
+								"guilds.cache.size"
+							)} servers! | ${this.client.config.prefix}help`,
+						},
+						{
+							type: "LISTENING",
+							text: `your commands. | ${this.client.config.prefix}help`,
+						},
+						{
+							type: "PLAYING",
+							text: `with ${await this.client.shard!.fetchClientValues(
+								"users.cache.size"
+							)} members! | ${this.client.config.prefix}help`,
+						},
+						{
+							type: "PLAYING",
+							text: `https://ryuko.cc | ${this.client.config.prefix}help`,
+						},
+						{
+							type: "LISTENING",
+							text: `kanye. | ${this.client.config.prefix}help`,
+						},
+				  ];
 		let i = 0;
 		setInterval(() => {
 			if (i + 1 == statuses.length) i = 0;
