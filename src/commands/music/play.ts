@@ -256,7 +256,7 @@ export default class PlayCommand extends Command {
 			embedToSend.setURL(data?.tracks[0].info.uri!);
 		}
 
-		if (!guildQueue.tracks[1]) {
+		if (!guildQueue.player) {
 			const player = await node.joinVoiceChannel({
 				guildID: message.guild!.id,
 				voiceChannelID: message.member!.voice.channelID!,
