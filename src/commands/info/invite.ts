@@ -6,7 +6,7 @@ export default class InviteCommand extends Command {
 		super("invite", {
 			aliases: ["invite", "inv"],
 			description: "Invite me to your server!",
-			category: "Utility",
+			category: "Info",
 		});
 	}
 

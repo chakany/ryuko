@@ -64,7 +64,10 @@ export default class HelpCommand extends Command {
 			return message.channel.send(embed);
 		} else if (input instanceof Command) {
 			const embed = new MessageEmbed({
-				title: `${input.aliases[0]} Command`,
+				title: `${
+					input.aliases[0].charAt(0).toUpperCase() +
+					input.aliases[0].slice(1)
+				} Command`,
 				url: `${this.client.config.siteUrl}/commands/${input.categoryID}/${input.id}`,
 				description: input.description,
 				color: message.guild?.me?.displayHexColor,
