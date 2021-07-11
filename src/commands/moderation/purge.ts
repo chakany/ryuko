@@ -1,4 +1,5 @@
 import { Command } from "discord-akairo";
+import { TextChannel } from "discord.js";
 import { Message, MessageEmbed, Collection } from "discord.js";
 
 export default class PurgeCommand extends Command {
@@ -48,32 +49,36 @@ export default class PurgeCommand extends Command {
 			);
 		try {
 			let deleted: Collection<string, Message>;
-			await message.channel.messages
-				.fetch({ limit: count + 1 })
-				.then((messages) => {
-					// Fetches the messages
-					if (victim) {
-						deleted = messages.filter(
-							(m) =>
-								m.author.id === victim.id || m.id === message.id
-						);
-					} else {
-						deleted = messages;
-					}
-					if (!deleted.find((sus) => sus.id === message.id))
-						return message.channel.send(
-							this.client.error(
-								message,
-								this,
-								"Invalid Argument",
-								"I could not find that user!"
-							)
-						);
-					// @ts-ignore
-					message.channel.bulkDelete(
-						deleted // Bulk deletes all messages that have been fetched and are not older than 14 days (due to the Discord API)
-					);
+			const messages = await message.channel.messages.fetch({
+				limit: count + 1,
+			});
+
+			// Fetches the messages
+			if (victim) {
+				deleted = messages.filter(
+					(m) => m.author.id === victim.id || m.id === message.id
+				);
+			} else {
+				deleted = messages;
+			}
+			if (!deleted.find((sus) => sus.id === message.id))
+				return message.channel.send(
+					this.client.error(
+						message,
+						this,
+						"Invalid Argument",
+						"I could not find that user!"
+					)
+				);
+
+			await (<TextChannel>message.channel)
+				.bulkDelete(
+					deleted // Bulk deletes all messages that have been fetched and are not older than 14 days (due to the Discord API)
+				)
+				.catch((error) => {
+					throw error;
 				});
+
 			const logchannel = this.client.settings.get(
 				message.guild!.id,
 				"loggingChannel",
@@ -88,9 +93,6 @@ export default class PurgeCommand extends Command {
 				title: "Purge",
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				footer: {
-					text: `No content ("") means that there was probably an embed there\nGreen represents the command that initated the purge`,
-				},
 				fields: [
 					{
 						name: "Purged By",
@@ -99,37 +101,28 @@ export default class PurgeCommand extends Command {
 					},
 					{
 						name: "Channel",
-						value: `<#${message.channel.id}>`,
+						value: message.channel,
 						inline: true,
 					},
 					{
 						name: "Number of Messages",
-						// @ts-ignore
-						value: "`" + deleted.size + "`",
+						value: `\`${deleted.size}\``,
 						inline: true,
 					},
 				],
 			});
-			let content: any = "```diff\n";
-			// @ts-ignore
-			for (const [key, value] of deleted) {
-				if (key === message.id)
-					content =
-						content +
-						`+ ${value.author.tag} (${value.author.id}): "${value.content}"\n`;
-				else
-					content =
-						content +
-						`- ${value.author.tag} (${value.author.id}): "${value.content}"\n`;
-			}
-			content = content + "```";
-			purgeEmbed.setDescription(content);
 
-			// @ts-ignore
-			this.client.channels.cache
-				.get(logchannel)
-				// @ts-ignore
-				.send(purgeEmbed);
+			const tempMessage = await message.channel.send(purgeEmbed);
+
+			purgeEmbed.setThumbnail(
+				message.author.displayAvatarURL({ dynamic: true })
+			);
+
+			(<TextChannel>this.client.channels.cache.get(logchannel)).send(
+				purgeEmbed
+			);
+
+			setTimeout(() => tempMessage.delete(), 5000);
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(

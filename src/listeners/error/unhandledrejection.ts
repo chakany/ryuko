@@ -9,6 +9,6 @@ export default class UnhandledRejectionListener extends Listener {
 	}
 
 	exec(error: any) {
-		if (error.code != 50013) this.client.log.error(error);
+		this.client.log.debug(error);
 	}
 }
