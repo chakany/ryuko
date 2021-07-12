@@ -55,7 +55,7 @@ void (async function () {
 
 		// db check
 		try {
-			await db.sync();
+			await db.sync({ alter: true });
 			checkStatus.push({ db: colors.green("Passed") });
 		} catch (error) {
 			checkStatus.push({ db: colors.red("Failed") });
