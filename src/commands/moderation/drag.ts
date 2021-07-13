@@ -12,8 +12,8 @@ export default class DragCommand extends Command {
 
 			args: [
 				{
-					id: "user",
-					type: "memberMention",
+					id: "member",
+					type: "member",
 				},
 			],
 			modOnly: true,
@@ -22,7 +22,7 @@ export default class DragCommand extends Command {
 
 	exec(message: Message, args: any): any {
 		try {
-			const victim = args.user;
+			const victim = args.member;
 
 			// Get the mentioned user
 			const Channel = message.member!.voice.channel;
@@ -59,7 +59,7 @@ export default class DragCommand extends Command {
 					)
 				);
 
-			const oldChannel = args.user.voice.channel;
+			const oldChannel = args.member.voice.channel;
 			victim.voice.setChannel(Channel);
 			const logchannel = this.client.settings.get(
 				message.guild!.id,
@@ -79,31 +79,31 @@ export default class DragCommand extends Command {
 					.send(
 						new MessageEmbed({
 							title: "Drag",
-							description: `${victim} was dragged`,
 							color: message.guild?.me?.displayHexColor,
 							timestamp: new Date(),
-							footer: {
-								text: message.client.user?.tag,
-								icon_url: message.client.user?.displayAvatarURL(
-									{
-										dynamic: true,
-									}
-								),
+							thumbnail: {
+								url: victim.user.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
 							fields: [
 								{
 									name: "From",
-									value: "`" + oldChannel.name + "`",
+									value: oldChannel,
 									inline: true,
 								},
 								{
 									name: "To",
-									// @ts-ignore
-									value: "`" + Channel.name + "`",
+									value: Channel,
 									inline: true,
 								},
 								{
-									name: "By",
+									name: "Member",
+									value: args.member,
+									inline: true,
+								},
+								{
+									name: "Dragged By",
 									value: message.member,
 								},
 							],

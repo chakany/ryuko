@@ -100,20 +100,27 @@ export default class DisconnectCommand extends Command {
 				return;
 			const logEmbed = new MessageEmbed({
 				title: "Disconnection",
-				description: `${victim} was disconnected`,
-				thumbnail: victim.user.avatarURL({ dynamic: true }),
+				thumbnail: {
+					url: victim.user.displayAvatarURL({
+						dynamic: true,
+					}),
+				},
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				fields: [
 					{
 						name: "From",
-						value: "`" + oldChannel.name + "`",
+						value: oldChannel,
 						inline: true,
 					},
 					{
-						name: "By",
-						value: message.member,
+						name: "Member",
+						value: victim,
 						inline: true,
+					},
+					{
+						name: "Disconnected By",
+						value: message.member,
 					},
 				],
 			});
