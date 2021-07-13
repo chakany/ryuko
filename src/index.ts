@@ -13,6 +13,7 @@ import Redis from "./utils/redis";
 import home from "./routes/home";
 import commands from "./routes/commands";
 import verify from "./routes/verify";
+import wiki from "./routes/wiki";
 
 const { token, port, imgApiUrl, pterodactyl } = require("../config.json");
 let log = bunyan.createLogger({ name: "shardmanager" });
@@ -209,6 +210,7 @@ void (async function () {
 					app.use("/", home);
 					app.use("/commands", commands);
 					app.use("/verify", verify);
+					app.use("/wiki", wiki);
 
 					app.use(express.static("../app/static"));
 

@@ -1,9 +1,4 @@
-$body-bg: #222;
-$body-color: white;
-:root {
-	--bs-font-sans-serif: "Roboto", sans-serif;
-}
-
+@import "./base.scss";
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
 body {

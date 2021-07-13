@@ -1,5 +1,7 @@
+@import "./base.scss";
+
 .navbar-dark {
-	background-color: #222;
+	background-color: $body-bg;
 }
 
 .navbar-brand {
