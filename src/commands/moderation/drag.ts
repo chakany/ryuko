@@ -79,12 +79,7 @@ export default class DragCommand extends Command {
 					.send(
 						new MessageEmbed({
 							title: "Drag",
-							description:
-								"`" +
-								victim.user.tag +
-								"` `" +
-								victim.user.id +
-								"` was dragged",
+							description: `${victim} was dragged`,
 							color: message.guild?.me?.displayHexColor,
 							timestamp: new Date(),
 							footer: {
@@ -106,6 +101,10 @@ export default class DragCommand extends Command {
 									// @ts-ignore
 									value: "`" + Channel.name + "`",
 									inline: true,
+								},
+								{
+									name: "By",
+									value: message.member,
 								},
 							],
 						})

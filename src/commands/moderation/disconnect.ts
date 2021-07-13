@@ -67,6 +67,11 @@ export default class DisconnectCommand extends Command {
 						value: "`" + oldChannel.name + "`",
 						inline: true,
 					},
+					{
+						name: "By",
+						value: message.author,
+						inline: true,
+					},
 				],
 			});
 			if (args.reason)
@@ -95,12 +100,7 @@ export default class DisconnectCommand extends Command {
 				return;
 			const logEmbed = new MessageEmbed({
 				title: "Disconnection",
-				description:
-					"`" +
-					victim.user.tag +
-					"` `" +
-					victim.user.id +
-					"` was disconnected",
+				description: `${victim} was disconnected`,
 				thumbnail: victim.user.avatarURL({ dynamic: true }),
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
@@ -108,6 +108,11 @@ export default class DisconnectCommand extends Command {
 					{
 						name: "From",
 						value: "`" + oldChannel.name + "`",
+						inline: true,
+					},
+					{
+						name: "By",
+						value: message.member,
 						inline: true,
 					},
 				],

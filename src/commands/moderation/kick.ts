@@ -115,13 +115,6 @@ export default class KickCommand extends Command {
 					},
 					color: message.guild!.me?.displayHexColor,
 					timestamp: new Date(),
-					author: {
-						name: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-						url: `https://discord.com/users/${message.author.id}`,
-					},
 					fields: [
 						{
 							name: "Member",

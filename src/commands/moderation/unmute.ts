@@ -75,11 +75,17 @@ export default class MoveCommand extends Command {
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				author: {
-					name: message.author.tag + " (" + message.author.id + ")",
+					name: message.author.tag,
 					icon_url: message.author.displayAvatarURL({
 						dynamic: true,
 					}),
 				},
+				fields: [
+					{
+						name: "Unmuted By",
+						value: message.member,
+					},
+				],
 			})
 		);
 		const logChannel = this.client.settings.get(
@@ -98,9 +104,20 @@ export default class MoveCommand extends Command {
 				?.send(
 					new MessageEmbed({
 						title: "Member Unmuted",
-						description: `${args.user} has been unmuted by ${message.author}.`,
+						description: `${args.user} has been unmuted`,
 						color: message.guild?.me?.displayHexColor,
+						thumbnail: {
+							url: args.member.user.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
 						timestamp: new Date(),
+						fields: [
+							{
+								name: "Unmuted By",
+								value: message.member,
+							},
+						],
 					})
 				);
 	}

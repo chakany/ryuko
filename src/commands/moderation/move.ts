@@ -1,5 +1,6 @@
 import { Command } from "discord-akairo";
-import { Message } from "discord.js";
+import { GuildMember } from "discord.js";
+import { Message, MessageEmbed, TextChannel } from "discord.js";
 
 export default class MoveCommand extends Command {
 	constructor() {
@@ -26,7 +27,8 @@ export default class MoveCommand extends Command {
 
 	exec(message: Message, args: any): any {
 		try {
-			const victim = args.user;
+			const victim = args.member;
+			const oldChannel = (<GuildMember>args.member).voice.channel;
 			const Channel = args.channel;
 
 			// Check if the member is provided
@@ -52,6 +54,49 @@ export default class MoveCommand extends Command {
 				);
 
 			victim.voice.setChannel(Channel);
+
+			if (this.client.settings.get(message.guild!.id, "logging", false))
+				(<TextChannel>(
+					message.guild!.channels.cache.get(
+						this.client.settings.get(
+							message.guild!.id,
+							"loggingChannel",
+							null
+						)
+					)
+				)).send(
+					new MessageEmbed({
+						title: "Member Moved",
+						thumbnail: {
+							url: args.member.user.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
+						color: message.guild!.me?.displayHexColor,
+						timestamp: new Date(),
+						fields: [
+							{
+								name: "From",
+								value: oldChannel,
+								inline: true,
+							},
+							{
+								name: "To",
+								value: Channel,
+								inline: true,
+							},
+							{
+								name: "Member",
+								value: args.member,
+								inline: true,
+							},
+							{
+								name: "Moved by",
+								value: message.member,
+							},
+						],
+					})
+				);
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(

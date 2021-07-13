@@ -95,7 +95,7 @@ export default class UnbanCommand extends Command {
 						inline: true,
 					},
 					{
-						name: "Banned by",
+						name: "Unbanned by",
 						value: message.member,
 						inline: true,
 					},
