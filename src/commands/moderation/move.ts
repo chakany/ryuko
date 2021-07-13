@@ -13,7 +13,7 @@ export default class MoveCommand extends Command {
 
 			args: [
 				{
-					id: "user",
+					id: "member",
 					type: "member",
 				},
 				{
