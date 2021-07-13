@@ -1,19 +1,11 @@
 import bunyan from "bunyan";
 import { Category, Command } from "discord-akairo";
 
-let log: bunyan;
-
-if (process.env.NODE_ENV !== "production")
-	log = bunyan.createLogger({
-		name: "bot",
-		stream: process.stdout,
-		level: "debug",
-	});
-else
-	log = bunyan.createLogger({
-		name: "bot",
-		stream: process.stdout,
-	});
+let log = bunyan.createLogger({
+	name: "bot",
+	stream: process.stdout,
+	level: process.env.NODE_ENV !== "production" ? "debug" : "info",
+});
 
 import Bot from "./struct/client";
 
