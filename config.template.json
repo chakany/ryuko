@@ -10,6 +10,7 @@
 	"siteUrl": "https://ryuko.cc",
 	"imgApiUrl": "",
 	"supportInvite": "https://discord.gg/c3AppSbaDM",
+	"steamApiKey": "",
 	"db": {
 		"host": "",
 		"port": 3306,
