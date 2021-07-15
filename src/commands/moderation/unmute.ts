@@ -74,16 +74,22 @@ export default class MoveCommand extends Command {
 				description: `Successfully unmuted ${args.user}`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
-				author: {
-					name: message.author.tag,
+				footer: {
+					text: message.author.tag,
 					icon_url: message.author.displayAvatarURL({
 						dynamic: true,
 					}),
 				},
 				fields: [
 					{
+						name: "Unmuted",
+						value: args.user,
+						inline: true,
+					},
+					{
 						name: "Unmuted By",
 						value: message.member,
+						inline: true,
 					},
 				],
 			})
@@ -104,7 +110,6 @@ export default class MoveCommand extends Command {
 				?.send(
 					new MessageEmbed({
 						title: "Member Unmuted",
-						description: `${args.user} has been unmuted`,
 						color: message.guild?.me?.displayHexColor,
 						thumbnail: {
 							url: args.member.user.displayAvatarURL({
@@ -114,8 +119,14 @@ export default class MoveCommand extends Command {
 						timestamp: new Date(),
 						fields: [
 							{
+								name: "Unmuted",
+								value: args.user,
+								inline: true,
+							},
+							{
 								name: "Unmuted By",
 								value: message.member,
+								inline: true,
 							},
 						],
 					})
