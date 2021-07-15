@@ -4,7 +4,7 @@ import { Message, MessageEmbed } from "discord.js";
 export default class LoggingCommand extends Command {
 	constructor() {
 		super("logging", {
-			aliases: ["logging", "log", "logchannel", "loggingchannel"],
+			aliases: ["logging", "logs", "log"],
 			category: "Configuration",
 			args: [
 				{
