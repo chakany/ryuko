@@ -42,9 +42,7 @@ export default class TicketCommand extends Command {
 			message.author.id == ticketResult?.memberId
 		) {
 			message.channel.delete(
-				`Closed by ${message.author.username}#${
-					message.author.discriminator
-				} at ${new Date().toString()}`
+				`Closed by ${message.author.tag} at ${new Date().toString()}`
 			);
 			this.client.db.deleteTicket(
 				message.guild!.id,

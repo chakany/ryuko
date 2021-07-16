@@ -65,11 +65,11 @@ export default class TicketCommand extends Command {
 			channel = await message.guild?.channels.create(
 				`ticket-${message.author.username}`,
 				{
-					topic: `Opened on ${new Date().toString()} by ${
-						message.member
-					}`,
-					reason: `${message.author.username}#${
-						message.author.discriminator
+					topic: `Opened on <t:${Math.round(
+						new Date().getTime() / 1000
+					)}:f> by ${message.member}`,
+					reason: `${
+						message.author.tag
 					} opened a ticket on ${new Date().toString()}`,
 					permissionOverwrites: perms,
 					parent: this.client.settings.get(
@@ -83,12 +83,14 @@ export default class TicketCommand extends Command {
 			channel = await message.guild?.channels.create(
 				`ticket-${message.author.username}`,
 				{
-					topic: `Opened on ${new Date().toString()} by ${
-						message.member
-					}`,
-					reason: `${message.author.username}#${
-						message.author.discriminator
-					} opened a ticket on ${new Date().toString()}`,
+					topic: `Opened on <t:${Math.round(
+						new Date().getTime() / 1000
+					)}:f> by ${message.member}`,
+					reason: `${
+						message.author.tag
+					} opened a ticket on <t:${Math.round(
+						new Date().getTime() / 1000
+					)}:f>`,
 					permissionOverwrites: perms,
 				}
 			);
