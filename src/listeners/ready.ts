@@ -106,10 +106,6 @@ export default class ReadyListener extends Listener {
 							type: "PLAYING",
 							text: `https://ryuko.cc | ${this.client.config.prefix}help`,
 						},
-						{
-							type: "LISTENING",
-							text: `kanye. | ${this.client.config.prefix}help`,
-						},
 				  ];
 		let i = 0;
 		setInterval(() => {
