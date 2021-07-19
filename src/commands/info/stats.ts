@@ -37,14 +37,23 @@ export default class PingCommand extends Command {
 				fields: [
 					{
 						name: "Total Guilds",
-						value: await this.client.shard!.fetchClientValues(
+						value: `\`${await this.client.shard!.fetchClientValues(
 							"guilds.cache.size"
-						),
+						)}\``,
+						inline: true,
+					},
+					{
+						name: "Total Members",
+						value: `\`${await this.client.shard!.fetchClientValues(
+							"users.cache.size"
+						)}\``,
 						inline: true,
 					},
 					{
 						name: "Current Shard",
-						value: `${message.guild!.shardID + 1}/${this.client.shard?.count}`,
+						value: `\`${message.guild!.shardID + 1}\`/\`${
+							this.client.shard?.count
+						}\``,
 						inline: true,
 					},
 					{
@@ -57,28 +66,30 @@ export default class PingCommand extends Command {
 					{ name: "Uptime", value: uptime, inline: true },
 					{
 						name: "Node.js Version",
-						value: process.version,
+						value: `\`${process.version}\``,
 						inline: true,
 					},
 					{
 						name: "Akairo Version",
-						value: `v${
+						value: `\`v${
 							require("../../../node_modules/discord-akairo/package.json")
 								.version
-						}`,
+						}\``,
 						inline: true,
 					},
 					{
 						name: "Discord.js Version",
-						value: `v${
+						value: `\`v${
 							require("../../../node_modules/discord.js/package.json")
 								.version
-						}`,
+						}\``,
 						inline: true,
 					},
 					{
 						name: "Bot Version",
-						value: `v${require("../../../package.json").version}`,
+						value: `\`v${
+							require("../../../package.json").version
+						}\``,
 						inline: true,
 					},
 					{
