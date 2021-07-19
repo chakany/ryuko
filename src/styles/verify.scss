@@ -9,8 +9,6 @@ body {
 	overflow-x: hidden;
 	overflow-y: hidden;
 	text-align: center;
-	padding-top: 25px;
-	margin-top: 25px;
 }
 
 #captcha-container {
@@ -21,4 +19,8 @@ body {
 .g-recaptcha {
 	padding-top: 10px;
 	display: inline-block;
+}
+
+#container {
+	padding-top: 25px;
 }

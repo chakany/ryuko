@@ -1,6 +1,7 @@
 import express from "express";
 import axios from "axios";
 import bcrypt from "bcrypt";
+import { User } from "discord.js";
 
 import Db from "../utils/db";
 
@@ -62,9 +63,9 @@ const router = express.Router();
 
 // Our main route
 router.get("/", async (req, res) => {
-	if (!req.query.state) return res.status(404).send("404 Missing Paramaters");
+	if (!req.query.state) return res.status(400).send("400 Bad Request");
 	let redisRes = await redis.getVerificationKey(req.query.state);
-	if (!redisRes.userId) return res.status(404).send("404 Invalid Paramaters");
+	if (!redisRes.userId) return res.status(400).send("400 Bad Request");
 	if (!req.query.code) {
 		res.redirect(
 			new URL(
@@ -82,10 +83,16 @@ router.get("/", async (req, res) => {
 				},
 			});
 
+			const bot: User = await (
+				await manager.fetchClientValues("user")
+			)[0];
+
 			if (user.data.id !== redisRes.userId)
 				res.render("verify", {
 					verified: false,
 					error: "You signed in with a different account than the one you initiated the verification with. Please make sure you login with the same account.",
+					username: bot.username,
+					avatar: bot.avatarURL,
 				});
 			else
 				res.render("verify", {
@@ -95,17 +102,19 @@ router.get("/", async (req, res) => {
 					siteKey: recaptchaSiteKey,
 					state: req.query.state,
 					id: redisRes.userId,
+					username: bot.username,
+					avatar: bot.avatarURL,
 				});
 		} catch (error) {
 			weblog.error(error);
 			res.status(500).send("500 Internal Server Error");
 		}
-	} else return res.status(404);
+	} else return res.status(400).send("400 Bad Request");
 });
 
 router.post("/", async (req, res) => {
 	if (!req.body["g-recaptcha-response"] || !req.body.state || !req.body.id)
-		return res.status(400).send("Missing Parameters");
+		return res.status(400).send("400 Bad Request");
 
 	try {
 		const results = await checkCaptcha(req.body["g-recaptcha-response"]);
@@ -119,6 +128,9 @@ router.post("/", async (req, res) => {
 			);
 			const current = new Date();
 			current.setDate(current.getDate() - 14);
+			const bot: User = await (
+				await manager.fetchClientValues("user")
+			)[0];
 			if (
 				(fetchedMember?.ipAddress &&
 					fetchedMember.cookieId &&
@@ -133,6 +145,8 @@ router.post("/", async (req, res) => {
 				res.render("verify", {
 					verified: true,
 					error: null,
+					username: bot.username,
+					avatar: bot.avatarURL,
 				});
 				redis.publish(
 					`verification-${req.body.state}`,
@@ -149,6 +163,8 @@ router.post("/", async (req, res) => {
 				res.cookie("_verificationId", hash).render("verify", {
 					verified: true,
 					error: null,
+					username: bot.username,
+					avatar: bot.avatarURL,
 				});
 				redis.publish(
 					`verification-${req.body.state}`,

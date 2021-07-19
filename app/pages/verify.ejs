@@ -1,14 +1,18 @@
-<head>
+<!DOCTYPE html>
+<html>
+    <head>
     <meta charset="utf-8" />
 		<meta
 			name="viewport"
 			content="width=device-width, initial-scale=1, shrink-to-fit=no"
 		/>
-		<title>Verify your account</title>
+		<title>Verify your account | <%= username %></title>
 		<link rel="stylesheet" type="text/css" href="/styles/verify.css" />
 </head>
-
-<% if (verified == true) { %>
+<body>
+    <%- include("../components/header.ejs") %>
+    <div id="container" >
+        <% if (verified == true) { %>
     <h1>You can now close this window</h1>
 <% } else if (error) { %>
     <h1><%= error %></h1>
@@ -25,7 +29,7 @@
             form.submit();
         }
     </script>
-    <h1>Please complete the captcha to continue</h1>
+    <h4>Please complete the captcha to continue</h4>
     <form id="captcha-container" action="" method="POST">
         <div
             name="g-recaptcha-response"
@@ -37,4 +41,10 @@
         <input type="hidden" name="state" value="<%= state %>" />
         <input type="hidden" name="id" value="<%= id %>" />
     </form>
+    You are currently logged in as: <br>
+    <%= user.username %>#<%= user.discriminator %>
 <% } %>
+    </div>
+
+</body>
+</html>
