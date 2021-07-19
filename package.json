@@ -10,7 +10,7 @@
 		"watch": "npx sass --watch src/styles:app/static/styles",
 		"postinstall": "patch-package"
 	},
-	"author": "Jack C <30955604+jacany@users.noreply.github.com>",
+	"author": "Jack C <jack@chaker.net>",
 	"license": "MIT",
 	"devDependencies": {
 		"@types/bcrypt": "^5.0.0",
