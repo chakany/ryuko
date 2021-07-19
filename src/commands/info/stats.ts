@@ -44,7 +44,7 @@ export default class PingCommand extends Command {
 					},
 					{
 						name: "Current Shard",
-						value: `${message.guild?.shardID}/${this.client.shard?.count}`,
+						value: `${message.guild!.shardID + 1}/${this.client.shard?.count}`,
 						inline: true,
 					},
 					{
