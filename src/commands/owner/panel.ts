@@ -127,7 +127,7 @@ export default class PanelCommand extends Command {
 							if (info.description)
 								field =
 									field +
-									"\nDescription:`" +
+									"\nDescription: `" +
 									info.description +
 									"`";
 							if (resources.resources.cpu_absolute != 0)
