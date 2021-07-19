@@ -39,7 +39,7 @@ export default class HelpCommand extends Command {
 			const embed = new MessageEmbed({
 				title: `${this.client.user!.username}'s Commands`,
 				url: `${this.client.config.siteUrl}/commands`,
-				description: `Need help? Join my [Support Server](${this.client.config.supportInvite} "Join support server")`,
+				description: `Run \`${message.util?.parsed?.prefix}${this.aliases[0]} <category>\` to see all commands in a category.\nRun \`${message.util?.parsed?.prefix}${this.aliases[0]} <command>\` to view information about a command.\n\nNeed help? Join my [Support Server](${this.client.config.supportInvite} "Join support server")`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
@@ -52,7 +52,7 @@ export default class HelpCommand extends Command {
 			for (const [name, category] of this.handler.categories) {
 				embed.addField(
 					category.id,
-					`\`${prefix}${alias} ${category.id.toLowerCase()}\`\n[See category on website](${
+					`\`${prefix}${alias} ${category.id.toLowerCase()}\`\n[Learn More](${
 						this.client.config.siteUrl
 					}/commands/${category.id} "${
 						this.client.config.siteUrl

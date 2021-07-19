@@ -9,7 +9,7 @@ import {
 export default class TicketCommand extends Command {
 	constructor() {
 		super("newticket", {
-			aliases: ["ticket"],
+			aliases: ["ticket", "newticket"],
 			description: "Open a new ticket",
 			category: "Tickets",
 			clientPermissions: ["MANAGE_CHANNELS"],

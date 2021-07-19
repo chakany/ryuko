@@ -279,7 +279,7 @@ export default class RyukoClient extends AkairoClient {
 				icon_url: message.author.displayAvatarURL({ dynamic: true }),
 			},
 			author: {
-				name: `❌ Error: ${command.id}`,
+				name: `❌ Error: ${command.aliases[0]}`,
 				url: `${this.config.siteUrl}/commands/${command.categoryID}/${command.id}`,
 			},
 			fields: [
