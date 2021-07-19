@@ -10,7 +10,6 @@ import { Collection, Message, MessageEmbed } from "discord.js";
 import { Shoukaku, ShoukakuPlayer, ShoukakuTrack } from "shoukaku";
 import { LavasfyClient } from "lavasfy";
 import bunyan from "bunyan";
-import client from "nekos.life";
 import { Job } from "node-schedule";
 import ms from "ms";
 import moment from "moment";
@@ -47,7 +46,6 @@ declare module "discord-akairo" {
 		queue: Collection<string, Queue>;
 		log: bunyan;
 		jobs: Map<string, Map<string, Job>>;
-		hentai: client;
 		invites: Collection<string, any>;
 		error(
 			message: Message,
@@ -82,7 +80,6 @@ export default class RyukoClient extends AkairoClient {
 	public log: bunyan;
 	public jobs: Collection<string, Map<string, Job>>;
 	public invites: Collection<string, any>;
-	public hentai: client;
 	public commandHandler: CommandHandler;
 	private inhibitorHandler: InhibitorHandler;
 	private listenerHandler: ListenerHandler;
@@ -96,13 +93,10 @@ export default class RyukoClient extends AkairoClient {
 				disableMentions: "everyone",
 			}
 		);
-		const newHentai = new client();
-
 		this.config = config;
 		this.log = log;
 		this.jobs = new Collection();
 		this.invites = new Collection();
-		this.hentai = newHentai;
 
 		this.db = new Db();
 		const redislog = bunyan.createLogger({ name: "redis" });

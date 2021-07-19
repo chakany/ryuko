@@ -4,7 +4,6 @@ import express from "express";
 import colors from "colors";
 import table from "cli-table";
 import axios from "axios";
-import nekos from "nekos.life";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 
@@ -113,15 +112,6 @@ void (async function () {
 			checkStatus.push({ pterodactyl: colors.yellow("Skipped") });
 		}
 
-		// nekos.life api check
-		try {
-			const hentai = new nekos();
-			await hentai.sfw.neko();
-			checkStatus.push({ "nekos.life": colors.green("Passed") });
-		} catch (error) {
-			shardArgs.push("--disable-NSFW");
-			checkStatus.push({ "nekos.life": colors.red("Failed") });
-		}
 		console.log(checkStatus.toString());
 	} else {
 		log.warn(
@@ -135,7 +125,6 @@ void (async function () {
 		});
 		checkStatus.push({ "img-api": colors.yellow("Skipped") });
 		checkStatus.push({ pterodactyl: colors.yellow("Skipped") });
-		checkStatus.push({ "nekos.life": colors.yellow("Skipped") });
 		console.log(checkStatus.toString());
 		try {
 			await db.sync();
