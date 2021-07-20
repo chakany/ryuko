@@ -84,6 +84,13 @@ export default class Db extends Sequelize {
 			ticketCategory: {
 				type: DataTypes.STRING,
 			},
+			starboard: {
+				type: DataTypes.BOOLEAN,
+				defaultValue: false,
+			},
+			starboardChannel: {
+				type: DataTypes.STRING,
+			},
 			someDumbFuckingSetting: {
 				type: DataTypes.BOOLEAN,
 			},
