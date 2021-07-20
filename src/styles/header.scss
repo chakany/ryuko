@@ -1,5 +1,9 @@
 @import "./base.scss";
 
+.navbar {
+	text-align: left;
+}
+
 .navbar-dark {
 	background-color: $body-bg;
 }
