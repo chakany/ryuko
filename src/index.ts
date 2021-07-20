@@ -127,7 +127,7 @@ void (async function () {
 		checkStatus.push({ pterodactyl: colors.yellow("Skipped") });
 		console.log(checkStatus.toString());
 		try {
-			await db.sync();
+			await db.sync({ alter: true });
 		} catch (error) {
 			dberror = error;
 		}
