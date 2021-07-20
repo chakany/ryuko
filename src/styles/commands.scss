@@ -2,6 +2,11 @@
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
+html {
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
 body {
 	font-size: 0.875rem;
 	font: 1rem/1.5 var(--bs-font-sans-serif);
