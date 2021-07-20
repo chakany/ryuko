@@ -31,9 +31,13 @@ export default class MessageReactionAddListener extends Listener {
 
 		const embed: MessageEmbed = new MessageEmbed({
 			timestamp: message.createdTimestamp,
+			color: message.guild?.me?.displayHexColor,
 			author: {
 				name: message.author.tag,
 				iconURL: message.author.displayAvatarURL({ dynamic: true }),
+			},
+			footer: {
+				text: `ID: ${message.id}`,
 			},
 			description: message.content,
 		});
