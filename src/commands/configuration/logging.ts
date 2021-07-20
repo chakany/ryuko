@@ -27,7 +27,7 @@ export default class LoggingCommand extends Command {
 			default:
 				return message.channel.send(
 					new MessageEmbed({
-						title: "Logging",
+						title: "Logging Actions",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {

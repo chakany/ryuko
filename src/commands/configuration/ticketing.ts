@@ -27,7 +27,7 @@ export default class TicketingCommand extends Command {
 			default:
 				return message.channel.send(
 					new MessageEmbed({
-						title: "Ticketing",
+						title: "Ticketing Actions",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {

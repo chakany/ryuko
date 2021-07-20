@@ -26,7 +26,7 @@ export default class VerificationCommand extends Command {
 			default:
 				return message.channel.send(
 					new MessageEmbed({
-						title: "Actions",
+						title: "Verification Actions",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
