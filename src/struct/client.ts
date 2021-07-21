@@ -16,6 +16,8 @@ import moment from "moment";
 
 import Db from "../utils/db";
 import Redis from "../utils/redis";
+import Trivia from "../utils/trivia";
+import { generateUsage } from "../utils/command";
 
 const config = require("../../config.json");
 
@@ -40,6 +42,8 @@ declare module "discord-akairo" {
 		redis: Redis;
 		commandHandler: CommandHandler;
 		config: any;
+		generateUsage: Function;
+		trivia: Trivia;
 		settings: SequelizeProvider;
 		shoukaku: Shoukaku;
 		lavasfy: LavasfyClient;
@@ -73,6 +77,8 @@ export default class RyukoClient extends AkairoClient {
 	public db: Db;
 	public redis: Redis;
 	public config: any;
+	public generateUsage: Function;
+	public trivia: Trivia;
 	public settings: SequelizeProvider;
 	public shoukaku: Shoukaku;
 	public lavasfy: LavasfyClient;
@@ -94,6 +100,8 @@ export default class RyukoClient extends AkairoClient {
 			}
 		);
 		this.config = config;
+		this.trivia = new Trivia("../../app/data/trivia");
+		this.generateUsage = generateUsage;
 		this.log = log;
 		this.jobs = new Collection();
 		this.invites = new Collection();
@@ -253,14 +261,6 @@ export default class RyukoClient extends AkairoClient {
 		description: string
 	) {
 		const prefix = message.util?.parsed?.prefix;
-		let current;
-		let usage: string = `${prefix}${command.id}`;
-		// @ts-ignore
-		if (command.args)
-			// @ts-ignore
-			for (let i = 0; (current = command.args[i]); i++) {
-				usage = usage + ` <${current.id}>`;
-			}
 		return new MessageEmbed({
 			title: error,
 			description: description,
@@ -279,7 +279,7 @@ export default class RyukoClient extends AkairoClient {
 			fields: [
 				{
 					name: "Usage",
-					value: "`" + usage + "`",
+					value: "`" + this.generateUsage(command, prefix) + "`",
 				},
 			],
 		});

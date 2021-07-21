@@ -72,8 +72,8 @@ current; %> <% for (let i = 0; (current = permissions[i]); i++) {%>
 <!-- The usage of the command -->
 <h3 class="title">Usage</h3>
 <% var usage = prefix + command.aliases[0] %> <% if (command.args) { %> <% var
-current; %> <% for (let i = 0; (current = command.args[i]); i++) { %> <% usage =
-usage + ` <${current.id}>`; %> <% } %> <% } %>
+current; %> <% for (let i = 0; (current = command.args[i]); i++) { %> <% if
+(!current.prompt) usage = usage + ` <${current.id}>`; %> <% } %> <% } %>
 <code><%= usage %> </code>
 
 <style>
