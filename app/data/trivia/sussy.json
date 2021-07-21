@@ -1,0 +1,18 @@
+{
+	"title": "Sussy",
+	"description": "When the impostor is sus!",
+	"questions": [
+		{
+			"question": "Red sus?",
+			"answer": ["Yes", "No", "Red sus"]
+		},
+		{
+			"question": "Crewmate?",
+			"answer": ["Yes", "No", "Crewmate"]
+		},
+		{
+			"question": "Amongsuspeek",
+			"answer": ["Yes", "No", "Amongsuspeek"]
+		}
+	]
+}

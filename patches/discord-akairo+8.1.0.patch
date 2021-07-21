@@ -1,70 +1,5 @@
-diff --git a/node_modules/discord-akairo/src/struct/commands/Command.js b/node_modules/discord-akairo/src/struct/commands/Command.js
-index 1003663..3d398ce 100644
---- a/node_modules/discord-akairo/src/struct/commands/Command.js
-+++ b/node_modules/discord-akairo/src/struct/commands/Command.js
-@@ -17,10 +17,13 @@ class Command extends AkairoModule {
-         const {
-             aliases = [],
-             args = this.args || [],
-+            guild = [],
-             quoted = true,
-             separator,
-             channel = null,
-             ownerOnly = false,
-+            modOnly = false,
-+            nsfw = false,
-             editable = true,
-             typing = false,
-             cooldown = null,
-@@ -46,6 +49,18 @@ class Command extends AkairoModule {
-          */
-         this.aliases = aliases;
- 
-+        /**
-+         * Command Arguments.
-+         * @type {any}
-+         */
-+        this.args = args;
-+
-+        /**
-+         * Guilds the command can be used in.
-+         * @type {string[]}
-+         */
-+        this.guild = guild;
-+
-         const { flagWords, optionFlagWords } = Array.isArray(args)
-             ? ContentParser.getFlags(args)
-             : { flagWords: flags, optionFlagWords: optionFlags };
-@@ -74,6 +89,18 @@ class Command extends AkairoModule {
-          */
-         this.ownerOnly = Boolean(ownerOnly);
- 
-+        /**
-+         * Usable only by the discord mods.
-+         * @type {boolean}
-+         */
-+        this.modOnly = Boolean(modOnly);
-+        
-+        /**
-+         * Whether or not the command is NSFW.
-+         * @type {boolean}
-+         */
-+        this.nsfw = Boolean(nsfw);
-+
-         /**
-          * Whether or not this command can be ran by an edit.
-          * @type {boolean}
-@@ -248,6 +275,8 @@ module.exports = Command;
-  * @prop {string[]} [optionFlags=[]] - Option flags to use when using an ArgumentGenerator.
-  * @prop {string} [channel] - Restricts channel to either 'guild' or 'dm'.
-  * @prop {boolean} [ownerOnly=false] - Whether or not to allow client owner(s) only.
-+ * @prop {boolean} [modOnly=false] - Whether or not to allow mods only.
-+ * @prop {boolean} [nsfw=false] - Whether or not the command is NSFW.
-  * @prop {boolean} [typing=false] - Whether or not to type in channel during execution.
-  * @prop {boolean} [editable=true] - Whether or not message edits will run this command.
-  * @prop {number} [cooldown] - The command cooldown in milliseconds.
 diff --git a/node_modules/discord-akairo/src/struct/commands/CommandHandler.js b/node_modules/discord-akairo/src/struct/commands/CommandHandler.js
-index 818ddc4..ec2899d 100644
+index 818ddc4..ec2899d 100755
 --- a/node_modules/discord-akairo/src/struct/commands/CommandHandler.js
 +++ b/node_modules/discord-akairo/src/struct/commands/CommandHandler.js
 @@ -216,26 +216,6 @@ class CommandHandler extends AkairoHandler {
@@ -95,7 +30,7 @@ index 818ddc4..ec2899d 100644
  
      /**
 diff --git a/node_modules/discord-akairo/src/util/Constants.js b/node_modules/discord-akairo/src/util/Constants.js
-index bacd4e1..4d4810e 100644
+index bacd4e1..4d4810e 100755
 --- a/node_modules/discord-akairo/src/util/Constants.js
 +++ b/node_modules/discord-akairo/src/util/Constants.js
 @@ -79,7 +79,7 @@ module.exports = {

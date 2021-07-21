@@ -1,6 +1,5 @@
-import { Command } from "discord-akairo";
+import Command from "../../struct/Command";
 import { Message, MessageEmbed } from "discord.js";
-import fs from "fs";
 import os from "os";
 
 export default class PingCommand extends Command {

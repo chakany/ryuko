@@ -1,4 +1,5 @@
-import { Command, Argument } from "discord-akairo";
+import { Argument } from "discord-akairo";
+import Command from "../../struct/Command";
 import { Message, MessageEmbed } from "discord.js";
 
 export default class DisconnectCommand extends Command {

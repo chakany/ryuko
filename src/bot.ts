@@ -7,7 +7,7 @@ let log = bunyan.createLogger({
 	level: process.env.NODE_ENV !== "production" ? "debug" : "info",
 });
 
-import Bot from "./struct/client";
+import Bot from "./struct/Client";
 
 const { token } = require("../config.json");
 

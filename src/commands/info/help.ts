@@ -1,4 +1,5 @@
-import { Command, Argument, Category } from "discord-akairo";
+import { Argument, Category } from "discord-akairo";
+import Command from "../../struct/Command";
 import { Message, MessageEmbed } from "discord.js";
 
 export default class HelpCommand extends Command {
@@ -110,19 +111,11 @@ export default class HelpCommand extends Command {
 					`${input.ratelimit} uses per ${input.cooldown} ms`,
 					true
 				);
-			if (!input.args)
-				embed.addField(
-					"Usage",
-					`\`${message.util?.parsed?.prefix}${input.aliases[0]}\``
-				);
-			else {
-				let usage = `${message.util?.parsed?.prefix}${input.aliases[0]}`;
-				let current;
-				for (let i = 0; (current = input.args[i]); i++) {
-					usage = usage + ` <${current.id}>`;
-				}
-				embed.addField("Usage", `\`${usage}\``);
-			}
+
+			embed.addField(
+				"Usage",
+				`\`${this.client.generateUsage(input, prefix)}\``
+			);
 
 			return message.channel.send(embed);
 		} else if (input instanceof Category) {

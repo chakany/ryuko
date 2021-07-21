@@ -1,4 +1,5 @@
-import { Command, Inhibitor } from "discord-akairo";
+import { Inhibitor } from "discord-akairo";
+import Command from "../struct/Command";
 import { Message } from "discord.js";
 
 export default class DisabledInhibitor extends Inhibitor {

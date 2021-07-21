@@ -1,5 +1,6 @@
-import { Inhibitor, Command } from "discord-akairo";
-import { Message } from "discord.js";
+import { Inhibitor } from "discord-akairo";
+import Command from "../struct/Command";
+import { Message, TextChannel } from "discord.js";
 
 export default class NsfwInhibitor extends Inhibitor {
 	constructor() {
@@ -9,8 +10,10 @@ export default class NsfwInhibitor extends Inhibitor {
 	}
 
 	exec(message: Message, command: Command) {
-		// @ts-ignore
-		if (!command.nsfw || (command.nsfw && message.channel.nsfw))
+		if (
+			!command.nsfw ||
+			(command.nsfw && (<TextChannel>message.channel).nsfw)
+		)
 			return false;
 		return true;
 	}

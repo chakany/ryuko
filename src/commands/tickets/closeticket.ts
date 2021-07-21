@@ -1,4 +1,4 @@
-import { Command } from "discord-akairo";
+import Command from "../../struct/Command";
 import { Message, MessageEmbed } from "discord.js";
 
 export default class TicketCommand extends Command {
