@@ -16,7 +16,7 @@ export default class Command extends AkairoCommand {
 	constructor(id: string, options: Options | undefined) {
 		super(id, options);
 
-		const { modOnly = false, nsfw = false, guild = [] } = options!;
+		const { modOnly = false, nsfw = false, guild = [], args } = options!;
 
 		/**
 		 * Usable only by the discord mods.
@@ -35,5 +35,7 @@ export default class Command extends AkairoCommand {
 		 * @type {string[]}
 		 */
 		this.guild = guild;
+
+		this.args = args;
 	}
 }
