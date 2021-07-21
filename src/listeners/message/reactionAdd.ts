@@ -29,8 +29,14 @@ export default class MessageReactionAddListener extends Listener {
 
 		const message: Message = reaction.message;
 
+		const fields = message.embeds[0].fields || [];
+
+		const content = message.embeds[0].description || message.content
+
 		const embed: MessageEmbed = new MessageEmbed({
 			timestamp: message.createdTimestamp,
+			title: "Jump to Message",
+			url: `https://discord.com/channels/${message.guild!.id}/${message.channel.id}/${message.id}`,
 			color: message.guild?.me?.displayHexColor,
 			author: {
 				name: message.author.tag,
@@ -39,7 +45,8 @@ export default class MessageReactionAddListener extends Listener {
 			footer: {
 				text: `ID: ${message.id}`,
 			},
-			description: message.content,
+			description: content ,
+			fields: fields,
 		});
 
 		if (message.attachments.size > 0)
