@@ -21,6 +21,7 @@ let redislog = bunyan.createLogger({ name: "redis" });
 
 let manager: ShardingManager;
 let redis: Redis;
+let user: any;
 
 // make this async because so steps are performed in order
 void (async function () {
@@ -177,10 +178,10 @@ void (async function () {
 			shardArgs,
 		});
 
-	manager.on("shardCreate", (shard) => {
+	manager.on("shardCreate", async (shard) => {
 		log.info(`Launched shard ${shard.id}`);
 		if (shard.id == 0) {
-			shard.once("ready", () => {
+			shard.once("ready", async () => {
 				const app = express();
 
 				try {
@@ -203,6 +204,18 @@ void (async function () {
 
 					app.use(express.static("../app/static"));
 
+					user = await (await manager.fetchClientValues("user"))[0];
+
+					// THIS SHOULD ALWAYS BE LAST!
+					app.get("*", function (req, res) {
+						res.status(404).render("error", {
+							username: user.username,
+							avatar: user.avatarURL,
+							code: 404,
+							description: "Page not Found",
+						});
+					});
+
 					app.listen(port, () => {
 						weblog.info(`Bound to port ${port}`);
 					});
@@ -215,4 +228,4 @@ void (async function () {
 	manager.spawn();
 })();
 
-export { manager, weblog, redis };
+export { manager, weblog, redis, user };
