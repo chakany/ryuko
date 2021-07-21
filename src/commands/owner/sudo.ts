@@ -1,4 +1,4 @@
-import { Command } from "discord-akairo";
+import Command from "../../struct/Command";
 import { Message, GuildMember } from "discord.js";
 
 export default class SudoCommand extends Command {

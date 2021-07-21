@@ -1,10 +1,7 @@
 import {
-	Command,
-	Category,
-	Inhibitor,
-	Listener,
 	Argument,
 } from "discord-akairo";
+import Command from "../../struct/Command";
 import { Message, MessageEmbed } from "discord.js";
 
 export default class DisableCommand extends Command {

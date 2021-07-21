@@ -1,4 +1,4 @@
-import { Command } from "discord-akairo";
+import Command from "../../struct/Command";
 import { Message, MessageEmbed, MessageAttachment } from "discord.js";
 import qrcode from "qrcode";
 

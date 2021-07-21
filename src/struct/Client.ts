@@ -4,7 +4,6 @@ import {
 	InhibitorHandler,
 	ListenerHandler,
 	SequelizeProvider,
-	Command,
 } from "discord-akairo";
 import { Collection, Message, MessageEmbed } from "discord.js";
 import { Shoukaku, ShoukakuPlayer, ShoukakuTrack } from "shoukaku";
@@ -13,6 +12,8 @@ import bunyan from "bunyan";
 import { Job } from "node-schedule";
 import ms from "ms";
 import moment from "moment";
+
+import Command from "./Command";
 
 import Db from "../utils/db";
 import Redis from "../utils/redis";
@@ -36,6 +37,7 @@ interface Queue {
 	loop: boolean;
 }
 
+// Bruh
 declare module "discord-akairo" {
 	interface AkairoClient {
 		db: Db;
@@ -57,19 +59,6 @@ declare module "discord-akairo" {
 			error: string,
 			description: string
 		): MessageEmbed;
-	}
-
-	interface Command {
-		args?: any;
-		modOnly: boolean;
-		nsfw: boolean;
-		guild: string[];
-	}
-
-	interface CommandOptions {
-		modOnly?: boolean;
-		nsfw?: boolean;
-		guild?: string[];
 	}
 }
 
@@ -150,6 +139,7 @@ export default class RyukoClient extends AkairoClient {
 			allowMention: true,
 			handleEdits: true,
 			commandUtil: true,
+			// @ts-expect-error 2322
 			ignorePermissions: (message: Message, command: Command) => {
 				if (config.ownerId.includes(message.author.id)) return true;
 				else if (

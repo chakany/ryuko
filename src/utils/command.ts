@@ -1,4 +1,4 @@
-import { Command } from "discord-akairo";
+import Command from "../struct/Command"
 
 export function generateUsage(command: Command, prefix: string) {
 	let usage: string = `${prefix}${command.id}`;

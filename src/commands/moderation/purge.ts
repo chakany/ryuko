@@ -1,4 +1,4 @@
-import { Command } from "discord-akairo";
+import Command from "../../struct/Command";
 import { TextChannel } from "discord.js";
 import { Message, MessageEmbed, Collection } from "discord.js";
 

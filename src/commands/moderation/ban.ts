@@ -1,7 +1,6 @@
-import { Command, Argument } from "discord-akairo";
+import { Argument } from "discord-akairo";
+import Command from "../../struct/Command";
 import { Message, MessageEmbed, GuildMember, TextChannel } from "discord.js";
-import ms from "ms";
-import moment from "moment";
 
 export default class BanCommand extends Command {
 	constructor() {

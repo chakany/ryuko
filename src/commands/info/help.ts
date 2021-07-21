@@ -1,4 +1,5 @@
-import { Command, Argument, Category } from "discord-akairo";
+import { Argument, Category } from "discord-akairo";
+import Command from "../../struct/Command";
 import { Message, MessageEmbed } from "discord.js";
 
 export default class HelpCommand extends Command {

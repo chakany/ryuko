@@ -5,7 +5,7 @@ Adding a new command is a breeze, you just need to know _how_.
 For this, we will use our ping command.
 
 ```ts
-import { Command } from "discord-akairo";
+import Command from "../../struct/Command";
 import { MessageEmbed } from "discord.js";
 import { Message } from "discord.js";
 
