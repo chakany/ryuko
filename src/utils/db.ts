@@ -168,6 +168,7 @@ export default class Db extends Sequelize {
 				where: {
 					guildId,
 				},
+				attributes: ["memberId", "level", "xp"],
 			});
 
 			return results?.sort((a, b) => b.xp - a.xp);
