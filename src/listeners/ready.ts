@@ -1,6 +1,7 @@
 import { Listener } from "discord-akairo";
 import { MessageEmbed, TextChannel, ActivityType } from "discord.js";
 import schedule, { Job } from "node-schedule";
+import axios from "axios";
 
 export default class ReadyListener extends Listener {
 	constructor() {
@@ -76,6 +77,15 @@ export default class ReadyListener extends Listener {
 
 		this.client.log.info(`${this.client.user!.username} is ready to roll!`);
 
+		const guilds = await this.client.shard!.fetchClientValues(
+			"guilds.cache.size"
+		);
+
+		const totalGuilds = guilds.reduce(
+			(acc, guildCount) => acc + guildCount,
+			0
+		);
+
 		// Set Discord Status
 		const statuses =
 			process.env.NODE_ENV !== "production"
@@ -88,9 +98,7 @@ export default class ReadyListener extends Listener {
 				: [
 						{
 							type: "WATCHING",
-							text: `${await this.client.shard!.fetchClientValues(
-								"guilds.cache.size"
-							)} servers! | ${this.client.config.prefix}help`,
+							text: `${totalGuilds} servers! | ${this.client.config.prefix}help`,
 						},
 						{
 							type: "LISTENING",
@@ -116,5 +124,38 @@ export default class ReadyListener extends Listener {
 				type: <ActivityType>statuses[i].type,
 			});
 		}, 15000);
+
+		// Post status to bot lists
+		// discord.bots.gg
+		axios.post(
+			`https://discord.bots.gg/api/v1/bots/${this.client.user!.id}/stats`,
+			{
+				guildCount: this.client.guilds.cache.size,
+				shardCount: this.client.shard!.count,
+				shardId: this.client.guilds.cache.array()[0].shardID,
+			},
+			{
+				headers: {
+					Authorization: this.client.config.discord_bots_gg_token,
+				},
+			}
+		);
+
+		// discordbotlist.com
+		axios.post(
+			`https://discordbotlist.com/api/v1/bots/${
+				this.client.user!.id
+			}/stats`,
+			{
+				guilds: this.client.guilds.cache.size,
+				users: this.client.users.cache.size,
+				shard_id: this.client.guilds.cache.array()[0].shardID,
+			},
+			{
+				headers: {
+					Authorization: this.client.config.discordbotlist_com_token,
+				},
+			}
+		);
 	}
 }
