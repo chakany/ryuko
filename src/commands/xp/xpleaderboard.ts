@@ -8,6 +8,7 @@ export default class XpLeaderboardCommand extends Command {
 			aliases: ["xpleaderboard"],
 			description: "Gets the Xp Leaderboard",
 			category: "Xp",
+			clientPermissions: ["MANAGE_MESSAGES"],
 		});
 	}
 
