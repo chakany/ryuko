@@ -13,48 +13,36 @@ export default class XpLeaderboardCommand extends Command {
 	}
 
 	async exec(message: Message): Promise<any> {
-		try {
-			const levels = await this.client.db.getGuildXp(message.guild!.id);
+		const levels = await this.client.db.getGuildXp(message.guild!.id);
 
-			const levelEmbed = new FieldsEmbed()
-				.setArray(levels)
-				.setChannel(<TextChannel>message.channel)
-				.setAuthorizedUsers([message.author.id])
-				.setElementsPerPage(6)
-				.formatField("Leaderboard", (user: any) => {
-					return `**${
-						levels.findIndex(
-							(s: any) => s.memberId === user.memberId
-						) + 1
-					}:** ${message.guild!.members.cache.get(user.memberId)} \`${
-						user.xp
-					}\` XP; Level \`${user.level}\``;
-				})
-				.setPage(1)
-				.setPageIndicator(true)
-				.setDisabledNavigationEmojis(["delete"]);
+		const levelEmbed = new FieldsEmbed()
+			.setArray(levels)
+			.setChannel(<TextChannel>message.channel)
+			.setAuthorizedUsers([message.author.id])
+			.setElementsPerPage(6)
+			.formatField("Leaderboard", (user: any) => {
+				return `**${
+					levels.findIndex((s: any) => s.memberId === user.memberId) +
+					1
+				}:** ${
+					message.guild!.members.cache.get(user.memberId) ||
+					"CANNOT_FIND"
+				} \`${user.xp}\` XP; Level \`${user.level}\``;
+			})
+			.setPage(1)
+			.setPageIndicator(true)
+			.setDisabledNavigationEmojis(["delete"]);
 
-			levelEmbed.embed
-				.setColor(message.guild!.me!.displayHexColor)
-				.setTitle(`${message.guild!.name} XP Leaderboard`)
-				.setThumbnail(message.guild!.iconURL({ dynamic: true }) || "")
-				.setTimestamp(new Date())
-				.setFooter(
-					message.author.tag,
-					message.author.displayAvatarURL({ dynamic: true })
-				);
-
-			await levelEmbed.build();
-		} catch (error) {
-			this.client.log.error(error);
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"An Error Occurred",
-					error.message
-				)
+		levelEmbed.embed
+			.setColor(message.guild!.me!.displayHexColor)
+			.setTitle(`${message.guild!.name} XP Leaderboard`)
+			.setThumbnail(message.guild!.iconURL({ dynamic: true }) || "")
+			.setTimestamp(new Date())
+			.setFooter(
+				message.author.tag,
+				message.author.displayAvatarURL({ dynamic: true })
 			);
-		}
+
+		await levelEmbed.build();
 	}
 }

@@ -12,7 +12,7 @@ export default class TicketCommand extends Command {
 			aliases: ["ticket", "newticket"],
 			description: "Open a new ticket",
 			category: "Tickets",
-			clientPermissions: ["MANAGE_CHANNELS"],
+			clientPermissions: ["MANAGE_CHANNELS", "MANAGE_MESSAGES"],
 		});
 	}
 
@@ -126,5 +126,7 @@ export default class TicketCommand extends Command {
 				},
 			})
 		);
+
+		message.delete();
 	}
 }

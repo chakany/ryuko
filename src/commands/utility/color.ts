@@ -41,41 +41,28 @@ export default class ColorCommand extends Command {
 			this.client.config.emojis.loading + "*Please wait..*"
 		);
 
-		try {
-			const image = await this._getImage(args.hexcode);
+		const image = await this._getImage(args.hexcode);
 
-			const attachment = new MessageAttachment(image.data, "image.png");
+		const attachment = new MessageAttachment(image.data, "image.png");
 
-			loadMessage.delete();
+		loadMessage.delete();
 
-			return message.channel.send({
-				embed: new MessageEmbed({
-					title: "Color",
-					color: message.guild?.me?.displayHexColor,
-					image: {
-						url: "attachment://image.png",
-					},
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-				}),
-				files: [attachment],
-			});
-		} catch (error) {
-			this.client.log.error(error);
-			message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"An error occurred",
-					"An unknown error occurred"
-				)
-			);
-			return false;
-		}
+		return message.channel.send({
+			embed: new MessageEmbed({
+				title: "Color",
+				color: message.guild?.me?.displayHexColor,
+				image: {
+					url: "attachment://image.png",
+				},
+				timestamp: new Date(),
+				footer: {
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
+				},
+			}),
+			files: [attachment],
+		});
 	}
 }

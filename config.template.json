@@ -10,6 +10,8 @@
 	"siteUrl": "https://ryuko.cc",
 	"imgApiUrl": "",
 	"supportInvite": "https://discord.gg/c3AppSbaDM",
+	"discord_bots_gg_token": "",
+	"discordbotlist_com_token": "",
 	"steamApiKey": "",
 	"db": {
 		"host": "",

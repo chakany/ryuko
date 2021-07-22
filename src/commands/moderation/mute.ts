@@ -116,21 +116,7 @@ export default class MuteCommand extends Command {
 				)
 			);
 		}
-		try {
-			args.member.roles.add(
-				// @ts-ignore
-				message.guild?.roles.cache.get(muteRole)
-			);
-		} catch (error) {
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Permissions",
-					"I am missing the Assign Roles Permission!"
-				)
-			);
-		}
+		args.member.roles.add(message.guild?.roles.cache.get(muteRole));
 
 		message.channel.send(
 			new MessageEmbed({
@@ -253,7 +239,5 @@ export default class MuteCommand extends Command {
 						],
 					})
 				);
-
-		return;
 	}
 }

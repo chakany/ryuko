@@ -37,34 +37,7 @@ export default class UrbanCommand extends Command {
 			},
 		});
 		if (!args.word) {
-			try {
-				const definitions = await ud.wordsOfTheDay();
-				for await (let definition of definitions) {
-					let field = `***Definition:*** ${definition.definition}\n***Example:*** ${definition.example}\n[See Page](${definition.permalink})`;
-					field =
-						field.length >= 2000
-							? field.slice(0, 2000) + "..."
-							: field;
-
-					embed.addField(definition.word, field);
-				}
-
-				return message.channel.send(embed);
-			} catch (error) {
-				this.client.log.error(error);
-				return message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"An error occurred",
-						error.message
-					)
-				);
-			}
-		}
-		try {
-			const definitions = await ud.define(message.util?.parsed?.content!);
-			embed.setTitle("Search: `" + message.util?.parsed?.content! + "`");
+			const definitions = await ud.wordsOfTheDay();
 			for await (let definition of definitions) {
 				let field = `***Definition:*** ${definition.definition}\n***Example:*** ${definition.example}\n[See Page](${definition.permalink})`;
 				field =
@@ -74,16 +47,17 @@ export default class UrbanCommand extends Command {
 			}
 
 			return message.channel.send(embed);
-		} catch (error) {
-			this.client.log.error(error);
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"An error occurred",
-					error.message
-				)
-			);
 		}
+
+		const definitions = await ud.define(message.util?.parsed?.content!);
+		embed.setTitle("Search: `" + message.util?.parsed?.content! + "`");
+		for await (let definition of definitions) {
+			let field = `***Definition:*** ${definition.definition}\n***Example:*** ${definition.example}\n[See Page](${definition.permalink})`;
+			field = field.length >= 2000 ? field.slice(0, 2000) + "..." : field;
+
+			embed.addField(definition.word, field);
+		}
+
+		return message.channel.send(embed);
 	}
 }

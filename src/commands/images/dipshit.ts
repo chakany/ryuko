@@ -42,41 +42,28 @@ export default class DipshitCommand extends Command {
 			this.client.config.emojis.loading + "*Please wait..*"
 		);
 
-		try {
-			const image = await this._getImage(message.util?.parsed?.content!);
+		const image = await this._getImage(message.util?.parsed?.content!);
 
-			const attachment = new MessageAttachment(image.data, "image.png");
+		const attachment = new MessageAttachment(image.data, "image.png");
 
-			loadMessage.delete();
+		loadMessage.delete();
 
-			return message.channel.send({
-				embed: new MessageEmbed({
-					title: "Dipshit",
-					color: message.guild?.me?.displayHexColor,
-					image: {
-						url: "attachment://image.png",
-					},
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-				}),
-				files: [attachment],
-			});
-		} catch (error) {
-			this.client.log.error(error);
-			message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"An error occurred",
-					"An unknown error occurred"
-				)
-			);
-			return false;
-		}
+		return message.channel.send({
+			embed: new MessageEmbed({
+				title: "Dipshit",
+				color: message.guild?.me?.displayHexColor,
+				image: {
+					url: "attachment://image.png",
+				},
+				timestamp: new Date(),
+				footer: {
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
+				},
+			}),
+			files: [attachment],
+		});
 	}
 }
