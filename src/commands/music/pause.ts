@@ -11,42 +11,30 @@ export default class PauseCommand extends Command {
 	}
 
 	async exec(message: Message): Promise<any> {
-		try {
-			const serverQueue = this.client.queue.get(message.guild!.id);
-			if (serverQueue === undefined)
-				return message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"Invalid Usage",
-						"There is no song currently playing"
-					)
-				);
-			if (
-				!message.member?.voice.channel ||
-				message.member?.voice.channelID !==
-					serverQueue.player?.voiceConnection.voiceChannelID
-			)
-				return message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"Invalid Usage",
-						"You have to be in the voice channel to pause the music!"
-					)
-				);
-			serverQueue.player.setPaused(true);
-			serverQueue.paused = true;
-		} catch (error) {
-			this.client.log.error(error);
+		const serverQueue = this.client.queue.get(message.guild!.id);
+		if (serverQueue === undefined)
 			return message.channel.send(
 				this.client.error(
 					message,
 					this,
-					"An error occurred",
-					error.message
+					"Invalid Usage",
+					"There is no song currently playing"
 				)
 			);
-		}
+		if (
+			!message.member?.voice.channel ||
+			message.member?.voice.channelID !==
+				serverQueue.player?.voiceConnection.voiceChannelID
+		)
+			return message.channel.send(
+				this.client.error(
+					message,
+					this,
+					"Invalid Usage",
+					"You have to be in the voice channel to pause the music!"
+				)
+			);
+		serverQueue.player.setPaused(true);
+		serverQueue.paused = true;
 	}
 }

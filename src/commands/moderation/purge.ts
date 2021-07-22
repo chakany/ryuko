@@ -47,91 +47,81 @@ export default class PurgeCommand extends Command {
 					"You cannot purge more than 100 message at once!"
 				)
 			);
-		try {
-			let deleted: Collection<string, Message>;
-			const messages = await message.channel.messages.fetch({
-				limit: count + 1,
-			});
 
-			// Fetches the messages
-			if (victim) {
-				deleted = messages.filter(
-					(m) => m.author.id === victim.id || m.id === message.id
-				);
-			} else {
-				deleted = messages;
-			}
-			if (!deleted.find((sus) => sus.id === message.id))
-				return message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"Invalid Argument",
-						"I could not find that user!"
-					)
-				);
+		let deleted: Collection<string, Message>;
+		const messages = await message.channel.messages.fetch({
+			limit: count + 1,
+		});
 
-			await (<TextChannel>message.channel)
-				.bulkDelete(
-					deleted // Bulk deletes all messages that have been fetched and are not older than 14 days (due to the Discord API)
-				)
-				.catch((error) => {
-					throw error;
-				});
-
-			const logchannel = this.client.settings.get(
-				message.guild!.id,
-				"loggingChannel",
-				null
+		// Fetches the messages
+		if (victim) {
+			deleted = messages.filter(
+				(m) => m.author.id === victim.id || m.id === message.id
 			);
-			if (
-				!logchannel ||
-				!this.client.settings.get(message.guild!.id, "logging", false)
-			)
-				return;
-			let purgeEmbed = new MessageEmbed({
-				title: "Purge",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				fields: [
-					{
-						name: "Purged By",
-						value: message.member,
-						inline: true,
-					},
-					{
-						name: "Channel",
-						value: message.channel,
-						inline: true,
-					},
-					{
-						name: "Number of Messages",
-						value: `\`${deleted.size}\``,
-						inline: true,
-					},
-				],
-			});
-
-			const tempMessage = await message.channel.send(purgeEmbed);
-
-			purgeEmbed.setThumbnail(
-				message.author.displayAvatarURL({ dynamic: true })
-			);
-
-			(<TextChannel>this.client.channels.cache.get(logchannel)).send(
-				purgeEmbed
-			);
-
-			setTimeout(() => tempMessage.delete(), 5000);
-		} catch (error) {
+		} else {
+			deleted = messages;
+		}
+		if (!deleted.find((sus) => sus.id === message.id))
 			return message.channel.send(
 				this.client.error(
 					message,
 					this,
-					"An error occurred",
-					error.message
+					"Invalid Argument",
+					"I could not find that user!"
 				)
 			);
-		}
+
+		await (<TextChannel>message.channel)
+			.bulkDelete(
+				deleted // Bulk deletes all messages that have been fetched and are not older than 14 days (due to the Discord API)
+			)
+			.catch((error) => {
+				throw error;
+			});
+
+		const logchannel = this.client.settings.get(
+			message.guild!.id,
+			"loggingChannel",
+			null
+		);
+		if (
+			!logchannel ||
+			!this.client.settings.get(message.guild!.id, "logging", false)
+		)
+			return;
+		let purgeEmbed = new MessageEmbed({
+			title: "Purge",
+			color: message.guild?.me?.displayHexColor,
+			timestamp: new Date(),
+			fields: [
+				{
+					name: "Purged By",
+					value: message.member,
+					inline: true,
+				},
+				{
+					name: "Channel",
+					value: message.channel,
+					inline: true,
+				},
+				{
+					name: "Number of Messages",
+					value: `\`${deleted.size}\``,
+					inline: true,
+				},
+			],
+		});
+
+		const tempMessage = await message.channel.send(purgeEmbed);
+
+		purgeEmbed.setThumbnail(
+			message.author.displayAvatarURL({ dynamic: true })
+		);
+
+		(<TextChannel>this.client.channels.cache.get(logchannel)).send(
+			purgeEmbed
+		);
+
+		setTimeout(() => tempMessage.delete(), 5000);
 	}
 }

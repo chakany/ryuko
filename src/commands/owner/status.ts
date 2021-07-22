@@ -48,21 +48,9 @@ export default class StatusCommand extends Command {
 			`${args.type} `,
 			""
 		);
-		try {
-			this.client.shard!.broadcastEval(
-				`this.user.setActivity('${content}', { type: '${args.type.toUpperCase()}' })`
-			);
-		} catch (error) {
-			this.client.log.error(error);
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"An error occurred",
-					error.message
-				)
-			);
-		}
+		this.client.shard!.broadcastEval(
+			`this.user.setActivity('${content}', { type: '${args.type.toUpperCase()}' })`
+		);
 
 		return message.channel.send(
 			new MessageEmbed({

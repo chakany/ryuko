@@ -18,44 +18,33 @@ export default class PingCommand extends Command {
 	}
 
 	async exec(message: Message): Promise<any> {
-		try {
-			const code = new MessageAttachment(
-				await qrcode.toBuffer(message.util?.parsed?.content!),
-				"qrcode.png"
-			);
+		const code = new MessageAttachment(
+			await qrcode.toBuffer(message.util?.parsed?.content!),
+			"qrcode.png"
+		);
 
-			return message.channel.send({
-				embed: new MessageEmbed({
-					title: "QR Code Generated!",
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
+		return message.channel.send({
+			embed: new MessageEmbed({
+				title: "QR Code Generated!",
+				color: message.guild?.me?.displayHexColor,
+				timestamp: new Date(),
+				footer: {
+					text: message.author.tag,
+					icon_url: message.author.displayAvatarURL({
+						dynamic: true,
+					}),
+				},
+				fields: [
+					{
+						name: "Input",
+						value: `\`${message.util?.parsed?.content!}\``,
 					},
-					fields: [
-						{
-							name: "Input",
-							value: `\`${message.util?.parsed?.content!}\``,
-						},
-					],
-					image: {
-						url: "attachment://qrcode.png",
-					},
-				}),
-				files: [code],
-			});
-		} catch (error) {
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"An Error Occurred",
-					error.message
-				)
-			);
-		}
+				],
+				image: {
+					url: "attachment://qrcode.png",
+				},
+			}),
+			files: [code],
+		});
 	}
 }
