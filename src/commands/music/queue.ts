@@ -1,6 +1,6 @@
 import Command from "../../struct/Command";
-import { MessageEmbed } from "discord.js";
-import { Message } from "discord.js";
+import { Message, TextChannel } from "discord.js";
+import { FieldsEmbed } from "discord-paginationembed";
 
 export default class QueueCommand extends Command {
 	constructor() {
@@ -8,6 +8,7 @@ export default class QueueCommand extends Command {
 			aliases: ["queue", "nowplaying"],
 			description: "Gets the Song Queue",
 			category: "Music",
+			clientPermissions: ["MANAGE_MESSAGES"],
 		});
 	}
 
@@ -20,45 +21,38 @@ export default class QueueCommand extends Command {
 						message,
 						this,
 						"Invalid Usage",
-						"There are no songs currently playing"
+						"There is nothing in the queue!"
 					)
 				);
-			let description =
-				"**Currently Playing:** `" +
-				serverQueue.tracks[0].info.title +
-				"`\n";
-			let i;
-			for (i = 1; i < 7; i++) {
-				if (serverQueue.tracks[i] && serverQueue.tracks.length > 1) {
-					let song = serverQueue.tracks[i];
-					description =
-						description +
-						`\n**${i}:**` +
-						" [`" +
-						song.info.title +
-						"`](" +
-						song.info.uri +
-						")";
-				}
-			}
-			if (serverQueue.tracks.length > 6)
-				description =
-					description +
-					`\nand **${serverQueue.tracks.length - 6}** more.`;
-			return message.channel.send(
-				new MessageEmbed({
-					title: "Song Queue",
-					color: message.guild?.me?.displayHexColor,
-					description: description,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
+
+			const queueEmbed = new FieldsEmbed()
+				.setArray(serverQueue.tracks)
+				.setChannel(<TextChannel>message.channel)
+				.setAuthorizedUsers([message.author.id])
+				.setElementsPerPage(6)
+				.formatField("Songs", (song: any) => {
+					const index = serverQueue.tracks.findIndex(
+						(s) => s.info.identifier === song.info.identifier
+					);
+					if (index !== 0) return `**${index}:** ${song.info.title}`;
 				})
-			);
+				.setPage(1)
+				.setPageIndicator(true)
+				.setDisabledNavigationEmojis(["delete"]);
+
+			queueEmbed.embed
+				.setColor(message.guild!.me!.displayHexColor)
+				.setTitle(`Song Queue`)
+				.setDescription(
+					`**Currently Playing:** \`${serverQueue.tracks[0].info.title}\``
+				)
+				.setTimestamp(new Date())
+				.setFooter(
+					message.author.tag,
+					message.author.displayAvatarURL({ dynamic: true })
+				);
+
+			await queueEmbed.build();
 		} catch (error) {
 			this.client.log.error(error);
 			return message.channel.send(
