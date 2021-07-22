@@ -1,6 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap");
+
 $body-bg: #222;
 $body-color: white;
 
 :root {
 	--bs-font-sans-serif: "Roboto", sans-serif;
 }
+
+@import "../../node_modules/bootstrap/scss/bootstrap";

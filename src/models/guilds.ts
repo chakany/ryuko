@@ -1,7 +1,7 @@
-import { Sequelize, DataTypes, ModelCtor } from "sequelize"
+import { Sequelize, DataTypes, ModelCtor } from "sequelize";
 
-export default function(sequelize: Sequelize, config: any): ModelCtor<any> {
-    return sequelize.define("guilds", {
+export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
+	return sequelize.define("guilds", {
 		id: {
 			type: DataTypes.STRING,
 			allowNull: false,

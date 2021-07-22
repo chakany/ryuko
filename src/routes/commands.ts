@@ -1,9 +1,9 @@
 import express from "express";
-import { Category, Command } from "discord-akairo";
+import Command from "../struct/Command";
 
 const { prefix } = require("../../config.json");
 
-import { manager, weblog } from "../index";
+import { manager, weblog, user } from "../index";
 
 const router = express.Router();
 
@@ -25,18 +25,19 @@ router.get("/:category", async function (req, res) {
 								req.params.category.slice(1)
 				))
 			)
-				return res.sendStatus(404);
+				return res.sendStatus(404).render("error", {
+					username: user.username,
+					avatar: user.avatarURL,
+					code: 404,
+					description: "Page not Found",
+				});
 
 			res.render("commands", {
 				categories: (
 					await manager.fetchClientValues("commandHandler.categories")
 				)[0],
-				username: await (
-					await manager.fetchClientValues("user")
-				)[0].username,
-				avatar: await (
-					await manager.fetchClientValues("user")
-				)[0].avatarURL,
+				username: user.username,
+				avatar: user.avatarURL,
 				prefix: prefix,
 				command: null,
 				category: await (
@@ -61,7 +62,12 @@ router.get("/:category", async function (req, res) {
 								req.params.category.slice(1)
 				))
 			)
-				return res.status(404).send("404 Not Found");
+				return res.status(404).render("error", {
+					username: user.username,
+					avatar: user.avatarURL,
+					code: 404,
+					description: "Page not Found",
+				});
 
 			res.sendFile(
 				`${process.cwd()}/pages/commands/${req.params.category.toLowerCase()}/theFuckingIndex123131312.html`
@@ -100,17 +106,18 @@ router.get("/:category/:command", async function (req, res) {
 					))
 			)
 				// If the command or category doesn't exist
-				return res.sendStatus(404);
+				return res.status(404).render("error", {
+					username: user.username,
+					avatar: user.avatarURL,
+					code: 404,
+					description: "Page not Found",
+				});
 			res.render("commands", {
 				categories: (
 					await manager.fetchClientValues("commandHandler.categories")
 				)[0],
-				username: await (
-					await manager.fetchClientValues("user")
-				)[0].username,
-				avatar: await (
-					await manager.fetchClientValues("user")
-				)[0].avatarURL,
+				username: user.username,
+				avatar: user.avatarURL,
 				prefix: prefix,
 				command: await (
 					await manager.fetchClientValues("commandHandler.categories")
@@ -151,7 +158,12 @@ router.get("/:category/:command", async function (req, res) {
 						(command: Command) => command.id === req.params.command
 					))
 			)
-				return res.status(404).send("404 Not Found");
+				return res.status(404).render("error", {
+					username: user.username,
+					avatar: user.avatarURL,
+					code: 404,
+					description: "Page not Found",
+				});
 
 			res.sendFile(
 				`${process.cwd()}/pages/commands/${req.params.category.toLowerCase()}/${

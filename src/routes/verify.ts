@@ -7,7 +7,7 @@ import Db from "../utils/db";
 
 const db = new Db();
 
-import { manager, weblog, redis } from "../index";
+import { manager, weblog, redis, user } from "../index";
 
 const {
 	clientID,
@@ -63,9 +63,21 @@ const router = express.Router();
 
 // Our main route
 router.get("/", async (req, res) => {
-	if (!req.query.state) return res.status(400).send("400 Bad Request");
+	if (!req.query.state)
+		return res.status(400).render("error", {
+			username: user.username,
+			avatar: user.avatarURL,
+			code: 400,
+			description: "Bad Request",
+		});
 	let redisRes = await redis.getVerificationKey(req.query.state);
-	if (!redisRes.userId) return res.status(400).send("400 Bad Request");
+	if (!redisRes.userId)
+		return res.status(400).render("error", {
+			username: user.username,
+			avatar: user.avatarURL,
+			code: 400,
+			description: "Bad Request",
+		});
 	if (!req.query.code) {
 		res.redirect(
 			new URL(
@@ -107,14 +119,30 @@ router.get("/", async (req, res) => {
 				});
 		} catch (error) {
 			weblog.error(error);
-			res.status(500).send("500 Internal Server Error");
+			res.status(500).render("error", {
+				username: user.username,
+				avatar: user.avatarURL,
+				code: 500,
+				description: "Internal Server Error",
+			});
 		}
-	} else return res.status(400).send("400 Bad Request");
+	} else
+		return res.status(400).render("error", {
+			username: user.username,
+			avatar: user.avatarURL,
+			code: 400,
+			description: "Bad Request",
+		});
 });
 
 router.post("/", async (req, res) => {
 	if (!req.body["g-recaptcha-response"] || !req.body.state || !req.body.id)
-		return res.status(400).send("400 Bad Request");
+		return res.status(400).render("error", {
+			username: user.username,
+			avatar: user.avatarURL,
+			code: 400,
+			description: "Bad Request",
+		});
 
 	try {
 		const results = await checkCaptcha(req.body["g-recaptcha-response"]);
@@ -128,9 +156,6 @@ router.post("/", async (req, res) => {
 			);
 			const current = new Date();
 			current.setDate(current.getDate() - 14);
-			const bot: User = await (
-				await manager.fetchClientValues("user")
-			)[0];
 			if (
 				(fetchedMember?.ipAddress &&
 					fetchedMember.cookieId &&
@@ -145,8 +170,8 @@ router.post("/", async (req, res) => {
 				res.render("verify", {
 					verified: true,
 					error: null,
-					username: bot.username,
-					avatar: bot.avatarURL,
+					username: user.username,
+					avatar: user.avatarURL,
 				});
 				redis.publish(
 					`verification-${req.body.state}`,
@@ -163,8 +188,8 @@ router.post("/", async (req, res) => {
 				res.cookie("_verificationId", hash).render("verify", {
 					verified: true,
 					error: null,
-					username: bot.username,
-					avatar: bot.avatarURL,
+					username: user.username,
+					avatar: user.avatarURL,
 				});
 				redis.publish(
 					`verification-${req.body.state}`,
@@ -177,7 +202,12 @@ router.post("/", async (req, res) => {
 		}
 	} catch (error) {
 		weblog.error(error);
-		res.status(500).send("500 Internal Server Error");
+		return res.status(500).render("error", {
+			username: user.username,
+			avatar: user.avatarURL,
+			code: 500,
+			description: "Internal Server Error",
+		});
 	}
 });
 
