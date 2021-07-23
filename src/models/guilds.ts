@@ -15,7 +15,7 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 		},
 		levelUpMessage: {
 			type: DataTypes.BOOLEAN,
-			defaultValue: true,
+			defaultValue: false,
 		},
 		volume: {
 			type: DataTypes.INTEGER,
