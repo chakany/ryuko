@@ -63,7 +63,7 @@ export default class TicketingCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Enabled Tickets`,
+						title: `${this.client.emoji.greenCheck} Enabled Tickets`,
 						description: "Tickets have been enabled",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
@@ -81,7 +81,7 @@ export default class TicketingCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Disabled Tickets`,
+						title: `${this.client.emoji.greenCheck} Disabled Tickets`,
 						description: "Tickets have been disabled",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
@@ -126,7 +126,7 @@ export default class TicketingCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Changed Ticket Role`,
+						title: `${this.client.emoji.greenCheck} Changed Ticket Role`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
@@ -182,7 +182,7 @@ export default class TicketingCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Changed Ticket Category`,
+						title: `${this.client.emoji.greenCheck} Changed Ticket Category`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {

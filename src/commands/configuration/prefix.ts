@@ -55,7 +55,7 @@ export default class PrefixCommand extends Command {
 
 		message.channel.send(
 			new MessageEmbed({
-				title: `${this.client.config.emojis.greenCheck} Changed Prefix`,
+				title: `${this.client.emoji.greenCheck} Changed Prefix`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {

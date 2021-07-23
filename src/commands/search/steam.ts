@@ -76,19 +76,19 @@ export default class SteamCommand extends Command {
 		let status;
 
 		if (data.personastate === 0)
-			status = `${this.client.config.emojis.invisible} Offline`;
+			status = `${this.client.emoji.invisible} Offline`;
 		else if (data.personastate === 1)
-			status = `${this.client.config.emojis.online} Online`;
+			status = `${this.client.emoji.online} Online`;
 		else if (data.personastate === 2)
-			status = `${this.client.config.emojis.dnd} Busy`;
+			status = `${this.client.emoji.dnd} Busy`;
 		else if (data.personastate === 3)
-			status = `${this.client.config.emojis.idle} Away`;
+			status = `${this.client.emoji.idle} Away`;
 		else if (data.personastate === 4)
-			status = `${this.client.config.emojis.idle} Snooze`;
+			status = `${this.client.emoji.idle} Snooze`;
 		else if (data.personastate === 5)
-			status = `${this.client.config.emojis.online} Looking to Trade`;
+			status = `${this.client.emoji.online} Looking to Trade`;
 		else if (data.personastate === 6)
-			status = `${this.client.config.emojis.online} Looking to Play`;
+			status = `${this.client.emoji.online} Looking to Play`;
 
 		return message.channel.send(
 			new MessageEmbed({

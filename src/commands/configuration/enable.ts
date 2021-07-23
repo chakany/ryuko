@@ -96,7 +96,7 @@ export default class DisableCommand extends Command {
 			);
 			return message.channel.send(
 				new MessageEmbed({
-					title: `${this.client.config.emojis.greenCheck} Enabled command: \`${toEnable.aliases[0]}\``,
+					title: `${this.client.emoji.greenCheck} Enabled command: \`${toEnable.aliases[0]}\``,
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
@@ -138,7 +138,7 @@ export default class DisableCommand extends Command {
 					JSON.stringify(commands)
 				);
 				const embed = new MessageEmbed({
-					title: `${this.client.config.emojis.greenCheck} Enabled category: \`${category.id}\``,
+					title: `${this.client.emoji.greenCheck} Enabled category: \`${category.id}\``,
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {

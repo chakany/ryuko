@@ -82,7 +82,7 @@ export default class VerificationCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Enabled User Verification`,
+						title: `${this.client.emoji.greenCheck} Enabled User Verification`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
@@ -113,7 +113,7 @@ export default class VerificationCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Disabled User Verification`,
+						title: `${this.client.emoji.greenCheck} Disabled User Verification`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
@@ -173,7 +173,7 @@ export default class VerificationCommand extends Command {
 
 						return message.channel.send(
 							new MessageEmbed({
-								title: `${this.client.config.emojis.greenCheck} Set verification level`,
+								title: `${this.client.emoji.greenCheck} Set verification level`,
 								color: message.guild?.me?.displayHexColor,
 								timestamp: new Date(),
 								footer: {
@@ -223,7 +223,7 @@ export default class VerificationCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Set Verification Role`,
+						title: `${this.client.emoji.greenCheck} Set Verification Role`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {

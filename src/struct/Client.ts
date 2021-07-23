@@ -21,6 +21,7 @@ import Trivia from "../utils/trivia";
 import { generateUsage } from "../utils/command";
 
 const config = require("../../config.json");
+const emojis = require("../../app/data/emojis.json");
 
 const ShoukakuOptions = {
 	moveOnDisconnect: false,
@@ -44,6 +45,7 @@ declare module "discord-akairo" {
 		redis: Redis;
 		commandHandler: CommandHandler;
 		config: any;
+		emoji: any;
 		generateUsage: Function;
 		trivia: Trivia;
 		settings: SequelizeProvider;
@@ -66,6 +68,7 @@ export default class RyukoClient extends AkairoClient {
 	public db: Db;
 	public redis: Redis;
 	public config: any;
+	public emoji: any;
 	public generateUsage: Function;
 	public trivia: Trivia;
 	public settings: SequelizeProvider;
@@ -89,6 +92,7 @@ export default class RyukoClient extends AkairoClient {
 			}
 		);
 		this.config = config;
+		this.emoji = emojis;
 		this.trivia = new Trivia("../../app/data/trivia");
 		this.generateUsage = generateUsage;
 		this.log = log;

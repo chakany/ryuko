@@ -64,7 +64,7 @@ export default class AddMemberCommand extends Command {
 
 			return message.channel.send(
 				new MessageEmbed({
-					title: `${this.client.config.emojis.greenCheck} Added member`,
+					title: `${this.client.emoji.greenCheck} Added member`,
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
