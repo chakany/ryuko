@@ -36,16 +36,20 @@ export default class PingCommand extends Command {
 				fields: [
 					{
 						name: "Total Guilds",
-						value: `\`${await this.client.shard!.fetchClientValues(
-							"guilds.cache.size"
-						)}\``,
+						value: `\`${(
+							await this.client.shard!.fetchClientValues(
+								"guilds.cache.size"
+							)
+						).reduce((acc, guildCount) => acc + guildCount, 0)}\``,
 						inline: true,
 					},
 					{
 						name: "Total Members",
-						value: `\`${await this.client.shard!.fetchClientValues(
-							"users.cache.size"
-						)}\``,
+						value: `\`${(
+							await this.client.shard!.fetchClientValues(
+								"users.cache.size"
+							)
+						).reduce((acc, guildCount) => acc + guildCount, 0)}\``,
 						inline: true,
 					},
 					{

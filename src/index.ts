@@ -212,7 +212,7 @@ void (async function () {
 							username: user.username,
 							avatar: user.avatarURL,
 							code: 404,
-							description: "Page not Found",
+							description: "Page Not Found",
 						});
 					});
 

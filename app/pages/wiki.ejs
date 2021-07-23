@@ -8,5 +8,7 @@
 	<script>
 		document.getElementById("navbar-wiki-link").classList.add("active");
 	</script>
-	<h1>Wiki Coming Soon!</h1>
+	<% if (!page) { %>
+	<h1>Placeholder</h1>
+	<% } else { %> <%- include(page) %> <% } %>
 </body>
