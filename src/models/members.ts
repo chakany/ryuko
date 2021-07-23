@@ -14,6 +14,9 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 		ipAddress: {
 			type: DataTypes.STRING,
 		},
+		verifiedAt: {
+			type: DataTypes.DATE,
+		},
 		xpMultiplier: {
 			type: DataTypes.FLOAT,
 			defaultValue: 1.0,
