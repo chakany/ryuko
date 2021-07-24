@@ -7,6 +7,7 @@ import ticketsModel from "../models/tickets";
 import punishmentsModel from "../models/punishments";
 import membersModel from "../models/members";
 import xpModel from "../models/xp";
+import transactionsModel from "../models/transactions";
 
 const config = require("../../config.json");
 
@@ -22,6 +23,7 @@ export default class Db extends Sequelize {
 	public punishments: ModelCtor<any>;
 	public members: ModelCtor<any>;
 	public guildXp: ModelCtor<any>;
+	public transactions: ModelCtor<any>;
 
 	constructor() {
 		super(config.db.database, config.db.username, config.db.password, {
@@ -36,6 +38,7 @@ export default class Db extends Sequelize {
 		this.punishments = punishmentsModel(this, config);
 		this.members = membersModel(this, config);
 		this.guildXp = xpModel(this, config);
+		this.transactions = transactionsModel(this, config);
 	}
 
 	getSettings() {
@@ -44,10 +47,61 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	getMembers() {
-		return new SequelizeProvider(this.members, {
-			idColumn: "id",
+	createTransaction(
+		sender: string,
+		reciever: string,
+		amount: number,
+		reason = null
+	) {
+		return this.transactions.create({
+			sender,
+			reciever,
+			amount,
+			reason,
 		});
+	}
+
+	getTransactions(id: string) {
+		return this.transactions.findAll({
+			where: {
+				[Op.or]: [{ sender: id }, { reciever: id }],
+			},
+		});
+	}
+
+	getBalance(id: string) {
+		return this.members.findOne({
+			attributes: ["coins"],
+			where: {
+				id,
+			},
+		});
+	}
+
+	addCoins(id: string, amount: number) {
+		return this.members.update(
+			{
+				coins: this.Sequelize.literal(`coins + ${amount}`),
+			},
+			{
+				where: {
+					id,
+				},
+			}
+		);
+	}
+
+	removeCoins(id: string, amount: number) {
+		return this.members.update(
+			{
+				coins: this.Sequelize.literal(`coins - ${amount}`),
+			},
+			{
+				where: {
+					id,
+				},
+			}
+		);
 	}
 
 	async addTicket(guildId: string, memberId: string, channelId: string) {

@@ -1,29 +1,28 @@
 import { Sequelize, DataTypes, ModelCtor } from "sequelize";
 
 export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
-	return sequelize.define("members", {
+	return sequelize.define("transactions", {
 		id: {
-			type: DataTypes.STRING,
-			allowNull: false,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			primaryKey: true,
 			unique: "id",
+			allowNull: false,
 		},
-		cookieId: {
+		sender: {
 			type: DataTypes.STRING,
+			allowNull: false,
 		},
-		ipAddress: {
+		reciever: {
 			type: DataTypes.STRING,
+			allowNull: false,
 		},
-		verifiedAt: {
-			type: DataTypes.DATE,
-		},
-		coins: {
+		amount: {
 			type: DataTypes.BIGINT,
-			defaultValue: 0,
+			allowNull: false,
 		},
-		xpMultiplier: {
-			type: DataTypes.FLOAT,
-			defaultValue: 1.0,
+		reason: {
+			type: DataTypes.STRING,
 		},
 	});
 }

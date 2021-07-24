@@ -49,7 +49,6 @@ declare module "discord-akairo" {
 		generateUsage: Function;
 		trivia: Trivia;
 		settings: SequelizeProvider;
-		members: SequelizeProvider;
 		shoukaku: Shoukaku;
 		lavasfy: LavasfyClient;
 		queue: Collection<string, Queue>;
@@ -73,7 +72,6 @@ export default class RyukoClient extends AkairoClient {
 	public generateUsage: Function;
 	public trivia: Trivia;
 	public settings: SequelizeProvider;
-	public members: SequelizeProvider;
 	public shoukaku: Shoukaku;
 	public lavasfy: LavasfyClient;
 	public queue: Collection<string, Queue>;
@@ -108,7 +106,6 @@ export default class RyukoClient extends AkairoClient {
 			redislog.error(error);
 		});
 		this.settings = this.db.getSettings();
-		this.members = this.db.getMembers();
 
 		this.shoukaku = new Shoukaku(this, config.lavalink, ShoukakuOptions);
 		const lavalinkConfig = (): any[] => {
