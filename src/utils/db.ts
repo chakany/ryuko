@@ -44,6 +44,12 @@ export default class Db extends Sequelize {
 		});
 	}
 
+	getMembers() {
+		return new SequelizeProvider(this.members, {
+			idColumn: "id",
+		});
+	}
+
 	async addTicket(guildId: string, memberId: string, channelId: string) {
 		await this.members.upsert({
 			id: memberId,
