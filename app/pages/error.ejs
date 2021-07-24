@@ -1,7 +1,22 @@
+<script>
+	var head = document.getElementsByTagName("head")[0];
+	head.innerHTML =
+		head.innerHTML +
+		`<meta property="og:url" content="${window.location.href}" />`;
+</script>
 <head>
+	<meta charset="utf-8" />
+	<meta
+		name="viewport"
+		content="width=device-width, initial-scale=1, shrink-to-fit=no"
+	/>
 	<title><%= code %> <%= description %> | <%= username %></title>
 	<link rel="stylesheet" type="text/css" href="/styles/error.css" />
 	<link rel="shortcut icon" type="image/webp" href="<%= avatar %>" />
+	<meta property="og:title" content="Error" />
+	<meta property="og:site_name" content="<%= username %>" />
+	<meta property="og:type" content="website" />
+	<meta property="og:image" content="<%= avatar %>" />
 </head>
 <body>
 	<%- include("../components/header.ejs") %>

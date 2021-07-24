@@ -1,3 +1,9 @@
+<script>
+	var head = document.getElementsByTagName("head")[0];
+	head.innerHTML =
+		head.innerHTML +
+		`<meta property="og:url" content="${window.location.href}" />`;
+</script>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -9,6 +15,14 @@
 		<title>Home | <%= username %></title>
 		<link rel="stylesheet" type="text/css" href="/styles/home.css" />
 		<link rel="shortcut icon" type="image/webp" href="<%= avatar %>" />
+		<meta property="og:title" content="Home" />
+		<meta property="og:site_name" content="<%= username %>" />
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="<%= avatar %>" />
+		<meta
+			property="og:description"
+			content="Homepage for the <%= username %> Discord Bot"
+		/>
 	</head>
 	<body>
 		<%- include("../components/header.ejs") %>
