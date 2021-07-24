@@ -1,3 +1,9 @@
+<script>
+	var head = document.getElementsByTagName("head")[0];
+	head.innerHTML =
+		head.innerHTML +
+		`<meta property="og:url" content="${window.location.href}" />`;
+</script>
 <!DOCTYPE html>
 <html>
     <head>
@@ -7,8 +13,12 @@
 			content="width=device-width, initial-scale=1, shrink-to-fit=no"
 		/>
 		<title>Verify your account | <%= username %></title>
-		<link rel="stylesheet" type="text/css" href="/styles/verify.css" />
+		<link rel="stylesheet" type="text/css" href="/static/styles/verify.css" />
         <link rel="shortcut icon" type="image/webp" href="<%= avatar %>"/>
+        <meta property="og:title" content="Verify" />
+		<meta property="og:site_name" content="<%= username %>" />
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="<%= avatar %>" />
 </head>
 <body>
     <%- include("../components/header.ejs") %>

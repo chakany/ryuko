@@ -198,8 +198,9 @@ export default class VerifyCommand extends Command {
 								)
 							)).send(
 								new MessageEmbed({
-									title: "Member Failed Verification",
-									description: "and have been banned",
+									title: "Member Verification Failed",
+									description:
+										"An alternate account was detected, they have been banned.",
 									thumbnail: {
 										url: message.author.displayAvatarURL({
 											dynamic: true,
@@ -211,6 +212,12 @@ export default class VerifyCommand extends Command {
 										{
 											name: "Member",
 											value: message.member,
+											inline: true,
+										},
+										{
+											name: "Original Account",
+											value: `<@${call.originalAccount}>`,
+											inline: true,
 										},
 									],
 								})
@@ -268,8 +275,9 @@ export default class VerifyCommand extends Command {
 									)
 								)).send(
 									new MessageEmbed({
-										title: "Member Failed Verification",
-										description: "and have been banned",
+										title: "Member Verification Failed",
+										description:
+											"An alternate account was detected, they have been banned.",
 										thumbnail: {
 											url: message.author.displayAvatarURL(
 												{ dynamic: true }
@@ -282,6 +290,12 @@ export default class VerifyCommand extends Command {
 											{
 												name: "Member",
 												value: message.member,
+												inline: true,
+											},
+											{
+												name: "Original Account",
+												value: `<@${call.originalAccount}>`,
+												inline: true,
 											},
 										],
 									})

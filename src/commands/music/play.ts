@@ -86,7 +86,7 @@ export default class PlayCommand extends Command {
 		const guildQueue = queue.get(message.guild!.id)!;
 		const sentMessage = await message.channel.send(
 			new MessageEmbed({
-				title: `${this.client.config.emojis.loading} *Please Wait..*`,
+				title: `${this.client.emoji.loading} *Please Wait..*`,
 				description:
 					"I am searching for your song(s), if you queued a big playlist this will take a minute!",
 				color: message.guild?.me?.displayHexColor,

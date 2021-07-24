@@ -3,6 +3,7 @@
 const discord = require("discord.js");
 const { AkairoClient, CommandHandler } = require("discord-akairo");
 const ejs = require("ejs");
+const path = require("path");
 
 let config = null;
 
@@ -165,6 +166,33 @@ async function buildPages() {
 					avatar,
 					prefix: config.prefix,
 					command: command,
+				})
+			);
+		}
+	}
+
+	// Render Wiki
+	const Wiki = require("./dist/utils/wiki").default;
+	const wiki = new Wiki(path.resolve("./app/wiki"));
+
+	for await (const category of wiki.categories) {
+		fs.mkdir(`dist/pages/wiki/${category.file}`);
+
+		for await (const page of category.files) {
+			fs.writeFile(
+				`./dist/pages/wiki/${
+					category.name ? `${category.file}/` : ""
+				}${page.file.replace(".ejs", ".html")}`,
+				await ejs.renderFile("./app/pages/wiki.ejs", {
+					avatar,
+					username: bot.user.username,
+					page: path.resolve(
+						wiki.dir,
+						category.name ? `${category.file}/` : "",
+						page.file
+					),
+					categories: wiki.categories,
+					prefix: config.prefix,
 				})
 			);
 		}

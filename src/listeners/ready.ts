@@ -106,8 +106,13 @@ export default class ReadyListener extends Listener {
 						},
 						{
 							type: "PLAYING",
-							text: `with ${await this.client.shard!.fetchClientValues(
-								"users.cache.size"
+							text: `with ${(
+								await this.client.shard!.fetchClientValues(
+									"users.cache.size"
+								)
+							).reduce(
+								(acc, guildCount) => acc + guildCount,
+								0
 							)} members! | ${this.client.config.prefix}help`,
 						},
 						{
@@ -126,36 +131,42 @@ export default class ReadyListener extends Listener {
 		}, 15000);
 
 		// Post status to bot lists
-		// discord.bots.gg
-		axios.post(
-			`https://discord.bots.gg/api/v1/bots/${this.client.user!.id}/stats`,
-			{
-				guildCount: this.client.guilds.cache.size,
-				shardCount: this.client.shard!.count,
-				shardId: this.client.guilds.cache.array()[0].shardID,
-			},
-			{
-				headers: {
-					Authorization: this.client.config.discord_bots_gg_token,
+		// Only send if we in prod
+		if (process.env.NODE_ENV == "production") {
+			// discord.bots.gg
+			axios.post(
+				`https://discord.bots.gg/api/v1/bots/${
+					this.client.user!.id
+				}/stats`,
+				{
+					guildCount: this.client.guilds.cache.size,
+					shardCount: this.client.shard!.count,
+					shardId: this.client.guilds.cache.array()[0].shardID,
 				},
-			}
-		);
+				{
+					headers: {
+						Authorization: this.client.config.discord_bots_gg_token,
+					},
+				}
+			);
 
-		// discordbotlist.com
-		axios.post(
-			`https://discordbotlist.com/api/v1/bots/${
-				this.client.user!.id
-			}/stats`,
-			{
-				guilds: this.client.guilds.cache.size,
-				users: this.client.users.cache.size,
-				shard_id: this.client.guilds.cache.array()[0].shardID,
-			},
-			{
-				headers: {
-					Authorization: this.client.config.discordbotlist_com_token,
+			// discordbotlist.com
+			axios.post(
+				`https://discordbotlist.com/api/v1/bots/${
+					this.client.user!.id
+				}/stats`,
+				{
+					guilds: this.client.guilds.cache.size,
+					users: this.client.users.cache.size,
+					shard_id: this.client.guilds.cache.array()[0].shardID,
 				},
-			}
-		);
+				{
+					headers: {
+						Authorization:
+							this.client.config.discordbotlist_com_token,
+					},
+				}
+			);
+		}
 	}
 }

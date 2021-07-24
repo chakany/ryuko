@@ -202,7 +202,7 @@ void (async function () {
 					app.use("/verify", verify);
 					app.use("/wiki", wiki);
 
-					app.use(express.static("../app/static"));
+					app.use("/static", express.static("../app/static"));
 
 					user = await (await manager.fetchClientValues("user"))[0];
 
@@ -212,7 +212,7 @@ void (async function () {
 							username: user.username,
 							avatar: user.avatarURL,
 							code: 404,
-							description: "Page not Found",
+							description: "Page Not Found",
 						});
 					});
 

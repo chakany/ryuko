@@ -23,7 +23,7 @@ export default class TomCommand extends Command {
 
 	async exec(message: Message) {
 		const loadMessage = await message.channel.send(
-			this.client.config.emojis.loading + "*Please wait..*"
+			this.client.emoji.loading + "*Please wait..*"
 		);
 
 		const messageAttachment = message.attachments.first();

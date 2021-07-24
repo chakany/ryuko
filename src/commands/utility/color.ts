@@ -38,7 +38,7 @@ export default class ColorCommand extends Command {
 			);
 
 		const loadMessage = await message.channel.send(
-			this.client.config.emojis.loading + "*Please wait..*"
+			this.client.emoji.loading + "*Please wait..*"
 		);
 
 		const image = await this._getImage(args.hexcode);

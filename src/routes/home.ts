@@ -9,9 +9,9 @@ router.get("/", async function (req, res) {
 	try {
 		if (process.env.NODE_ENV !== "production") {
 			res.render("index", {
-				totalServers: await manager.fetchClientValues(
-					"guilds.cache.size"
-				),
+				totalServers: (
+					await manager.fetchClientValues("guilds.cache.size")
+				).reduce((acc, guildCount) => acc + guildCount, 0),
 				avatar: user.avatarURL,
 				username: user.username,
 				support: supportInvite,

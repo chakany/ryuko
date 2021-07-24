@@ -27,7 +27,8 @@ export default class StarboardCommand extends Command {
 			default:
 				return message.channel.send(
 					new MessageEmbed({
-						title: "Starboard Actions",
+						title: "Starboard Subcommands",
+						description: `See more information on the [Starboard Wiki](${this.client.config.siteUrl}/wiki/Features/Starboard)`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
@@ -46,8 +47,8 @@ export default class StarboardCommand extends Command {
 								value: "Disable the Starboard",
 							},
 							{
-								name: "`channel <value>`",
-								value: "Channel to send stars into",
+								name: "`channel <channel>`",
+								value: "Channel to send starred messages into",
 							},
 						],
 					})
@@ -73,7 +74,7 @@ export default class StarboardCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Enabled Starboard`,
+						title: `${this.client.emoji.greenCheck} Enabled Starboard`,
 						description: "The Starboard has been enabled",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
@@ -91,7 +92,7 @@ export default class StarboardCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Disabled Starboard`,
+						title: `${this.client.emoji.greenCheck} Disabled Starboard`,
 						description: "The Starboard has been disabled",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
@@ -136,7 +137,7 @@ export default class StarboardCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Changed Starboard Channel`,
+						title: `${this.client.emoji.greenCheck} Changed Starboard Channel`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {

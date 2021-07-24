@@ -9,7 +9,7 @@ export default class LoggingCommand extends Command {
 			category: "Configuration",
 			args: [
 				{
-					id: "action",
+					id: "subcommand",
 					type: "string",
 				},
 				{
@@ -28,7 +28,8 @@ export default class LoggingCommand extends Command {
 			default:
 				return message.channel.send(
 					new MessageEmbed({
-						title: "Logging Actions",
+						title: "Logging Subcommands",
+						description: `See more information on the [Logging Wiki](${this.client.config.siteUrl}/wiki/Features/Logging)`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
@@ -47,7 +48,7 @@ export default class LoggingCommand extends Command {
 								value: "Disable logging",
 							},
 							{
-								name: "`channel <value>`",
+								name: "`channel <channel>`",
 								value: "Channel to send logs into",
 							},
 						],
@@ -59,7 +60,7 @@ export default class LoggingCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Enabled Logging`,
+						title: `${this.client.emoji.greenCheck} Enabled Logging`,
 						description: "Logging has been enabled",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
@@ -77,7 +78,7 @@ export default class LoggingCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Disabled Logging`,
+						title: `${this.client.emoji.greenCheck} Disabled Logging`,
 						description: "Logging has been disabled",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
@@ -122,7 +123,7 @@ export default class LoggingCommand extends Command {
 
 				return message.channel.send(
 					new MessageEmbed({
-						title: `${this.client.config.emojis.greenCheck} Changed Logging Channel`,
+						title: `${this.client.emoji.greenCheck} Changed Logging Channel`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {

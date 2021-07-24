@@ -36,7 +36,7 @@ export default class XpMessageCommand extends Command {
 
 			return message.channel.send(
 				new MessageEmbed({
-					title: `${this.client.config.emojis.greenCheck} Enabled XP Messages`,
+					title: `${this.client.emoji.greenCheck} Enabled XP Messages`,
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
@@ -56,7 +56,7 @@ export default class XpMessageCommand extends Command {
 
 			return message.channel.send(
 				new MessageEmbed({
-					title: `${this.client.config.emojis.greenCheck} Disabled XP Messages`,
+					title: `${this.client.emoji.greenCheck} Disabled XP Messages`,
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {

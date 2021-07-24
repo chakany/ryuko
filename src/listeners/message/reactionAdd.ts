@@ -29,9 +29,11 @@ export default class MessageReactionAddListener extends Listener {
 
 		const message: Message = reaction.message;
 
-		const fields = message.embeds[0].fields || [];
+		const fields = message.embeds[0] ? message.embeds[0].fields : [];
 
-		const content = message.embeds[0].description || message.content;
+		const content = message.embeds[0]
+			? message.embeds[0].description
+			: message.content;
 
 		const embed: MessageEmbed = new MessageEmbed({
 			timestamp: message.createdTimestamp,
@@ -47,7 +49,7 @@ export default class MessageReactionAddListener extends Listener {
 			footer: {
 				text: `ID: ${message.id}`,
 			},
-			description: content,
+			description: content!,
 			fields: fields,
 		});
 
@@ -66,6 +68,6 @@ export default class MessageReactionAddListener extends Listener {
 					null
 				)
 			)
-		)).send(embed);
+		)).send(message.channel, { embed });
 	}
 }

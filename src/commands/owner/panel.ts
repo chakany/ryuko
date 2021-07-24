@@ -83,9 +83,7 @@ export default class PanelCommand extends Command {
 			case "list":
 				const listMessage = await message.channel.send(
 					new MessageEmbed({
-						title:
-							this.client.config.emojis.loading +
-							" *Please wait..*",
+						title: this.client.emoji.loading + " *Please wait..*",
 						description: "Requesting information from panel.",
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
@@ -163,35 +161,35 @@ export default class PanelCommand extends Command {
 							switch (resources.current_state) {
 								case "running":
 									embed.addField(
-										`${this.client.config.emojis.online} ${info.name}`,
+										`${this.client.emoji.online} ${info.name}`,
 										field,
 										true
 									);
 									break;
 								case "starting":
 									embed.addField(
-										`${this.client.config.emojis.idle} ${info.name}`,
+										`${this.client.emoji.idle} ${info.name}`,
 										field,
 										true
 									);
 									break;
 								case "stopping":
 									embed.addField(
-										`${this.client.config.emojis.idle} ${info.name}`,
+										`${this.client.emoji.idle} ${info.name}`,
 										field,
 										true
 									);
 									break;
 								case "offline":
 									embed.addField(
-										`${this.client.config.emojis.dnd} ${info.name}`,
+										`${this.client.emoji.dnd} ${info.name}`,
 										field,
 										true
 									);
 									break;
 								default:
 									embed.addField(
-										`${this.client.config.emojis.invisible} ${info.name}`,
+										`${this.client.emoji.invisible} ${info.name}`,
 										field,
 										true
 									);
@@ -323,7 +321,7 @@ export default class PanelCommand extends Command {
 	): Promise<boolean> {
 		const startMessage = await message.channel.send(
 			new MessageEmbed({
-				title: this.client.config.emojis.loading + " *Please wait..*",
+				title: this.client.emoji.loading + " *Please wait..*",
 				description: "Sending command to panel.",
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
@@ -339,7 +337,7 @@ export default class PanelCommand extends Command {
 			await this._setPower(server, state);
 			startMessage.edit(
 				new MessageEmbed({
-					title: `${this.client.config.emojis.greenCheck} Request Sent!`,
+					title: `${this.client.emoji.greenCheck} Request Sent!`,
 					description:
 						"Sucessfully sent the request to " +
 						state +

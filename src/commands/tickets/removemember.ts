@@ -64,7 +64,7 @@ export default class RemoveMemberCommand extends Command {
 
 			return message.channel.send(
 				new MessageEmbed({
-					title: `${this.client.config.emojis.greenCheck} Removed member`,
+					title: `${this.client.emoji.greenCheck} Removed member`,
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {

@@ -39,7 +39,7 @@ export default class DipshitCommand extends Command {
 			);
 
 		const loadMessage = await message.channel.send(
-			this.client.config.emojis.loading + "*Please wait..*"
+			this.client.emoji.loading + "*Please wait..*"
 		);
 
 		const image = await this._getImage(message.util?.parsed?.content!);

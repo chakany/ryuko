@@ -80,12 +80,13 @@ export default class Db extends Sequelize {
 			id,
 			cookieId,
 			ipAddress,
+			verifiedAt: new Date(),
 		});
 	}
 
 	getMembersByIdentifier(cookieId = "", ipAddress = ""): Promise<any> {
 		return this.members.findOne({
-			attributes: ["id", "ipAddress", "cookieId", "updatedAt"],
+			attributes: ["id", "ipAddress", "cookieId", "verifiedAt"],
 			where: {
 				[Op.or]: [{ cookieId }, { ipAddress }],
 			},
