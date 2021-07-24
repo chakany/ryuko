@@ -11,7 +11,7 @@
 			content="width=device-width, initial-scale=1, shrink-to-fit=no"
 		/>
 	<title>Wiki | <%= username %></title>
-	<link rel="stylesheet" type="text/css" href="/styles/wiki.css" />
+	<link rel="stylesheet" type="text/css" href="/static/styles/wiki.css" />
 	<link rel="shortcut icon" type="image/webp" href="<%= avatar %>" />
 	<meta property="og:title" content="Wiki" />
 		<meta property="og:site_name" content="<%= username %>" />
@@ -64,14 +64,10 @@
 							<span data-feather="plus-circle"></span>
 						</a>
 					</h6>
-					<ul class="nav flex-column mb-2">
+					<ul class="nav flex-column mb-2" style="list-style-type: none;">
 						<% for( let index = 0; index < categories[i].files.length;
 						index++ ) { %>
-						<li class="nav-item">
-							<!--
-                                Don't worry, the onclick still works, and this doesn't break anything despite what your
-                                IDE says.
-                            -->
+						<li class="nav-item" style="list-style-type: none;">
 							<a
 								class="nav-link wiki-button"
 								href="/wiki/<%= categories[i].file ? `${categories[i].file}/` : "" %><%= categories[i].files[index].file.replace(".ejs", "") %>"
@@ -80,8 +76,8 @@
 								<%= categories[i].files[index].name %>
 							</a>
 						</li>
-					</ul>
-					<% } %> <% } %>
+					
+					<% } %> </ul> <% } %>
 				</div>
 			</nav>
 
