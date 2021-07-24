@@ -27,7 +27,8 @@ export default class VerificationCommand extends Command {
 			default:
 				return message.channel.send(
 					new MessageEmbed({
-						title: "Verification Actions",
+						title: "Verification Subcommands",
+						description: `See more information on the [Verification Wiki](${this.client.config.siteUrl}/wiki/Features/Verification)`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
@@ -50,7 +51,7 @@ export default class VerificationCommand extends Command {
 								value: "Set the level of verification you want\n`strict` Ban all alternate accounts\n`medium` Ban all alternate accounts that have an active punishment (like mute, or ban)\n`low` Take no action against alternate accounts, use this if you only want to present a CAPTCHA to users",
 							},
 							{
-								name: "`role <value>`",
+								name: "`role <role>`",
 								value: "Set the role that verified users will be given after completing verification",
 							},
 						],

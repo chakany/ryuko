@@ -192,6 +192,7 @@ async function buildPages() {
 						page.file
 					),
 					categories: wiki.categories,
+					prefix: config.prefix,
 				})
 			);
 		}

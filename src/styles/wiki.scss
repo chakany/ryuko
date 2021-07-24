@@ -1,10 +1,5 @@
 @import "./base.scss";
 
-html {
-	overflow-x: hidden;
-	overflow-y: hidden;
-}
-
 body {
 	font-size: 0.875rem;
 	font: 1rem/1.5 var(--bs-font-sans-serif);
@@ -12,6 +7,7 @@ body {
 	color: $body-color;
 	overflow-x: hidden;
 	overflow-y: hidden;
+	height: 100vh;
 }
 
 .position-sticky {
@@ -27,6 +23,15 @@ body {
 	width: 16px;
 	height: 16px;
 	vertical-align: text-bottom;
+}
+
+#content-container {
+	height: 90vh;
+	overflow-y: auto !important;
+}
+
+::marker {
+	display: none;
 }
 
 /*
@@ -93,4 +98,8 @@ body {
 	.sidebar {
 		top: 5rem;
 	}
+}
+
+.inherit {
+	color: inherit;
 }

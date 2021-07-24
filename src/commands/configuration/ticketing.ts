@@ -28,7 +28,8 @@ export default class TicketingCommand extends Command {
 			default:
 				return message.channel.send(
 					new MessageEmbed({
-						title: "Ticketing Actions",
+						title: "Ticketing Subcommands",
+						description: `See more information on the [Ticketing Wiki](${this.client.config.siteUrl}/wiki/Features/Ticketing)`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
@@ -47,7 +48,7 @@ export default class TicketingCommand extends Command {
 								value: "Disable tickets",
 							},
 							{
-								name: "`role <value>`",
+								name: "`role <role>`",
 								value: "Role to automatically give access to tickets",
 							},
 							{

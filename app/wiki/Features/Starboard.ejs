@@ -1,0 +1,35 @@
+<h1>Starboard</h1>
+
+The Starboard allows Server Members to react with a ⭐ on a message, and have it
+sent to a special channel automatically with the message content, image
+attached, or if it's an embed it sends the embed's fields
+
+</br> </br>
+
+<h3>Setup</h3>
+Configurating the starboard is done through the <code><a href="/commands/Configuration/starboard" class="inherit"><%= prefix %>starboard</a></code> command, and it's subcommands.
+
+<ol>
+    <li>Create a channel that you want starred message to be sent into, preferably public for all to see.</li>
+    <li>Set the Starboard Channel with <code><%= prefix %>starboard channel &lt;value&gt;</code>, this will be the channel that all starred messages will be sent to.</li>
+    <li>Enable the Starboard with <code><%= prefix %>starboard enable</code>, this will enable messages being sent into the channel that you previously set when a message is starred</li>
+</ol>
+Have Fun!
+
+</br> </br> A quick overview of all subcommands below. </br> </br>
+<h5>Subcommands</h5>
+<ul>
+	<li><code>enable</code> Enables the Starboard</li>
+	<li><code>disable</code> Disables the Starboard</li>
+	<li><code>channel &lt;value&gt;</code> Set the role that all starred messages will be sent into</li>
+</ul>
+
+</br>
+<h3>Preview</h3>
+
+<h5>Normal Message</h5>
+<img src="/static/img/starboard/normal.png" alt="Normal Message" />
+<h5>Message with Image</h5>
+<img src="/static/img/starboard/image.png" alt="Message with Image" />
+<h5>Message with Embed</h5>
+<img src="/static/img/starboard/embed.png" alt="Message with Embed" />

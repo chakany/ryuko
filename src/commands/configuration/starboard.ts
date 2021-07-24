@@ -27,7 +27,8 @@ export default class StarboardCommand extends Command {
 			default:
 				return message.channel.send(
 					new MessageEmbed({
-						title: "Starboard Actions",
+						title: "Starboard Subcommands",
+						description: `See more information on the [Starboard Wiki](${this.client.config.siteUrl}/wiki/Features/Starboard)`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
@@ -46,8 +47,8 @@ export default class StarboardCommand extends Command {
 								value: "Disable the Starboard",
 							},
 							{
-								name: "`channel <value>`",
-								value: "Channel to send stars into",
+								name: "`channel <channel>`",
+								value: "Channel to send starred messages into",
 							},
 						],
 					})

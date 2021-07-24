@@ -41,6 +41,7 @@
 			>
 				<div class="position-sticky pt-3">
 					<% for( let i = 0; i < categories.length; i++ ) { %>
+						<% if (categories[i].name) { %>
 					<h6
 						class="
 							sidebar-heading
@@ -56,14 +57,8 @@
 						<span
 							><a><%= categories[i].name %></a></span
 						>
-						<a
-							class="link-secondary"
-							href="#"
-							aria-label="Add a new report"
-						>
-							<span data-feather="plus-circle"></span>
-						</a>
 					</h6>
+					<% } %>
 					<ul class="nav flex-column mb-2" style="list-style-type: none;">
 						<% for( let index = 0; index < categories[i].files.length;
 						index++ ) { %>

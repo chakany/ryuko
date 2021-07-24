@@ -2,7 +2,7 @@ import express from "express";
 import path from "path";
 import Wiki from "../utils/wiki";
 
-const { supportInvite } = require("../../config.json");
+const { prefix } = require("../../config.json");
 
 import { weblog, user } from "../index";
 
@@ -40,9 +40,9 @@ router.get("/:category", async function (req, res) {
 				return res.render("wiki", {
 					avatar: user.avatarURL,
 					username: user.username,
-					support: supportInvite,
 					page: path.resolve(wiki.dir, page.file),
 					categories: wiki.categories,
+					prefix,
 				});
 			else
 				return res.sendFile(
@@ -91,7 +91,7 @@ router.get("/:category/:file", async function (req, res) {
 			return res.render("wiki", {
 				avatar: user.avatarURL,
 				username: user.username,
-				support: supportInvite,
+				prefix,
 				page: path.resolve(wiki.dir, category.file, file.file),
 				categories: wiki.categories,
 			});

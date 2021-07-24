@@ -23,7 +23,24 @@ export default class Wiki {
 			{
 				name: null,
 				file: "",
-				files: [],
+				files: [
+					{
+						name: "Home",
+						file: "Home.ejs",
+					},
+					{
+						name: "FAQ",
+						file: "FAQ.ejs",
+					},
+					{
+						name: "Contributing",
+						file: "Contributing.ejs",
+					},
+					{
+						name: "Donating",
+						file: "Donating.ejs",
+					},
+				],
 			},
 		];
 
@@ -31,30 +48,25 @@ export default class Wiki {
 
 		// Directories can only go one deep
 		baseDir.forEach((file: string) => {
-			if (file.endsWith(".ejs"))
-				this.categories[0].files.push({
-					name: this.clean(file),
-					file,
-				});
-			else {
-				const newDir = fs.readdirSync(path.join(this.dir, file));
+			if (file.endsWith(".ejs")) return;
 
-				const category: Category = {
-					name: this.clean(file),
-					file,
-					files: [],
-				};
+			const newDir = fs.readdirSync(path.join(this.dir, file));
 
-				newDir.forEach((newFile: string) => {
-					if (newFile.endsWith(".ejs"))
-						category.files.push({
-							name: this.clean(newFile),
-							file: newFile,
-						});
-				});
+			const category: Category = {
+				name: this.clean(file),
+				file,
+				files: [],
+			};
 
-				this.categories.push(category);
-			}
+			newDir.forEach((newFile: string) => {
+				if (newFile.endsWith(".ejs"))
+					category.files.push({
+						name: this.clean(newFile),
+						file: newFile,
+					});
+			});
+
+			this.categories.push(category);
 		});
 	}
 

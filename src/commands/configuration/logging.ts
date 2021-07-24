@@ -9,7 +9,7 @@ export default class LoggingCommand extends Command {
 			category: "Configuration",
 			args: [
 				{
-					id: "action",
+					id: "subcommand",
 					type: "string",
 				},
 				{
@@ -28,7 +28,8 @@ export default class LoggingCommand extends Command {
 			default:
 				return message.channel.send(
 					new MessageEmbed({
-						title: "Logging Actions",
+						title: "Logging Subcommands",
+						description: `See more information on the [Logging Wiki](${this.client.config.siteUrl}/wiki/Features/Logging)`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
@@ -47,7 +48,7 @@ export default class LoggingCommand extends Command {
 								value: "Disable logging",
 							},
 							{
-								name: "`channel <value>`",
+								name: "`channel <channel>`",
 								value: "Channel to send logs into",
 							},
 						],

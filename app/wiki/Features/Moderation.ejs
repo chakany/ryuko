@@ -1,0 +1,54 @@
+<h1>Moderation</h1>
+The Moderation system has many useful features, but it should be configured properly, and it's good to know some quirks of it.
+
+</br>
+</br>
+<h3>Features</h3>
+The Moderation System has many <b>critical</b> features, like <a href="/commands/Moderation/mute" class="inherit">mutes</a>, <a href="/commands/Moderation/purge" class="inherit">message purging</a>, and more!
+
+</br>  </br> 
+<h3>How it Works</h3>
+There are two ways to execute Moderation Commands, with the Moderator Role
+(configurable with the
+<code
+	><a class="inherit" href="/commands/Configuration/modrole"
+		><%= prefix %>modrole</a
+	></code
+>
+command), or by simply having the permission.
+</br>
+The <code
+	><a class="inherit" href="/commands/Configuration/modrole"
+		>modrole</a
+	></code
+> command allows you to have a "Moderator" role that you can give to users, that has no permissions attached to it.
+</br> This forces your Moderators to take all of moderaton actions through the bot.
+</br>All moderation commands can be used with this role <b>EXCEPT</b> kick, ban, and unban.
+This is done just in case you don't want moderators to have access to those permissions, if you do though, just give the Moderator role the appropriate permissions.
+
+</br> </br>
+<h3>Setting up the Moderator Role</h3>
+To setup the Moderator role, use the <code
+	><a class="inherit" href="/commands/Configuration/modrole"
+		><%= prefix %>modrole</a
+	></code
+> command.
+
+<ol>
+    <li>Create a Special Moderator Role, it doesn't need any permissions attached.</li>
+    <li>Run the <code><%= prefix %>modrole &lt;role&gt;</code> command. This will save the role into the Database, and will allow members with this role to use most Moderation commands.</li>
+</ol>
+
+</br> 
+<h3>Setting up the Muted Role</h3>
+To setup the Muted role, use the <code
+	><a class="inherit" href="/commands/Configuration/muterole"
+		><%= prefix %>muterole</a
+	></code
+> command.
+This will be given to members when they are muted by a moderator, and when they are unmuted/when their mute expires.
+
+<ol>
+    <li>Create a Special "Muted" Role, at least take away the "Send Messages" permission.</li>
+    <li>Run the <code><%= prefix %>muterole &lt;role&gt;</code> command. This will save the role into the Database, be automatically assigned to members when they are muted.</li>
+</ol>
