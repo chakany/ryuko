@@ -11,12 +11,7 @@ const wiki = new Wiki("../../app/wiki");
 const router = express.Router();
 router.get("/", async function (req, res) {
 	try {
-		return res.render("wiki", {
-			avatar: user.avatarURL,
-			username: user.username,
-			support: supportInvite,
-			page: null,
-		});
+		res.redirect("/wiki/Home");
 	} catch (err) {
 		weblog.error(err);
 		return res.status(500).render("error", {
@@ -31,16 +26,34 @@ router.get("/", async function (req, res) {
 router.get("/:category", async function (req, res) {
 	try {
 		const category = wiki.findCategory(req.params.category);
+		const page = wiki.findPage(wiki.categories[0], req.params.category);
 
-		if (!category)
+		if (!category && !page)
 			return res.status(404).render("error", {
 				username: user.username,
 				avatar: user.avatarURL,
 				code: 404,
 				description: "Page Not Found",
 			});
+		else if (!category && page) {
+			if (process.env.NODE_ENV !== "production")
+				return res.render("wiki", {
+					avatar: user.avatarURL,
+					username: user.username,
+					support: supportInvite,
+					page: path.resolve(wiki.dir, page.file),
+					categories: wiki.categories,
+				});
+			else
+				return res.sendFile(
+					`${process.cwd()}/pages/wiki/${page.file.replace(
+						".ejs",
+						".html"
+					)}`
+				);
+		}
 
-		return res.redirect(`${category.files[0].file.replace(".ejs", "")}`);
+		return res.redirect(`${category!.files[0].file.replace(".ejs", "")}`);
 	} catch (err) {
 		weblog.error(err);
 		return res.status(500).render("error", {
@@ -74,12 +87,20 @@ router.get("/:category/:file", async function (req, res) {
 				description: "Page Not Found",
 			});
 
-		return res.render("wiki", {
-			avatar: user.avatarURL,
-			username: user.username,
-			support: supportInvite,
-			page: path.resolve(wiki.dir, category.file, file.file),
-		});
+		if (process.env.NODE_ENV !== "production")
+			return res.render("wiki", {
+				avatar: user.avatarURL,
+				username: user.username,
+				support: supportInvite,
+				page: path.resolve(wiki.dir, category.file, file.file),
+				categories: wiki.categories,
+			});
+		else
+			return res.sendFile(
+				`${process.cwd()}/pages/wiki/${
+					category.file
+				}/${file.file.replace(".ejs", ".html")}`
+			);
 	} catch (err) {
 		weblog.error(err);
 		return res.status(500).render("error", {

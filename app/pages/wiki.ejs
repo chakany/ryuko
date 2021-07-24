@@ -1,5 +1,6 @@
 <head>
 	<title>Wiki | <%= username %></title>
+
 	<link rel="stylesheet" type="text/css" href="/styles/wiki.css" />
 	<link rel="shortcut icon" type="image/webp" href="<%= avatar %>" />
 </head>
@@ -8,7 +9,70 @@
 	<script>
 		document.getElementById("navbar-wiki-link").classList.add("active");
 	</script>
-	<% if (!page) { %>
-	<h1>Placeholder</h1>
-	<% } else { %> <%- include(page) %> <% } %>
+	<div class="container-fluid">
+		<div class="row">
+			<nav
+				id="sidebarMenu"
+				class="
+					sidebar-sticky
+					col-md-3 col-lg-2
+					d-md-block
+					sidebar
+					collapse
+				"
+			>
+				<div class="position-sticky pt-3">
+					<% for( let i = 0; i < categories.length; i++ ) { %>
+					<h6
+						class="
+							sidebar-heading
+							d-flex
+							justify-content-between
+							align-items-center
+							px-3
+							mt-4
+							mb-1
+							text-muted
+						"
+					>
+						<span
+							><a><%= categories[i].name %></a></span
+						>
+						<a
+							class="link-secondary"
+							href="#"
+							aria-label="Add a new report"
+						>
+							<span data-feather="plus-circle"></span>
+						</a>
+					</h6>
+					<ul class="nav flex-column mb-2">
+						<% for( let index = 0; index < categories[i].files.length;
+						index++ ) { %>
+						<li class="nav-item">
+							<!--
+                                Don't worry, the onclick still works, and this doesn't break anything despite what your
+                                IDE says.
+                            -->
+							<a
+								class="nav-link wiki-button"
+								href="/wiki/<%= categories[i].file ? `${categories[i].file}/` : "" %><%= categories[i].files[index].file.replace(".ejs", "") %>"
+							>
+								<span data-feather="file-text"></span>
+								<%= categories[i].files[index].name %>
+							</a>
+						</li>
+					</ul>
+					<% } %> <% } %>
+				</div>
+			</nav>
+
+			<main
+				id="content-container"
+				class="col-md-9 ms-sm-auto col-lg-10 px-md-4"
+			>
+				<%- include(page) %>
+			</main>
+		</div>
+	</div>
 </body>

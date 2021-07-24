@@ -1,5 +1,96 @@
 @import "./base.scss";
 
+html {
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
 body {
-	text-align: center;
+	font-size: 0.875rem;
+	font: 1rem/1.5 var(--bs-font-sans-serif);
+	background-color: $body-bg;
+	color: $body-color;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+.position-sticky {
+	background-color: $body-bg;
+}
+
+#sidebarMenu {
+	background-color: $body-bg;
+	padding: 0 !important;
+}
+
+.feather {
+	width: 16px;
+	height: 16px;
+	vertical-align: text-bottom;
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+	position: fixed;
+	top: 0;
+	/* rtl:raw:
+  right: 0;
+  */
+	bottom: 0;
+	/* rtl:remove */
+	left: 0;
+	z-index: 100; /* Behind the navbar */
+	padding: 48px 0 0; /* Height of navbar */
+	box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+	background-color: $body-bg;
+
+	.nav-link {
+		font-weight: 500;
+		color: $body-color;
+		background-color: $body-bg;
+
+		.feather {
+			margin-right: 4px;
+			color: #727272;
+		}
+		&.active {
+			color: #007bff;
+		}
+
+		&:hover .feather,
+		&.active .feather {
+			color: inherit;
+		}
+	}
+}
+
+.wiki-button {
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+.sidebar-sticky {
+	position: relative;
+	background-color: $body-bg;
+	top: 0;
+	height: calc(100vh - 48px);
+	padding-top: 0;
+	overflow-x: hidden;
+	overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+
+.sidebar-heading {
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	background-color: $body-bg;
+}
+
+@media (max-width: 767.98px) {
+	.sidebar {
+		top: 5rem;
+	}
 }
