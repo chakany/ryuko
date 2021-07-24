@@ -18,10 +18,10 @@ export default class BalanceCommand extends Command {
 	}
 
 	async exec(message: Message, args: any) {
-		const coins = await this.client.db.getBalance(args.user.id)
+		const coins = await this.client.db.getBalance(args.user.id);
 
 		message.channel.send(
-			`**Your Current Balance:** ${coins.coins} Coins ${this.client.emoji.coin}`
+			`**${args.user.tag}'s Current Balance:** ${coins.coins} Coins ${this.client.emoji.coin}`
 		);
 	}
 }

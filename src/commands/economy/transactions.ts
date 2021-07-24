@@ -6,7 +6,7 @@ export default class TransactionsCommand extends Command {
 	constructor() {
 		super("transactions", {
 			aliases: ["transactions"],
-			description: "Check the balance of you or another user",
+			description: "See your transaction history",
 			category: "Economy",
 			clientPermissions: ["MANAGE_MESSAGES"],
 		});
@@ -23,7 +23,21 @@ export default class TransactionsCommand extends Command {
 			.setAuthorizedUsers([message.author.id])
 			.setElementsPerPage(6)
 			.formatField("Transactions", (transaction: any) => {
-				return `<@!${transaction.reciever}>:arrow_left:<@!${transaction.sender}>; **${transaction.amount} Coins**`;
+				return transaction.sender == message.author.id
+					? `:arrow_right: <@!${transaction.reciever}>; **${
+							transaction.amount
+					  } Coins**; ${
+							transaction.reason
+								? `\`${transaction.reason}\``
+								: "No Reason Provided"
+					  }`
+					: `:arrow_left: <@!${transaction.sender}>; **${
+							transaction.amount
+					  } Coins**; ${
+							transaction.reason
+								? `\`${transaction.reason}\``
+								: "No Reason Provided"
+					  }`;
 			})
 			.setPage(1)
 			.setPageIndicator(true)
@@ -34,7 +48,7 @@ export default class TransactionsCommand extends Command {
 			.setTitle(
 				`${this.client.emoji.coin}${message.author.username}'s Transactions`
 			)
-			.setThumbnail(message.guild!.iconURL({ dynamic: true }) || "")
+			.setThumbnail(message.author!.displayAvatarURL({ dynamic: true }))
 			.setTimestamp(new Date())
 			.setFooter(
 				message.author.tag,

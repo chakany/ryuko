@@ -66,6 +66,15 @@ export default class Db extends Sequelize {
 			where: {
 				[Op.or]: [{ sender: id }, { reciever: id }],
 			},
+			order: [["createdAt", "DESC"]],
+		});
+	}
+
+	getMember(id: string) {
+		return this.members.findOne({
+			where: {
+				id,
+			},
 		});
 	}
 
