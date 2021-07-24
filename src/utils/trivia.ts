@@ -4,6 +4,7 @@ import { Collection } from "discord.js";
 
 interface Question {
 	question: string;
+	image?: string;
 	answer: string | string[];
 }
 
