@@ -1,18 +1,38 @@
 @import "./base.scss";
 
-html,
-body {
-	font: 1rem/1.5 var(--bs-font-sans-serif);
+#card {
+	padding-left: 15vw;
+	padding-top: 70px;
+	display: flex;
+	align-items: center;
+
+	.avatar {
+		vertical-align: middle;
+	}
+
+	.card-text {
+		vertical-align: middle;
+		padding-left: 30px;
+	}
+
+	#description {
+		padding-top: 10px;
+		font-size: 20px;
+	}
 }
 
-#container {
-	margin-top: 100px;
+#buttons {
 	text-align: center;
+	padding-top: 30px;
+}
+
+#stats {
+	padding-top: 70px;
+	padding-left: 5vw;
 }
 
 .avatar {
 	border-radius: 50%;
 	border-color: white;
 	border-width: 2x;
-	border-style: solid;
 }
