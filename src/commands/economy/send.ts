@@ -55,8 +55,10 @@ export default class SendCommand extends Command {
 				)
 			);
 		// Get Coins for mentioned user and Executor
-		const mentioned = await this.client.db.getBalance(args.user.id);
-		const executor = await this.client.db.getBalance(message.author.id);
+		const mentioned = await this.client.economy.getBalance(args.user.id);
+		const executor = await this.client.economy.getBalance(
+			message.author.id
+		);
 
 		// Check if we have enough coins for this transaction
 		if (executor.coins < args.amount)
@@ -72,9 +74,9 @@ export default class SendCommand extends Command {
 			);
 
 		// Update user balances accordingly
-		this.client.db.addCoins(args.user.id, args.amount);
-		this.client.db.removeCoins(message.author.id, args.amount);
-		this.client.db.createTransaction(
+		this.client.economy.addCoins(args.user.id, args.amount);
+		this.client.economy.removeCoins(message.author.id, args.amount);
+		this.client.economy.createTransaction(
 			message.author.id,
 			args.user.id,
 			args.amount,

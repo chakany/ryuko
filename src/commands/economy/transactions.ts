@@ -13,7 +13,7 @@ export default class TransactionsCommand extends Command {
 	}
 
 	async exec(message: Message) {
-		const transactions = await this.client.db.getTransactions(
+		const transactions = await this.client.economy.getTransactions(
 			message.author.id
 		);
 

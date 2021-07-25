@@ -14,7 +14,7 @@ export default class DailyCommand extends Command {
 	async exec(message: Message) {
 		const amount = Math.floor(Math.random() * 500);
 
-		this.client.db.addCoins(message.author.id, amount);
+		this.client.economy.addCoins(message.author.id, amount);
 
 		return message.channel.send(
 			new MessageEmbed({

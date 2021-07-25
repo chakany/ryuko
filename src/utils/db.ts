@@ -47,70 +47,12 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	createTransaction(
-		sender: string,
-		reciever: string,
-		amount: number,
-		reason = null
-	) {
-		return this.transactions.create({
-			sender,
-			reciever,
-			amount,
-			reason,
-		});
-	}
-
-	getTransactions(id: string) {
-		return this.transactions.findAll({
-			where: {
-				[Op.or]: [{ sender: id }, { reciever: id }],
-			},
-			order: [["createdAt", "DESC"]],
-		});
-	}
-
 	getMember(id: string) {
 		return this.members.findOne({
 			where: {
 				id,
 			},
 		});
-	}
-
-	getBalance(id: string) {
-		return this.members.findOne({
-			attributes: ["coins"],
-			where: {
-				id,
-			},
-		});
-	}
-
-	addCoins(id: string, amount: number) {
-		return this.members.update(
-			{
-				coins: this.Sequelize.literal(`coins + ${amount}`),
-			},
-			{
-				where: {
-					id,
-				},
-			}
-		);
-	}
-
-	removeCoins(id: string, amount: number) {
-		return this.members.update(
-			{
-				coins: this.Sequelize.literal(`coins - ${amount}`),
-			},
-			{
-				where: {
-					id,
-				},
-			}
-		);
 	}
 
 	async addTicket(guildId: string, memberId: string, channelId: string) {
