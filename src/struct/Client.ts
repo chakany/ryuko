@@ -267,7 +267,9 @@ export default class RyukoClient extends AkairoClient {
 			footer: {
 				text: `Use the "${message.util?.parsed?.prefix}${
 					command.handler.findCommand("support").aliases[0]
-				}" command if you need assistance\n${message.author.tag}`,
+				}" command if you would like to report this error\n${
+					message.author.tag
+				}`,
 				icon_url: message.author.displayAvatarURL({ dynamic: true }),
 			},
 			author: {

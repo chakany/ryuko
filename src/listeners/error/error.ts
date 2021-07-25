@@ -11,7 +11,6 @@ export default class HandlerErrorListener extends Listener {
 	}
 
 	exec(error: Error, message: Message, command: Command) {
-		this.client.log.error(error);
 		return message.channel.send(
 			this.client.error(
 				message,
