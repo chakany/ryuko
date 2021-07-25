@@ -6,6 +6,7 @@ export default class UsmapCommand extends Command {
 		super("usmap", {
 			aliases: ["usmap"],
 			description: "United States Map Trivia",
+			category: "Trivia",
 		});
 	}
 
@@ -19,7 +20,7 @@ export default class UsmapCommand extends Command {
 			prompt: {
 				start: new MessageEmbed({
 					title: "United States Map Trivia",
-					description: `**${question?.question}**\n\nYou have **30 seconds**.`,
+					description: `**${question?.question}**\n\nYou have **15 seconds**.`,
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
@@ -34,7 +35,11 @@ export default class UsmapCommand extends Command {
 				}),
 				timeout: new MessageEmbed({
 					title: "Time Expired",
-					description: `You ran out of time! Try again?`,
+					description: `You ran out of time! The correct answer was **${
+						typeof question?.answer == "object"
+							? question?.answer[0]
+							: question?.answer
+					}**.`,
 					color: message.guild?.me?.displayHexColor,
 					timestamp: new Date(),
 					footer: {
@@ -44,7 +49,7 @@ export default class UsmapCommand extends Command {
 						}),
 					},
 				}),
-				time: 30000,
+				time: 15000,
 			},
 		};
 
