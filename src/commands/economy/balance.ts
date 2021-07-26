@@ -21,7 +21,7 @@ export default class BalanceCommand extends Command {
 		const coins = await this.client.economy.getBalance(args.user.id);
 
 		message.channel.send(
-			`**${args.user.tag}'s Current Balance:** ${coins.coins} Coins ${this.client.emoji.coin}`
+			`**${args.user.username}'s Current Balance:** ${coins.coins} Coins ${this.client.emoji.coin}`
 		);
 	}
 }
