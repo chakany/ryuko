@@ -12,7 +12,7 @@ export default class StopCommand extends Command {
 
 	async exec(message: Message): Promise<any> {
 		const serverQueue = this.client.queue.get(message.guild!.id);
-		if (serverQueue === undefined)
+		if (!serverQueue || !serverQueue.player)
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -31,7 +31,7 @@ export default class StopCommand extends Command {
 					message,
 					this,
 					"Invalid Usage",
-					"You have to be in the voice channel to stop the music!"
+					"You have to be in the same voice channel as me to stop the music!"
 				)
 			);
 		serverQueue.player.disconnect();
