@@ -12,10 +12,29 @@ export default class TransactionsCommand extends Command {
 		});
 	}
 
-	async exec(message: Message) {
+	isInt(str: string): boolean {
+		try {
+			parseInt(str);
+			return true;
+		} catch (e) {
+			return false;
+		}
+	}
+
+	async exec(message: Message): Promise<any> {
 		const transactions = await this.client.economy.getTransactions(
 			message.author.id
 		);
+
+		if (!transactions.length)
+			return message.channel.send(
+				this.client.error(
+					message,
+					this,
+					"Invalid Transactions",
+					"You do not have any transactions!"
+				)
+			);
 
 		const transactionEmbed = new FieldsEmbed()
 			.setArray(transactions)
@@ -24,16 +43,20 @@ export default class TransactionsCommand extends Command {
 			.setElementsPerPage(6)
 			.formatField("Transactions", (transaction: any) => {
 				return transaction.sender == message.author.id
-					? `:arrow_right: <@!${transaction.reciever}>; **${
-							transaction.amount
-					  } Coins**; ${
+					? `:arrow_right: ${
+							this.isInt(transaction.reciever)
+								? `<@!${transaction.reciever}>`
+								: transaction.reciever
+					  }; **${transaction.amount} Coins**; ${
 							transaction.reason
 								? `\`${transaction.reason}\``
 								: "No Reason Provided"
 					  }`
-					: `:arrow_left: <@!${transaction.sender}>; **${
-							transaction.amount
-					  } Coins**; ${
+					: `:arrow_left: ${
+							this.isInt(transaction.sender)
+								? `<@!${transaction.sender}>`
+								: transaction.sender
+					  }; **${transaction.amount} Coins**; ${
 							transaction.reason
 								? `\`${transaction.reason}\``
 								: "No Reason Provided"
