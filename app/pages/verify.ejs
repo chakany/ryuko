@@ -24,11 +24,20 @@
     <%- include("../components/header.ejs") %>
     <div id="container" >
         <% if (verified == true) { %>
-    <h1>You can now close this window</h1>
+    <h1>Verified Successfully</h1>
+    <h3>You can now close this window</h3>
 <% } else if (error) { %>
     <h1><%= error %></h1>
     </br>
     <h2>Please try again</h2>
+<% } else if (redirectUri) { %>
+    <h1>Member Verification</h1> </br>
+    <h4>The guild you are trying to join has Member Verification setup to protect against bots and alternate accounts.</h4>
+    <h4>You can learn more about it <a href="/wiki/features/verification">here</a></h4>
+    <h4>You will need to link your Discord account to <%= username %> to continue, click the button below to link your accounts.</h4> </br>
+    <a href="<%= redirectUri %>" class="btn btn-primary" type="button"
+				>Verify</a
+			>
 <% } else { %>
     <head>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>

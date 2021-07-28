@@ -79,43 +79,48 @@ router.get("/", async (req, res) => {
 			description: "Bad Request",
 		});
 	if (!req.query.code) {
-		res.redirect(
-			new URL(
+		res.render("verify", {
+			verified: false,
+			error: null,
+			redirectUri: new URL(
 				`https://discord.com/oauth2/authorize?client_id=${clientID}&redirect_uri=${siteUrl}/verify&response_type=code&scope=identify%20guilds&state=${req.query.state}`
-			).toString()
-		);
+			).toString(),
+			username: user.username,
+			avatar: user.avatarURL,
+		});
 	} else if (req.query.code) {
 		let tokens: TokenResponse;
 		try {
 			tokens = await getTokens(req.query.code);
 
-			const user = await axios.get("https://discord.com/api/users/@me", {
-				headers: {
-					authorization: `${tokens.token_type} ${tokens.access_token}`,
-				},
-			});
+			const requestedUser = await axios.get(
+				"https://discord.com/api/users/@me",
+				{
+					headers: {
+						authorization: `${tokens.token_type} ${tokens.access_token}`,
+					},
+				}
+			);
 
-			const bot: User = await (
-				await manager.fetchClientValues("user")
-			)[0];
-
-			if (user.data.id !== redisRes.userId)
+			if (requestedUser.data.id !== redisRes.userId)
 				res.render("verify", {
 					verified: false,
-					error: "You signed in with a different account than the one you initiated the verification with. Please make sure you login with the same account.",
-					username: bot.username,
-					avatar: bot.avatarURL,
+					error: "You signed in with a different account",
+					username: user.username,
+					avatar: user.avatarURL,
+					redirectUri: null,
 				});
 			else
 				res.render("verify", {
-					user: user.data,
+					user: requestedUser.data,
 					verified: false,
 					error: null,
 					siteKey: recaptchaSiteKey,
 					state: req.query.state,
 					id: redisRes.userId,
-					username: bot.username,
-					avatar: bot.avatarURL,
+					username: user.username,
+					avatar: user.avatarURL,
+					redirectUri: null,
 				});
 		} catch (error) {
 			weblog.error(error);
@@ -172,6 +177,7 @@ router.post("/", async (req, res) => {
 					error: null,
 					username: user.username,
 					avatar: user.avatarURL,
+					redirectUri: null,
 				});
 				redis.publish(
 					`verification-${req.body.state}`,
