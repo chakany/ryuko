@@ -15,6 +15,12 @@ export default class DailyCommand extends Command {
 		const amount = Math.floor(Math.random() * 500);
 
 		this.client.economy.addCoins(message.author.id, amount);
+		this.client.economy.createTransaction(
+			"Daily",
+			message.author.id,
+			amount,
+			"Daily Command"
+		);
 
 		return message.channel.send(
 			new MessageEmbed({

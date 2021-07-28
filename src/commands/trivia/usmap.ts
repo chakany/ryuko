@@ -66,6 +66,12 @@ export default class UsmapCommand extends Command {
 			const amount = Math.floor(Math.random() * 200);
 
 			this.client.economy.addCoins(message.author.id, amount);
+			this.client.economy.createTransaction(
+				"Trivia",
+				message.author.id,
+				amount,
+				"Correct Answer"
+			);
 
 			return message.channel.send(
 				new MessageEmbed({

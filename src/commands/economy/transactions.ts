@@ -12,15 +12,6 @@ export default class TransactionsCommand extends Command {
 		});
 	}
 
-	isInt(str: string): boolean {
-		try {
-			parseInt(str);
-			return true;
-		} catch (e) {
-			return false;
-		}
-	}
-
 	async exec(message: Message): Promise<any> {
 		const transactions = await this.client.economy.getTransactions(
 			message.author.id
@@ -44,7 +35,7 @@ export default class TransactionsCommand extends Command {
 			.formatField("Transactions", (transaction: any) => {
 				return transaction.sender == message.author.id
 					? `:arrow_right: ${
-							this.isInt(transaction.reciever)
+							!isNaN(transaction.reciever)
 								? `<@!${transaction.reciever}>`
 								: transaction.reciever
 					  }; **${transaction.amount} Coins**; ${
@@ -53,7 +44,7 @@ export default class TransactionsCommand extends Command {
 								: "No Reason Provided"
 					  }`
 					: `:arrow_left: ${
-							this.isInt(transaction.sender)
+							!isNaN(transaction.sender)
 								? `<@!${transaction.sender}>`
 								: transaction.sender
 					  }; **${transaction.amount} Coins**; ${

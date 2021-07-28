@@ -54,8 +54,7 @@ export default class SendCommand extends Command {
 					"You cannot send coins to yourself!"
 				)
 			);
-		// Get Coins for mentioned user and Executor
-		const mentioned = await this.client.economy.getBalance(args.user.id);
+		// Get Coins for the executor
 		const executor = await this.client.economy.getBalance(
 			message.author.id
 		);

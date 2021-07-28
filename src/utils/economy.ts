@@ -23,7 +23,7 @@ export default class Economy {
 		sender: string,
 		reciever: string,
 		amount: number,
-		reason = null
+		reason = ""
 	) {
 		return this.db.transactions.create({
 			sender,
