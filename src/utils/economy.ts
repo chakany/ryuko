@@ -16,7 +16,7 @@ export default class Economy {
 		this.dir = path.resolve(__dirname, dir);
 		this.db = db;
 
-		this.items = require(path.join(dir, "items.json"));
+		this.items = require(path.join(this.dir, "items.json"));
 	}
 
 	createTransaction(
