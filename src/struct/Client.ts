@@ -18,6 +18,7 @@ import Command from "./Command";
 import Db from "../utils/db";
 import Redis from "../utils/redis";
 import Trivia from "../utils/trivia";
+import Economy from "../utils/economy";
 import { generateUsage } from "../utils/command";
 
 const config = require("../../config.json");
@@ -44,9 +45,11 @@ declare module "discord-akairo" {
 		db: Db;
 		redis: Redis;
 		commandHandler: CommandHandler;
+		starboardMessages: Collection<string, Message>;
 		config: any;
 		emoji: any;
 		generateUsage: Function;
+		economy: Economy;
 		trivia: Trivia;
 		settings: SequelizeProvider;
 		shoukaku: Shoukaku;
@@ -70,6 +73,7 @@ export default class RyukoClient extends AkairoClient {
 	public config: any;
 	public emoji: any;
 	public generateUsage: Function;
+	public economy: Economy;
 	public trivia: Trivia;
 	public settings: SequelizeProvider;
 	public shoukaku: Shoukaku;
@@ -77,6 +81,7 @@ export default class RyukoClient extends AkairoClient {
 	public queue: Collection<string, Queue>;
 	public log: bunyan;
 	public jobs: Collection<string, Map<string, Job>>;
+	public starboardMessages: Collection<string, Message>;
 	public invites: Collection<string, any>;
 	public commandHandler: CommandHandler;
 	private inhibitorHandler: InhibitorHandler;
@@ -98,8 +103,10 @@ export default class RyukoClient extends AkairoClient {
 		this.log = log;
 		this.jobs = new Collection();
 		this.invites = new Collection();
+		this.starboardMessages = new Collection();
 
 		this.db = new Db();
+		this.economy = new Economy("../../app/data", this.db);
 		const redislog = bunyan.createLogger({ name: "redis" });
 		this.redis = new Redis(redislog);
 		this.redis.on("error", (error: any) => {
@@ -263,7 +270,9 @@ export default class RyukoClient extends AkairoClient {
 			footer: {
 				text: `Use the "${message.util?.parsed?.prefix}${
 					command.handler.findCommand("support").aliases[0]
-				}" command if you need assistance\n${message.author.tag}`,
+				}" command if you would like to report this error\n${
+					message.author.tag
+				}`,
 				icon_url: message.author.displayAvatarURL({ dynamic: true }),
 			},
 			author: {

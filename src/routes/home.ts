@@ -12,6 +12,9 @@ router.get("/", async function (req, res) {
 				totalServers: (
 					await manager.fetchClientValues("guilds.cache.size")
 				).reduce((acc, guildCount) => acc + guildCount, 0),
+				totalUsers: (
+					await manager.fetchClientValues("users.cache.size")
+				).reduce((acc, guildCount) => acc + guildCount, 0),
 				avatar: user.avatarURL,
 				username: user.username,
 				support: supportInvite,

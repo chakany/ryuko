@@ -131,6 +131,7 @@ async function buildPages() {
 		`./dist/pages/index.html`,
 		await ejs.renderFile("./app/pages/index.ejs", {
 			totalServers: bot.guilds.cache.size,
+			totalUsers: bot.users.cache.size,
 			avatar,
 			username: bot.user.username,
 			support,

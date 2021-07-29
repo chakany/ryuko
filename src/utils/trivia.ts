@@ -2,8 +2,11 @@ import fs from "fs";
 import path from "path";
 import { Collection } from "discord.js";
 
+const { siteUrl } = require("../../config.json");
+
 interface Question {
 	question: string;
+	image?: string;
 	answer: string | string[];
 }
 
@@ -23,6 +26,10 @@ export default class Trivia {
 
 		files.forEach((file) => {
 			const topic = require(path.resolve(__dirname, dir, file));
+
+			topic.questions.forEach((question: Question) => {
+				if (question.image) question.image = siteUrl + question.image;
+			});
 
 			this.topics.set(topic.title, topic);
 		});

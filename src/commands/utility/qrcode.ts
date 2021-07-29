@@ -2,7 +2,7 @@ import Command from "../../struct/Command";
 import { Message, MessageEmbed, MessageAttachment } from "discord.js";
 import qrcode from "qrcode";
 
-export default class PingCommand extends Command {
+export default class QrcodeCommand extends Command {
 	constructor() {
 		super("qrcode", {
 			aliases: ["qrcode", "qr"],
@@ -17,7 +17,16 @@ export default class PingCommand extends Command {
 		});
 	}
 
-	async exec(message: Message): Promise<any> {
+	async exec(message: Message, args: any): Promise<any> {
+		if (!args.content)
+			return message.channel.send(
+				this.client.error(
+					message,
+					this,
+					"Invalid Arguments",
+					"You must input some text to turn into a QR Code!"
+				)
+			);
 		const code = new MessageAttachment(
 			await qrcode.toBuffer(message.util?.parsed?.content!),
 			"qrcode.png"

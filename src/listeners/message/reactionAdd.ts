@@ -53,6 +53,14 @@ export default class MessageReactionAddListener extends Listener {
 			fields: fields,
 		});
 
+		const starredMessage = this.client.starboardMessages.get(message.id);
+
+		if (starredMessage)
+			return starredMessage.edit(
+				`${reaction.count} :star: | ${message.channel}`,
+				{ embed }
+			);
+
 		if (message.attachments.size > 0)
 			embed.setImage(message.attachments.array()[0].url);
 		else if (message.embeds[0]?.image?.url)
@@ -60,7 +68,7 @@ export default class MessageReactionAddListener extends Listener {
 		else if (message.embeds[0]?.thumbnail?.url)
 			embed.setImage(message.embeds[0]?.thumbnail?.url);
 
-		return (<TextChannel>(
+		const newMessage = await (<TextChannel>(
 			message.guild?.channels.cache.get(
 				this.client.settings.get(
 					reaction.message.guild!.id,
@@ -68,6 +76,8 @@ export default class MessageReactionAddListener extends Listener {
 					null
 				)
 			)
-		)).send(message.channel, { embed });
+		)).send(`${reaction.count} :star: | ${message.channel}`, { embed });
+
+		this.client.starboardMessages.set(message.id, newMessage);
 	}
 }

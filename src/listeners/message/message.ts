@@ -63,11 +63,11 @@ export default class MessageListener extends Listener {
 
 		if (!message.author.bot) {
 			if (
-				this.client.settings.get(
+				!this.client.settings.get(
 					message.guild!.id,
 					"someDumbFuckingSetting",
 					null
-				) == null
+				)
 			)
 				this.client.settings.set(
 					message.guild!.id,

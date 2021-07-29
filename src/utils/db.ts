@@ -7,6 +7,7 @@ import ticketsModel from "../models/tickets";
 import punishmentsModel from "../models/punishments";
 import membersModel from "../models/members";
 import xpModel from "../models/xp";
+import transactionsModel from "../models/transactions";
 
 const config = require("../../config.json");
 
@@ -22,6 +23,7 @@ export default class Db extends Sequelize {
 	public punishments: ModelCtor<any>;
 	public members: ModelCtor<any>;
 	public guildXp: ModelCtor<any>;
+	public transactions: ModelCtor<any>;
 
 	constructor() {
 		super(config.db.database, config.db.username, config.db.password, {
@@ -36,11 +38,20 @@ export default class Db extends Sequelize {
 		this.punishments = punishmentsModel(this, config);
 		this.members = membersModel(this, config);
 		this.guildXp = xpModel(this, config);
+		this.transactions = transactionsModel(this, config);
 	}
 
 	getSettings() {
 		return new SequelizeProvider(this.guilds, {
 			idColumn: "id",
+		});
+	}
+
+	getMember(id: string) {
+		return this.members.findOne({
+			where: {
+				id,
+			},
 		});
 	}
 
@@ -98,52 +109,44 @@ export default class Db extends Sequelize {
 		guildId: string,
 		xp: number
 	): Promise<number | boolean> {
-		return new Promise(async (resolve, reject) => {
-			try {
-				await this.query(
-					"INSERT IGNORE INTO `members` (`id`,`createdAt`,`updatedAt`) VALUES (:id,NOW(),NOW()) RETURNING *;",
-					{
-						replacements: {
-							id: memberId,
-						},
-						type: QueryTypes.SELECT,
-					}
-				).then(async (user) => {
-					const multiplier = user[0]
-						? // @ts-expect-error
-						  <number>user[0].xpMultiplier
-						: 1;
-
-					const query = await this.query(
-						"INSERT INTO `xp` (`memberId`,`guildId`,`level`,`xp`,`createdAt`,`updatedAt`) VALUES (:memberId,:guildId,TRUNCATE(:xp / 500, 0) + 1,:xp,NOW(),NOW()) ON DUPLICATE KEY UPDATE `memberId`=VALUES(`memberId`), `guildId`=VALUES(`guildId`), `xp`=xp + (VALUES(`xp`) * :multiplier), `level`=TRUNCATE(xp / 500, 0) + 1, `updatedAt`=VALUES(`updatedAt`) RETURNING *;",
-						{
-							replacements: {
-								memberId,
-								guildId,
-								xp,
-								multiplier,
-							},
-							type: QueryTypes.SELECT,
-						}
-					);
-					// @ts-expect-error
-					const oldXp = query[0].xp - xp * multiplier;
-					const level = Math.trunc((oldXp - xp * multiplier) / 500);
-
-					resolve(
-						(xp * multiplier + oldXp) % 500 == 0 ||
-							(xp * multiplier + oldXp > level * 500 &&
-								xp * multiplier + oldXp < (level + 1) * 500 &&
-								oldXp < level * 500)
-							? // @ts-expect-error
-							  query[0].level
-							: false
-					);
-				});
-			} catch (error) {
-				reject(error);
+		const user = await this.query(
+			"INSERT IGNORE INTO `members` (`id`,`createdAt`,`updatedAt`) VALUES (:id,NOW(),NOW()) RETURNING *;",
+			{
+				replacements: {
+					id: memberId,
+				},
+				type: QueryTypes.SELECT,
 			}
-		});
+		);
+
+		const multiplier = user[0]
+			? // @ts-expect-error
+			  <number>user[0].xpMultiplier
+			: 1;
+
+		const query = await this.query(
+			"INSERT INTO `xp` (`memberId`,`guildId`,`level`,`xp`,`createdAt`,`updatedAt`) VALUES (:memberId,:guildId,TRUNCATE(:xp / 500, 0) + 1,:xp,NOW(),NOW()) ON DUPLICATE KEY UPDATE `memberId`=VALUES(`memberId`), `guildId`=VALUES(`guildId`), `xp`=xp + (VALUES(`xp`) * :multiplier), `level`=TRUNCATE(xp / 500, 0) + 1, `updatedAt`=VALUES(`updatedAt`) RETURNING *;",
+			{
+				replacements: {
+					memberId,
+					guildId,
+					xp,
+					multiplier,
+				},
+				type: QueryTypes.SELECT,
+			}
+		);
+		// @ts-expect-error
+		const oldXp = query[0].xp - xp * multiplier;
+		const level = Math.trunc((oldXp - xp * multiplier) / 500);
+
+		return (xp * multiplier + oldXp) % 500 == 0 ||
+			(xp * multiplier + oldXp > level * 500 &&
+				xp * multiplier + oldXp < (level + 1) * 500 &&
+				oldXp < level * 500)
+			? // @ts-expect-error
+			  query[0].level
+			: false;
 	}
 
 	async getMemberXp(memberId: string, guildId: string): Promise<any> {

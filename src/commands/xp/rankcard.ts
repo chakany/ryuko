@@ -6,7 +6,7 @@ const canvacord = require("canvacord");
 export default class RankcardCommand extends Command {
 	constructor() {
 		super("rankcard", {
-			aliases: ["rankcard"],
+			aliases: ["level"],
 			description: "Gets your xp rankcard",
 			category: "Xp",
 		});

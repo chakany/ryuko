@@ -63,7 +63,8 @@ export default class PlayCommand extends Command {
 		else if (
 			queue.get(message.guild!.id) &&
 			queue.get(message.guild!.id)?.player?.voiceConnection
-				.voiceChannelID !== message.member?.voice.channelID
+				.voiceChannelID !== message.member?.voice.channelID &&
+			queue.get(message.guild!.id)?.player
 		)
 			return message.channel.send(
 				this.client.error(
@@ -204,6 +205,15 @@ export default class PlayCommand extends Command {
 				message.util?.parsed?.content!,
 				"youtube"
 			);
+			if (!data)
+				return sentMessage.edit(
+					this.client.error(
+						message,
+						this,
+						"An error occurred",
+						"I could not play that, try again?"
+					)
+				);
 			if (data?.tracks[0]) guildQueue.tracks.push(data?.tracks[0]);
 			embedToSend.setDescription("`" + data?.tracks[0].info.title + "`");
 			embedToSend.setThumbnail(
@@ -214,6 +224,15 @@ export default class PlayCommand extends Command {
 			const data = await node.rest.resolve(
 				message.util?.parsed?.content!
 			);
+			if (!data)
+				return sentMessage.edit(
+					this.client.error(
+						message,
+						this,
+						"An error occurred",
+						"I could not play that, try again?"
+					)
+				);
 			if (data?.playlistName) {
 				let playlistCount = 0;
 				let playlistDescription = "";

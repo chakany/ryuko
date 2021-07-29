@@ -1,6 +1,8 @@
 import Command from "../../struct/Command";
 import { Message, MessageEmbed, TextChannel } from "discord.js";
 import crypto from "crypto";
+import ms from "ms";
+import moment from "moment";
 
 export default class VerifyCommand extends Command {
 	constructor() {
@@ -71,20 +73,13 @@ export default class VerifyCommand extends Command {
 		let sentMessage: Message;
 		try {
 			sentMessage = await message.author.send(
-				new MessageEmbed({
-					title: "Account Verification",
-					description: `[Please verify your account to continue to **${
-						message.guild!.name
-					}**](${this.client.config.siteUrl}/verify?state=${key})`,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: `Expires in 10 minutes\n${message.author.tag}`,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-				})
+				`The server **${
+					message.guild!.name
+				}** has Member Verification enabled.\nTo verify, please visit: ${
+					this.client.config.siteUrl
+				}/verify?state=${key}\n\nThis expires <t:${moment()
+					.add(ms("10m"), "ms")
+					.unix()}:R>`
 			);
 		} catch (error) {
 			await this.client.redis.unsubscribe(`verification-${key}`);
@@ -107,20 +102,9 @@ export default class VerifyCommand extends Command {
 
 			if (call.message == "verified") {
 				sentMessage.edit(
-					new MessageEmbed({
-						title: "Verified Successfully",
-						description: `Welcome to **${
-							message.guild!.name
-						}**! Enjoy your stay!`,
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-					})
+					`Verified Successfully, Welcome to **${
+						message.guild!.name
+					}**!`
 				);
 				if (
 					this.client.settings.get(

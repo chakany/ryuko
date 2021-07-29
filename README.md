@@ -1,6 +1,7 @@
 <p align="center"><img width="800px" src="https://i.imgur.com/3ny3m8z.jpg" /></p>
 <h3 align="center">Ryuko</h3>
-<h4 align="center">An in-development Discord bot that aims to meet all of your needs!</h4>
+<h4 align="center">A Utility bot with Verification, Music, Tickets, a Starboard, and more.
+</h4>
 <p align="center" href="https://google.com"><img src="https://github.com/jacany/ryuko/actions/workflows/ci.yml/badge.svg?branch=master&event=push" /></p>
 
 ---

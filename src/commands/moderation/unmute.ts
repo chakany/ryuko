@@ -112,7 +112,7 @@ export default class MoveCommand extends Command {
 						title: "Member Unmuted",
 						color: message.guild?.me?.displayHexColor,
 						thumbnail: {
-							url: args.member.user.displayAvatarURL({
+							url: args.user.displayAvatarURL({
 								dynamic: true,
 							}),
 						},
