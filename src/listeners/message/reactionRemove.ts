@@ -6,26 +6,16 @@ import {
 	MessageEmbed,
 } from "discord.js";
 
-export default class MessageReactionAddListener extends Listener {
+export default class MessageReactionRemoveListener extends Listener {
 	constructor() {
-		super("messageReactionAdd", {
+		super("messageReactionRemove", {
 			emitter: "client",
-			event: "messageReactionAdd",
+			event: "messageReactionRemove",
 		});
 	}
 
 	async exec(reaction: MessageReaction) {
 		if (reaction.partial) await reaction.fetch();
-		if (
-			reaction.message.channel.type == "dm" ||
-			reaction.emoji.name != "⭐" ||
-			!this.client.settings.get(
-				reaction.message.guild!.id,
-				"starboard",
-				false
-			)
-		)
-			return;
 
 		const message: Message = reaction.message;
 

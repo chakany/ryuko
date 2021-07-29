@@ -45,6 +45,7 @@ declare module "discord-akairo" {
 		db: Db;
 		redis: Redis;
 		commandHandler: CommandHandler;
+		starboardMessages: Collection<string, Message>;
 		config: any;
 		emoji: any;
 		generateUsage: Function;
@@ -80,6 +81,7 @@ export default class RyukoClient extends AkairoClient {
 	public queue: Collection<string, Queue>;
 	public log: bunyan;
 	public jobs: Collection<string, Map<string, Job>>;
+	public starboardMessages: Collection<string, Message>;
 	public invites: Collection<string, any>;
 	public commandHandler: CommandHandler;
 	private inhibitorHandler: InhibitorHandler;
@@ -101,6 +103,7 @@ export default class RyukoClient extends AkairoClient {
 		this.log = log;
 		this.jobs = new Collection();
 		this.invites = new Collection();
+		this.starboardMessages = new Collection();
 
 		this.db = new Db();
 		this.economy = new Economy("../../app/data", this.db);
