@@ -9,7 +9,7 @@ export default class LoggingCommand extends Command {
 			category: "Configuration",
 			args: [
 				{
-					id: "subcommand",
+					id: "action",
 					type: "string",
 				},
 				{
