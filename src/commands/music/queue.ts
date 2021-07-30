@@ -33,9 +33,10 @@ export default class QueueCommand extends Command {
 				const index = serverQueue.tracks.findIndex(
 					(s) => s.info.identifier === song.info.identifier
 				);
-				if (index !== 0 && serverQueue.tracks[1])
-					return `**${index}:** \`${song.info.title}\``;
-				else return "**Nothing else in the Queue**";
+				if (index == 0 && !serverQueue.tracks[1])
+					return "**Nothing else in the Queue**";
+				else if (index == 0) return;
+				else return `**${index}:** \`${song.info.title}\``;
 			})
 			.setPage(1)
 			.setPageIndicator(true)

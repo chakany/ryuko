@@ -17,6 +17,12 @@ export default class MessageReactionRemoveListener extends Listener {
 	async exec(reaction: MessageReaction) {
 		if (reaction.partial) await reaction.fetch();
 
+		if (
+			reaction.message.channel.type == "dm" ||
+			reaction.emoji.name != "⭐"
+		)
+			return;
+
 		const message: Message = reaction.message;
 
 		const fields = message.embeds[0] ? message.embeds[0].fields : [];
@@ -43,14 +49,6 @@ export default class MessageReactionRemoveListener extends Listener {
 			fields: fields,
 		});
 
-		const starredMessage = this.client.starboardMessages.get(message.id);
-
-		if (starredMessage)
-			return starredMessage.edit(
-				`${reaction.count} :star: | ${message.channel}`,
-				{ embed }
-			);
-
 		if (message.attachments.size > 0)
 			embed.setImage(message.attachments.array()[0].url);
 		else if (message.embeds[0]?.image?.url)
@@ -58,16 +56,12 @@ export default class MessageReactionRemoveListener extends Listener {
 		else if (message.embeds[0]?.thumbnail?.url)
 			embed.setImage(message.embeds[0]?.thumbnail?.url);
 
-		const newMessage = await (<TextChannel>(
-			message.guild?.channels.cache.get(
-				this.client.settings.get(
-					reaction.message.guild!.id,
-					"starboardChannel",
-					null
-				)
-			)
-		)).send(`${reaction.count} :star: | ${message.channel}`, { embed });
+		const starredMessage = this.client.starboardMessages.get(message.id);
 
-		this.client.starboardMessages.set(message.id, newMessage);
+		if (starredMessage)
+			return starredMessage.edit(
+				`${reaction.count} :star: | ${message.channel}`,
+				{ embed }
+			);
 	}
 }

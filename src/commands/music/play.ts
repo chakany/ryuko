@@ -308,6 +308,17 @@ export default class PlayCommand extends Command {
 				return queue.delete(message.guild!.id);
 			});
 
+			player.on("trackException", (reason: any) => {
+				message.channel.send(
+					this.client.error(
+						message,
+						this,
+						"An error occurred",
+						`\`\`\`${reason.exception.message}\n${reason.exception.cause}\`\`\``
+					)
+				);
+			});
+
 			return sentMessage.edit(embedToSend);
 		} else {
 			embedToSend.setTitle("Added to Queue");
