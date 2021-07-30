@@ -8,7 +8,6 @@ export default class XpLeaderboardCommand extends Command {
 			aliases: ["xpleaderboard"],
 			description: "Gets the Xp Leaderboard",
 			category: "Xp",
-			clientPermissions: ["MANAGE_MESSAGES"],
 		});
 	}
 
@@ -30,8 +29,7 @@ export default class XpLeaderboardCommand extends Command {
 				} \`${user.xp}\` XP; Level \`${user.level}\``;
 			})
 			.setPage(1)
-			.setPageIndicator(true)
-			.setDisabledNavigationEmojis(["delete"]);
+			.setPageIndicator(true);
 
 		levelEmbed.embed
 			.setColor(message.guild!.me!.displayHexColor)

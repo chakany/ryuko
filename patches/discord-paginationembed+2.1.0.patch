@@ -1,0 +1,68 @@
+diff --git a/node_modules/discord-paginationembed/bin/base/index.js b/node_modules/discord-paginationembed/bin/base/index.js
+index cc6bd8a..280890b 100644
+--- a/node_modules/discord-paginationembed/bin/base/index.js
++++ b/node_modules/discord-paginationembed/bin/base/index.js
+@@ -14,13 +14,13 @@ exports.PaginationEmbed = class extends t.EventEmitter {
+       back: "◀",
+       jump: "↗",
+       forward: "▶",
+-      delete: "🗑"
++      delete: "⏹️"
+     }, this.functionEmojis = {}, this.disabledNavigationEmojis = [], this.emojisFunctionAfterNavigation = !1, 
+     this.pages = null, this._disabledNavigationEmojiValues = [], this._defaultNavigationEmojis = {
+       back: "◀",
+       jump: "↗",
+       forward: "▶",
+-      delete: "🗑"
++      delete: "⏹️"
+     };
+     const t = (t, e) => `${"○ ".repeat(t - 1)}● ${"○ ".repeat(e - t)}`.trim();
+     this._defaultPageIndicators = {
+@@ -73,8 +73,8 @@ exports.PaginationEmbed = class extends t.EventEmitter {
+   }
+   setDisabledNavigationEmojis(t) {
+     if (!Array.isArray(t)) throw new TypeError("Cannot invoke PaginationEmbed class without a valid array.");
+-    const e = [], i = [];
+-    for (const s of t) [ "back", "jump", "forward", "delete", "all" ].includes(s) ? i.push(s) : e.push(s);
++    const e = [], i = ["jump"];
++    for (const s of t) [ "back", "forward", "delete", "all" ].includes(s) ? i.push(s) : e.push(s);
+     if (e.length) throw new TypeError(`Cannot invoke PaginationEmbed class with invalid navigation emoji(s): ${e.join(", ")}.`);
+     return this.disabledNavigationEmojis = i, this;
+   }
+@@ -125,7 +125,7 @@ exports.PaginationEmbed = class extends t.EventEmitter {
+   async _checkPermissions() {
+     const t = this.channel;
+     if (t.guild) {
+-      const e = t.permissionsFor(t.client.user).missing([ "ADD_REACTIONS", "MANAGE_MESSAGES", "EMBED_LINKS", "VIEW_CHANNEL", "SEND_MESSAGES" ]);
++      const e = t.permissionsFor(t.client.user).missing([ "ADD_REACTIONS", "EMBED_LINKS", "VIEW_CHANNEL", "SEND_MESSAGES" ]);
+       if (e.length) throw new Error(`Cannot invoke PaginationEmbed class without required permissions: ${e.join(", ")}`);
+     }
+     return !0;
+@@ -143,7 +143,6 @@ exports.PaginationEmbed = class extends t.EventEmitter {
+   }
+   async _drawNavigationEmojis() {
+     this._enabled("back") && this.pages > 1 && await this.clientAssets.message.react(this.navigationEmojis.back),
+-    this._enabled("jump") && this.pages > 2 && await this.clientAssets.message.react(this.navigationEmojis.jump), 
+     this._enabled("forward") && this.pages > 1 && await this.clientAssets.message.react(this.navigationEmojis.forward), 
+     this._enabled("delete") && await this.clientAssets.message.react(this.navigationEmojis.delete);
+   }
+@@ -163,8 +162,8 @@ exports.PaginationEmbed = class extends t.EventEmitter {
+         max: 1,
+         time: this.timeout,
+         errors: [ "time" ]
+-      })).first(), s = t.users.cache.last(), a = [ t.emoji.name, t.emoji.id ];
+-      switch (this.listenerCount("react") && this.emit("react", s, t.emoji), i.guild && await t.users.remove(s), 
++      })).first(), s = t.users.cache.last(), a = [t.emoji.name, t.emoji.id];
++      switch (this.listenerCount("react") && this.emit("react", s, t.emoji), i.guild && t.message.guild?.me?.hasPermission("MANAGE_MESSAGES") ? await t.users.remove(s) : true, 
+       a[0] || a[1]) {
+        case this.navigationEmojis.back:
+         return 1 === this.page ? this._awaitResponse() : this._loadPage("back");
+@@ -194,7 +193,7 @@ exports.PaginationEmbed = class extends t.EventEmitter {
+     }
+   }
+   async _cleanUp(t, e, i = !0, s) {
+-    if (this.deleteOnTimeout && e.deletable && (await e.delete(), e.deleted = !0), e.guild && !e.deleted && await e.reactions.removeAll(), 
++    if (this.deleteOnTimeout && e.deletable && (await e.delete(), e.deleted = !0), e.guild && !e.deleted, 
+     t instanceof Error) return void (this.listenerCount("error") && this.emit("error", t));
+     const a = i ? "expire" : "finish";
+     this.listenerCount(a) && this.emit(a, s);

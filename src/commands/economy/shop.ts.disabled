@@ -29,8 +29,7 @@ export default class ShopCommand extends Command {
 						return `${item.name}; \`${item.price}\` coins ${this.client.emoji.coin}`;
 					})
 					.setPage(1)
-					.setPageIndicator(true)
-					.setDisabledNavigationEmojis(["delete"]);
+					.setPageIndicator(true);
 
 				transactionEmbed.embed
 					.setColor(message.guild!.me!.displayHexColor)

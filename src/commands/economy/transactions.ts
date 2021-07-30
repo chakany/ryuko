@@ -8,7 +8,6 @@ export default class TransactionsCommand extends Command {
 			aliases: ["transactions"],
 			description: "See your transaction history",
 			category: "Economy",
-			clientPermissions: ["MANAGE_MESSAGES"],
 		});
 	}
 
@@ -54,8 +53,7 @@ export default class TransactionsCommand extends Command {
 					  }`;
 			})
 			.setPage(1)
-			.setPageIndicator(true)
-			.setDisabledNavigationEmojis(["delete"]);
+			.setPageIndicator(true);
 
 		transactionEmbed.embed
 			.setColor(message.guild!.me!.displayHexColor)
