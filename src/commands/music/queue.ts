@@ -8,7 +8,6 @@ export default class QueueCommand extends Command {
 			aliases: ["queue", "nowplaying"],
 			description: "Gets the Song Queue",
 			category: "Music",
-			clientPermissions: ["MANAGE_MESSAGES"],
 		});
 	}
 
@@ -39,8 +38,7 @@ export default class QueueCommand extends Command {
 				else return `**${index}:** \`${song.info.title}\``;
 			})
 			.setPage(1)
-			.setPageIndicator(true)
-			.setDisabledNavigationEmojis(["delete"]);
+			.setPageIndicator(true);
 
 		queueEmbed.embed
 			.setColor(message.guild!.me!.displayHexColor)
