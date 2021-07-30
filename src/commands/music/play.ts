@@ -130,10 +130,7 @@ export default class PlayCommand extends Command {
 							new ShoukakuTrack(response.tracks[0])
 						);
 						embedToSend.setDescription(
-							"[`" +
-								`${response.tracks[0].info.title} - ${response?.tracks[0].info.author}` +
-								"`]" +
-								`(${response.tracks[0].info.uri})`
+							`\`${response.tracks[0].info.title} - ${response?.tracks[0].info.author}\``
 						);
 						embedToSend.setURL(response.tracks[0].info.uri);
 						embedToSend.setThumbnail(
@@ -150,20 +147,11 @@ export default class PlayCommand extends Command {
 							if (playlistCount == 0)
 								playlistDescription =
 									playlistDescription +
-									"[`" +
-									track.info.title +
-									"`](" +
-									track.info.uri +
-									")\n";
+									`\`${track.info.title} - ${track.info.author}\`\n`;
 							else if (playlistCount < 7)
 								playlistDescription =
 									playlistDescription +
-									`\n**${playlistCount}:** ` +
-									"[`" +
-									track.info.title +
-									"`](" +
-									track.info.uri +
-									")";
+									`\n**${playlistCount}:** \`${track.info.title} - ${track.info.author}\``;
 							else if (playlistCount == 7)
 								playlistDescription =
 									playlistDescription +
@@ -239,21 +227,11 @@ export default class PlayCommand extends Command {
 				for await (let track of data?.tracks) {
 					if (playlistCount == 0)
 						playlistDescription =
-							playlistDescription +
-							"[`" +
-							track.info.title +
-							"`](" +
-							track.info.uri +
-							")\n";
+							playlistDescription + `\`${track.info.title}\`\n`;
 					else if (playlistCount < 7)
 						playlistDescription =
 							playlistDescription +
-							`\n**${playlistCount}:** ` +
-							"[`" +
-							track.info.title +
-							"`](" +
-							track.info.uri +
-							")";
+							`\n**${playlistCount}:** \`${track.info.title}\``;
 					else if (playlistCount == 7)
 						playlistDescription =
 							playlistDescription +
@@ -263,9 +241,7 @@ export default class PlayCommand extends Command {
 				guildQueue.tracks = [...data?.tracks];
 				embedToSend.setDescription(playlistDescription);
 			} else if (data?.tracks[0]) {
-				embedToSend.setDescription(
-					"`" + data?.tracks[0].info.title + "`"
-				);
+				embedToSend.setDescription(`\`${data?.tracks[0].info.title}\``);
 				guildQueue.tracks.push(data?.tracks[0]);
 			}
 			if (data?.tracks[0].info.uri?.startsWith("https://www.youtube.com"))
