@@ -42,7 +42,7 @@
 		"body-parser": "^1.19.0",
 		"bootstrap": "^5.0.2",
 		"bunyan": "^1.8.15",
-		"canvacord": "^5.2.2",
+		"canvacord": "^5.2.1",
 		"cli-table": "^0.3.6",
 		"colors": "^1.4.0",
 		"cookie-parser": "^1.4.5",
