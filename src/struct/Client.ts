@@ -185,6 +185,12 @@ export default class RyukoClient extends AkairoClient {
 			return moment().add(ms(phrase), "ms");
 		});
 
+		this.commandHandler.resolver.addType("ms", (message, phrase) => {
+			if (!phrase) return null;
+
+			return ms(phrase);
+		});
+
 		this.inhibitorHandler = new InhibitorHandler(this, {
 			directory: "./inhibitors",
 		});
