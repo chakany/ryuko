@@ -13,9 +13,7 @@
 	<!-- prettier-ignore -->
 	<% category.forEach(leCommand => { %>
 	<li>
-		<a
-			href="<%= leCommand.categoryID %>/<%= leCommand.id %>"
-			style="color: inherit"
+		<a href="<%= leCommand.categoryID %>/<%= leCommand.id %>"
 			><%= leCommand.aliases[0] %></a
 		>
 		- <%= leCommand.description %>
