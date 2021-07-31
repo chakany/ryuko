@@ -5,13 +5,20 @@ export default class LeaveCommand extends Command {
 	constructor() {
 		super("leave", {
 			aliases: ["leave"],
-			description: "Make me leave the server",
+			description: "Make me leave a guild",
 			category: "Owner",
 			ownerOnly: true,
+			args: [
+				{
+					id: "guild",
+					type: "guild",
+					default: (message: Message) => message.guild,
+				},
+			],
 		});
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		return message.guild!.leave();
+		return args.guild.leave();
 	}
 }
