@@ -13,6 +13,7 @@
 	"discord_bots_gg_token": "",
 	"discordbotlist_com_token": "",
 	"steamApiKey": "",
+	"topgg_token": "",
 	"db": {
 		"host": "",
 		"port": 3306,

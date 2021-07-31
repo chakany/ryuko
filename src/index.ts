@@ -6,6 +6,7 @@ import table from "cli-table";
 import axios from "axios";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import { AutoPoster } from "topgg-autoposter";
 
 import Db from "./utils/db";
 import Redis from "./utils/redis";
@@ -14,7 +15,13 @@ import commands from "./routes/commands";
 import verify from "./routes/verify";
 import wiki from "./routes/wiki";
 
-const { token, port, imgApiUrl, pterodactyl } = require("../config.json");
+const {
+	token,
+	port,
+	imgApiUrl,
+	pterodactyl,
+	topgg_token,
+} = require("../config.json");
 let log = bunyan.createLogger({ name: "shardmanager" });
 let weblog = bunyan.createLogger({ name: "webserver" });
 let redislog = bunyan.createLogger({ name: "redis" });
@@ -168,15 +175,17 @@ void (async function () {
 
 	if (process.env.NODE_ENV !== "production")
 		manager = new ShardingManager("./bot.ts", {
-			token: token,
+			token,
 			execArgv: ["-r", "ts-node/register"],
 			shardArgs,
 		});
 	else
 		manager = new ShardingManager("./bot.js", {
-			token: token,
+			token,
 			shardArgs,
 		});
+
+	AutoPoster(topgg_token, manager);
 
 	manager.on("shardCreate", async (shard) => {
 		log.info(`Launched shard ${shard.id}`);

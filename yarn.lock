@@ -28,6 +28,11 @@
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
+"@jpbberry/typed-emitter@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@jpbberry/typed-emitter/-/typed-emitter-1.0.1.tgz#8276cccb0417d9975e14a5b605cba86c33289327"
+  integrity sha512-KN53f30wcy/P00tgXlkFG5IEFv5zEC3QArBHDLkUEzJu/tPtbJkZkUEBGJE3++pAIPRl2Vs6bsO9y3sHgF311w==
+
 "@mapbox/node-pre-gyp@^1.0.0":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@mapbox/node-pre-gyp/-/node-pre-gyp-1.0.5.tgz#2a0b32fcb416fb3f2250fd24cb2a81421a4f5950"
@@ -42,6 +47,14 @@
     rimraf "^3.0.2"
     semver "^7.3.4"
     tar "^6.1.0"
+
+"@top-gg/sdk@^3.0.9":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@top-gg/sdk/-/sdk-3.1.2.tgz#dc5cf2d3ea31cfd6919aa7bd3051d3bea14c7bb6"
+  integrity sha512-k44J9lCzyER4F7CClhhP9apgTqGLQeKCy4Hop2g2357QYOAFk8YlbdJOaEFts1v0V9rIQPrWK7w2t1KI/mgzCQ==
+  dependencies:
+    node-fetch "^2.6.1"
+    raw-body "^2.4.1"
 
 "@types/bcrypt@^5.0.0":
   version "5.0.0"
@@ -1136,7 +1149,7 @@ http-errors@1.7.2:
     statuses ">= 1.5.0 < 2"
     toidentifier "1.0.0"
 
-http-errors@~1.7.2:
+http-errors@1.7.3, http-errors@~1.7.2:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-1.7.3.tgz#6c619e4f9c60308c38519498c14fbb10aacebb06"
   integrity sha512-ZTTX0MWrsQ2ZAhA1cejAwDLycFsd7I7nVtnkT3Ol0aqodaKW+0CTZDQ1uBv5whptCnc8e8HeRRJxRs0kmm/Qfw==
@@ -1909,6 +1922,16 @@ raw-body@2.4.0:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+raw-body@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.4.1.tgz#30ac82f98bb5ae8c152e67149dac8d55153b168c"
+  integrity sha512-9WmIKF6mkvA0SLmA2Knm9+qj89e+j1zqgyn8aXGd7+nAduPoqgI9lO57SAZNn/Byzo5P7JhXTyg9PzaJbH73bA==
+  dependencies:
+    bytes "3.1.0"
+    http-errors "1.7.3"
+    iconv-lite "0.4.24"
+    unpipe "1.0.0"
+
 rc@^1.2.7:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.8.tgz#cd924bf5200a075b83c188cd6b9e211b7fc0d3ed"
@@ -2357,6 +2380,15 @@ toidentifier@1.0.0:
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
 
+topgg-autoposter@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/topgg-autoposter/-/topgg-autoposter-2.0.0.tgz#c07bfadc3b6587c382fdc568178dc4083cc9d686"
+  integrity sha512-0p+nQFwonIDfc6H0B5A9DO+34WYJvjaAMV+aVh+7sG+ChIi2Etl+w6bFEXhI1ws7dnsmp26Jstpyb9lK/Sy0dw==
+  dependencies:
+    "@jpbberry/typed-emitter" "^1.0.1"
+    "@top-gg/sdk" "^3.0.9"
+    typescript "^4.2.3"
+
 toposort-class@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/toposort-class/-/toposort-class-1.0.1.tgz#7ffd1f78c8be28c3ba45cd4e1a3f5ee193bd9988"
@@ -2423,7 +2455,7 @@ type-is@~1.6.17, type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
-typescript@^4.3.5:
+typescript@^4.2.3, typescript@^4.3.5:
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"
   integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==
