@@ -1,6 +1,7 @@
 import { Argument, Category } from "discord-akairo";
 import Command from "../../struct/Command";
 import { Message, MessageEmbed } from "discord.js";
+import ms from "ms";
 
 export default class HelpCommand extends Command {
 	constructor() {
@@ -104,7 +105,11 @@ export default class HelpCommand extends Command {
 			if (input.modOnly) embed.addField("Moderator Only", "Yes", true);
 			if (input.ownerOnly) embed.addField("Owner Only", "Yes", true);
 			if (input.cooldown)
-				embed.addField("Cooldown", `${input.cooldown} ms`, true);
+				embed.addField(
+					"Cooldown",
+					ms(input.cooldown, { long: true }),
+					true
+				);
 			if (input.ratelimit != 1 && input.cooldown)
 				embed.addField(
 					"Ratelimit",

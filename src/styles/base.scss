@@ -1,10 +1,24 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap");
-
 $body-bg: #222;
 $body-color: white;
+$primary-color: #e22525;
 
-:root {
-	--bs-font-sans-serif: "Roboto", sans-serif;
-}
+$theme-colors: (
+	primary: $primary-color,
+);
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
+
+code {
+	color: $primary-color;
+	background-color: rgb(22, 22, 22);
+	border-radius: 2px;
+	padding: 4px;
+}
+
+a {
+	color: inherit;
+
+	&:hover {
+		color: $primary-color;
+	}
+}

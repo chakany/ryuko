@@ -61,8 +61,10 @@ body {
 			margin-right: 4px;
 			color: #727272;
 		}
+
+		&:hover,
 		&.active {
-			color: #007bff;
+			color: $primary-color;
 		}
 
 		&:hover .feather,
