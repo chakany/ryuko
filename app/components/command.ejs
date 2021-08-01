@@ -1,90 +1,51 @@
-<style>
-	body {
-		overflow-y: auto;
-	}
-
-	.title {
-		padding-top: 20px;
-	}
-</style>
-<h1 class="title">
-	<%= command.aliases[0].charAt(0).toUpperCase() + command.aliases[0].slice(1)
-	%> Command
-</h1>
-
-<!-- Description of the command -->
-<% if (command.description) { %>
-<h3 class="title">Description</h3>
-<p><%= command.description %></p>
-<% } %>
-
-<!-- All of the command's aliases -->
-<% if (command.aliases[1]) { %>
-<h3 class="title">Aliases</h3>
-<% var current; %> <% for (let i = 1; (current = command.aliases[i]); i++) {%>
-<code><%=current %></code><% if(command.aliases[i + 1]) { %>,<% } %> <% } %> <%
-} %>
-
-<!-- Command cooldown -->
-<% if (command.formattedCooldown) { %>
-<h3 class="title">Cooldown</h3>
-<p><%= command.formattedCooldown %></p>
-<% } %>
-
-<!-- Required permissions that the user needs to perform the command -->
-<% if (command.userPermissions) { %>
-<h3 class="title">Required User Permissions</h3>
-<% const permissions = command.userPermissions.toString().split(","); var
-current; %> <% for (let i = 0; (current = permissions[i]); i++) {%>
-<code><%=current %></code>
-<% } %> <% } %>
-
-<!-- Required permissions that the bot needs to perform the command -->
-<% if (command.clientPermissions) { %>
-<h3 class="title">Required Bot Permissions</h3>
-<% const permissions = command.clientPermissions.toString().split(","); var
-current; %> <% for (let i = 0; (current = permissions[i]); i++) {%>
-<code><%=current %></code>
-<% } %> <% } %>
-
-<!-- Roles required to run the command, not permissions -->
-<% if (command.modOnly || command.ownerOnly) { %>
-<h3 class="title">Required Roles</h3>
-<ul>
-	<% if(command.modOnly) { %>
-	<li>Discord Moderator</li>
-	<% } %> <% if(command.ownerOnly) { %>
-	<li>Bot Owner</li>
-	<% } %>
-</ul>
-<% } %>
-
-<!-- If the is restricted to use in certain channels -->
-<% if (command.nsfw) { %>
-<h3 class="title">Usable Channels</h3>
-<ul>
-	<% if(command.nsfw) { %>
-	<li>NSFW Channels</li>
-	<% } %>
-</ul>
-<% } %>
-
-<!-- The usage of the command -->
-<h3 class="title">Usage</h3>
-<code><%= command.usage %></code>
-
-<style>
-	.footer {
-		padding-top: 20px;
-		text-align: center !important;
-	}
-</style>
-
-<!--
-<div class="footer">
-	<footer>
-		Note: This website is under construction!<br />Made with ❤️ by
-		<a href="https://chaker.xyz" target="_blank">Jack C</a>
-	</footer>
+<div class="card" style="width: 18rem">
+	<div class="card-body">
+		<h5 class="card-title"><%= command.aliases[0] %></h5>
+		<% if (command.description) { %>
+		<p class="card-text"><%= command.description %></p>
+		<% } %>
+	</div>
+	<ul class="list-group list-group-flush">
+		<% if (command.aliases.length > 1) { %>
+		<li class="list-group-item">
+			<b>Aliases:</b>
+			<!--prettier-ignore-->
+			<% for (let aliasI = 1; aliasI < command.aliases.length; aliasI++) { %>
+			<code><%= command.aliases[aliasI] %></code>
+			<!--prettier-ignore-->
+			<% } %>
+		</li>
+		<% } %> <% if (command.formattedCooldown) { %>
+		<li class="list-group-item">
+			<b>Cooldown:</b> <%= command.formattedCooldown %>
+		</li>
+		<% } %> <% if(command.userPermissions) { %>
+		<li class="list-group-item">
+			<b>User Permissions:</b>
+			<!--prettier-ignore-->
+			<% for (let uPermissionI = 0; uPermissionI < command.userPermissions.length; uPermissionI++) { %>
+			<code><%= command.userPermissions[uPermissionI] %></code>
+			<!--prettier-ignore-->
+			<% } %>
+		</li>
+		<% } %> <% if(command.clientPermissions) { %>
+		<li class="list-group-item">
+			<b>Bot Permissions:</b>
+			<!--prettier-ignore-->
+			<% for (let cPermissionI = 0; cPermissionI < command.clientPermissions.length; cPermissionI++) { %>
+			<code><%= command.clientPermissions[cPermissionI] %></code>
+			<!--prettier-ignore-->
+			<% } %>
+		</li>
+		<% } %> <% if(command.nsfw) { %>
+		<li class="list-group-item"><b>NSFW:</b> Yes</li>
+		<% } %> <% if(command.modOnly) { %>
+		<li class="list-group-item"><b>Mod Only:</b> Yes</li>
+		<% } %> <% if(command.ownerOnly) { %>
+		<li class="list-group-item"><b>Owner Only:</b> Yes</li>
+		<% } %>
+		<li class="list-group-item">
+			<b>Usage:</b> <code><%= command.usage %></code>
+		</li>
+	</ul>
 </div>
--->
