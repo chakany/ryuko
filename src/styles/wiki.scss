@@ -1,21 +1,10 @@
 @import "./base.scss";
 
-body {
-	font-size: 0.875rem;
-	font: 1rem/1.5 var(--bs-font-sans-serif);
-	background-color: $body-bg;
-	color: $body-color;
-	overflow-x: hidden;
-	overflow-y: hidden;
-	height: 100vh;
-}
-
-.position-sticky {
-	background-color: $body-bg;
+.container-fluid {
+	margin-top: 2vh;
 }
 
 #sidebarMenu {
-	background-color: $body-bg;
 	padding: 0 !important;
 }
 
@@ -26,6 +15,7 @@ body {
 }
 
 #content-container {
+	margin-top: 2vh;
 	height: 90vh;
 	overflow-y: auto !important;
 }
@@ -53,23 +43,17 @@ body {
 	background-color: $body-bg;
 
 	.nav-link {
-		font-weight: 500;
-		color: $body-color;
-		background-color: $body-bg;
+		padding: 0.4vw;
+		border-radius: 4px;
+		text-decoration: none;
+		cursor: pointer;
+		margin-left: 10px;
+		color: inherit;
 
-		.feather {
-			margin-right: 4px;
-			color: #727272;
-		}
-
-		&:hover,
-		&.active {
+		&:hover {
+			background-color: #3d3d3d;
 			color: $primary-color;
-		}
-
-		&:hover .feather,
-		&.active .feather {
-			color: inherit;
+			transition: 0.3s;
 		}
 	}
 }
@@ -100,8 +84,4 @@ body {
 	.sidebar {
 		top: 5rem;
 	}
-}
-
-.inherit {
-	color: inherit;
 }
