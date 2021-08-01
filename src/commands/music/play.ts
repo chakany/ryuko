@@ -138,9 +138,9 @@ export default class PlayCommand extends Command {
 						);
 						break;
 					case "PLAYLIST_LOADED":
-						guildQueue.tracks = [
-							...response.tracks.map((d) => new ShoukakuTrack(d)),
-						];
+						for (let track of response.tracks) {
+							guildQueue.tracks.push(new ShoukakuTrack(track));
+						}
 						let playlistCount = 0;
 						let playlistDescription = "";
 						for await (let track of response.tracks) {
@@ -238,7 +238,9 @@ export default class PlayCommand extends Command {
 							`\nand **${data?.tracks.length - 6}** more.`;
 					playlistCount++;
 				}
-				guildQueue.tracks = [...data?.tracks];
+				for (let track of data?.tracks) {
+					guildQueue.tracks.push(new ShoukakuTrack(track));
+				}
 				embedToSend.setDescription(playlistDescription);
 			} else if (data?.tracks[0]) {
 				embedToSend.setDescription(`\`${data?.tracks[0].info.title}\``);
