@@ -1,12 +1,21 @@
-$body-bg: #222;
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
+
+$body-bg: #2b2a2a;
 $body-color: white;
 $primary-color: #e22525;
+$navbar-color: #222;
 
 $theme-colors: (
 	primary: $primary-color,
 );
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
+
+html,
+body {
+	font-family: "Inter", sans-serif;
+}
 
 code {
 	color: $primary-color;

@@ -1,38 +1,49 @@
 @import "./base.scss";
 
-#card {
-	padding-left: 15vw;
-	padding-top: 70px;
-	display: flex;
-	align-items: center;
-
-	.avatar {
-		vertical-align: middle;
-	}
-
-	.card-text {
-		vertical-align: middle;
-		padding-left: 30px;
-	}
-
-	#description {
-		padding-top: 10px;
-		font-size: 20px;
-	}
+#container {
+	margin-top: 20px;
 }
 
-#buttons {
+#inspirational {
 	text-align: center;
-	padding-top: 30px;
+	padding-top: 27vh;
 }
 
-#stats {
-	padding-top: 70px;
-	padding-left: 5vw;
+.bot-username {
+	font-family: "Russo One", sans-serif;
+	font-size: 70px;
+	color: $primary-color;
 }
 
-.avatar {
-	border-radius: 50%;
-	border-color: white;
-	border-width: 2x;
+.inspirational-button {
+	margin-top: 10px;
+}
+
+#features {
+	padding: 100px;
+	padding-top: 13vw;
+}
+
+.feature-row {
+	padding-left: 1vw;
+	padding-right: 1vw;
+	text-align: center;
+}
+
+.second-row {
+	justify-content: center;
+}
+
+.card {
+	background-color: $body-bg !important;
+	border-color: #3d3d3d !important;
+}
+
+#bottom-section {
+	padding-top: 10vh;
+	text-align: center;
+}
+
+#bottom-title {
+	font-family: "Russo One", sans-serif;
 }
