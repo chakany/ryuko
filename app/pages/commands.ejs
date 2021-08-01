@@ -9,6 +9,10 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Commands | <%= username %></title>
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
 		<link
 			rel="stylesheet"
 			type="text/css"
@@ -57,7 +61,10 @@
 					<div class="row justify-content-center">
 						<!--prettier-ignore-->
 						<% for(let commandI = 0; commandI < category.length; commandI++) { %>
-						<div id="<%= category[commandI].id %>" class="col-4">
+						<div
+							id="<%= category[commandI].id %>"
+							class="col-md-auto"
+						>
 							<%- include("../components/command.ejs", { command:
 							category[commandI]}) %>
 						</div>
