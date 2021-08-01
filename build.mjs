@@ -152,24 +152,9 @@ async function buildPages() {
 				categories,
 				username: bot.user.username,
 				avatar,
-				prefix: config.prefix,
-				command: null,
 				category: Array.from(category.values()),
 			})
 		);
-
-		for await (let [commandId, command] of category) {
-			fs.writeFile(
-				`./dist/pages/commands/${categoryName}/${commandId}.html`,
-				await ejs.renderFile("./app/pages/commands.ejs", {
-					categories,
-					username: bot.user.username,
-					avatar,
-					prefix: config.prefix,
-					command: command,
-				})
-			);
-		}
 	}
 
 	// Render Wiki
