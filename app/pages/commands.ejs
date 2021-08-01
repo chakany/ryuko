@@ -4,102 +4,75 @@
 		head.innerHTML +
 		`<meta property="og:url" content="${window.location.href}" />`;
 </script>
-<head>
-	<meta charset="utf-8" />
-	<title>Commands | <%= username %></title>
-	<link rel="stylesheet" type="text/css" href="/static/styles/commands.css" />
-	<link rel="shortcut icon" type="image/webp" href="<%= avatar %>" />
-	<meta property="og:title" content="Commands" />
-	<meta property="og:site_name" content="<%= username %>" />
-	<meta property="og:type" content="website" />
-	<meta property="og:image" content="<%= avatar %>" />
-	<meta
-		property="og:description"
-		content="Commands List for the <%= username %> Discord Bot"
-	/>
-</head>
-<body>
-	<%- include("../components/header.ejs") %>
-	<script>
-		document.getElementById("navbar-commands-link").classList.add("active");
-	</script>
-	<div class="container-fluid">
-		<div class="row">
-			<nav
-				id="sidebarMenu"
-				class="
-					sidebar-sticky
-					col-md-3 col-lg-2
-					d-md-block
-					sidebar
-					collapse
-				"
-			>
-				<div class="position-sticky pt-3">
-					<% for( let i = 0; i < categories.length; i++ ) { %> <%
-					if(categories[i][0]) { %>
-					<h6
-						class="
-							sidebar-heading
-							d-flex
-							justify-content-between
-							align-items-center
-							px-3
-							mt-4
-							mb-1
-							text-muted
-						"
-					>
-						<span
-							><a
-								href="/commands/<%= categories[i][0].categoryID %>"
-								style="color: inherit; text-decoration: none"
-								><%= categories[i][0].categoryID %></a
-							></span
-						>
-						<a
-							class="link-secondary"
-							href="#"
-							aria-label="Add a new report"
-						>
-							<span data-feather="plus-circle"></span>
-						</a>
-					</h6>
-					<ul class="nav flex-column mb-2">
-						<% for( let index = 0; index < categories[i].length;
-						index++ ) { %>
-						<li class="nav-item">
-							<!--
-                                Don't worry, the onclick still works, and this doesn't break anything despite what your
-                                IDE says.
-                            -->
-							<a
-								class="nav-link command-button"
-								href="/commands/<%= categories[i][index].categoryID %>/<%= categories[i][index].id %>"
-							>
-								<span data-feather="file-text"></span>
-								<%=
-								categories[i][index].aliases[0].charAt(0).toUpperCase()
-								+ categories[i][index].aliases[0].slice(1) %>
-							</a>
-						</li>
-						<% } %>
-					</ul>
-					<% } %> <% } %>
-				</div>
-			</nav>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Commands | <%= username %></title>
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="/static/styles/commands.css"
+		/>
+		<link rel="shortcut icon" type="image/webp" href="<%= avatar %>" />
+		<meta property="og:title" content="Commands" />
+		<meta property="og:site_name" content="<%= username %>" />
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="<%= avatar %>" />
+		<meta
+			property="og:description"
+			content="Commands List for the <%= username %> Discord Bot"
+		/>
+	</head>
+	<body>
+		<%- include("../components/header.ejs") %>
+		<script>
+			document
+				.getElementById("nav-commands-button")
+				.classList.add("active");
+		</script>
+		<div class="container">
+			<h1>Commands</h1>
 
-			<main
-				id="content-container"
-				class="col-md-9 ms-sm-auto col-lg-10 px-md-4"
-			>
-				<!-- prettier-ignore -->
-				<% if (!command) { %>
-					<%- include('../components/category.ejs') %>
-				<% } else { %>
-					<%- include('../components/command.ejs') %>
-				<% } %>
-			</main>
+			<div id="categories">
+				<div id="category-buttons">
+					<!--prettier-ignore-->
+					<% for(let categoryI = 0; categoryI < categories.length; categoryI++) { %>
+					<a
+						id="<%= categories[categoryI][0].categoryID %>-button"
+						class="category-link"
+						href="/commands/<%= categories[categoryI][0].categoryID %>"
+						><%= categories[categoryI][0].categoryID %></a
+					>
+					<% } %>
+					<script>
+						document
+							.getElementById(
+								"<%= category[0].categoryID %>-button"
+							)
+							.classList.add("active");
+					</script>
+				</div>
+				<div id="commands">
+					<div class="row justify-content-center">
+						<!--prettier-ignore-->
+						<% for(let commandI = 0; commandI < category.length; commandI++) { %>
+						<div
+							id="<%= category[commandI].id %>"
+							class="col-md-auto"
+						>
+							<%- include("../components/command.ejs", { command:
+							category[commandI]}) %>
+						</div>
+						<% } %>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
-</body>
+		<%- include("../components/footer.ejs") %>
+	</body>
+</html>

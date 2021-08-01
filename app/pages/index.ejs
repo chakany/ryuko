@@ -19,40 +19,157 @@
 		<meta property="og:site_name" content="<%= username %>" />
 		<meta property="og:type" content="website" />
 		<meta property="og:image" content="<%= avatar %>" />
-		<meta
-			property="og:description"
-			content="Homepage for the <%= username %> Discord Bot"
-		/>
+		<meta property="og:description" content="<%= username %> Homepage" />
 	</head>
 	<body>
 		<%- include("../components/header.ejs") %>
 		<script>
-			document.getElementById("navbar-home-link").classList.add("active");
+			document.getElementById("nav-home-button").classList.add("active");
 		</script>
-		<div id="container">
-			<div id="card">
-				<img src="<%= avatar %>" class="avatar" />
-				<h1 class="card-text"><%= username %></br><div id="description">A Utility bot with Verification, Music, Tickets, a Starboard, and more.
-</div></h1>
+		<div id="container" class="container-fluid">
+			<div id="inspirational">
+				<h1 class="bot-username"><%=username %></h1>
+				<h3>
+					A Utility bot with Verification, Music, Tickets, a
+					Starboard, and more.
+				</h3>
+				<a href="/wiki" class="btn btn-outline-primary inspirational-button"
+					>Read Wiki</a
+				>
+				<a
+					href="<%= invite %>"
+					class="btn btn-primary inspirational-button"
+					>Invite to Server</a
+				>
+				<a
+					href="<%= support %>"
+					class="btn btn-outline-primary inspirational-button"
+					>Get Support</a
+				>
 			</div>
 
-			<div id="buttons">
-				<a href="<%= invite %>" class="btn btn-primary" type="button"
-				>Add to Discord</a
-			> 
-			<a href="/commands" class="btn btn-primary" type="button"
-				>View all Commands</a
-			>
-			<a href="/wiki" class="btn btn-primary" type="button"
-				>Read the Wiki</a
-			> 
-			<a href="<%= support %>" class="btn btn-primary" type="button"
-				>Get Support</a
-			>
-			
+			<div id="features">
+				<h1>Features</h1>
+				<hr />
+				<div class="row feature-row justify-content-center">
+					<div class="col col-lg-2">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Verification</h5>
+								<p class="card-text">
+									Ensure that new Members are human, and
+									identify alternate accounts.
+								</p>
+								<a
+									href="/wiki/Features/Verification"
+									class="btn btn-primary"
+									>Learn More</a
+								>
+							</div>
+						</div>
+					</div>
+					<div class="col col-lg-2">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Moderation</h5>
+								<p class="card-text">
+									Purge Messages, Mute Members, Ban Members,
+									Kick Members, and more.
+								</p>
+								<a
+									href="/wiki/Features/Moderation"
+									class="btn btn-primary"
+									>Learn More</a
+								>
+							</div>
+						</div>
+					</div>
+					<div class="col col-lg-2">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Tickets</h5>
+								<p class="card-text">
+									Easily handle support tickets in private
+									channels with your Members & Support Team.
+								</p>
+								<a
+									href="/wiki/Features/Ticketing"
+									class="btn btn-primary"
+									>Learn More</a
+								>
+							</div>
+						</div>
+					</div>
+					<div class="col col-lg-2">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Logging</h5>
+								<p class="card-text">
+									Log events in your server cleanly with
+									embeds that show everything.
+								</p>
+								<a
+									href="/wiki/Features/Logging"
+									class="btn btn-primary"
+									>Learn More</a
+								>
+							</div>
+						</div>
+					</div>
+					<div class="col col-lg-2">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Starboard</h5>
+								<p class="card-text">
+									React with a ⭐! Great for "pinning"
+									messages into a special channel.
+								</p>
+								<a
+									href="/wiki/Features/Starboard"
+									class="btn btn-primary"
+									>Learn More</a
+								>
+							</div>
+						</div>
+					</div>
+				</div>
+			</br>
+				<div class="row feature-row justify-content-center">
+					<div class="col col-lg-2">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">XP</h5>
+								<p class="card-text">
+									A fun way to measure Member activity in your
+									Server!
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col col-lg-2">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Economy</h5>
+								<p class="card-text">
+									A basic economy system that runs on Coins!
+									Earn coins from recieving them from other
+									Members, Trivia, and more!
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="bottom-section">
+					<h1 id="bottom-title">What are you waiting for?</h1>
+					<h4>Add <%= username %> to your Server today!</h4>
+					<a
+					href="<%= invite %>"
+					class="btn btn-primary inspirational-button"
+					>Invite to Server</a
+				>
+				</div>
 			</div>
-			
-			<%- include("../components/footer.ejs") %>
 		</div>
+		<%- include("../components/footer.ejs") %>
 	</body>
 </html>

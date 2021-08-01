@@ -1,16 +1,43 @@
 @import "./base.scss";
 
-.navbar {
-	text-align: left;
+#navbar {
+	display: flex;
+	justify-content: center;
+	padding-top: 1vh;
+	padding-bottom: 1vh;
+	padding-left: 5vw;
+	padding-right: 5vw;
+	align-items: center;
+	background-color: $navbar-color;
 }
 
-.navbar-dark {
-	background-color: $body-bg;
+.header-avatar {
+	width: 9vh;
+	height: 9vh;
+	border-radius: 50%;
+	border-width: 2px;
+	margin-right: 10px;
+	cursor: pointer;
 }
 
-.navbar-brand {
-	img {
-		width: 35px;
-		border-radius: 50%;
+#links {
+	margin-left: 50vw;
+}
+
+.navbar-item {
+	padding: 0.4vw;
+	border-radius: 4px;
+	text-decoration: none;
+	cursor: pointer;
+	margin-left: 10px;
+
+	&:hover {
+		background-color: #3d3d3d;
+		color: $primary-color;
+		transition: 0.3s;
 	}
+}
+
+.active {
+	color: $primary-color;
 }

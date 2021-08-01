@@ -1,11 +1,13 @@
 @import "./base.scss";
 
-body {
-	text-align: center;
+.container {
+	margin-top: 20vh;
+	margin-bottom: 35vh;
 }
 
 #code {
 	font-size: 100px;
+	font-family: "Russo One", sans-serif;
 }
 
 #description {

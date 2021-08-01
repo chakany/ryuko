@@ -1,8 +1,79 @@
+@import "./base.scss";
+
 .footer {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	text-align: center !important;
-	width: 100%;
-	padding-bottom: 15px;
+	display: flex;
+	padding: 1.5vw;
+	background-color: $navbar-color;
+	justify-content: space-between;
+}
+
+#branding {
+	display: flex;
+	align-items: center;
+	vertical-align: middle;
+}
+
+.footer-avatar {
+	border-width: 2px;
+	border-radius: 50%;
+	vertical-align: middle;
+	width: 6vw;
+	height: 6vw;
+}
+
+.footer-username {
+	vertical-align: middle;
+	font-family: "Russo One", sans-serif;
+	font-size: 2vw;
+	padding-left: 1vw;
+	margin-bottom: 0;
+	text-decoration: none;
+
+	&:hover {
+		color: $primary-color;
+		transition: 0.3s;
+		cursor: pointer;
+	}
+}
+
+#credits {
+	display: table-cell;
+	vertical-align: middle;
+	margin-bottom: 0;
+}
+
+.author {
+	font-family: "Russo One", sans-serif;
+	line-height: 200px;
+	font-size: 2vw;
+}
+
+#wrappingText {
+	color: inherit;
+	text-decoration: none;
+}
+
+#name {
+	text-decoration: none;
+
+	&:hover {
+		color: $primary-color;
+		transition: 0.3s;
+		cursor: pointer;
+	}
+}
+
+@media screen and (max-width: 800px) {
+	#credits {
+		display: none;
+	}
+
+	.footer-username {
+		font-size: 6vw;
+	}
+
+	.footer-avatar {
+		width: 10vw;
+		height: 10vw;
+	}
 }
