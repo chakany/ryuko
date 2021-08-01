@@ -20,13 +20,16 @@
 </head>
 <body>
 	<%- include("../components/header.ejs") %>
-	<h1 id="code"><%= code %></h1>
-	<p id="description"><%= description %></p>
-	<button
-		type="button"
-		class="btn btn-primary"
-		onclick="window.history.back()"
-	>
-		Go Back
-	</button>
+	<div class="container">
+		<h1 id="code"><%= code %></h1>
+		<p id="description"><%= description %></p>
+		<button
+			type="button"
+			class="btn btn-primary"
+			onclick="window.history.back()"
+		>
+			Go Back
+		</button>
+	</div>
+	<%- include("../components/footer.ejs") %>
 </body>
