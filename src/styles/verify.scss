@@ -1,13 +1,9 @@
 @import "./base.scss";
 
-body {
-	font-size: 0.875rem;
-	font: 1rem/1.5 var(--bs-font-sans-serif);
-	background-color: $body-bg;
-	color: $body-color;
-	overflow-x: hidden;
-	overflow-y: hidden;
+.container {
 	text-align: center;
+	margin-top: 10vh;
+	margin-bottom: 40vh;
 }
 
 #captcha-container {
@@ -20,6 +16,6 @@ body {
 	display: inline-block;
 }
 
-#container {
-	padding-top: 25px;
+.bigtitle {
+	font-family: "Russo One", sans-serif;
 }
