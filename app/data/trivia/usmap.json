@@ -1,266 +1,257 @@
-{
-	"title": "usmap",
-	"description": "United States Map Trivia",
-	"questions": [
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/nj.png",
-			"answer": ["New Jersey", "Jersey", "NJ"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/pa.png",
-			"answer": ["Pennsylvania", "PA"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ny.png",
-			"answer": ["New York", "NY"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/de.png",
-			"answer": ["Delaware", "DE"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/md.png",
-			"answer": ["Maryland", "MD"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/va.png",
-			"answer": ["Virgina", "VA"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/nc.png",
-			"answer": ["North Carolina", "NC"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/sc.png",
-			"answer": ["South Carolina", "SC"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ga.png",
-			"answer": ["Georgia", "GA"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/fl.png",
-			"answer": ["Florida", "FL"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ct.png",
-			"answer": ["Connecticut", "CT"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ri.png",
-			"answer": ["Rhode Island", "RI"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ma.png",
-			"answer": ["Massachusetts", "MA"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/vt.png",
-			"answer": ["Vermont", "VT"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/nh.png",
-			"answer": ["New Hampshire", "NH"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/me.png",
-			"answer": ["Maine", "ME"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/me.png",
-			"answer": ["Maine", "ME"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/dc.png",
-			"answer": [
-				"Washington, D.C.",
-				"Washington DC",
-				"Washington D.C.",
-				"DC"
-			]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/tn.png",
-			"answer": ["Tennessee", "TN"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ky.png",
-			"answer": ["Kentucky", "KY"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/wv.png",
-			"answer": ["West Virginia", "WV"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/oh.png",
-			"answer": ["Ohio", "OH"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/in.png",
-			"answer": ["Indiana", "IN"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/mi.png",
-			"answer": ["Minnesota", "MI"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ms.png",
-			"answer": ["Mississippi", "MS"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/la.png",
-			"answer": ["Louisiana", "LA"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ar.png",
-			"answer": ["Arkansas", "AR"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/mo.png",
-			"answer": ["Missouri", "MO"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/il.png",
-			"answer": ["Illinois", "IL"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ia.png",
-			"answer": ["Iowa", "IA"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/wi.png",
-			"answer": ["Wisconsin", "WI"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/mn.png",
-			"answer": ["Minnesota", "MN"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/nd.png",
-			"answer": ["North Dakota", "ND"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/sd.png",
-			"answer": ["South Dakota", "SD"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ne.png",
-			"answer": ["Nebraska", "NE"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ks.png",
-			"answer": ["Kansas", "KS"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ok.png",
-			"answer": ["Oklahoma", "OK"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/tx.png",
-			"answer": ["Texas", "TX"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/nm.png",
-			"answer": ["New Mexico", "NM"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/co.png",
-			"answer": ["Colorado", "CO"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/wy.png",
-			"answer": ["Wyoming", "WY"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/mt.png",
-			"answer": ["Montana", "MT"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/id.png",
-			"answer": ["Idaho", "ID"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ut.png",
-			"answer": ["Utah", "UT"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/az.png",
-			"answer": ["Arizona", "AZ"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/nv.png",
-			"answer": ["Nevada", "NV"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/or.png",
-			"answer": ["Oregon", "OR"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/wa.png",
-			"answer": ["Washington", "WA"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ca.png",
-			"answer": ["California", "CA"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/hi.png",
-			"answer": ["Hawaii", "HI"]
-		},
-		{
-			"question": "What State is This?",
-			"image": "/static/img/trivia/usmap/ak.png",
-			"answer": ["Alaska", "AK"]
-		}
-	]
-}
+[
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/nj.png",
+		"answer": ["New Jersey", "Jersey", "NJ"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/pa.png",
+		"answer": ["Pennsylvania", "PA"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ny.png",
+		"answer": ["New York", "NY"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/de.png",
+		"answer": ["Delaware", "DE"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/md.png",
+		"answer": ["Maryland", "MD"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/va.png",
+		"answer": ["Virgina", "VA"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/nc.png",
+		"answer": ["North Carolina", "NC"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/sc.png",
+		"answer": ["South Carolina", "SC"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ga.png",
+		"answer": ["Georgia", "GA"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/fl.png",
+		"answer": ["Florida", "FL"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ct.png",
+		"answer": ["Connecticut", "CT"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ri.png",
+		"answer": ["Rhode Island", "RI"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ma.png",
+		"answer": ["Massachusetts", "MA"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/vt.png",
+		"answer": ["Vermont", "VT"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/nh.png",
+		"answer": ["New Hampshire", "NH"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/me.png",
+		"answer": ["Maine", "ME"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/me.png",
+		"answer": ["Maine", "ME"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/dc.png",
+		"answer": ["Washington, D.C.", "Washington DC", "Washington D.C.", "DC"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/tn.png",
+		"answer": ["Tennessee", "TN"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ky.png",
+		"answer": ["Kentucky", "KY"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/wv.png",
+		"answer": ["West Virginia", "WV"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/oh.png",
+		"answer": ["Ohio", "OH"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/in.png",
+		"answer": ["Indiana", "IN"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/mi.png",
+		"answer": ["Minnesota", "MI"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ms.png",
+		"answer": ["Mississippi", "MS"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/la.png",
+		"answer": ["Louisiana", "LA"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ar.png",
+		"answer": ["Arkansas", "AR"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/mo.png",
+		"answer": ["Missouri", "MO"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/il.png",
+		"answer": ["Illinois", "IL"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ia.png",
+		"answer": ["Iowa", "IA"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/wi.png",
+		"answer": ["Wisconsin", "WI"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/mn.png",
+		"answer": ["Minnesota", "MN"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/nd.png",
+		"answer": ["North Dakota", "ND"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/sd.png",
+		"answer": ["South Dakota", "SD"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ne.png",
+		"answer": ["Nebraska", "NE"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ks.png",
+		"answer": ["Kansas", "KS"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ok.png",
+		"answer": ["Oklahoma", "OK"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/tx.png",
+		"answer": ["Texas", "TX"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/nm.png",
+		"answer": ["New Mexico", "NM"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/co.png",
+		"answer": ["Colorado", "CO"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/wy.png",
+		"answer": ["Wyoming", "WY"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/mt.png",
+		"answer": ["Montana", "MT"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/id.png",
+		"answer": ["Idaho", "ID"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ut.png",
+		"answer": ["Utah", "UT"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/az.png",
+		"answer": ["Arizona", "AZ"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/nv.png",
+		"answer": ["Nevada", "NV"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/or.png",
+		"answer": ["Oregon", "OR"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/wa.png",
+		"answer": ["Washington", "WA"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ca.png",
+		"answer": ["California", "CA"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/hi.png",
+		"answer": ["Hawaii", "HI"]
+	},
+	{
+		"question": "What State is This?",
+		"image": "/static/img/trivia/usmap/ak.png",
+		"answer": ["Alaska", "AK"]
+	}
+]

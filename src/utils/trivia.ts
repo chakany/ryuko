@@ -17,7 +17,7 @@ interface Topic {
 }
 
 export default class Trivia {
-	public topics: Collection<string, Topic>;
+	public topics: Collection<string, Question[]>;
 
 	constructor(dir: string) {
 		this.topics = new Collection();
@@ -27,18 +27,16 @@ export default class Trivia {
 		files.forEach((file) => {
 			const topic = require(path.resolve(__dirname, dir, file));
 
-			topic.questions.forEach((question: Question) => {
+			topic.forEach((question: Question) => {
 				if (question.image) question.image = siteUrl + question.image;
 			});
 
-			this.topics.set(topic.title, topic);
+			this.topics.set(file.replace(".json", ""), topic);
 		});
 	}
 
 	public getQuestion(name: string): Question | null {
-		const questions = this.topics.find(
-			(topic) => topic.title.toLowerCase() == name.toLowerCase()
-		)?.questions;
+		const questions = this.topics.get(name);
 
 		return questions
 			? questions[Math.floor(Math.random() * questions.length)]
