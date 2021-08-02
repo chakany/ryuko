@@ -18,6 +18,17 @@ body {
 	font-family: "Inter", sans-serif;
 }
 
+.card {
+	background-color: $body-bg !important;
+	border-color: $lighter-accent !important;
+
+	&:hover {
+		cursor: auto;
+		box-shadow: 0 6px 40px rgb(0 0 0 / 0.2);
+		transition-duration: 0.3s;
+	}
+}
+
 code {
 	color: $primary-color;
 	background-color: $body-accent;
