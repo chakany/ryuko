@@ -6,7 +6,7 @@
 }
 
 #category-buttons {
-	background-color: $navbar-color;
+	background-color: $body-accent;
 	border-radius: 4px;
 	padding: 0.5vh;
 }
@@ -19,7 +19,7 @@
 	border-radius: 2px;
 
 	&:hover {
-		background-color: #3d3d3d;
+		background-color: $lighter-accent;
 		color: $primary-color;
 		transition: 0.3s;
 	}
@@ -41,7 +41,7 @@
 
 .card {
 	background-color: $body-bg !important;
-	border-color: #3d3d3d !important;
+	border-color: $lighter-accent !important;
 
 	&:hover {
 		cursor: auto;
@@ -52,6 +52,6 @@
 
 .list-group-item {
 	background-color: $body-bg !important;
-	border-color: #3d3d3d !important;
+	border-color: $lighter-accent !important;
 	color: $body-color !important;
 }

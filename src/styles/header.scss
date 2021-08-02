@@ -8,7 +8,7 @@
 	padding-left: 5vw;
 	padding-right: 5vw;
 	align-items: center;
-	background-color: $navbar-color;
+	background-color: $body-accent;
 }
 
 .header-avatar {
@@ -32,7 +32,7 @@
 	margin-left: 10px;
 
 	&:hover {
-		background-color: #3d3d3d;
+		background-color: $lighter-accent;
 		color: $primary-color;
 		transition: 0.3s;
 	}
