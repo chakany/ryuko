@@ -18,6 +18,10 @@ body {
 	font-family: "Inter", sans-serif;
 }
 
+::selection {
+	background: $primary-color;
+}
+
 .card {
 	background-color: $body-bg !important;
 	border-color: $lighter-accent !important;
