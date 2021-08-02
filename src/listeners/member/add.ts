@@ -85,9 +85,9 @@ export default class MemberAddListener extends Listener {
 				return logChannel.send(
 					new MessageEmbed({
 						title: "Member Joined",
-						description: `They are the ${
+						description: `They are member #${
 							member.guild!.memberCount
-						}th member!`,
+						}!`,
 						thumbnail: {
 							url: member.user.displayAvatarURL({
 								dynamic: true,
