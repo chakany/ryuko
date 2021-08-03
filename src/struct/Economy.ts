@@ -1,5 +1,5 @@
 import path from "path";
-import Db from "./db";
+import Db from "../utils/db";
 import { Op } from "sequelize";
 
 interface Item {

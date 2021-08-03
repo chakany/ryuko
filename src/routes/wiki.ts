@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import Wiki from "../utils/wiki";
+import Wiki from "../struct/Wiki";
 
 const { prefix } = require("../../config.json");
 
