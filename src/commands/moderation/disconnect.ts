@@ -1,6 +1,6 @@
 import { Argument } from "discord-akairo";
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message, MessageEmbed, GuildMember } from "discord.js";
 
 export default class DisconnectCommand extends Command {
 	constructor() {
@@ -13,8 +13,8 @@ export default class DisconnectCommand extends Command {
 
 			args: [
 				{
-					id: "user",
-					type: Argument.product("memberMention", "string"),
+					id: "member",
+					type: "member",
 				},
 				{
 					id: "reason",
@@ -27,7 +27,7 @@ export default class DisconnectCommand extends Command {
 
 	exec(message: Message, args: any): any {
 		// Check if the user is valid
-		if (!args.user)
+		if (!args.member)
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -36,10 +36,9 @@ export default class DisconnectCommand extends Command {
 					"You must provide a user to disconnect!"
 				)
 			);
-		const victim = args.user[0];
 
 		// Checks if the user is in a voice channel
-		if (!victim.voice.channel)
+		if (!args.member.voice.channel)
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -49,10 +48,10 @@ export default class DisconnectCommand extends Command {
 				)
 			);
 
-		const oldChannel = args.user[0].voice.channel;
-		victim.voice.setChannel(null);
+		const oldChannel = args.member.voice.channel;
+		args.member.voice.setChannel(null);
 		const sendEmbed = new MessageEmbed({
-			title: "You have been disconnected by a mod",
+			title: "Disconnected",
 			color: message.guild?.me?.displayHexColor,
 			timestamp: new Date(),
 			footer: {
@@ -64,7 +63,7 @@ export default class DisconnectCommand extends Command {
 			fields: [
 				{
 					name: "From",
-					value: "`" + oldChannel.name + "`",
+					value: oldChannel,
 					inline: true,
 				},
 				{
@@ -72,18 +71,15 @@ export default class DisconnectCommand extends Command {
 					value: message.author,
 					inline: true,
 				},
+				{
+					name: "Reason",
+					value: args.reason
+						? `\`${args.reason}\``
+						: "No reason given",
+				},
 			],
 		});
-		if (args.reason)
-			sendEmbed.addField(
-				"Reason",
-				"`" +
-					message.util!.parsed?.content?.replace(args.user[1], "") +
-					"`",
-				true
-			);
-		else sendEmbed.addField("Reason", "None Provided", true);
-		victim.user.send(sendEmbed);
+		args.member.user.send(sendEmbed);
 
 		const logchannel = this.client.settings.get(
 			message.guild!.id,
@@ -98,7 +94,7 @@ export default class DisconnectCommand extends Command {
 		const logEmbed = new MessageEmbed({
 			title: "Disconnection",
 			thumbnail: {
-				url: victim.user.displayAvatarURL({
+				url: args.member.user.displayAvatarURL({
 					dynamic: true,
 				}),
 			},
@@ -112,24 +108,23 @@ export default class DisconnectCommand extends Command {
 				},
 				{
 					name: "Member",
-					value: victim,
+					value: args.member,
 					inline: true,
 				},
 				{
 					name: "Disconnected By",
 					value: message.member,
+					inline: true,
+				},
+				{
+					name: "Reason",
+					value: args.reason
+						? `\`${args.reason}\``
+						: "No reason given",
 				},
 			],
 		});
-		if (args.reason)
-			logEmbed.addField(
-				"Reason",
-				"`" +
-					message.util!.parsed?.content?.replace(args.user[1], "") +
-					"`",
-				true
-			);
-		else logEmbed.addField("Reason", "None Provided", true);
+
 		return (
 			// @ts-ignore
 			this.client.channels.cache

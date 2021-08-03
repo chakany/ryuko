@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message, MessageEmbed, GuildMember } from "discord.js";
 
 export default class MoveCommand extends Command {
 	constructor() {
@@ -9,10 +9,9 @@ export default class MoveCommand extends Command {
 			description: "Unmute a member",
 			clientPermissions: ["MANAGE_ROLES"],
 			userPermissions: ["MANAGE_ROLES"],
-
 			args: [
 				{
-					id: "user",
+					id: "member",
 					type: "member",
 				},
 			],
@@ -21,7 +20,7 @@ export default class MoveCommand extends Command {
 	}
 
 	exec(message: Message, args: any): any {
-		if (!args.user)
+		if (!args.member)
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -32,7 +31,7 @@ export default class MoveCommand extends Command {
 			);
 
 		const mutedMembers = this.client.jobs.get(message.guild!.id);
-		if (!mutedMembers?.get(args.user.id))
+		if (!mutedMembers?.get(args.member.id))
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -60,18 +59,21 @@ export default class MoveCommand extends Command {
 				)
 			);
 
-		args.user.roles.remove(message.guild?.roles.cache.get(muteRole));
-		mutedMembers.get(args.user.id)?.cancel();
-		mutedMembers.delete(args.user.id);
+		args.member.roles.remove(message.guild?.roles.cache.get(muteRole));
+		mutedMembers.get(args.member.id)?.cancel();
+		mutedMembers.delete(args.member.id);
 
 		this.client.jobs.set(message.guild!.id, mutedMembers);
 
-		this.client.db.unpunishMember(args.user.id, message.guild!.id, "mute");
+		this.client.db.unpunishMember(
+			args.member.id,
+			message.guild!.id,
+			"mute"
+		);
 
 		message.channel.send(
 			new MessageEmbed({
 				title: "Member Unmuted",
-				description: `Successfully unmuted ${args.user}`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
 				footer: {
@@ -83,7 +85,7 @@ export default class MoveCommand extends Command {
 				fields: [
 					{
 						name: "Unmuted",
-						value: args.user,
+						value: args.member,
 						inline: true,
 					},
 					{
@@ -112,7 +114,9 @@ export default class MoveCommand extends Command {
 						title: "Member Unmuted",
 						color: message.guild?.me?.displayHexColor,
 						thumbnail: {
-							url: args.user.displayAvatarURL({
+							url: (<GuildMember>(
+								args.member
+							)).user.displayAvatarURL({
 								dynamic: true,
 							}),
 						},
@@ -120,7 +124,7 @@ export default class MoveCommand extends Command {
 						fields: [
 							{
 								name: "Unmuted",
-								value: args.user,
+								value: args.member,
 								inline: true,
 							},
 							{

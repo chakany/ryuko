@@ -6,7 +6,7 @@ export default class AnalCommand extends Command {
 	constructor() {
 		super("anal", {
 			aliases: ["anal"],
-			description: "See Ass",
+			description: "See Anal",
 			category: "NSFW",
 			nsfw: true,
 		});

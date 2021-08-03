@@ -43,7 +43,8 @@ export default class VolumeCommand extends Command {
 					"You have to be in the voice channel to change the volume!"
 				)
 			);
-		const oldVolume = serverQueue.player.volume;
+		const volume = args.volume / 100;
+		const oldVolume = serverQueue.player.filters.volume * 100;
 		if (!args.volume || typeof args.volume !== "number")
 			return message.channel.send(
 				new MessageEmbed({
@@ -59,7 +60,7 @@ export default class VolumeCommand extends Command {
 					},
 				})
 			);
-		if (args.volume > 100)
+		if (volume > 100)
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -68,20 +69,7 @@ export default class VolumeCommand extends Command {
 					"You cannot set a volume greater than 100!"
 				)
 			);
-		serverQueue.player.setVolume(args.volume);
-		await this.client.settings
-			.set(message.guild!.id, "volume", args.volume)
-			.catch((error) => {
-				this.client.log.error(error);
-				return message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"An error occurred",
-						"Note that the value you set has not been saved in permanent storage. It is probably too loud, Try setting a lower volume."
-					)
-				);
-			});
+		serverQueue.player.setVolume(volume);
 		return message.channel.send(
 			new MessageEmbed({
 				title: `Volume Changed!`,

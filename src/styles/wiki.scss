@@ -51,7 +51,7 @@
 		color: inherit;
 
 		&:hover {
-			background-color: #3d3d3d;
+			background-color: $lighter-accent;
 			color: $primary-color;
 			transition: 0.3s;
 		}

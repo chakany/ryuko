@@ -211,6 +211,43 @@ export default class Db extends Sequelize {
 		});
 	}
 
+	async getAllMutes(memberId: string, guildId: string): Promise<any> {
+		return this.punishments.findAll({
+			where: {
+				memberId,
+				guildId,
+				type: "mute",
+			},
+			order: [["createdAt", "DESC"]],
+		});
+	}
+
+	warnMember(
+		memberId: string,
+		guildId: string,
+		adminId: string,
+		reason = ""
+	): Promise<any> {
+		return this.punishments.create({
+			memberId,
+			guildId,
+			type: "warn",
+			adminId,
+			reason,
+		});
+	}
+
+	getAllWarns(memberId: string, guildId: string): Promise<any> {
+		return this.punishments.findAll({
+			where: {
+				memberId,
+				guildId,
+				type: "warn",
+			},
+			order: [["createdAt", "DESC"]],
+		});
+	}
+
 	async muteUser(
 		guildId: string,
 		type: string,

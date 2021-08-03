@@ -17,7 +17,7 @@ export default class PurgeCommand extends Command {
 					type: "number",
 				},
 				{
-					id: "user",
+					id: "member",
 					type: "member",
 				},
 			],
@@ -26,7 +26,7 @@ export default class PurgeCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		const victim = args.user;
+		const victim = args.member;
 		const count = args.count;
 
 		if (!count)

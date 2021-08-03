@@ -42,11 +42,11 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 		},
 		reason: {
 			type: DataTypes.STRING,
-			allowNull: false,
+			allowNull: true,
 		},
 		expires: {
 			type: DataTypes.DATE,
-			allowNull: false,
+			allowNull: true,
 		},
 	});
 }
