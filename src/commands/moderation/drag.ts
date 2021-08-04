@@ -99,7 +99,6 @@ export default class DragCommand extends Command {
 							{
 								name: "Member",
 								value: args.member,
-								inline: true,
 							},
 							{
 								name: "Dragged By",

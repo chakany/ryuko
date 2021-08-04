@@ -42,7 +42,7 @@ export default class MuteCommand extends Command {
 				)
 			);
 
-		if (!args.length[0])
+		if (!args.length[1])
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -61,9 +61,6 @@ export default class MuteCommand extends Command {
 					"You must provide a reason!"
 				)
 			);
-		const reason = message.util!.parsed!.content!.split(
-			`${args.length[1]} `
-		)[1];
 
 		const modRole = this.client.settings.get(
 			message.guild!.id,
@@ -141,7 +138,7 @@ export default class MuteCommand extends Command {
 						}),
 						inline: true,
 					},
-					{ name: "Reason", value: reason },
+					{ name: "Reason", value: `\`${args.reason}\`` },
 				],
 			})
 		);
@@ -190,7 +187,7 @@ export default class MuteCommand extends Command {
 			"mute",
 			args.member.id,
 			message.author.id,
-			reason,
+			args.reason,
 			args.length[0]
 		);
 
@@ -235,7 +232,7 @@ export default class MuteCommand extends Command {
 								}),
 								inline: true,
 							},
-							{ name: "Reason", value: reason },
+							{ name: "Reason", value: `\`${args.reason}\`` },
 						],
 					})
 				);

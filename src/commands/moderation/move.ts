@@ -87,7 +87,6 @@ export default class MoveCommand extends Command {
 						{
 							name: "Member",
 							value: args.member,
-							inline: true,
 						},
 						{
 							name: "Moved by",
