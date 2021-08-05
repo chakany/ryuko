@@ -31,7 +31,7 @@ export default class FilterCommand extends Command {
 				message.channel.send(
 					new MessageEmbed({
 						title: "Filter Subcommands",
-						description: `See more information on the [Moderation Wiki](${this.client.config.siteUrl}/wiki/Features/Moderation)`,
+						description: `See more information on the [Moderation Wiki](${this.client.config.siteUrl}/wiki/Features/Moderation#filter)`,
 						color: message.guild?.me?.displayHexColor,
 						timestamp: new Date(),
 						footer: {
