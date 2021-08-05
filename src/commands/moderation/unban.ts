@@ -116,7 +116,7 @@ export default class UnbanCommand extends Command {
 						null
 					)
 				)
-			)).send(
+			))?.send(
 				new MessageEmbed({
 					title: "Member Unbanned",
 					thumbnail: {

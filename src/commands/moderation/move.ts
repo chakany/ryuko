@@ -63,7 +63,7 @@ export default class MoveCommand extends Command {
 						null
 					)
 				)
-			)).send(
+			))?.send(
 				new MessageEmbed({
 					title: "Member Moved",
 					thumbnail: {

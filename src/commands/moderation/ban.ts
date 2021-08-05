@@ -143,7 +143,7 @@ export default class BanCommand extends Command {
 						null
 					)
 				)
-			)).send(
+			))?.send(
 				new MessageEmbed({
 					title: "Member Banned",
 					thumbnail: {
