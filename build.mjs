@@ -158,7 +158,7 @@ async function buildPages() {
 	}
 
 	// Render Wiki
-	const Wiki = require("./dist/utils/wiki").default;
+	const Wiki = require("./dist/struct/Wiki").default;
 	const wiki = new Wiki(path.resolve("./app/wiki"));
 
 	for await (const category of wiki.categories) {
