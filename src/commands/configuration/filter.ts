@@ -241,7 +241,7 @@ export default class FilterCommand extends Command {
 						fields: [
 							{
 								name: "Phrase",
-								value: second_arg,
+								value: `\`${second_arg}\``,
 							},
 						],
 					})
@@ -275,7 +275,7 @@ export default class FilterCommand extends Command {
 							fields: [
 								{
 									name: "Phrase",
-									value: second_arg,
+									value: `\`${second_arg}\``,
 								},
 								{
 									name: "Added By",
@@ -330,7 +330,7 @@ export default class FilterCommand extends Command {
 						fields: [
 							{
 								name: "Phrase",
-								value: second_arg,
+								value: `\`${second_arg}\``,
 							},
 						],
 					})
@@ -364,7 +364,7 @@ export default class FilterCommand extends Command {
 							fields: [
 								{
 									name: "Phrase",
-									value: second_arg,
+									value: `\`${second_arg}\``,
 								},
 								{
 									name: "Removed By",
