@@ -251,6 +251,42 @@ export default class Db extends Sequelize {
 		});
 	}
 
+	async hasPhrase(guildId: string, phrase: string): Promise<boolean> {
+		const found = await this.filteredPhrases.findOne({
+			where: {
+				guildId,
+				phrase,
+			},
+		});
+
+		if (found && found.phrase == phrase) return true;
+		else return false;
+	}
+
+	addPhrase(guildId: string, phrase: string): Promise<any> {
+		return this.filteredPhrases.create({
+			guildId,
+			phrase,
+		});
+	}
+
+	removePhrase(guildId: string, phrase: string): Promise<any> {
+		return this.filteredPhrases.destroy({
+			where: {
+				guildId,
+				phrase,
+			},
+		});
+	}
+
+	getFilteredPhrases(guildId: string): Promise<any> {
+		return this.filteredPhrases.findAll({
+			where: {
+				guildId,
+			},
+		});
+	}
+
 	async muteUser(
 		guildId: string,
 		type: string,
