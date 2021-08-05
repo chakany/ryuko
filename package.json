@@ -37,6 +37,7 @@
 		"zx": "^2.0.0"
 	},
 	"dependencies": {
+		"aki-api": "^6.0.5",
 		"axios": "^0.21.1",
 		"bcrypt": "^5.0.1",
 		"body-parser": "^1.19.0",

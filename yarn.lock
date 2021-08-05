@@ -270,6 +270,15 @@ agent-base@6:
   dependencies:
     debug "4"
 
+aki-api@^6.0.5:
+  version "6.0.5"
+  resolved "https://registry.yarnpkg.com/aki-api/-/aki-api-6.0.5.tgz#ab21e68b630a38602a7a294361faafb06989cfe0"
+  integrity sha512-E7UZy0Hq+3H2+ho1gSaXGfbQ2iI0YodvnJbHnMxCOPjUWHQClH57Sli56g6exMa47TDKFhq7mzJcz8MoZUFG5g==
+  dependencies:
+    axios "^0.21.1"
+    https-proxy-agent "^5.0.0"
+    typescript next
+
 ansi-regex@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-2.1.1.tgz#c3b33ab5ee360d86e0e628f0468ae7ef27d654df"
@@ -2465,6 +2474,11 @@ typescript@^4.2.3, typescript@^4.3.5:
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"
   integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==
+
+typescript@next:
+  version "4.4.0-dev.20210805"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.0-dev.20210805.tgz#482e51059c09f8226f96b9be536f7cca5d13ed87"
+  integrity sha512-eOWuLJKiSWo1xXB+3EVuxS23wJmuelKq/xYVYUfkygXTuP99s7cCVUgUBQrGO450YR21+dVxm/nSiEiVtf1MAg==
 
 universalify@^0.1.0:
   version "0.1.2"
