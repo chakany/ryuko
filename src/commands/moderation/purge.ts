@@ -118,7 +118,7 @@ export default class PurgeCommand extends Command {
 			message.author.displayAvatarURL({ dynamic: true })
 		);
 
-		(<TextChannel>this.client.channels.cache.get(logchannel)).send(
+		(<TextChannel>this.client.channels.cache.get(logchannel))?.send(
 			purgeEmbed
 		);
 

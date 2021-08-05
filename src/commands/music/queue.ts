@@ -35,7 +35,7 @@ export default class QueueCommand extends Command {
 				if (index == 0 && !serverQueue.tracks[1])
 					return "**Nothing else in the Queue**";
 				else if (index == 0) return;
-				else return `**${index}:** \`${song.info.title}\``;
+				else return `**${index}.** \`${song.info.title}\``;
 			})
 			.setPage(1)
 			.setPageIndicator(true);

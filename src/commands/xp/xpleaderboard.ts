@@ -23,7 +23,7 @@ export default class XpLeaderboardCommand extends Command {
 				return `**${
 					levels.findIndex((s: any) => s.memberId === user.memberId) +
 					1
-				}:** ${
+				}.** ${
 					message.guild!.members.cache.get(user.memberId) ||
 					"CANNOT_FIND"
 				} \`${user.xp}\` XP; Level \`${user.level}\``;

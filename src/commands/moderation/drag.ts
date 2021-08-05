@@ -75,7 +75,7 @@ export default class DragCommand extends Command {
 			this.client.channels.cache
 				.get(logchannel)
 				// @ts-ignore
-				.send(
+				?.send(
 					new MessageEmbed({
 						title: "Drag",
 						color: message.guild?.me?.displayHexColor,
@@ -99,7 +99,6 @@ export default class DragCommand extends Command {
 							{
 								name: "Member",
 								value: args.member,
-								inline: true,
 							},
 							{
 								name: "Dragged By",

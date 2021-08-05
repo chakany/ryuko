@@ -52,3 +52,32 @@ This will be given to members when they are muted by a moderator, and when they 
     <li>Create a Special "Muted" Role, at least take away the "Send Messages" permission.</li>
     <li>Run the <code><%= prefix %>muterole &lt;role&gt;</code> command. This will save the role into the Database, be automatically assigned to members when they are muted.</li>
 </ol>
+
+</br>
+<h3 id="filter">Setting up the Word Filter</h3>
+The filter is configurable, and allows for Server Administrators, as well as Moderators to add to it, remove from it, enable, or disable it.
+
+To setup the Filter, use the <code
+	><a  href="/commands/Configuration/filter"
+		><%= prefix %>filter</a
+	></code
+> command.
+
+</br> </br>
+
+<h4>Setup</h4>
+<ol>
+	<li>Enable the filter with <code><%= prefix %>filter enable</code>, this will turn it on, but with no phrases added to it!</li>
+	<li>Add phrases to the filter with <code><%= prefix %>filter add &lt;phrase&gt;</code>, this will add the phrase into the filter, and will automatically delete a message that contains this phrase.</li>
+</ol>
+Congratulations! You have just set up the filter!
+
+</br> </br>
+<h4>Subcommands</h4>
+<ul>
+	<li><code>enable</code> Enable the Filter</li>
+	<li><code>disable</code> Disable the Filter</li>
+	<li><code>list</code> List all Phrases in the Filter</li>
+	<li><code>add &lt;phrase&gt;</code> Add a Phrase to the Filter</li>
+	<li><code>remove &lt;phrase&gt;</code> Remove a Phrase from the Filter</li>
+</ul>

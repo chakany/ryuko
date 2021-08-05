@@ -105,7 +105,7 @@ export default class KickCommand extends Command {
 						null
 					)
 				)
-			)).send(
+			))?.send(
 				new MessageEmbed({
 					title: "Member Kicked",
 					thumbnail: {

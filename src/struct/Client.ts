@@ -17,8 +17,8 @@ import Command from "./Command";
 
 import Db from "../utils/db";
 import Redis from "../utils/redis";
-import Trivia from "../utils/trivia";
-import Economy from "../utils/economy";
+import Trivia from "./Trivia";
+import Economy from "./Economy";
 import { generateUsage } from "../utils/command";
 
 const config = require("../../config.json");
@@ -215,19 +215,11 @@ export default class RyukoClient extends AkairoClient {
 	}
 
 	_setupShoukakuEvents() {
-		let log: bunyan;
-
-		if (process.env.NODE_ENV !== "production")
-			log = bunyan.createLogger({
-				name: "lavalink",
-				stream: process.stdout,
-				level: "debug",
-			});
-		else
-			log = bunyan.createLogger({
-				name: "lavalink",
-				stream: process.stdout,
-			});
+		const log = bunyan.createLogger({
+			name: "lavalink",
+			stream: process.stdout,
+			level: process.env.NODE_ENV !== "production" ? "debug" : "info",
+		});
 
 		this.shoukaku.on("ready", (name) => log.info(`[${name}] Connected.`));
 		this.shoukaku.on("error", (name, error) =>

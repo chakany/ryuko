@@ -130,7 +130,7 @@ export default class DisconnectCommand extends Command {
 			this.client.channels.cache
 				.get(logchannel)
 				// @ts-ignore
-				.send(logEmbed)
+				?.send(logEmbed)
 		);
 	}
 }

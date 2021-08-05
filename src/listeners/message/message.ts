@@ -10,10 +10,11 @@ export default class MessageListener extends Listener {
 	}
 
 	async exec(message: Message) {
+		if (message.author.bot) return;
+
 		if (
 			message.channel.type == "dm" &&
-			message.content.startsWith(this.client.config.prefix) &&
-			!message.author.bot
+			message.content.startsWith(this.client.config.prefix)
 		)
 			return message.channel.send(
 				new MessageEmbed({
@@ -61,38 +62,62 @@ export default class MessageListener extends Listener {
 		if (message.partial) await message.fetch();
 		this.client.commandHandler.handle(message);
 
-		if (!message.author.bot) {
-			if (
-				!this.client.settings.get(
-					message.guild!.id,
-					"someDumbFuckingSetting",
-					null
-				)
-			)
-				this.client.settings.set(
-					message.guild!.id,
-					"someDumbFuckingSetting",
-					true
-				);
-
-			const level = await this.client.db.addXp(
-				message.author.id,
+		if (
+			!this.client.settings.get(
 				message.guild!.id,
-				10
+				"someDumbFuckingSetting",
+				null
+			)
+		)
+			this.client.settings.set(
+				message.guild!.id,
+				"someDumbFuckingSetting",
+				true
 			);
 
-			if (typeof level == "number") {
-				const shouldLevelMessage = this.client.settings.get(
-					message.guild!.id,
-					"levelUpMessage",
-					false
+		// Test against filter
+		if (this.client.settings.get(message.guild!.id, "filter", false)) {
+			const filteredPhrases = await this.client.db.getFilteredPhrases(
+				message.guild!.id
+			);
+
+			const phrases = filteredPhrases.map((col: any) => col.phrase);
+
+			if (phrases.length) {
+				const regex = new RegExp(
+					`^(.*?(${phrases.join("|")})[^$]*)$`,
+					"gim"
 				);
 
-				if (shouldLevelMessage) {
-					message.channel.send(
-						`Congrats ${message.author}, you leveled up to level ${level}!`
+				if (regex.test(message.content)) {
+					message.delete({ reason: "Contains filtered word" });
+					message.author.send(
+						`Please do not use filtered words in **${
+							message.guild!.name
+						}**!`
 					);
 				}
+			}
+		}
+
+		// Run XP
+		const level = await this.client.db.addXp(
+			message.author.id,
+			message.guild!.id,
+			10
+		);
+
+		if (typeof level == "number") {
+			const shouldLevelMessage = this.client.settings.get(
+				message.guild!.id,
+				"levelUpMessage",
+				false
+			);
+
+			if (shouldLevelMessage) {
+				message.channel.send(
+					`Congrats ${message.author}, you leveled up to level ${level}!`
+				);
 			}
 		}
 	}

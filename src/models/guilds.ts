@@ -68,6 +68,10 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 		starboardChannel: {
 			type: DataTypes.STRING,
 		},
+		filter: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
 		someDumbFuckingSetting: {
 			type: DataTypes.BOOLEAN,
 		},

@@ -101,7 +101,7 @@ export default class WarnCommand extends Command {
 						null
 					)
 				)
-			)).send(
+			))?.send(
 				new MessageEmbed({
 					title: "Member Warned",
 					color: message.guild?.me?.displayHexColor,

@@ -63,7 +63,7 @@ export default class MoveCommand extends Command {
 						null
 					)
 				)
-			)).send(
+			))?.send(
 				new MessageEmbed({
 					title: "Member Moved",
 					thumbnail: {
@@ -87,7 +87,6 @@ export default class MoveCommand extends Command {
 						{
 							name: "Member",
 							value: args.member,
-							inline: true,
 						},
 						{
 							name: "Moved by",
