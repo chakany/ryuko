@@ -83,8 +83,6 @@ export default class MessageListener extends Listener {
 
 			const phrases = filteredPhrases.map((col: any) => col.phrase);
 
-			console.log(phrases);
-
 			if (phrases.length) {
 				const regex = new RegExp(
 					`^(.*?(${phrases.join("|")})[^$]*)$`,

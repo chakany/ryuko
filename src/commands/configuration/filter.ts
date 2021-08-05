@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Argument } from "discord-akairo";
+import { FieldsEmbed } from "discord-paginationembed";
 import { Message, MessageEmbed, TextChannel } from "discord.js";
 
 export default class FilterCommand extends Command {
@@ -48,6 +48,10 @@ export default class FilterCommand extends Command {
 							{
 								name: "`disable`",
 								value: "Disable the Filter",
+							},
+							{
+								name: "`list`",
+								value: "List all Phrases in the Filter",
 							},
 							{
 								name: "`add <phrase>`",
@@ -164,6 +168,36 @@ export default class FilterCommand extends Command {
 							],
 						})
 					);
+				break;
+			case "list":
+				const phrases = await this.client.db.getFilteredPhrases(
+					message.guild!.id
+				);
+
+				const phraseEmbed = new FieldsEmbed()
+					.setArray(phrases)
+					.setChannel(<TextChannel>message.channel)
+					.setAuthorizedUsers([message.author.id])
+					.setElementsPerPage(10)
+					.formatField("Phrases", (phrase: any) => {
+						return `\`${phrase.phrase}\``;
+					})
+					.setPage(1)
+					.setPageIndicator(true);
+
+				phraseEmbed.embed
+					.setColor(message.guild!.me!.displayHexColor)
+					.setTitle(`${message.guild!.name} Filtered Phrases`)
+					.setThumbnail(
+						message.guild!.iconURL({ dynamic: true }) || ""
+					)
+					.setTimestamp(new Date())
+					.setFooter(
+						message.author.tag,
+						message.author.displayAvatarURL({ dynamic: true })
+					);
+
+				await phraseEmbed.build();
 				break;
 			case "add":
 				if (!second_arg)
