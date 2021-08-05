@@ -83,18 +83,22 @@ export default class MessageListener extends Listener {
 
 			const phrases = filteredPhrases.map((col: any) => col.phrase);
 
-			const regex = new RegExp(
-				`^(.*?(${phrases.join("|")})[^$]*)$`,
-				"gim"
-			);
+			console.log(phrases);
 
-			if (regex.test(message.content)) {
-				message.delete({ reason: "Contains filtered word" });
-				message.author.send(
-					`Please do not use filtered words in **${
-						message.guild!.name
-					}**!`
+			if (phrases.length) {
+				const regex = new RegExp(
+					`^(.*?(${phrases.join("|")})[^$]*)$`,
+					"gim"
 				);
+
+				if (regex.test(message.content)) {
+					message.delete({ reason: "Contains filtered word" });
+					message.author.send(
+						`Please do not use filtered words in **${
+							message.guild!.name
+						}**!`
+					);
+				}
 			}
 		}
 
