@@ -16,7 +16,6 @@ import moment from "moment";
 import Command from "./Command";
 
 import Db from "../utils/db";
-import Redis from "../utils/redis";
 import Trivia from "./Trivia";
 import Economy from "./Economy";
 import { generateUsage } from "../utils/command";
@@ -43,7 +42,6 @@ interface Queue {
 declare module "discord-akairo" {
 	interface AkairoClient {
 		db: Db;
-		redis: Redis;
 		commandHandler: CommandHandler;
 		starboardMessages: Collection<string, Message>;
 		config: any;
@@ -69,7 +67,6 @@ declare module "discord-akairo" {
 
 export default class RyukoClient extends AkairoClient {
 	public db: Db;
-	public redis: Redis;
 	public config: any;
 	public emoji: any;
 	public generateUsage: Function;
@@ -107,11 +104,6 @@ export default class RyukoClient extends AkairoClient {
 
 		this.db = new Db();
 		this.economy = new Economy("../../app/data", this.db);
-		const redislog = bunyan.createLogger({ name: "redis" });
-		this.redis = new Redis(redislog);
-		this.redis.on("error", (error: any) => {
-			redislog.error(error);
-		});
 		this.settings = this.db.getSettings();
 
 		this.shoukaku = new Shoukaku(this, config.lavalink, ShoukakuOptions);

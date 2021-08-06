@@ -6,10 +6,10 @@ const { redis } = require("../../config.json");
 export default class Redis extends driver {
 	private log: bunyan;
 
-	constructor(log: bunyan) {
+	constructor() {
 		super(redis);
 
-		this.log = log;
+		this.log = bunyan.createLogger({ name: "redis" });
 	}
 
 	async addNewVerification(
@@ -19,7 +19,7 @@ export default class Redis extends driver {
 		key: string
 	) {
 		return this.pipeline()
-			.hset(`verification:${key}`, {
+			.hmset(`verification:${key}`, {
 				guildId,
 				userId,
 				level,

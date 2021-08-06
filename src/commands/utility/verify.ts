@@ -3,6 +3,7 @@ import { Message, MessageEmbed, TextChannel } from "discord.js";
 import crypto from "crypto";
 import ms from "ms";
 import moment from "moment";
+import myRedis from "../../utils/redis";
 
 export default class VerifyCommand extends Command {
 	constructor() {
@@ -60,15 +61,17 @@ export default class VerifyCommand extends Command {
 			"low"
 		);
 
+		const redis = new myRedis();
+
 		const key = crypto.randomBytes(4).toString("hex");
-		this.client.redis.addNewVerification(
+		redis.addNewVerification(
 			message.guild!.id,
 			message.author.id,
 			level,
 			key
 		);
 
-		this.client.redis.subscribe(`verification-${key}`);
+		redis.subscribe(`verification-${key}`);
 
 		let sentMessage: Message;
 		try {
@@ -82,8 +85,8 @@ export default class VerifyCommand extends Command {
 					.unix()}:R>`
 			);
 		} catch (error) {
-			await this.client.redis.unsubscribe(`verification-${key}`);
-			this.client.redis.removeVerification(key);
+			await redis.unsubscribe(`verification-${key}`);
+			redis.removeVerification(key);
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -180,7 +183,7 @@ export default class VerifyCommand extends Command {
 										null
 									)
 								)
-							)).send(
+							))?.send(
 								new MessageEmbed({
 									title: "Member Verification Failed",
 									description:
@@ -257,7 +260,7 @@ export default class VerifyCommand extends Command {
 											null
 										)
 									)
-								)).send(
+								))?.send(
 									new MessageEmbed({
 										title: "Member Verification Failed",
 										description:
@@ -321,7 +324,7 @@ export default class VerifyCommand extends Command {
 											null
 										)
 									)
-								)).send(
+								))?.send(
 									new MessageEmbed({
 										title: "Member Verified",
 										thumbnail: {
@@ -378,7 +381,7 @@ export default class VerifyCommand extends Command {
 										null
 									)
 								)
-							)).send(
+							))?.send(
 								new MessageEmbed({
 									title: "Member Verified",
 									thumbnail: {
@@ -399,15 +402,15 @@ export default class VerifyCommand extends Command {
 				}
 			}
 			completed = true;
-			this.client.redis.removeListener("message", miCallback);
-			return this.client.redis.unsubscribe(`verification-${key}`);
+			redis.removeListener("message", miCallback);
+			return redis.unsubscribe(`verification-${key}`);
 		};
 
 		setTimeout(() => {
-			this.client.redis.removeListener("message", miCallback);
-			this.client.redis.unsubscribe(`verification-${key}`);
+			redis.removeListener("message", miCallback);
+			redis.unsubscribe(`verification-${key}`);
 		}, 600000);
 
-		return this.client.redis.on("message", miCallback);
+		return redis.on("message", miCallback);
 	}
 }
