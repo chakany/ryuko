@@ -24,7 +24,6 @@ const {
 } = require("../config.json");
 let log = bunyan.createLogger({ name: "shardmanager" });
 let weblog = bunyan.createLogger({ name: "webserver" });
-let redislog = bunyan.createLogger({ name: "redis" });
 
 let manager: ShardingManager;
 let redis: Redis;
@@ -72,7 +71,7 @@ void (async function () {
 
 		// redis check
 		await new Promise((resolve) => {
-			redis = new Redis(redislog);
+			redis = new Redis();
 			redis.on("error", (err) => {
 				if (!rediserror)
 					checkStatus.push({ redis: colors.red("Failed") });
@@ -141,7 +140,7 @@ void (async function () {
 		}
 		// redis check
 		await new Promise((resolve) => {
-			redis = new Redis(redislog);
+			redis = new Redis();
 			redis.on("error", (err) => {
 				if (!rediserror)
 					checkStatus.push({ redis: colors.red("Failed") });
