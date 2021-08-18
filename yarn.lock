@@ -218,10 +218,10 @@
     "@types/mime" "^1"
     "@types/node" "*"
 
-"@types/steamid@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@types/steamid/-/steamid-1.1.0.tgz#116bbf24030153675ad0085ee8656a2b0aa350f3"
-  integrity sha512-gwO3A+roHuUZdrPj8LVcgZcl/xmAIhssuXl8hEvD2/s51mvpuMJa4bAGcGXSps4k4E5pkj3nKMlP/3YbP3vCMg==
+"@types/steamid@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/steamid/-/steamid-2.0.0.tgz#940231e429041474e289aca5267d5588a145c9cf"
+  integrity sha512-t/prmxiR7lV9Z1FwPQv56VpWELUSRuqBkvfAhwJYnVdM17qP2TiXybIoaQ9DwXi5722USXvZyv/VioVPln9YgA==
 
 "@types/strip-bom@^3.0.0":
   version "3.0.0"
