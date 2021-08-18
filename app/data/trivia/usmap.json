@@ -81,11 +81,6 @@
 	},
 	{
 		"question": "What State is This?",
-		"image": "/static/img/trivia/usmap/me.png",
-		"answer": ["Maine", "ME"]
-	},
-	{
-		"question": "What State is This?",
 		"image": "/static/img/trivia/usmap/dc.png",
 		"answer": ["Washington, D.C.", "Washington DC", "Washington D.C.", "DC"]
 	},
@@ -117,7 +112,7 @@
 	{
 		"question": "What State is This?",
 		"image": "/static/img/trivia/usmap/mi.png",
-		"answer": ["Minnesota", "MI"]
+		"answer": ["Michigan", "MI"]
 	},
 	{
 		"question": "What State is This?",
