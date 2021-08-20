@@ -63,7 +63,7 @@
 		"qrcode": "^1.4.4",
 		"reddit-grabber": "^2.1.0",
 		"sequelize": "^6.6.5",
-		"shoukaku": "2.0.1",
+		"shoukaku": "1.6.5",
 		"spotify-url-info": "^2.2.3",
 		"steamid": "^2.0.0",
 		"topgg-autoposter": "^2.0.0",

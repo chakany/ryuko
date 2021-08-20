@@ -4,7 +4,7 @@ import { Message, GuildMember } from "discord.js";
 export default class DoasCommand extends Command {
 	constructor() {
 		super("doas", {
-			aliases: ["doas"],
+			aliases: ["doas", "sudo"],
 			description: "Run a command as another member",
 			category: "Owner",
 			ownerOnly: true,
