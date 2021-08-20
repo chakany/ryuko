@@ -42,7 +42,7 @@ export default class MuteCommand extends Command {
 				)
 			);
 
-		if (!args.length[1])
+		if (!args.length || !args.length[1])
 			return message.channel.send(
 				this.client.error(
 					message,
