@@ -53,7 +53,7 @@ export default class MutesCommand extends Command {
 					mute.adminId
 				}>; **${duration.humanize()}**; <t:${created.unix()}:f>; ${
 					mute.reason ? `\`${mute.reason}\`` : "No Reason Provided"
-				}`;
+				}${mute.unpunished ? `; **Unmuted**` : ""}`;
 			})
 			.setPage(1)
 			.setPageIndicator(true);

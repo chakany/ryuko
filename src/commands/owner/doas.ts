@@ -1,10 +1,10 @@
 import Command from "../../struct/Command";
 import { Message, GuildMember } from "discord.js";
 
-export default class SudoCommand extends Command {
+export default class DoasCommand extends Command {
 	constructor() {
-		super("sudo", {
-			aliases: ["sudo"],
+		super("doas", {
+			aliases: ["doas", "sudo"],
 			description: "Run a command as another member",
 			category: "Owner",
 			ownerOnly: true,
