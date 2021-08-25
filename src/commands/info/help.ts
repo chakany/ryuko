@@ -40,7 +40,7 @@ export default class HelpCommand extends Command {
 		if (!input || typeof input == "string") {
 			const embed = new MessageEmbed({
 				title: `${this.client.user!.username}'s Commands`,
-				url: `${this.client.config.siteUrl}/commands/${this.handler.categories[0].id}`,
+				url: `${this.client.config.siteUrl}/commands/${this.handler.categories[0][0].categoryID}`,
 				description: `Run \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} <category>\` to see all commands in a category.\nRun \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} <command>\` to view information about a command.\n\nNeed help? Join my [Support Server](${this.client.config.supportInvite} "Join support server") or read my [Wiki](${this.client.config.siteUrl}/wiki "Read Wiki")`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
