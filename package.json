@@ -1,6 +1,6 @@
 {
 	"name": "ryuko",
-	"version": "1.6.11",
+	"version": "1.6.12",
 	"main": "dist/index.js",
 	"repository": "https://github.com/jacany/ryuko",
 	"scripts": {
