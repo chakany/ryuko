@@ -40,7 +40,9 @@ export default class HelpCommand extends Command {
 		if (!input || typeof input == "string") {
 			const embed = new MessageEmbed({
 				title: `${this.client.user!.username}'s Commands`,
-				url: `${this.client.config.siteUrl}/commands`,
+				url: `${
+					this.client.config.siteUrl
+				}/commands/${this.handler.categories.firstKey()}`,
 				description: `Run \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} <category>\` to see all commands in a category.\nRun \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} <command>\` to view information about a command.\n\nNeed help? Join my [Support Server](${this.client.config.supportInvite} "Join support server") or read my [Wiki](${this.client.config.siteUrl}/wiki "Read Wiki")`,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
@@ -49,6 +51,9 @@ export default class HelpCommand extends Command {
 					icon_url: message.author.displayAvatarURL({
 						dynamic: true,
 					}),
+				},
+				image: {
+					url: "https://camo.githubusercontent.com/f7fd8d93e6f7a4ccba321076f2599b0390d13bbbe621adfe8af15d908b36a822/68747470733a2f2f692e696d6775722e636f6d2f336e79336d387a2e6a7067",
 				},
 			});
 			for (const [name, category] of this.handler.categories) {
@@ -70,7 +75,7 @@ export default class HelpCommand extends Command {
 					input.aliases[0].charAt(0).toUpperCase() +
 					input.aliases[0].slice(1)
 				} Command`,
-				url: `${this.client.config.siteUrl}/commands/${input.categoryID}/${input.id}`,
+				url: `${this.client.config.siteUrl}/commands/${input.categoryID}#${input.id}`,
 				description: input.description,
 				color: message.guild?.me?.displayHexColor,
 				timestamp: new Date(),
