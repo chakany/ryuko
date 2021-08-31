@@ -170,18 +170,14 @@ export default class Db extends Sequelize {
 	}
 
 	async getGuildXp(guildId: string): Promise<any> {
-		try {
-			const results: any[] = await this.guildXp.findAll({
-				where: {
-					guildId,
-				},
-				attributes: ["memberId", "level", "xp"],
-			});
+		const results: any[] = await this.guildXp.findAll({
+			where: {
+				guildId,
+			},
+			attributes: ["memberId", "level", "xp"],
+		});
 
-			return results?.sort((a, b) => b.xp - a.xp);
-		} catch (error) {
-			throw new Error(error);
-		}
+		return results?.sort((a, b) => b.xp - a.xp);
 	}
 
 	async getCurrentUserPunishments(

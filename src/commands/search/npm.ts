@@ -88,7 +88,7 @@ export default class NpmCommand extends Command {
 				],
 			});
 			return message.channel.send(embed);
-		} catch (error) {
+		} catch (error: any) {
 			if (error.message == "Request failed with status code 404")
 				return message.channel.send(
 					this.client.error(
@@ -98,15 +98,7 @@ export default class NpmCommand extends Command {
 						"I could not find that package!"
 					)
 				);
-			this.client.log.error(error);
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"An error occurred",
-					error.message
-				)
-			);
+			throw error;
 		}
 	}
 }

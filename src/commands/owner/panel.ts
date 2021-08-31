@@ -197,7 +197,7 @@ export default class PanelCommand extends Command {
 						})
 					);
 					listMessage.edit(embed);
-				} catch (error) {
+				} catch (error: any) {
 					this.client.log.error(error);
 					message.channel.send(
 						this.client.error(
@@ -354,7 +354,7 @@ export default class PanelCommand extends Command {
 					},
 				})
 			);
-		} catch (error) {
+		} catch (error: any) {
 			this.client.log.error(error);
 			message.channel.send(
 				this.client.error(
