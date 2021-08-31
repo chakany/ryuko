@@ -1,13 +1,12 @@
 import express from "express";
 import axios from "axios";
 import bcrypt from "bcrypt";
-import { User } from "discord.js";
 
 import Db from "../utils/db";
 
 const db = new Db();
 
-import { manager, weblog, redis, user } from "../index";
+import { redis, user } from "../index";
 
 const {
 	clientID,
@@ -26,37 +25,29 @@ interface TokenResponse {
 }
 
 async function getTokens(code: any): Promise<TokenResponse> {
-	try {
-		const req = await axios.post(
-			"https://discord.com/api/oauth2/token",
-			new URLSearchParams({
-				client_id: clientID,
-				client_secret: clientSecret,
-				code,
-				grant_type: "authorization_code",
-				redirect_uri: `${siteUrl}/verify`,
-				scope: "identify",
-			})
-		);
-		return req.data;
-	} catch (error) {
-		throw new Error(error);
-	}
+	const req = await axios.post(
+		"https://discord.com/api/oauth2/token",
+		new URLSearchParams({
+			client_id: clientID,
+			client_secret: clientSecret,
+			code,
+			grant_type: "authorization_code",
+			redirect_uri: `${siteUrl}/verify`,
+			scope: "identify",
+		})
+	);
+	return req.data;
 }
 
 async function checkCaptcha(response: any): Promise<any> {
-	try {
-		const req = await axios.post(
-			"https://www.google.com/recaptcha/api/siteverify",
-			new URLSearchParams({
-				secret: recaptchaSecret,
-				response,
-			})
-		);
-		return req.data;
-	} catch (error) {
-		throw new Error(error);
-	}
+	const req = await axios.post(
+		"https://www.google.com/recaptcha/api/siteverify",
+		new URLSearchParams({
+			secret: recaptchaSecret,
+			response,
+		})
+	);
+	return req.data;
 }
 
 const router = express.Router();
@@ -90,47 +81,37 @@ router.get("/", async (req, res) => {
 		});
 	} else if (req.query.code) {
 		let tokens: TokenResponse;
-		try {
-			tokens = await getTokens(req.query.code);
+		tokens = await getTokens(req.query.code);
 
-			const requestedUser = await axios.get(
-				"https://discord.com/api/users/@me",
-				{
-					headers: {
-						authorization: `${tokens.token_type} ${tokens.access_token}`,
-					},
-				}
-			);
+		const requestedUser = await axios.get(
+			"https://discord.com/api/users/@me",
+			{
+				headers: {
+					authorization: `${tokens.token_type} ${tokens.access_token}`,
+				},
+			}
+		);
 
-			if (requestedUser.data.id !== redisRes.userId)
-				res.render("verify", {
-					verified: false,
-					error: "You signed in with a different account",
-					username: user.username,
-					avatar: user.avatarURL,
-					redirectUri: null,
-				});
-			else
-				res.render("verify", {
-					user: requestedUser.data,
-					verified: false,
-					error: null,
-					siteKey: recaptchaSiteKey,
-					state: req.query.state,
-					id: redisRes.userId,
-					username: user.username,
-					avatar: user.avatarURL,
-					redirectUri: null,
-				});
-		} catch (error) {
-			weblog.error(error);
-			res.status(500).render("error", {
+		if (requestedUser.data.id !== redisRes.userId)
+			res.render("verify", {
+				verified: false,
+				error: "You signed in with a different account",
 				username: user.username,
 				avatar: user.avatarURL,
-				code: 500,
-				description: "Internal Server Error",
+				redirectUri: null,
 			});
-		}
+		else
+			res.render("verify", {
+				user: requestedUser.data,
+				verified: false,
+				error: null,
+				siteKey: recaptchaSiteKey,
+				state: req.query.state,
+				id: redisRes.userId,
+				username: user.username,
+				avatar: user.avatarURL,
+				redirectUri: null,
+			});
 	} else
 		return res.status(400).render("error", {
 			username: user.username,
@@ -149,71 +130,61 @@ router.post("/", async (req, res) => {
 			description: "Bad Request",
 		});
 
-	try {
-		const results = await checkCaptcha(req.body["g-recaptcha-response"]);
+	const results = await checkCaptcha(req.body["g-recaptcha-response"]);
 
-		if (results.success) {
-			let redisRes = await redis.getVerificationKey(req.body.state);
+	if (results.success) {
+		let redisRes = await redis.getVerificationKey(req.body.state);
 
-			const fetchedMember = await db.getMembersByIdentifier(
-				req.cookies._verificationId,
-				req.ip
+		const fetchedMember = await db.getMembersByIdentifier(
+			req.cookies._verificationId,
+			req.ip
+		);
+		const current = new Date();
+		current.setDate(current.getDate() - 14);
+		if (
+			(fetchedMember?.ipAddress &&
+				fetchedMember.cookieId &&
+				!(await bcrypt.compare(
+					req.body.id,
+					fetchedMember?.cookieId
+				))) ||
+			(fetchedMember?.ipAddress == req.ip &&
+				fetchedMember?.id !== req.body.id &&
+				fetchedMember?.verifiedAt > current)
+		) {
+			res.render("verify", {
+				verified: true,
+				error: null,
+				username: user.username,
+				avatar: user.avatarURL,
+				redirectUri: null,
+			});
+			redis.publish(
+				`verification-${req.body.state}`,
+				JSON.stringify({
+					message: "alt",
+					originalAccount: fetchedMember?.id,
+				})
 			);
-			const current = new Date();
-			current.setDate(current.getDate() - 14);
-			if (
-				(fetchedMember?.ipAddress &&
-					fetchedMember.cookieId &&
-					!(await bcrypt.compare(
-						req.body.id,
-						fetchedMember?.cookieId
-					))) ||
-				(fetchedMember?.ipAddress == req.ip &&
-					fetchedMember?.id !== req.body.id &&
-					fetchedMember?.verifiedAt > current)
-			) {
-				res.render("verify", {
-					verified: true,
-					error: null,
-					username: user.username,
-					avatar: user.avatarURL,
-					redirectUri: null,
-				});
-				redis.publish(
-					`verification-${req.body.state}`,
-					JSON.stringify({
-						message: "alt",
-						originalAccount: fetchedMember?.id,
-					})
-				);
-			} else {
-				const salt = await bcrypt.genSalt(10);
-				const hash = await bcrypt.hash(req.body.id, salt);
+		} else {
+			const salt = await bcrypt.genSalt(10);
+			const hash = await bcrypt.hash(req.body.id, salt);
 
-				db.addMember(req.body.id, hash, req.ip!);
-				res.cookie("_verificationId", hash).render("verify", {
-					verified: true,
-					error: null,
-					username: user.username,
-					avatar: user.avatarURL,
-				});
-				redis.publish(
-					`verification-${req.body.state}`,
-					JSON.stringify({
-						message: "verified",
-					})
-				);
-			}
-			redis.removeVerification(req.body.state);
+			db.addMember(req.body.id, hash, req.ip!);
+			res.cookie("_verificationId", hash).render("verify", {
+				verified: true,
+				error: null,
+				username: user.username,
+				avatar: user.avatarURL,
+			});
+			redis.publish(
+				`verification-${req.body.state}`,
+				JSON.stringify({
+					message: "verified",
+				})
+			);
 		}
-	} catch (error) {
-		weblog.error(error);
-		return res.status(500).render("error", {
-			username: user.username,
-			avatar: user.avatarURL,
-			code: 500,
-			description: "Internal Server Error",
-		});
+		redis.removeVerification(req.body.state);
 	}
 });
 
