@@ -4,10 +4,11 @@
 	"main": "dist/index.js",
 	"repository": "https://github.com/jacany/ryuko",
 	"scripts": {
-		"start": "cd dist && cross-env NODE_ENV=production node . | npx bunyan -o short",
-		"dev": "cd src && npx ts-node-dev --transpile-only . | npx bunyan -o short",
-		"format": "yarn prettier --write .",
-		"watch": "npx sass --watch src/styles:app/static/styles",
+		"start": "cd dist && cross-env NODE_ENV=production node . | bunyan -o short",
+		"dev": "cd src && ts-node-dev --transpile-only . | bunyan -o short",
+		"build": "tsc",
+		"format": "prettier --write .",
+		"watch": "sass --watch src/styles:app/static/styles",
 		"postinstall": "patch-package"
 	},
 	"author": "Jack C <jack@chaker.net>",

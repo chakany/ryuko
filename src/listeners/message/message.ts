@@ -99,26 +99,5 @@ export default class MessageListener extends Listener {
 				}
 			}
 		}
-
-		// Run XP
-		const level = await this.client.db.addXp(
-			message.author.id,
-			message.guild!.id,
-			10
-		);
-
-		if (typeof level == "number") {
-			const shouldLevelMessage = this.client.settings.get(
-				message.guild!.id,
-				"levelUpMessage",
-				false
-			);
-
-			if (shouldLevelMessage) {
-				message.channel.send(
-					`Congrats ${message.author}, you leveled up to level ${level}!`
-				);
-			}
-		}
 	}
 }

@@ -4,7 +4,7 @@ import Wiki from "../struct/Wiki";
 
 const { prefix } = require("../../config.json");
 
-import { weblog, user } from "../index";
+import { user } from "../index";
 
 const wiki = new Wiki("../../app/wiki");
 
@@ -25,21 +25,13 @@ router.get("/:category", async function (req, res) {
 			description: "Page Not Found",
 		});
 	else if (!category && page) {
-		if (process.env.NODE_ENV !== "production")
-			return res.render("wiki", {
-				avatar: user.avatarURL,
-				username: user.username,
-				page: path.resolve(wiki.dir, page.file),
-				categories: wiki.categories,
-				prefix,
-			});
-		else
-			return res.sendFile(
-				`${process.cwd()}/pages/wiki/${page.file.replace(
-					".ejs",
-					".html"
-				)}`
-			);
+		return res.render("wiki", {
+			avatar: user.avatarURL,
+			username: user.username,
+			page: path.resolve(wiki.dir, page.file),
+			categories: wiki.categories,
+			prefix,
+		});
 	}
 
 	return res.redirect(`${category!.files[0].file.replace(".ejs", "")}`);
@@ -66,21 +58,13 @@ router.get("/:category/:file", async function (req, res) {
 			description: "Page Not Found",
 		});
 
-	if (process.env.NODE_ENV !== "production")
-		return res.render("wiki", {
-			avatar: user.avatarURL,
-			username: user.username,
-			prefix,
-			page: path.resolve(wiki.dir, category.file, file.file),
-			categories: wiki.categories,
-		});
-	else
-		return res.sendFile(
-			`${process.cwd()}/pages/wiki/${category.file}/${file.file.replace(
-				".ejs",
-				".html"
-			)}`
-		);
+	return res.render("wiki", {
+		avatar: user.avatarURL,
+		username: user.username,
+		prefix,
+		page: path.resolve(wiki.dir, category.file, file.file),
+		categories: wiki.categories,
+	});
 });
 
 export default router;

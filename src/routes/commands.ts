@@ -12,64 +12,40 @@ router.get("/", async function (req, res) {
 });
 
 router.get("/:category", async function (req, res) {
-	if (process.env.NODE_ENV !== "production") {
-		if (
-			!(await (
-				await manager.fetchClientValues("commandHandler.categories")
-			)[0].find(
-				(category: any) =>
-					category[0] &&
-					category[0].categoryID ===
-						req.params.category.charAt(0).toUpperCase() +
-							req.params.category.slice(1)
-			))
-		)
-			return res.sendStatus(404).render("error", {
-				username: user.username,
-				avatar: user.avatarURL,
-				code: 404,
-				description: "Page not Found",
-			});
-
-		res.render("commands", {
-			categories: (
-				await manager.fetchClientValues("commandHandler.categories")
-			)[0],
+	if (
+		!(await (
+			await manager.fetchClientValues("commandHandler.categories")
+		)[0].find(
+			(category: any) =>
+				category[0] &&
+				category[0].categoryID ===
+					req.params.category.charAt(0).toUpperCase() +
+						req.params.category.slice(1)
+		))
+	)
+		return res.sendStatus(404).render("error", {
 			username: user.username,
 			avatar: user.avatarURL,
-			category: await (
-				await manager.fetchClientValues("commandHandler.categories")
-			)[0].find(
-				(category: any) =>
-					category[0] &&
-					category[0].categoryID ===
-						req.params.category.charAt(0).toUpperCase() +
-							req.params.category.slice(1)
-			),
+			code: 404,
+			description: "Page not Found",
 		});
-	} else {
-		if (
-			!(await (
-				await manager.fetchClientValues("commandHandler.categories")
-			)[0].find(
-				(category: any) =>
-					category[0] &&
-					category[0].categoryID ===
-						req.params.category.charAt(0).toUpperCase() +
-							req.params.category.slice(1)
-			))
-		)
-			return res.status(404).render("error", {
-				username: user.username,
-				avatar: user.avatarURL,
-				code: 404,
-				description: "Page not Found",
-			});
 
-		res.sendFile(
-			`${process.cwd()}/pages/commands/${req.params.category.toLowerCase()}/theFuckingIndex123131312.html`
-		);
-	}
+	res.render("commands", {
+		categories: (
+			await manager.fetchClientValues("commandHandler.categories")
+		)[0],
+		username: user.username,
+		avatar: user.avatarURL,
+		category: await (
+			await manager.fetchClientValues("commandHandler.categories")
+		)[0].find(
+			(category: any) =>
+				category[0] &&
+				category[0].categoryID ===
+					req.params.category.charAt(0).toUpperCase() +
+						req.params.category.slice(1)
+		),
+	});
 });
 
 export default router;
