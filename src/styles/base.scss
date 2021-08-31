@@ -42,9 +42,31 @@ code {
 
 a {
 	color: inherit;
+	transition: 0.3s;
 
 	&:hover {
 		color: $primary-color;
 		transition: 0.3s;
+	}
+}
+
+// Scrollbar
+
+*::-webkit-scrollbar {
+	width: 1vh;
+}
+
+*::-webkit-scrollbar-track {
+	background: $body-accent;
+}
+
+*::-webkit-scrollbar-thumb {
+	background: $body-accent;
+
+	border: 1px solid $primary-color;
+	border-radius: 5px;
+
+	&:hover {
+		background: $primary-color;
 	}
 }

@@ -1,6 +1,7 @@
 import Command from "../../struct/Command";
 import { Message, MessageEmbed } from "discord.js";
 import os from "os";
+import ms from "ms";
 
 export default class PingCommand extends Command {
 	constructor() {
@@ -15,13 +16,6 @@ export default class PingCommand extends Command {
 		const arr = [1, 2, 3, 4, 5, 6, 9, 7, 8, 9, 10];
 		arr.reverse();
 		const used = process.memoryUsage().heapUsed / 1024 / 1024;
-		var date = new Date(<number>this.client.uptime);
-		var uptime = "";
-		uptime += date.getUTCDate() - 1 + " days, ";
-		uptime += date.getUTCHours() + " hours, ";
-		uptime += date.getUTCMinutes() + " minutes, ";
-		uptime += date.getUTCSeconds() + " seconds, ";
-		uptime += date.getUTCMilliseconds() + " milliseconds";
 		return message.channel.send(
 			new MessageEmbed({
 				title: `${this.client.user!.username}'s Stats`,
@@ -35,7 +29,7 @@ export default class PingCommand extends Command {
 				},
 				fields: [
 					{
-						name: "Total Guilds",
+						name: "Total Servers",
 						value: `\`${(
 							await this.client.shard!.fetchClientValues(
 								"guilds.cache.size"
@@ -49,14 +43,15 @@ export default class PingCommand extends Command {
 							await this.client.shard!.fetchClientValues(
 								"users.cache.size"
 							)
-						).reduce((acc, guildCount) => acc + guildCount, 0)}\``,
+						).reduce(
+							(acc, memberCount) => acc + memberCount,
+							0
+						)}\``,
 						inline: true,
 					},
 					{
-						name: "Current Shard",
-						value: `\`${message.guild!.shardID + 1}\`/\`${
-							this.client.shard?.count
-						}\``,
+						name: "Total Shards",
+						value: `\`${this.client.shard?.count}\``,
 						inline: true,
 					},
 					{
@@ -66,7 +61,11 @@ export default class PingCommand extends Command {
 						}MB`,
 						inline: true,
 					},
-					{ name: "Uptime", value: uptime, inline: true },
+					{
+						name: "Uptime",
+						value: ms(this.client.uptime!, { long: true }),
+						inline: true,
+					},
 					{
 						name: "Node.js Version",
 						value: `\`${process.version}\``,

@@ -169,6 +169,25 @@
 					>Invite to Server</a
 				>
 				</div>
+
+				<div class="row stat-row justify-content-center">
+					<div class="col stat-col">
+						<h1 class="stat-header"><%= formatNumbers(totalServers) %></h1>
+						<h1 class="stat-header"><%= totalServers > 1 ? "Servers" : "Server" %></h1>
+					</div>
+					<div class="col stat-col">
+						<h1 class="stat-header"><%= formatNumbers(totalUsers) %></h1>
+						<h1 class="stat-header"><%= totalUsers > 1 ? "Members" : "Member" %></h1>
+					</div>
+					<div class="col stat-col">
+						<h1 class="stat-header"><%= formatNumbers(totalChannels) %></h1>
+						<h1 class="stat-header"><%= totalChannels > 1 ? "Channels" : "Channel" %></h1>
+					</div>
+					<div class="col stat-col">
+						<h1 class="stat-header"><%= formatNumbers(totalShards) %></h1>
+						<h1 class="stat-header"><%= totalShards > 1 ? "Shards" : "Shard" %></h1>
+					</div>
+				</div>
 			</div>
 		</div>
 		<%- include("../components/footer.ejs") %>

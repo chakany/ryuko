@@ -1,6 +1,6 @@
 import { ShardingManager } from "discord.js";
 import bunyan from "bunyan";
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import colors from "colors";
 import table from "cli-table";
 import axios from "axios";
@@ -223,6 +223,26 @@ void (async function () {
 							description: "Page Not Found",
 						});
 					});
+
+					app.use(
+						(
+							error: any,
+							req: Request,
+							res: Response,
+							next: NextFunction
+						) => {
+							// Log to console
+							weblog.error(error.stack);
+
+							// Return error page
+							res.status(500).render("error", {
+								username: user.username,
+								avatar: user.avatarURL,
+								code: 500,
+								description: "Internal Server Error",
+							});
+						}
+					);
 
 					app.listen(port, () => {
 						weblog.info(`Bound to port ${port}`);
