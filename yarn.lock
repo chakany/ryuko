@@ -2589,10 +2589,10 @@ unpipe@1.0.0, unpipe@~1.0.0:
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
   integrity sha1-sr9O6FFKrmFltIF4KdIbLvSZBOw=
 
-urban-dictionary@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/urban-dictionary/-/urban-dictionary-3.0.1.tgz#37ac49af76c71fefa38caa3f4e53b152fc5f0b08"
-  integrity sha512-69p3tBrhcwhai/07ki83nncKhdBcYJLnLlfPheZl0XAA/Og+icJGoFBEseee19x6omIUJqd5pUzV/+yVrocRcg==
+urban-dictionary@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/urban-dictionary/-/urban-dictionary-3.0.2.tgz#8028350dfd57e80a17b4fdac1cbc81f0672a38bc"
+  integrity sha512-hoYevSg6JNr8NiYRtxz7sqBDBu4RL52Bd45L2jQQ44Rwrz6ACmnKnRcUkH2TIQRILN+viZMT/MYYU3OyBz68AA==
 
 util-deprecate@~1.0.1:
   version "1.0.2"
