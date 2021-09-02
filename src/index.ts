@@ -1,5 +1,5 @@
 import { ShardingManager } from "discord.js";
-import bunyan from "bunyan";
+import Logger from "./struct/Logger";
 import express, { Request, Response, NextFunction } from "express";
 import colors from "colors";
 import table from "cli-table";
@@ -16,8 +16,8 @@ import verify from "./routes/verify";
 import wiki from "./routes/wiki";
 
 const { token, port, imgApiUrl, topgg_token } = require("../config.json");
-let log = bunyan.createLogger({ name: "shardmanager" });
-let weblog = bunyan.createLogger({ name: "webserver" });
+let log = new Logger({ name: "shardmanager" });
+let weblog = new Logger({ name: "webserver" });
 
 let manager: ShardingManager;
 let redis: Redis;

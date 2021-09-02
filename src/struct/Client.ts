@@ -15,7 +15,7 @@ import {
 } from "discord.js";
 import { Shoukaku, Libraries } from "shoukaku";
 import { LavasfyClient } from "lavasfy";
-import bunyan from "bunyan";
+import Logger from "./Logger";
 import { Job } from "node-schedule";
 import ms from "ms";
 import moment from "moment";
@@ -60,7 +60,7 @@ declare module "discord-akairo" {
 		shoukaku: Shoukaku;
 		lavasfy: LavasfyClient;
 		queue: Collection<string, Queue>;
-		log: bunyan;
+		log: Logger;
 		jobs: Map<string, Map<string, Job>>;
 		invites: Collection<string, any>;
 		sendToLogChannel(
@@ -81,7 +81,7 @@ export default class RyukoClient extends AkairoClient {
 	public shoukaku: Shoukaku;
 	public lavasfy: LavasfyClient;
 	public queue: Collection<string, Queue>;
-	public log: bunyan;
+	public log: Logger;
 	public jobs: Collection<string, Map<string, Job>>;
 	public starboardMessages: Collection<string, Message>;
 	public invites: Collection<string, any>;
@@ -89,7 +89,7 @@ export default class RyukoClient extends AkairoClient {
 	private inhibitorHandler: InhibitorHandler;
 	private listenerHandler: ListenerHandler;
 
-	constructor(log: bunyan) {
+	constructor(log: Logger) {
 		super(
 			{
 				ownerID: config.ownerId,
@@ -226,10 +226,8 @@ export default class RyukoClient extends AkairoClient {
 	}
 
 	_setupShoukakuEvents() {
-		const log = bunyan.createLogger({
+		const log = new Logger({
 			name: "lavalink",
-			stream: process.stdout,
-			level: process.env.NODE_ENV !== "production" ? "debug" : "info",
 		});
 
 		this.shoukaku.on("ready", (name) => log.info(`[${name}] Connected.`));
