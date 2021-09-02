@@ -8,6 +8,7 @@ import punishmentsModel from "../models/punishments";
 import membersModel from "../models/members";
 import transactionsModel from "../models/transactions";
 import filteredPhrasesModel from "../models/filteredPhrases";
+import guildBalancesModel from "../models/guildBalances";
 
 const config = require("../../config.json");
 
@@ -24,6 +25,7 @@ export default class Db extends Sequelize {
 	public members: ModelCtor<any>;
 	public transactions: ModelCtor<any>;
 	public filteredPhrases: ModelCtor<any>;
+	public guildBalances: ModelCtor<any>;
 
 	constructor() {
 		super(config.db.database, config.db.username, config.db.password, {
@@ -39,6 +41,7 @@ export default class Db extends Sequelize {
 		this.members = membersModel(this, config);
 		this.transactions = transactionsModel(this, config);
 		this.filteredPhrases = filteredPhrasesModel(this);
+		this.guildBalances = guildBalancesModel(this);
 	}
 
 	getSettings() {

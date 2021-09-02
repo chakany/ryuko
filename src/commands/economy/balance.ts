@@ -18,10 +18,15 @@ export default class BalanceCommand extends Command {
 	}
 
 	async exec(message: Message, args: any) {
-		const coins = await this.client.economy.getBalance(args.user.id);
+		const coins = await this.client.economy.getBalance(
+			message.guild!.id,
+			args.user.id
+		);
 
 		message.channel.send(
-			`**${args.user.username}'s Current Balance:** ${coins.coins} Coins ${this.client.emoji.coin}`
+			coins
+				? `**${args.user.username}'s Balance:** ${coins.coins} Coins ${this.client.emoji.coin}`
+				: `**${args.user.username}'s Balance:** 0 Coins ${this.client.emoji.coin}`
 		);
 	}
 }

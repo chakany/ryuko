@@ -55,9 +55,14 @@ export default class UsmapCommand extends Command {
 		if (results) {
 			const amount = Math.floor(Math.random() * 200);
 
-			this.client.economy.addCoins(message.author.id, amount);
+			this.client.economy.addCoins(
+				message.guild!.id,
+				message.author.id,
+				amount
+			);
 			this.client.economy.createTransaction(
-				"Trivia",
+				message.guild!.id,
+				this.client.user!.id,
 				message.author.id,
 				amount,
 				"Correct Answer"

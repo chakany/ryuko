@@ -14,9 +14,14 @@ export default class DailyCommand extends Command {
 	async exec(message: Message) {
 		const amount = Math.floor(Math.random() * 500);
 
-		this.client.economy.addCoins(message.author.id, amount);
+		this.client.economy.addCoins(
+			message.guild!.id,
+			message.author.id,
+			amount
+		);
 		this.client.economy.createTransaction(
-			"Daily",
+			message.guild!.id,
+			this.client.user!.id,
 			message.author.id,
 			amount,
 			"Daily Command"

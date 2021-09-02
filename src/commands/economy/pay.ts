@@ -1,10 +1,10 @@
 import Command from "../../struct/Command";
 import { Message, MessageEmbed } from "discord.js";
 
-export default class SendCommand extends Command {
+export default class PayCommand extends Command {
 	constructor() {
-		super("send", {
-			aliases: ["send", "gift"],
+		super("pay", {
+			aliases: ["pay", "send"],
 			description: "Send coins to another user",
 			category: "Economy",
 			args: [
@@ -59,27 +59,37 @@ export default class SendCommand extends Command {
 			});
 		// Get Coins for the executor
 		const executor = await this.client.economy.getBalance(
+			message.guild!.id,
 			message.author.id
 		);
 
 		// Check if we have enough coins for this transaction
-		if (executor.coins < args.amount)
+		if (!executor || executor?.coins < args.amount)
 			return message.channel.send({
 				embeds: [
 					this.error(
 						message,
 						"Insufficient Balance",
-						`You need ${
-							args.amount - executor.coins
-						} more coins to perform this transaction!`
+						`You need **${
+							args.amount - (executor?.coins || 0)
+						}** more coins to perform this transaction!`
 					),
 				],
 			});
 
 		// Update user balances accordingly
-		this.client.economy.addCoins(args.user.id, args.amount);
-		this.client.economy.removeCoins(message.author.id, args.amount);
+		this.client.economy.addCoins(
+			message.guild!.id,
+			args.user.id,
+			args.amount
+		);
+		this.client.economy.removeCoins(
+			message.guild!.id,
+			message.author.id,
+			args.amount
+		);
 		this.client.economy.createTransaction(
+			message.guild!.id,
 			message.author.id,
 			args.user.id,
 			args.amount,

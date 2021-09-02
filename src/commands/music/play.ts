@@ -144,7 +144,7 @@ export default class PlayCommand extends Command {
 							else if (playlistCount < 7)
 								playlistDescription =
 									playlistDescription +
-									`\n**${playlistCount}:** \`${track.info.title} - ${track.info.author}\``;
+									`\n**${playlistCount}.** \`${track.info.title} - ${track.info.author}\``;
 							else if (playlistCount == 7)
 								playlistDescription =
 									playlistDescription +
@@ -228,7 +228,7 @@ export default class PlayCommand extends Command {
 					else if (playlistCount < 7)
 						playlistDescription =
 							playlistDescription +
-							`\n**${playlistCount}:** \`${track.info.title}\``;
+							`\n**${playlistCount}.** \`${track.info.title}\``;
 					else if (playlistCount == 7)
 						playlistDescription =
 							playlistDescription +

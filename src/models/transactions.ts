@@ -9,6 +9,14 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 			unique: "id",
 			allowNull: false,
 		},
+		guildId: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			references: {
+				model: "guilds",
+				key: "id",
+			},
+		},
 		sender: {
 			type: DataTypes.STRING,
 			allowNull: false,

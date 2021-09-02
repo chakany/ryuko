@@ -13,6 +13,7 @@ export default class TransactionsCommand extends Command {
 
 	async exec(message: Message): Promise<any> {
 		const transactions = await this.client.economy.getTransactions(
+			message.guild!.id,
 			message.author.id
 		);
 
@@ -54,6 +55,8 @@ export default class TransactionsCommand extends Command {
 
 		transactionsEmbed.setEmbed({
 			title: `${this.client.emoji.coin}${message.author.username}'s Transactions`,
+			description:
+				"All Transactions are sorted from newest to oldest\n\n:arrow_left: = From\n:arrow_right: = To",
 			thumbnail: {
 				url: message.author.displayAvatarURL({ dynamic: true }),
 			},
