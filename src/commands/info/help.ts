@@ -86,23 +86,23 @@ export default class HelpCommand extends Command {
 				aliases.shift();
 				embed.addField("Aliases", aliases.join(", "), true);
 			}
-			/*
 			if (
 				input.userPermissions &&
 				typeof input.userPermissions != "function"
 			)
 				embed.addField(
 					"Required User Permissions",
-					input.userPermissions,
+					// @ts-ignore
+					input.userPermissions.join(", "),
 					true
 				);
 			if (input.clientPermissions)
 				embed.addField(
 					"Required Bot Permissions",
-					input.clientPermissions,
+					// @ts-ignore
+					input.clientPermissions.join(", "),
 					true
 				);
-				*/
 			if (input.nsfw) embed.addField("NSFW", "Yes", true);
 			if (input.modOnly) embed.addField("Moderator Only", "Yes", true);
 			if (input.ownerOnly) embed.addField("Owner Only", "Yes", true);

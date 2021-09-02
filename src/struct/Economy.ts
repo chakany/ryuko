@@ -17,11 +17,30 @@ export default class Economy {
 		this.db = db;
 	}
 
+	addItem(guildId: Snowflake, roleId: Snowflake, price: number) {
+		return this.db.items.create({
+			guildId,
+			roleId,
+			price,
+		});
+	}
+
+	removeItem(guildId: Snowflake, roleId: Snowflake, price: number) {
+		return this.db.items.destroy({
+			where: {
+				guildId,
+				roleId,
+				price,
+			},
+		});
+	}
+
 	getItems(guildId: Snowflake) {
 		return this.db.items.findAll({
 			where: {
 				guildId,
 			},
+			order: [["price", "DESC"]],
 		});
 	}
 
