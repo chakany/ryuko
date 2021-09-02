@@ -22,19 +22,16 @@ export default class DailyCommand extends Command {
 			"Daily Command"
 		);
 
-		return message.channel.send(
-			new MessageEmbed({
-				title: "Daily",
-				description: `Here are your daily **${amount} Coins**! ${this.client.emoji.coin}`,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			})
-		);
+		return message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: "Daily",
+						description: `Here are your daily **${amount} Coins**! ${this.client.emoji.coin}`,
+					},
+					message
+				),
+			],
+		});
 	}
 }

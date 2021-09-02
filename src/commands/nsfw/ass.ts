@@ -15,21 +15,18 @@ export default class AssCommand extends Command {
 	async exec(message: Message) {
 		const request = await get("image", "ass", true);
 
-		return message.channel.send(
-			new MessageEmbed({
-				title: "Ass",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				image: {
-					url: request.media,
-				},
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			})
-		);
+		return message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: "Ass",
+						image: {
+							url: request.media,
+						},
+					},
+					message
+				),
+			],
+		});
 	}
 }

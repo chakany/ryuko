@@ -1,6 +1,6 @@
 import Command from "../../struct/Command";
 import { Message, TextChannel } from "discord.js";
-import { FieldsEmbed } from "discord-paginationembed";
+import PaginationEmbed from "../../utils/PaginationEmbed";
 import moment from "moment";
 
 export default class WarnsCommand extends Command {
@@ -28,21 +28,18 @@ export default class WarnsCommand extends Command {
 		);
 
 		if (!warns.length)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Member",
-					"That Member has no warns!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Member",
+						"That Member has no warns!"
+					),
+				],
+			});
 
-		const warnsEmbed = new FieldsEmbed()
-			.setArray(warns)
-			.setChannel(<TextChannel>message.channel)
-			.setAuthorizedUsers([message.author.id])
-			.setElementsPerPage(6)
-			.formatField("Warns", (warn: any) => {
+		const warnsEmbed = new PaginationEmbed(message)
+			.format((warn: any) => {
 				const created = moment(warn.createdAt);
 				return `Warned By <@!${
 					warn.adminId
@@ -50,19 +47,16 @@ export default class WarnsCommand extends Command {
 					warn.reason ? `\`${warn.reason}\`` : "No Reason Provided"
 				}`;
 			})
-			.setPage(1)
-			.setPageIndicator(true);
+			.setFieldName("Warns")
+			.setExpireTime(60000);
 
-		warnsEmbed.embed
-			.setColor(message.guild!.me!.displayHexColor)
-			.setTitle(`${args.member.user.tag}'s Warns`)
-			.setThumbnail(args.member.user.displayAvatarURL({ dynamic: true }))
-			.setTimestamp(new Date())
-			.setFooter(
-				message.author.tag,
-				message.author.displayAvatarURL({ dynamic: true })
-			);
+		warnsEmbed.setEmbed({
+			title: `${args.member.user.tag}'s Warnings`,
+			thumbnail: {
+				url: args.member.user.displayAvatarURL({ dynamic: true }),
+			},
+		});
 
-		await warnsEmbed.build();
+		await warnsEmbed.send(warns, 6);
 	}
 }

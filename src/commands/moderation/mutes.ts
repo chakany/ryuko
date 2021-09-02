@@ -1,6 +1,6 @@
 import Command from "../../struct/Command";
 import { Message, TextChannel } from "discord.js";
-import { FieldsEmbed } from "discord-paginationembed";
+import PaginationEmbed from "../../utils/PaginationEmbed";
 import moment from "moment";
 
 export default class MutesCommand extends Command {
@@ -28,21 +28,18 @@ export default class MutesCommand extends Command {
 		);
 
 		if (!mutes.length)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Member",
-					"That Member has no mutes!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Member",
+						"That Member has no mutes!"
+					),
+				],
+			});
 
-		const mutesEmbed = new FieldsEmbed()
-			.setArray(mutes)
-			.setChannel(<TextChannel>message.channel)
-			.setAuthorizedUsers([message.author.id])
-			.setElementsPerPage(6)
-			.formatField("Mutes", (mute: any) => {
+		const mutesEmbed = new PaginationEmbed(message)
+			.format((mute: any) => {
 				const created = moment(mute.createdAt);
 				const expires = moment(mute.expires);
 				const diff = expires.diff(created);
@@ -55,19 +52,16 @@ export default class MutesCommand extends Command {
 					mute.reason ? `\`${mute.reason}\`` : "No Reason Provided"
 				}${mute.unpunished ? `; **Unmuted**` : ""}`;
 			})
-			.setPage(1)
-			.setPageIndicator(true);
+			.setFieldName("Mutes")
+			.setExpireTime(60000);
 
-		mutesEmbed.embed
-			.setColor(message.guild!.me!.displayHexColor)
-			.setTitle(`${args.member.user.tag}'s Mutes`)
-			.setThumbnail(args.member.user.displayAvatarURL({ dynamic: true }))
-			.setTimestamp(new Date())
-			.setFooter(
-				message.author.tag,
-				message.author.displayAvatarURL({ dynamic: true })
-			);
+		mutesEmbed.setEmbed({
+			title: `${args.member.user.tag}'s Mutes`,
+			thumbnail: {
+				url: args.member.user.displayAvatarURL({ dynamic: true }),
+			},
+		});
 
-		await mutesEmbed.build();
+		await mutesEmbed.send(mutes, 6);
 	}
 }

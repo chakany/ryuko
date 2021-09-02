@@ -1,6 +1,7 @@
 import Command from "../../struct/Command";
 import { Message, TextChannel } from "discord.js";
-import { FieldsEmbed } from "discord-paginationembed";
+
+import PaginationEmbed from "../../utils/PaginationEmbed";
 
 export default class QueueCommand extends Command {
 	constructor() {
@@ -14,21 +15,18 @@ export default class QueueCommand extends Command {
 	async exec(message: Message): Promise<any> {
 		const serverQueue = this.client.queue.get(message.guild!.id);
 		if (!serverQueue)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Usage",
-					"There is nothing in the queue!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Usage",
+						"There is nothing in the queue!"
+					),
+				],
+			});
 
-		const queueEmbed = new FieldsEmbed()
-			.setArray(serverQueue.tracks)
-			.setChannel(<TextChannel>message.channel)
-			.setAuthorizedUsers([message.author.id])
-			.setElementsPerPage(6)
-			.formatField("Songs", (song: any) => {
+		const queueEmbed = new PaginationEmbed(message)
+			.format((song: any) => {
 				const index = serverQueue.tracks.findIndex(
 					(s) => s.info.identifier === song.info.identifier
 				);
@@ -37,21 +35,14 @@ export default class QueueCommand extends Command {
 				else if (index == 0) return;
 				else return `**${index}.** \`${song.info.title}\``;
 			})
-			.setPage(1)
-			.setPageIndicator(true);
+			.setFieldName("Songs")
+			.setExpireTime(60000);
 
-		queueEmbed.embed
-			.setColor(message.guild!.me!.displayHexColor)
-			.setTitle(`Song Queue`)
-			.setDescription(
-				`**Currently Playing:** \`${serverQueue.tracks[0].info.title}\``
-			)
-			.setTimestamp(new Date())
-			.setFooter(
-				message.author.tag,
-				message.author.displayAvatarURL({ dynamic: true })
-			);
+		queueEmbed.setEmbed({
+			title: `Song Queue`,
+			description: `**Currently Playing:** \`${serverQueue.tracks[0].info.title}\``,
+		});
 
-		await queueEmbed.build();
+		await queueEmbed.send(serverQueue.tracks, 6);
 	}
 }

@@ -1,4 +1,5 @@
-import { Listener, Command } from "discord-akairo";
+import Listener from "../../struct/Listener";
+import Command from "../../struct/Command";
 import { Message } from "discord.js";
 
 export default class MissingPermissionsListener extends Listener {
@@ -10,19 +11,20 @@ export default class MissingPermissionsListener extends Listener {
 	}
 
 	exec(message: Message, command: Command, type: string, missing: any) {
-		return message.channel.send(
-			this.client.error(
-				message,
-				command,
-				"Missing Permissions",
-				`${
-					type == "client" ? "I do not have" : "You do not have"
-				} the ${missing} permission(s)!${
-					type == "client"
-						? " Please check my permissions, and make the nessary changes."
-						: ""
-				}`
-			)
-		);
+		return message.channel.send({
+			embeds: [
+				command.error(
+					message,
+					"Missing Permissions",
+					`${
+						type == "client" ? "I do not have" : "You do not have"
+					} the ${missing} permission(s)!${
+						type == "client"
+							? " Please check my permissions, and make the nessary changes."
+							: ""
+					}`
+				),
+			],
+		});
 	}
 }

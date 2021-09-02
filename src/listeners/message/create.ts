@@ -1,41 +1,17 @@
-import { Listener, Command } from "discord-akairo";
+import Listener from "../../struct/Listener";
 import { Message, MessageEmbed } from "discord.js";
 
-export default class MessageListener extends Listener {
+export default class MessageCreateListener extends Listener {
 	constructor() {
-		super("message", {
+		super("messageCreate", {
 			emitter: "client",
-			event: "message",
+			event: "messageCreate",
 		});
 	}
 
 	async exec(message: Message) {
 		if (message.author.bot) return;
-
-		if (
-			message.channel.type == "dm" &&
-			message.content.startsWith(this.client.config.prefix)
-		)
-			return message.channel.send(
-				new MessageEmbed({
-					title: "Invalid Channel",
-					description: `Sorry, commands cannot be used in DMs! Please [add me to your server](${await this.client.generateInvite(
-						{ permissions: "ADMINISTRATOR" }
-					)} "Add me to your server!") to use my commands.`,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					author: {
-						name: `❌ Error`,
-					},
-				})
-			);
-		else if (message.channel.type == "dm") return;
+		if (message.channel.type == "DM") return;
 
 		if (
 			message.content === `<@${this.client.user!.id}>` ||
@@ -90,7 +66,7 @@ export default class MessageListener extends Listener {
 				);
 
 				if (regex.test(message.content)) {
-					message.delete({ reason: "Contains filtered word" });
+					message.delete();
 					message.author.send(
 						`Please do not use filtered words in **${
 							message.guild!.name

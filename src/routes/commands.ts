@@ -14,7 +14,9 @@ router.get("/", async function (req, res) {
 router.get("/:category", async function (req, res) {
 	if (
 		!(await (
-			await manager.fetchClientValues("commandHandler.categories")
+			(await manager.fetchClientValues(
+				"commandHandler.categories"
+			)) as any
 		)[0].find(
 			(category: any) =>
 				category[0] &&
@@ -37,7 +39,9 @@ router.get("/:category", async function (req, res) {
 		username: user.username,
 		avatar: user.avatarURL,
 		category: await (
-			await manager.fetchClientValues("commandHandler.categories")
+			(await manager.fetchClientValues(
+				"commandHandler.categories"
+			)) as any
 		)[0].find(
 			(category: any) =>
 				category[0] &&

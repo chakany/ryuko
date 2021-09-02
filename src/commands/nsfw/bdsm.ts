@@ -15,21 +15,18 @@ export default class BdsmCommand extends Command {
 	async exec(message: Message) {
 		const request = await get("image", "bdsm", true);
 
-		return message.channel.send(
-			new MessageEmbed({
-				title: "BDSM",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				image: {
-					url: request.media,
-				},
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			})
-		);
+		return message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: "BDSM",
+						image: {
+							url: request.media,
+						},
+					},
+					message
+				),
+			],
+		});
 	}
 }

@@ -56,14 +56,15 @@ export default class SteamCommand extends Command {
 
 				data = profile.data.response.players[0];
 			} else {
-				return message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"An Error Occurred",
-						"I could not find that profile."
-					)
-				);
+				return message.channel.send({
+					embeds: [
+						this.error(
+							message,
+							"An Error Occurred",
+							"I could not find that profile! Please check the spelling and try again."
+						),
+					],
+				});
 			}
 		} else {
 			idObj = new steamid(args.input);
@@ -73,73 +74,79 @@ export default class SteamCommand extends Command {
 			data = profile.data.response.players[0];
 		}
 
-		let status;
+		let status: string = "";
 
-		if (data.personastate === 0)
-			status = `${this.client.emoji.invisible} Offline`;
-		else if (data.personastate === 1)
-			status = `${this.client.emoji.online} Online`;
-		else if (data.personastate === 2)
-			status = `${this.client.emoji.dnd} Busy`;
-		else if (data.personastate === 3)
-			status = `${this.client.emoji.idle} Away`;
-		else if (data.personastate === 4)
-			status = `${this.client.emoji.idle} Snooze`;
-		else if (data.personastate === 5)
-			status = `${this.client.emoji.online} Looking to Trade`;
-		else if (data.personastate === 6)
-			status = `${this.client.emoji.online} Looking to Play`;
+		switch (data.personastate) {
+			case 0:
+				status = `${this.client.emoji.invisible} Offline`;
+				break;
+			case 1:
+				status = `${this.client.emoji.online} Online`;
+				break;
+			case 2:
+				status = `${this.client.emoji.dnd} Busy`;
+				break;
+			case 3:
+				status = `${this.client.emoji.idle} Away`;
+				break;
+			case 4:
+				status = `${this.client.emoji.idle} Snooze`;
+				break;
+			case 5:
+				status = `${this.client.emoji.online} Looking to Trade`;
+				break;
+			case 6:
+				status = `${this.client.emoji.online} Looking to Play`;
+				break;
+		}
 
-		return message.channel.send(
-			new MessageEmbed({
-				title: `${data.personaname}'s Profile`,
-				url: data.profileurl,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				thumbnail: {
-					url: data.avatarfull,
-				},
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
+		return message.channel.send({
+			embeds: [
+				this.embed(
 					{
-						name: "Current Status",
-						value: status,
-						inline: true,
+						title: `${data.personaname}'s Profile`,
+						url: data.profileurl,
+						thumbnail: {
+							url: data.avatarfull,
+						},
+						fields: [
+							{
+								name: "Current Status",
+								value: status,
+								inline: true,
+							},
+							{
+								name: "Real Name",
+								value: data.realname
+									? `\`${data.realname}\``
+									: "Unknown",
+								inline: true,
+							},
+							{
+								name: "Created At",
+								value: `<t:${data.timecreated}:f>`,
+								inline: true,
+							},
+							{
+								name: "SteamID64",
+								value: `\`${idObj.getSteamID64()}\``,
+								inline: true,
+							},
+							{
+								name: "SteamID2",
+								value: `\`${idObj.getSteam2RenderedID()}\``,
+								inline: true,
+							},
+							{
+								name: "SteamID3",
+								value: `\`${idObj.getSteam3RenderedID()}\``,
+								inline: true,
+							},
+						],
 					},
-					{
-						name: "Real Name",
-						value: data.realname
-							? `\`${data.realname}\``
-							: "Unknown",
-						inline: true,
-					},
-					{
-						name: "Created At",
-						value: `<t:${data.timecreated}:f>`,
-						inline: true,
-					},
-					{
-						name: "SteamID64",
-						value: `\`${idObj.getSteamID64()}\``,
-						inline: true,
-					},
-					{
-						name: "SteamID2",
-						value: `\`${idObj.getSteam2RenderedID()}\``,
-						inline: true,
-					},
-					{
-						name: "SteamID3",
-						value: `\`${idObj.getSteam3RenderedID()}\``,
-						inline: true,
-					},
-				],
-			})
-		);
+					message
+				),
+			],
+		});
 	}
 }

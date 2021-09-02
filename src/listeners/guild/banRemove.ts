@@ -1,4 +1,4 @@
-import { Listener } from "discord-akairo";
+import Listener from "../../struct/Listener";
 import { Guild, User, TextChannel, MessageEmbed } from "discord.js";
 
 export default class GuildBanRemoveListener extends Listener {
@@ -10,20 +10,6 @@ export default class GuildBanRemoveListener extends Listener {
 	}
 
 	async exec(guild: Guild, user: User) {
-		const logChannelId = this.client.settings.get(
-			guild.id,
-			"loggingChannel",
-			null
-		);
-
-		if (
-			!logChannelId ||
-			!this.client.settings.get(guild.id, "logging", false)
-		)
-			return;
-
-		const logChannel = <TextChannel>guild.channels.cache.get(logChannelId);
-
 		const fetchedLogs = await guild.fetchAuditLogs({
 			limit: 1,
 			type: "MEMBER_BAN_REMOVE",
@@ -32,24 +18,32 @@ export default class GuildBanRemoveListener extends Listener {
 		const banLog = fetchedLogs.entries.first();
 
 		if (!banLog)
-			return logChannel.send(
-				new MessageEmbed({
-					title: "Member Unbanned",
-					thumbnail: {
-						url: user.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					color: guild.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
-						{
-							name: "Member",
-							value: user,
-							inline: true,
-						},
+			return this.client.sendToLogChannel(
+				{
+					embeds: [
+						this.embed(
+							{
+								title: "Member Unbanned",
+								thumbnail: {
+									url: user.displayAvatarURL({
+										dynamic: true,
+									}),
+								},
+								footer: {},
+								fields: [
+									{
+										name: "Member",
+										value: user.toString(),
+										inline: true,
+									},
+								],
+							},
+							user,
+							guild
+						),
 					],
-				})
+				},
+				guild
 			);
 
 		const { executor, target } = banLog;
@@ -57,49 +51,65 @@ export default class GuildBanRemoveListener extends Listener {
 		if (executor == guild.me?.user) return;
 
 		if ((<User>target).id === user.id) {
-			return logChannel.send(
-				new MessageEmbed({
-					title: "Member Unbanned",
-					thumbnail: {
-						url: user.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					color: guild.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
-						{
-							name: "Member",
-							value: user,
-							inline: true,
-						},
-						{
-							name: "Unbanned By",
-							value: executor,
-							inline: true,
-						},
+			return this.client.sendToLogChannel(
+				{
+					embeds: [
+						this.embed(
+							{
+								title: "Member Unbanned",
+								thumbnail: {
+									url: user.displayAvatarURL({
+										dynamic: true,
+									}),
+								},
+								footer: {},
+								fields: [
+									{
+										name: "Member",
+										value: user.toString(),
+										inline: true,
+									},
+									{
+										name: "Unbanned By",
+										value: executor!.toString(),
+										inline: true,
+									},
+								],
+							},
+							user,
+							guild
+						),
 					],
-				})
+				},
+				guild
 			);
 		} else {
-			return logChannel.send(
-				new MessageEmbed({
-					title: "Member Unbanned",
-					thumbnail: {
-						url: user.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					color: guild.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
-						{
-							name: "Member",
-							value: user,
-							inline: true,
-						},
+			return this.client.sendToLogChannel(
+				{
+					embeds: [
+						this.embed(
+							{
+								title: "Member Unbanned",
+								thumbnail: {
+									url: user.displayAvatarURL({
+										dynamic: true,
+									}),
+								},
+								footer: {},
+								fields: [
+									{
+										name: "Member",
+										value: user.toString(),
+										inline: true,
+									},
+								],
+							},
+							user,
+							guild
+						),
 					],
-				})
+				},
+				guild
 			);
 		}
 	}

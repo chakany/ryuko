@@ -24,53 +24,54 @@ export default class StatusCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		// Check for args
 		if (!args.type)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"You must set a type of status!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Argument",
+						"You must set a type of status!"
+					),
+				],
+			});
 
 		if (!args.status)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"You must set a status!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Argument",
+						"You must set a status!"
+					),
+				],
+			});
 
 		// Run the actual command
 		const content = message.util!.parsed!.content!.replace(
 			`${args.type} `,
 			""
 		);
-		this.client.shard!.broadcastEval(
-			`this.user.setActivity('${content}', { type: '${args.type.toUpperCase()}' })`
-		);
+		this.client.shard!.broadcastEval((client) => {
+			client.user?.setActivity(content, {
+				type: args.type.toUpperCase(),
+			});
+		});
 
-		return message.channel.send(
-			new MessageEmbed({
-				title: `${this.client.emoji.greenCheck} Changed the bot's status successfully!`,
-				color: message.guild?.me?.displayHexColor,
-				description:
-					"Changed to `" +
-					message.util!.parsed!.content!.replace(
-						`${args.type} `,
-						""
-					) +
-					"`.",
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			})
-		);
+		return message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: `${this.client.emoji.greenCheck} Changed the bot's status successfully!`,
+						description:
+							"Changed to `" +
+							message.util!.parsed!.content!.replace(
+								`${args.type} `,
+								""
+							) +
+							"`.",
+					},
+					message
+				),
+			],
+		});
 	}
 }

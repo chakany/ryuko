@@ -19,14 +19,15 @@ export default class RemoveMemberCommand extends Command {
 
 	async exec(message: Message, args: any): Promise<any> {
 		if (!args.member)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"You must provide a member to remove!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Argument",
+						"You must provide a member to remove!"
+					),
+				],
+			});
 
 		const ticketResult = await this.client.db.findTicket(
 			message.guild!.id,
@@ -34,14 +35,15 @@ export default class RemoveMemberCommand extends Command {
 		);
 
 		if (!ticketResult)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Channel",
-					"This is not a ticket channel!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Channel",
+						"This is not a ticket channel!"
+					),
+				],
+			});
 
 		const ticketRole = this.client.settings.get(
 			message.guild!.id,
@@ -57,48 +59,45 @@ export default class RemoveMemberCommand extends Command {
 			message.member!.permissions.has("MANAGE_CHANNELS")
 		) {
 			// for some reason updateOverwrite didn't exist unless i casted...
-			(<TextChannel>message.channel).updateOverwrite(args.member.id, {
-				VIEW_CHANNEL: false,
-				SEND_MESSAGES: false,
-			});
+			(<TextChannel>message.channel).permissionOverwrites.delete(
+				args.member.id
+			);
 
-			return message.channel.send(
-				new MessageEmbed({
-					title: `${this.client.emoji.greenCheck} Removed member`,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					fields: [
+			return message.channel.send({
+				embeds: [
+					this.embed(
 						{
-							name: "Member",
-							value: args.member,
-							inline: true,
+							title: `${this.client.emoji.greenCheck} Removed member`,
+							fields: [
+								{
+									name: "Member",
+									value: args.member,
+									inline: true,
+								},
+								{
+									name: "Removed by",
+									value: message.member,
+									inline: true,
+								},
+							],
 						},
-						{
-							name: "Removed by",
-							value: message.member,
-							inline: true,
-						},
-					],
-				})
-			);
+						message
+					),
+				],
+			});
 		} else
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Permissions",
-					`Only Channel Managers${
-						ticketRole
-							? `, and members with the <@&${ticketRole}> role`
-							: ""
-					} can run this command!`
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Permissions",
+						`Only Channel Managers${
+							ticketRole
+								? `, and members with the <@&${ticketRole}> role`
+								: ""
+						} can run this command!`
+					),
+				],
+			});
 	}
 }

@@ -42,20 +42,17 @@ export default class PictureCommand extends Command {
 		loadMessage.delete();
 
 		return message.channel.send({
-			embed: new MessageEmbed({
-				title: "Picture",
-				color: message.guild?.me?.displayHexColor,
-				image: {
-					url: "attachment://image.png",
-				},
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			}),
+			embeds: [
+				this.embed(
+					{
+						title: "Picture",
+						image: {
+							url: "attachment://image.png",
+						},
+					},
+					message
+				),
+			],
 			files: [attachment],
 		});
 	}

@@ -29,14 +29,15 @@ export default class DipshitCommand extends Command {
 
 	async exec(message: Message, args: any): Promise<any> {
 		if (!args.text)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Arguments",
-					"You must provide some text!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You must provide some text!"
+					),
+				],
+			});
 
 		const loadMessage = await message.channel.send(
 			this.client.emoji.loading + "*Please wait..*"
@@ -49,20 +50,17 @@ export default class DipshitCommand extends Command {
 		loadMessage.delete();
 
 		return message.channel.send({
-			embed: new MessageEmbed({
-				title: "Dipshit",
-				color: message.guild?.me?.displayHexColor,
-				image: {
-					url: "attachment://image.png",
-				},
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			}),
+			embeds: [
+				this.embed(
+					{
+						title: "Dipshit",
+						image: {
+							url: "attachment://image.png",
+						},
+					},
+					message
+				),
+			],
 			files: [attachment],
 		});
 	}

@@ -20,38 +20,36 @@ export default class AvatarCommand extends Command {
 
 	async exec(message: Message, args: any): Promise<any> {
 		if (args.user)
-			return message.channel.send(
-				new MessageEmbed({
-					title: `${args.user.username}'s Avatar`,
-					color: message.guild?.me?.displayHexColor,
-					image: {
-						url: args.user.displayAvatarURL({ dynamic: true }),
-					},
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-				})
-			);
+			return message.channel.send({
+				embeds: [
+					this.embed(
+						{
+							title: `${args.user.username}'s Avatar`,
+							image: {
+								url: args.user.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+						},
+						message
+					),
+				],
+			});
 
-		return message.channel.send(
-			new MessageEmbed({
-				title: `${message.author.username}'s Avatar`,
-				color: message.guild?.me?.displayHexColor,
-				image: {
-					url: message.author.displayAvatarURL({ dynamic: true }),
-				},
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			})
-		);
+		return message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: `${message.author.username}'s Avatar`,
+						image: {
+							url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
+					},
+					message
+				),
+			],
+		});
 	}
 }

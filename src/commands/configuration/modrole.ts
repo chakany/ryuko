@@ -30,36 +30,36 @@ export default class ModroleCommand extends Command {
 		);
 
 		if (!args.role && currentRole) {
-			return message.channel.send(
-				new MessageEmbed({
-					title: "Current Mod Role",
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					fields: [
+			return message.channel.send({
+				embeds: [
+					this.embed(
 						{
-							name: "Role",
-							value: currentRole ? `<@&${currentRole}>` : "None",
+							title: "Current Mod Role",
+							fields: [
+								{
+									name: "Role",
+									value: currentRole
+										? `<@&${currentRole}>`
+										: "None",
+								},
+							],
 						},
-					],
-				})
-			);
+						message
+					),
+				],
+			});
 		} else if (!args.role && !currentRole) {
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Configuration",
-					"There is no mod role set, use the '" +
-						prefix +
-						"modrole' command to set it."
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Configuration",
+						"There is no mod role set, use the '" +
+							prefix +
+							"modrole' command to set it."
+					),
+				],
+			});
 		}
 
 		await this.client.settings.set(
@@ -67,30 +67,29 @@ export default class ModroleCommand extends Command {
 			"modRole",
 			args.role.id
 		);
-		return message.channel.send(
-			new MessageEmbed({
-				title: `${this.client.emoji.greenCheck} Changed Mod Role`,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
+		return message.channel.send({
+			embeds: [
+				this.embed(
 					{
-						name: "Before",
-						value: currentRole ? `<@&${currentRole}>` : "None",
-						inline: true,
+						title: `${this.client.emoji.greenCheck} Changed Mod Role`,
+						fields: [
+							{
+								name: "Before",
+								value: currentRole
+									? `<@&${currentRole}>`
+									: "None",
+								inline: true,
+							},
+							{
+								name: "After",
+								value: args.role.toString(),
+								inline: true,
+							},
+						],
 					},
-					{
-						name: "After",
-						value: args.role,
-						inline: true,
-					},
-				],
-			})
-		);
+					message
+				),
+			],
+		});
 	}
 }

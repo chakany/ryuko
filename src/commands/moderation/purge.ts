@@ -30,23 +30,25 @@ export default class PurgeCommand extends Command {
 		const count = args.count;
 
 		if (!count)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"You must provide how many messages to delete!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Argument",
+						"You must provide how many messages to delete!"
+					),
+				],
+			});
 		if (count >= 100)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"You cannot purge more than 100 message at once!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Argument",
+						"You cannot purge more than 100 message at once!"
+					),
+				],
+			});
 
 		let deleted: Collection<string, Message>;
 		const messages = await message.channel.messages.fetch({
@@ -62,14 +64,15 @@ export default class PurgeCommand extends Command {
 			deleted = messages;
 		}
 		if (!deleted.find((sus) => sus.id === message.id))
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"I could not find that user!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Argument",
+						"I could not find that user!"
+					),
+				],
+			});
 
 		await (<TextChannel>message.channel)
 			.bulkDelete(
@@ -89,37 +92,70 @@ export default class PurgeCommand extends Command {
 			!this.client.settings.get(message.guild!.id, "logging", false)
 		)
 			return;
-		let purgeEmbed = new MessageEmbed({
-			title: "Purge",
-			color: message.guild?.me?.displayHexColor,
-			timestamp: new Date(),
-			fields: [
-				{
-					name: "Purged By",
-					value: message.member,
-					inline: true,
-				},
-				{
-					name: "Channel",
-					value: message.channel,
-					inline: true,
-				},
-				{
-					name: "Number of Messages",
-					value: `\`${deleted.size}\``,
-					inline: true,
-				},
+
+		const tempMessage = await message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: "Purge",
+						fields: [
+							{
+								name: "Purged By",
+								value: message.member!.toString(),
+								inline: true,
+							},
+							{
+								name: "Channel",
+								value: message.channel!.toString(),
+								inline: true,
+							},
+							{
+								name: "Number of Messages",
+								value: `\`${deleted.size}\``,
+								inline: true,
+							},
+						],
+					},
+					message
+				),
 			],
 		});
 
-		const tempMessage = await message.channel.send(purgeEmbed);
-
-		purgeEmbed.setThumbnail(
-			message.author.displayAvatarURL({ dynamic: true })
-		);
-
-		(<TextChannel>this.client.channels.cache.get(logchannel))?.send(
-			purgeEmbed
+		this.client.sendToLogChannel(
+			{
+				embeds: [
+					this.embed(
+						{
+							title: "Purge",
+							thumbnail: {
+								url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Purged By",
+									value: message.member!.toString(),
+									inline: true,
+								},
+								{
+									name: "Channel",
+									value: message.channel!.toString(),
+									inline: true,
+								},
+								{
+									name: "Number of Messages",
+									value: `\`${deleted.size}\``,
+									inline: true,
+								},
+							],
+						},
+						message
+					),
+				],
+			},
+			message.guild!
 		);
 
 		setTimeout(() => tempMessage.delete(), 5000);

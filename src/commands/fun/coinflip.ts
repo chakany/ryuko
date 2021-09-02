@@ -11,21 +11,18 @@ export default class CoinflipCommand extends Command {
 	}
 
 	async exec(message: Message) {
-		return message.channel.send(
-			new MessageEmbed({
-				title: "Coin Flip",
-				description: `I Flipped a coin, it was **${
-					Math.random() < 0.5 ? "Heads" : "Tails"
-				}**!`,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			})
-		);
+		return message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: "Coin Flip",
+						description: `I Flipped a coin, it was **${
+							Math.random() < 0.5 ? "Heads" : "Tails"
+						}**!`,
+					},
+					message
+				),
+			],
+		});
 	}
 }

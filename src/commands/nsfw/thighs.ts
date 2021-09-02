@@ -15,21 +15,18 @@ export default class ThighsCommand extends Command {
 	async exec(message: Message) {
 		const request = await get("image", "thighs", true);
 
-		return message.channel.send(
-			new MessageEmbed({
-				title: "Thighs",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				image: {
-					url: request.media,
-				},
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			})
-		);
+		return message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: "Thighs",
+						image: {
+							url: request.media,
+						},
+					},
+					message
+				),
+			],
+		});
 	}
 }

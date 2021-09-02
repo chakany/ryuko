@@ -18,37 +18,27 @@ export default class UsmapCommand extends Command {
 		const answer = yield {
 			type: "string",
 			prompt: {
-				start: new MessageEmbed({
-					title: "United States Map Trivia",
-					description: `**${question?.question}**\n\nYou have **15 seconds**.`,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
+				start: this.embed(
+					{
+						title: "United States Map Trivia",
+						description: `**${question?.question}**\n\nYou have **15 seconds**.`,
+						image: {
+							url: question?.image,
+						},
 					},
-					image: {
-						url: question?.image,
+					message
+				),
+				timeout: this.embed(
+					{
+						title: "Time Expired",
+						description: `You ran out of time! The correct answer was **${
+							typeof question?.answer == "object"
+								? question?.answer[0]
+								: question?.answer
+						}**.`,
 					},
-				}),
-				timeout: new MessageEmbed({
-					title: "Time Expired",
-					description: `You ran out of time! The correct answer was **${
-						typeof question?.answer == "object"
-							? question?.answer[0]
-							: question?.answer
-					}**.`,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-				}),
+					message
+				),
 				time: 15000,
 			},
 		};
@@ -73,38 +63,32 @@ export default class UsmapCommand extends Command {
 				"Correct Answer"
 			);
 
-			return message.channel.send(
-				new MessageEmbed({
-					title: "Correct Answer!",
-					description: `That answer is correct, take **${amount} coins**! ${this.client.emoji.coin}`,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-				})
-			);
+			return message.channel.send({
+				embeds: [
+					this.embed(
+						{
+							title: "Correct Answer!",
+							description: `That answer is correct, take **${amount} coins**! ${this.client.emoji.coin}`,
+						},
+						message
+					),
+				],
+			});
 		} else
-			return message.channel.send(
-				new MessageEmbed({
-					title: "Incorrect Answer!",
-					description: `You got that answer wrong, the correct answer is **${
-						typeof args.question.answer == "object"
-							? args.question.answer[0]
-							: args.question.answer
-					}**.`,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-				})
-			);
+			return message.channel.send({
+				embeds: [
+					this.embed(
+						{
+							title: "Incorrect Answer!",
+							description: `You got that answer wrong, the correct answer is **${
+								typeof args.question.answer == "object"
+									? args.question.answer[0]
+									: args.question.answer
+							}**.`,
+						},
+						message
+					),
+				],
+			});
 	}
 }

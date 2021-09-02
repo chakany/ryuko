@@ -1,4 +1,4 @@
-import { Listener } from "discord-akairo";
+import Listener from "../../struct/Listener";
 import { GuildMember, MessageEmbed, TextChannel, User } from "discord.js";
 
 export default class MemberAddListener extends Listener {
@@ -10,11 +10,6 @@ export default class MemberAddListener extends Listener {
 	}
 
 	async exec(member: GuildMember) {
-		const logChannelId = this.client.settings.get(
-			member.guild.id,
-			"loggingChannel",
-			null
-		);
 		if (
 			await this.client.db.getCurrentUserMutes(member.id, member.guild.id)
 		) {
@@ -24,18 +19,9 @@ export default class MemberAddListener extends Listener {
 
 			if (muteRole) member.roles.add(muteRole);
 		}
-		if (
-			!logChannelId ||
-			!this.client.settings.get(member.guild!.id, "logging", false)
-		)
-			return;
 
-		const logChannel = <TextChannel>(
-			member.guild!.channels.cache.get(logChannelId)
-		);
-
-		member.guild
-			.fetchInvites()
+		member.guild.invites
+			.fetch()
 			.then((guildInvites) => {
 				// This is the *existing* invites for the guild.
 				const ei = this.client.invites.get(member.guild.id);
@@ -48,61 +34,81 @@ export default class MemberAddListener extends Listener {
 					(i) => ei.get(i.code).uses < i.uses!
 				);
 
-				return logChannel.send(
-					new MessageEmbed({
-						title: "Member Joined",
-						description: `They are member #${
-							member.guild!.memberCount
-						}!`,
-						thumbnail: {
-							url: member.user.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-						color: member.guild.me?.displayHexColor,
-						timestamp: new Date(),
-						fields: [
-							{
-								name: "Member",
-								value: member,
-								inline: true,
-							},
-							{
-								name: "Invited by",
-								value: invite ? invite?.inviter : "Unknown",
-								inline: true,
-							},
-							{
-								name: "Invite Code",
-								value: invite ? `\`${invite?.code}\`` : "None",
-								inline: true,
-							},
+				return this.client.sendToLogChannel(
+					{
+						embeds: [
+							this.embed(
+								{
+									title: "Member Joined",
+									description: `They are member #${
+										member.guild!.memberCount
+									}!`,
+									thumbnail: {
+										url: member.user.displayAvatarURL({
+											dynamic: true,
+										}),
+									},
+									footer: {},
+									fields: [
+										{
+											name: "Member",
+											value: member.toString(),
+											inline: true,
+										},
+										{
+											name: "Invited by",
+											value:
+												invite?.inviter?.toString() ||
+												"Unknown",
+											inline: true,
+										},
+										{
+											name: "Invite Code",
+											value: invite
+												? `\`${invite?.code}\``
+												: "None",
+											inline: true,
+										},
+									],
+								},
+								member.user,
+								member.guild
+							),
 						],
-					})
+					},
+					member.guild
 				);
 			})
-			.catch((error) => {
-				return logChannel.send(
-					new MessageEmbed({
-						title: "Member Joined",
-						description: `They are member #${
-							member.guild!.memberCount
-						}!`,
-						thumbnail: {
-							url: member.user.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-						color: member.guild.me?.displayHexColor,
-						timestamp: new Date(),
-						fields: [
-							{
-								name: "Member",
-								value: member,
-								inline: true,
-							},
+			.catch((error: any) => {
+				return this.client.sendToLogChannel(
+					{
+						embeds: [
+							this.embed(
+								{
+									title: "Member Joined",
+									description: `They are member #${
+										member.guild!.memberCount
+									}!`,
+									thumbnail: {
+										url: member.user.displayAvatarURL({
+											dynamic: true,
+										}),
+									},
+									footer: {},
+									fields: [
+										{
+											name: "Member",
+											value: member.toString(),
+											inline: true,
+										},
+									],
+								},
+								member.user,
+								member.guild
+							),
 						],
-					})
+					},
+					member.guild
 				);
 			});
 	}

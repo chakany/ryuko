@@ -23,24 +23,26 @@ export default class DoasCommand extends Command {
 
 	async exec(message: Message, args: any): Promise<any> {
 		if (!args.member)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Arguments",
-					"You must provide a member to run the command as!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You must provide a member to run the command as!"
+					),
+				],
+			});
 
 		if (!args.command)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Arguments",
-					"You must provide a command to run!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You must provide a command to run!"
+					),
+				],
+			});
 
 		let newMessage = message;
 

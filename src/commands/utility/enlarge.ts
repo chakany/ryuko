@@ -21,42 +21,40 @@ export default class EnlargeCommand extends Command {
 			!args.emoji ||
 			(!args.emoji.startsWith("<:") && !args.emoji.startsWith("<a:"))
 		)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"You must provide a valid emoji!"
-				)
-			);
-
-		return message.channel.send(
-			new MessageEmbed({
-				title: "Enlarged Emoji",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				thumbnail: {
-					url: args.emoji.startsWith("<a")
-						? `https://cdn.discordapp.com/emojis/${args.emoji
-								.split(":")[2]
-								.slice(0, -1)}.gif`
-						: `https://cdn.discordapp.com/emojis/${args.emoji
-								.split(":")[2]
-								.slice(0, -1)}.png`,
-				},
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
-					{
-						name: "Emoji",
-						value: `\`${args.emoji.split(":")[1]}\``,
-					},
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Argument",
+						"You must provide a valid emoji!"
+					),
 				],
-			})
-		);
+			});
+
+		return message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: "Enlarged Emoji",
+						thumbnail: {
+							url: args.emoji.startsWith("<a")
+								? `https://cdn.discordapp.com/emojis/${args.emoji
+										.split(":")[2]
+										.slice(0, -1)}.gif`
+								: `https://cdn.discordapp.com/emojis/${args.emoji
+										.split(":")[2]
+										.slice(0, -1)}.png`,
+						},
+						fields: [
+							{
+								name: "Emoji",
+								value: `\`${args.emoji.split(":")[1]}\``,
+							},
+						],
+					},
+					message
+				),
+			],
+		});
 	}
 }

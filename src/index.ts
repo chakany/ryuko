@@ -15,13 +15,7 @@ import commands from "./routes/commands";
 import verify from "./routes/verify";
 import wiki from "./routes/wiki";
 
-const {
-	token,
-	port,
-	imgApiUrl,
-	pterodactyl,
-	topgg_token,
-} = require("../config.json");
+const { token, port, imgApiUrl, topgg_token } = require("../config.json");
 let log = bunyan.createLogger({ name: "shardmanager" });
 let weblog = bunyan.createLogger({ name: "webserver" });
 
@@ -99,26 +93,6 @@ void (async function () {
 			checkStatus.push({ "img-api": colors.yellow("Skipped") });
 		}
 
-		// pterodactyl panel check
-		if (pterodactyl.url && pterodactyl.key)
-			try {
-				await axios.get(pterodactyl.url + `/api/client/`, {
-					headers: {
-						Authorization: `Bearer ${pterodactyl.key}`,
-						"Content-Type": "application/json",
-						Accept: "Application/vnd.pterodactyl.v1+json",
-					},
-				});
-				checkStatus.push({ pterodactyl: colors.green("Passed") });
-			} catch (error) {
-				shardArgs.push("--disable-panel");
-				checkStatus.push({ pterodactyl: colors.red("Failed") });
-			}
-		else {
-			shardArgs.push("--disable-panel");
-			checkStatus.push({ pterodactyl: colors.yellow("Skipped") });
-		}
-
 		console.log(checkStatus.toString());
 	} else {
 		log.warn(
@@ -131,7 +105,6 @@ void (async function () {
 			redis: colors.yellow("Skipped"),
 		});
 		checkStatus.push({ "img-api": colors.yellow("Skipped") });
-		checkStatus.push({ pterodactyl: colors.yellow("Skipped") });
 		console.log(checkStatus.toString());
 		try {
 			await db.sync({ alter: true });
@@ -184,7 +157,9 @@ void (async function () {
 			shardArgs,
 		});
 
-	AutoPoster(topgg_token, manager);
+	process.env.NODE_ENV !== "production"
+		? null
+		: AutoPoster(topgg_token, manager);
 
 	manager.on("shardCreate", async (shard) => {
 		log.info(`Launched shard ${shard.id}`);

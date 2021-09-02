@@ -32,68 +32,68 @@ export default class MoveCommand extends Command {
 
 		// Check if the member is provided
 		if (!victim)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"You must provide a user to move!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Argument",
+						"You must provide a user to move!"
+					),
+				],
+			});
 
 		// Check if the channel is valid
 		if (!Channel)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"You must provide a voice channel to move to!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Argument",
+						"You must provide a voice channel to move to!"
+					),
+				],
+			});
 
 		victim.voice.setChannel(Channel);
 
-		if (this.client.settings.get(message.guild!.id, "logging", false))
-			(<TextChannel>(
-				message.guild!.channels.cache.get(
-					this.client.settings.get(
-						message.guild!.id,
-						"loggingChannel",
-						null
-					)
-				)
-			))?.send(
-				new MessageEmbed({
-					title: "Member Moved",
-					thumbnail: {
-						url: args.member.user.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					color: message.guild!.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
+		this.client.sendToLogChannel(
+			{
+				embeds: [
+					this.embed(
 						{
-							name: "From",
-							value: oldChannel,
-							inline: true,
+							title: "Member Moved",
+							thumbnail: {
+								url: args.member.user.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "From",
+									value: oldChannel?.toString(),
+									inline: true,
+								},
+								{
+									name: "To",
+									value: Channel.toString(),
+									inline: true,
+								},
+								{
+									name: "Member",
+									value: args.member.toString(),
+								},
+								{
+									name: "Moved by",
+									value: message.member!.toString(),
+								},
+							],
 						},
-						{
-							name: "To",
-							value: Channel,
-							inline: true,
-						},
-						{
-							name: "Member",
-							value: args.member,
-						},
-						{
-							name: "Moved by",
-							value: message.member,
-						},
-					],
-				})
-			);
+						message
+					),
+				],
+			},
+			message.guild!
+		);
 	}
 }

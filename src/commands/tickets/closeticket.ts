@@ -18,14 +18,15 @@ export default class TicketCommand extends Command {
 		);
 
 		if (!ticketResult)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Channel",
-					"This is not a ticket channel!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Channel",
+						"This is not a ticket channel!"
+					),
+				],
+			});
 
 		const ticketRole = this.client.settings.get(
 			message.guild!.id,

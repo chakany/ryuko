@@ -31,17 +31,12 @@ export default class DisableCommand extends Command {
 			oldSettings = JSON.parse(oldSettings);
 
 		if (!toEnable) {
-			const embed = new MessageEmbed({
-				title: "Commands",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
+			const embed = this.embed(
+				{
+					title: "Commands",
 				},
-			});
+				message
+			);
 
 			let enabledCommands = "";
 			for (const [key, dvalue] of new Map(
@@ -69,17 +64,18 @@ export default class DisableCommand extends Command {
 				embed.addField("Disabled", disabledCommands);
 			}
 
-			return message.channel.send(embed);
+			return message.channel.send({ embeds: [embed] });
 		} else if (toEnable.category) {
 			if (oldSettings && !oldSettings.includes(toEnable.id))
-				return message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"Invalid Argument",
-						"That command is already enabled!"
-					)
-				);
+				return message.channel.send({
+					embeds: [
+						this.error(
+							message,
+							"Invalid Argument",
+							"That command is already enabled!"
+						),
+					],
+				});
 			let enabledCommands;
 
 			if (!oldSettings) enabledCommands = [];
@@ -94,19 +90,16 @@ export default class DisableCommand extends Command {
 				"disabledCommands",
 				JSON.stringify(enabledCommands)
 			);
-			return message.channel.send(
-				new MessageEmbed({
-					title: `${this.client.emoji.greenCheck} Enabled command: \`${toEnable.aliases[0]}\``,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-				})
-			);
+			return message.channel.send({
+				embeds: [
+					this.embed(
+						{
+							title: `${this.client.emoji.greenCheck} Enabled command: \`${toEnable.aliases[0]}\``,
+						},
+						message
+					),
+				],
+			});
 		} else {
 			// Try to resolve as a category
 			if (message.util?.handler.findCategory(toEnable)) {
@@ -137,29 +130,27 @@ export default class DisableCommand extends Command {
 					"disabledCommands",
 					JSON.stringify(commands)
 				);
-				const embed = new MessageEmbed({
-					title: `${this.client.emoji.greenCheck} Enabled category: \`${category.id}\``,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
+				const embed = this.embed(
+					{
+						title: `${this.client.emoji.greenCheck} Enabled category: \`${category.id}\``,
+						fields: [{ name: "Enabled", value: enabledCommands }],
 					},
-					fields: [{ name: "Enabled", value: enabledCommands }],
-				});
-
-				return message.channel.send(embed);
-			} else {
-				return message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"Invalid Argument",
-						"You must provide a command or a category!"
-					)
+					message
 				);
+
+				return message.channel.send({
+					embeds: [embed],
+				});
+			} else {
+				return message.channel.send({
+					embeds: [
+						this.error(
+							message,
+							"Invalid Argument",
+							"You must provide a command or a category!"
+						),
+					],
+				});
 			}
 		}
 	}

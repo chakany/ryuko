@@ -1,5 +1,5 @@
-import { Listener } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import Listener from "../../struct/Listener";
+import { Message } from "discord.js";
 import levenshtein from "fast-levenshtein";
 
 export default class InvalidCommandListener extends Listener {
@@ -32,28 +32,26 @@ export default class InvalidCommandListener extends Listener {
 			const command = this.client.commandHandler.findCommand(
 				distances[0].cmd[0]
 			);
-			return message.channel.send(
-				new MessageEmbed({
-					title: "Invalid Command",
-					description:
-						"Did you mean [`" +
-						message.util?.parsed?.prefix +
-						distances[0].cmd[0] +
-						"`" +
-						`](${this.client.config.siteUrl}/commands/${command.categoryID}#${command.id})?`,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					author: {
-						name: `❌ Error: ${message.util?.parsed?.alias}`,
-					},
-				})
-			);
+			return message.channel.send({
+				embeds: [
+					this.embed(
+						{
+							title: "Invalid Command",
+							description:
+								"Did you mean [`" +
+								message.util?.parsed?.prefix +
+								distances[0].cmd[0] +
+								"`" +
+								`](${this.client.config.siteUrl}/commands/${command.categoryID}#${command.id})?`,
+							author: {
+								name: `❌ Error: ${message.util?.parsed?.alias}`,
+							},
+						},
+						message.author,
+						message.guild!
+					),
+				],
+			});
 		}
 	}
 }

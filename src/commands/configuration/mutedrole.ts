@@ -29,37 +29,37 @@ export default class ModroleCommand extends Command {
 		);
 
 		if (!args.role && currentRole) {
-			return message.channel.send(
-				new MessageEmbed({
-					title: "Current Mute Role",
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					fields: [
+			return message.channel.send({
+				embeds: [
+					this.embed(
 						{
-							name: "Role",
-							value: currentRole ? `<&${currentRole}>` : "None",
+							title: "Current Mute Role",
+							fields: [
+								{
+									name: "Role",
+									value: currentRole
+										? `<&${currentRole}>`
+										: "None",
+								},
+							],
 						},
-					],
-				})
-			);
+						message
+					),
+				],
+			});
 		} else if (!args.role && !currentRole) {
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Configuration",
-					"There is no mute role set, use the `" +
-						prefix +
-						this.handler.findCommand("muterole").aliases[0] +
-						"` to set it."
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Configuration",
+						"There is no mute role set, use the `" +
+							prefix +
+							this.handler.findCommand("muterole").aliases[0] +
+							"` to set it."
+					),
+				],
+			});
 		}
 
 		await this.client.settings.set(
@@ -68,30 +68,29 @@ export default class ModroleCommand extends Command {
 			args.role.id
 		);
 
-		return message.channel.send(
-			new MessageEmbed({
-				title: `${this.client.emoji.greenCheck} Changed Mute Role`,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
+		return message.channel.send({
+			embeds: [
+				this.embed(
 					{
-						name: "Before",
-						value: currentRole ? `<@&${currentRole}>` : "None",
-						inline: true,
+						title: `${this.client.emoji.greenCheck} Changed Mute Role`,
+						fields: [
+							{
+								name: "Before",
+								value: currentRole
+									? `<@&${currentRole}>`
+									: "None",
+								inline: true,
+							},
+							{
+								name: "After",
+								value: args.role,
+								inline: true,
+							},
+						],
 					},
-					{
-						name: "After",
-						value: args.role,
-						inline: true,
-					},
-				],
-			})
-		);
+					message
+				),
+			],
+		});
 	}
 }

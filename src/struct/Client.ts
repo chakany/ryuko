@@ -5,8 +5,15 @@ import {
 	ListenerHandler,
 	SequelizeProvider,
 } from "discord-akairo";
-import { Collection, Message, MessageEmbed } from "discord.js";
-import { Shoukaku, ShoukakuPlayer, ShoukakuTrack } from "shoukaku";
+import {
+	Collection,
+	Message,
+	Guild,
+	MessageOptions,
+	TextChannel,
+	Intents,
+} from "discord.js";
+import { Shoukaku, Libraries } from "shoukaku";
 import { LavasfyClient } from "lavasfy";
 import bunyan from "bunyan";
 import { Job } from "node-schedule";
@@ -32,8 +39,8 @@ const ShoukakuOptions = {
 };
 
 interface Queue {
-	player: ShoukakuPlayer | null;
-	tracks: ShoukakuTrack[];
+	player: any | null;
+	tracks: any[];
 	paused: boolean;
 	loop: boolean;
 }
@@ -56,12 +63,10 @@ declare module "discord-akairo" {
 		log: bunyan;
 		jobs: Map<string, Map<string, Job>>;
 		invites: Collection<string, any>;
-		error(
-			message: Message,
-			command: Command,
-			error: string,
-			description: string
-		): MessageEmbed;
+		sendToLogChannel(
+			options: MessageOptions,
+			guild: Guild
+		): Promise<Message> | null;
 	}
 }
 
@@ -90,7 +95,15 @@ export default class RyukoClient extends AkairoClient {
 				ownerID: config.ownerId,
 			},
 			{
-				disableMentions: "everyone",
+				intents: [
+					Intents.FLAGS.GUILDS,
+					Intents.FLAGS.GUILD_MESSAGES,
+					Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+					Intents.FLAGS.GUILD_BANS,
+					Intents.FLAGS.GUILD_INVITES,
+					Intents.FLAGS.GUILD_MEMBERS,
+					Intents.FLAGS.GUILD_VOICE_STATES,
+				],
 			}
 		);
 		this.config = config;
@@ -106,15 +119,21 @@ export default class RyukoClient extends AkairoClient {
 		this.economy = new Economy("../../app/data", this.db);
 		this.settings = this.db.getSettings();
 
-		this.shoukaku = new Shoukaku(this, config.lavalink, ShoukakuOptions);
+		this.shoukaku = new Shoukaku(
+			new Libraries.DiscordJS(this),
+			config.lavalink,
+			ShoukakuOptions
+		);
+
 		const lavalinkConfig = (): any[] => {
 			let nodes = [];
 			let node;
 			for (let i = 0; (node = config.lavalink[i]); i++) {
+				const splitted = (<string>node.url).split(":");
 				nodes.push({
 					id: node.name,
-					host: node.host,
-					port: node.port,
+					host: splitted[0],
+					port: splitted[1],
 					password: node.auth,
 				});
 			}
@@ -224,7 +243,7 @@ export default class RyukoClient extends AkairoClient {
 				}`
 			)
 		);
-		this.shoukaku.on("disconnected", (name, reason) =>
+		this.shoukaku.on("disconnect", (name, reason) =>
 			log.warn(`[${name}] Disconnected. Reason ${reason || "No reason"}`)
 		);
 		this.shoukaku.on("debug", (name, data) =>
@@ -245,36 +264,20 @@ export default class RyukoClient extends AkairoClient {
 		return super.login(token);
 	}
 
-	error(
-		message: Message,
-		command: Command,
-		error: string,
-		description: string
-	) {
-		const prefix = message.util?.parsed?.prefix;
-		return new MessageEmbed({
-			title: error,
-			description: description,
-			color: message.guild?.me?.displayHexColor,
-			timestamp: new Date(),
-			footer: {
-				text: `Use the "${message.util?.parsed?.prefix}${
-					command.handler.findCommand("support").aliases[0]
-				}" command if you would like to report this error\n${
-					message.author.tag
-				}`,
-				icon_url: message.author.displayAvatarURL({ dynamic: true }),
-			},
-			author: {
-				name: `❌ Error: ${command.aliases[0]}`,
-				url: `${this.config.siteUrl}/commands/${command.categoryID}/${command.id}`,
-			},
-			fields: [
-				{
-					name: "Usage",
-					value: "`" + this.generateUsage(command, prefix) + "`",
-				},
-			],
-		});
+	sendToLogChannel(
+		options: MessageOptions,
+		guild: Guild
+	): Promise<Message> | null {
+		if (
+			!this.settings.get(guild.id, "logging", false) &&
+			this.settings.get(guild.id, "loggingChannel", null)
+		)
+			return null;
+
+		return (<TextChannel>(
+			guild.channels.cache.get(
+				this.settings.get(guild.id, "loggingChannel", null)
+			)
+		))?.send(options);
 	}
 }

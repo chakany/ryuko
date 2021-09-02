@@ -31,8 +31,7 @@
 	"lavalink": [
 		{
 			"name": "",
-			"host": "",
-			"port": 0000,
+			"url": "host:port",
 			"auth": ""
 		}
 	],
@@ -40,9 +39,5 @@
 		"clientID": "",
 		"clientSecret": "",
 		"useSpotifyMetadata": true
-	},
-	"pterodactyl": {
-		"url": "",
-		"key": ""
 	}
 }

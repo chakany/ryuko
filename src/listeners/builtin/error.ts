@@ -1,4 +1,4 @@
-import { Listener } from "discord-akairo";
+import Listener from "../../struct/Listener";
 
 export default class ErrorListener extends Listener {
 	constructor() {

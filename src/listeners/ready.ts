@@ -1,7 +1,9 @@
-import { Listener } from "discord-akairo";
-import { MessageEmbed, TextChannel, ActivityType } from "discord.js";
-import schedule, { Job } from "node-schedule";
+import Listener from "../struct/Listener";
+import { ActivityType } from "discord.js";
+import schedule from "node-schedule";
 import axios from "axios";
+import moment from "moment";
+import ms from "ms";
 
 export default class ReadyListener extends Listener {
 	constructor() {
@@ -19,7 +21,7 @@ export default class ReadyListener extends Listener {
 
 		this.client.guilds.cache.forEach(async (g) => {
 			// Get all guild invites, save to collection
-			g.fetchInvites().then((guildInvites) => {
+			g.invites.fetch().then((guildInvites) => {
 				this.client.invites.set(g.id, guildInvites);
 			});
 
@@ -44,30 +46,59 @@ export default class ReadyListener extends Listener {
 
 								outer.client.jobs.get(g.id)?.delete(member.id);
 
-								const logChannel = outer.client.settings.get(
-									g.id,
-									"loggingChannel",
-									null
-								);
+								const expired = moment(mute.expires);
+								const created = moment(mute.createdAt);
 
-								if (
-									logChannel &&
-									outer.client.settings.get(
-										g.id,
-										"logging",
-										false
-									)
-								)
-									(<TextChannel>(
-										g.channels.cache.get(`${logChannel}`)
-									))?.send(
-										new MessageEmbed({
-											title: "Member Unmuted",
-											description: `${member}'s mute has expired.`,
-											color: g.me?.displayHexColor,
-											timestamp: new Date(),
-										})
-									);
+								const length = created.diff(expired);
+
+								outer.client.sendToLogChannel(
+									{
+										embeds: [
+											outer.embed(
+												{
+													title: "Member Unmuted",
+													description: `${member.toString()}'s mute has expired.`,
+													footer: {},
+													thumbnail: {
+														url: member.user.displayAvatarURL(
+															{
+																dynamic: true,
+															}
+														),
+													},
+													fields: [
+														{
+															name: "Member",
+															value: member.toString(),
+															inline: true,
+														},
+														{
+															name: "Length",
+															value: `**${ms(
+																length,
+																{ long: true }
+															)}** (<t:${created.unix()}:f>)`,
+														},
+														{
+															name: "Muted By",
+															value:
+																g.members.cache
+																	.get(
+																		mute.adminId
+																	)
+																	?.toString() ||
+																"Unknown",
+															inline: true,
+														},
+													],
+												},
+												member.user,
+												g
+											),
+										],
+									},
+									g
+								);
 							}
 						);
 						outer.client.jobs.get(g.id)?.set(member.id, job);
@@ -82,7 +113,7 @@ export default class ReadyListener extends Listener {
 		);
 
 		const totalGuilds = guilds.reduce(
-			(acc, guildCount) => acc + guildCount,
+			(acc: any, guildCount: any) => acc + guildCount,
 			0
 		);
 
@@ -111,7 +142,7 @@ export default class ReadyListener extends Listener {
 									"users.cache.size"
 								)
 							).reduce(
-								(acc, guildCount) => acc + guildCount,
+								(acc: any, guildCount: any) => acc + guildCount,
 								0
 							)} members! | ${this.client.config.prefix}help`,
 						},
@@ -141,7 +172,7 @@ export default class ReadyListener extends Listener {
 				{
 					guildCount: this.client.guilds.cache.size,
 					shardCount: this.client.shard!.count,
-					shardId: this.client.guilds.cache.array()[0].shardID,
+					shardId: this.client.guilds.cache.first()?.shardId,
 				},
 				{
 					headers: {
@@ -158,7 +189,7 @@ export default class ReadyListener extends Listener {
 				{
 					guilds: this.client.guilds.cache.size,
 					users: this.client.users.cache.size,
-					shard_id: this.client.guilds.cache.array()[0].shardID,
+					shard_id: this.client.guilds.cache.first()?.shardId,
 				},
 				{
 					headers: {

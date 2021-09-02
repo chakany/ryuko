@@ -27,33 +27,36 @@ export default class SendCommand extends Command {
 
 	async exec(message: Message, args: any): Promise<any> {
 		if (!args.user)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Arguments",
-					"You must provide a user to send coins to!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You must provide a user to send coins to!"
+					),
+				],
+			});
 		if (!args.amount)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Arguments",
-					"You must provide an amount of coins to send!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You must provide an amount of coins to send!"
+					),
+				],
+			});
 
 		if (message.author.id == args.user.id)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Arguments",
-					"You cannot send coins to yourself!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You cannot send coins to yourself!"
+					),
+				],
+			});
 		// Get Coins for the executor
 		const executor = await this.client.economy.getBalance(
 			message.author.id
@@ -61,16 +64,17 @@ export default class SendCommand extends Command {
 
 		// Check if we have enough coins for this transaction
 		if (executor.coins < args.amount)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Insufficient Balance",
-					`You need ${
-						args.amount - executor.coins
-					} more coins to perform this transaction!`
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Insufficient Balance",
+						`You need ${
+							args.amount - executor.coins
+						} more coins to perform this transaction!`
+					),
+				],
+			});
 
 		// Update user balances accordingly
 		this.client.economy.addCoins(args.user.id, args.amount);
@@ -82,31 +86,30 @@ export default class SendCommand extends Command {
 			args.reason
 		);
 
-		return message.channel.send(
-			new MessageEmbed({
-				title: `${this.client.emoji.coin}Coins Sent!`,
-				description: `You sent **${args.amount} coins** to ${args.user}`,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
+		return message.channel.send({
+			embeds: [
+				this.embed(
 					{
-						name: "Balance Before",
-						value: `**${executor.coins} Coins**`,
-						inline: true,
+						title: `${this.client.emoji.coin}Coins Sent!`,
+						description: `You sent **${args.amount} coins** to ${args.user}`,
+						fields: [
+							{
+								name: "Balance Before",
+								value: `**${executor.coins} Coins**`,
+								inline: true,
+							},
+							{
+								name: "Balance After",
+								value: `**${
+									executor.coins - args.amount
+								} Coins**`,
+								inline: true,
+							},
+						],
 					},
-					{
-						name: "Balance After",
-						value: `**${executor.coins - args.amount} Coins**`,
-						inline: true,
-					},
-				],
-			})
-		);
+					message
+				),
+			],
+		});
 	}
 }

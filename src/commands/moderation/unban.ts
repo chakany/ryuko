@@ -29,35 +29,38 @@ export default class UnbanCommand extends Command {
 		try {
 			user = await this.client.users.fetch(args.member);
 		} catch (error) {
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"An Error Occurred",
-					"Make sure that you entered a valid User ID, and try again."
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"An Error Occurred",
+						"Make sure that you entered a valid User ID, and try again."
+					),
+				],
+			});
 		}
 
 		if (!user)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Arguments",
-					"You must provide a user to unban!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You must provide a user to unban!"
+					),
+				],
+			});
 
-		if (!(await message.guild!.fetchBans()).has(args.member))
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Usage",
-					"That member is not currently banned!"
-				)
-			);
+		if (!message.guild!.bans.cache.has(args.member))
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Usage",
+						"That member is not currently banned!"
+					),
+				],
+			});
 
 		try {
 			message.guild!.members.unban(
@@ -67,82 +70,82 @@ export default class UnbanCommand extends Command {
 					: `No Reason Provided | Unbanned by ${message.member}`
 			);
 		} catch (error) {
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"An Error Occurred",
-					"Make sure that you entered a valid User ID, and try again."
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"An Error Occurred",
+						"Make sure that you entered a valid User ID, and try again."
+					),
+				],
+			});
 		}
 
-		message.channel.send(
-			new MessageEmbed({
-				title: "Unbanned Member",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
+		message.channel.send({
+			embeds: [
+				this.embed(
 					{
-						name: "Member",
-						value: user,
-						inline: true,
+						title: "Unbanned Member",
+						fields: [
+							{
+								name: "Member",
+								value: user.toString(),
+								inline: true,
+							},
+							{
+								name: "Unbanned by",
+								value: message.member!.toString(),
+								inline: true,
+							},
+							{
+								name: "Reason",
+								value: args.reason
+									? args.reason
+									: "None Provided",
+							},
+						],
 					},
-					{
-						name: "Unbanned by",
-						value: message.member,
-						inline: true,
-					},
-					{
-						name: "Reason",
-						value: args.reason ? args.reason : "None Provided",
-					},
-				],
-			})
-		);
+					message
+				),
+			],
+		});
 
-		if (this.client.settings.get(message.guild!.id, "logging", false))
-			(<TextChannel>(
-				message.guild!.channels.cache.get(
-					this.client.settings.get(
-						message.guild!.id,
-						"loggingChannel",
-						null
-					)
-				)
-			))?.send(
-				new MessageEmbed({
-					title: "Member Unbanned",
-					thumbnail: {
-						url: user.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					color: message.guild!.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
+		this.client.sendToLogChannel(
+			{
+				embeds: [
+					this.embed(
 						{
-							name: "Member",
-							value: user,
-							inline: true,
+							title: "Member Unbanned",
+							thumbnail: {
+								url: user.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: user.toString(),
+									inline: true,
+								},
+								{
+									name: "Unbanned by",
+									value: message.member!.toString(),
+									inline: true,
+								},
+								{
+									name: "Reason",
+									value: args.reason
+										? args.reason
+										: "None Provided",
+								},
+							],
 						},
-						{
-							name: "Unbanned by",
-							value: message.member,
-							inline: true,
-						},
-						{
-							name: "Reason",
-							value: args.reason ? args.reason : "None Provided",
-						},
-					],
-				})
-			);
+						message
+					),
+				],
+			},
+			message.guild!
+		);
 	}
 }

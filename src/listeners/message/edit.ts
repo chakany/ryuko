@@ -1,4 +1,4 @@
-import { Listener } from "discord-akairo";
+import Listener from "../../struct/Listener";
 import { Message, MessageEmbed, TextChannel } from "discord.js";
 
 export default class MessageEditListener extends Listener {
@@ -21,17 +21,6 @@ export default class MessageEditListener extends Listener {
 		if (!oldMessage.guild) return;
 		if (oldMessage.author.discriminator === "0000") return;
 
-		const logChannel = this.client.settings.get(
-			oldMessage.guild.id,
-			"loggingChannel",
-			null
-		);
-
-		if (
-			!logChannel ||
-			!this.client.settings.get(oldMessage.guild!.id, "logging", false)
-		)
-			return;
 		if (oldMessage.author.bot) return;
 
 		// Concatinate our message content if it is too long
@@ -46,35 +35,42 @@ export default class MessageEditListener extends Listener {
 				: newMessage.content;
 
 		// Cast to please typescript
-		return (<TextChannel>this.client.channels.cache.get(logChannel)).send(
-			new MessageEmbed({
-				title: "Message Edited",
-				thumbnail: {
-					url: oldMessage.author.displayAvatarURL({ dynamic: true }),
-				},
-				color: oldMessage.guild.me?.displayHexColor,
-				timestamp: new Date(),
-				fields: [
-					{
-						name: "Before",
-						value: `[${_oldmessage}](${oldMessage.url} "Jump to Message")`,
-					},
-					{
-						name: "After",
-						value: `[${_newmessage}](${newMessage.url} "Jump to Message")`,
-					},
-					{
-						name: "Author",
-						value: oldMessage.author,
-						inline: true,
-					},
-					{
-						name: "Channel",
-						value: oldMessage.channel,
-						inline: true,
-					},
+		return this.client.sendToLogChannel(
+			{
+				embeds: [
+					new MessageEmbed({
+						title: "Message Edited",
+						description: `[Jump to Message!](${oldMessage.url} "Jump to Message")`,
+						thumbnail: {
+							url: oldMessage.author.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
+						footer: {},
+						fields: [
+							{
+								name: "Before",
+								value: _oldmessage,
+							},
+							{
+								name: "After",
+								value: _newmessage,
+							},
+							{
+								name: "Author",
+								value: oldMessage.author.toString(),
+								inline: true,
+							},
+							{
+								name: "Channel",
+								value: oldMessage.channel.toString(),
+								inline: true,
+							},
+						],
+					}),
 				],
-			})
+			},
+			oldMessage.guild
 		);
 	}
 }

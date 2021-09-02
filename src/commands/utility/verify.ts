@@ -32,27 +32,29 @@ export default class VerifyCommand extends Command {
 			) ||
 			!verifiedRole
 		)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Configuration",
-					`You must configure verification first! Use the \`${
-						message.util?.parsed?.prefix
-					}${this.handler.findCommand(
-						"verification"
-					)}\` command to set it up.`
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Configuration",
+						`You must configure verification first! Use the \`${
+							message.util?.parsed?.prefix
+						}${this.handler.findCommand(
+							"verification"
+						)}\` command to set it up.`
+					),
+				],
+			});
 		else if (message.member!.roles.cache.get(verifiedRole)) {
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Member",
-					"You have already been verified!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Member",
+						"You have already been verified!"
+					),
+				],
+			});
 		}
 
 		const level = this.client.settings.get(
@@ -87,14 +89,15 @@ export default class VerifyCommand extends Command {
 		} catch (error) {
 			await redis.unsubscribe(`verification-${key}`);
 			redis.removeVerification(key);
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"",
-					"I cannot DM you! Check your privacy settings and try again"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"",
+						"I cannot DM you! Check your privacy settings and try again"
+					),
+				],
+			});
 		}
 
 		let completed = false;
@@ -109,39 +112,32 @@ export default class VerifyCommand extends Command {
 						message.guild!.name
 					}**!`
 				);
-				if (
-					this.client.settings.get(
-						message.guild!.id,
-						"logging",
-						false
-					)
-				)
-					(<TextChannel>(
-						message.guild!.channels.cache.get(
-							this.client.settings.get(
-								message.guild!.id,
-								"loggingChannel",
-								null
-							)
-						)
-					)).send(
-						new MessageEmbed({
-							title: "Member Verified",
-							thumbnail: {
-								url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-							color: message.guild?.me?.displayHexColor,
-							timestamp: new Date(),
-							fields: [
+
+				this.client.sendToLogChannel(
+					{
+						embeds: [
+							this.embed(
 								{
-									name: "Member",
-									value: message.member,
+									title: "Member Verified",
+									thumbnail: {
+										url: message.author.displayAvatarURL({
+											dynamic: true,
+										}),
+									},
+									footer: {},
+									fields: [
+										{
+											name: "Member",
+											value: message.member!.toString(),
+										},
+									],
 								},
-							],
-						})
-					);
+								message
+							),
+						],
+					},
+					message.guild!
+				);
 				message.member!.roles.add(
 					// @ts-expect-error 2345
 					message.guild!.roles.cache.get(verifiedRole)
@@ -152,63 +148,55 @@ export default class VerifyCommand extends Command {
 						message.member?.ban({
 							reason: `Alternate Account of User <@!${call.originalAccount}>`,
 						});
-						sentMessage.edit(
-							new MessageEmbed({
-								title: "Banned from Guild",
-								description: `Using alternate accounts in **${
-									message.guild!.name
-								}** is prohibited. If you believe this is an error, please contact the server owner.`,
-								color: message.guild?.me?.displayHexColor,
-								timestamp: new Date(),
-								footer: {
-									text: message.author.tag,
-									icon_url: message.author.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-							})
-						);
-						if (
-							this.client.settings.get(
-								message.guild!.id,
-								"logging",
-								false
-							)
-						)
-							(<TextChannel>(
-								message.guild!.channels.cache.get(
-									this.client.settings.get(
-										message.guild!.id,
-										"loggingChannel",
-										null
-									)
-								)
-							))?.send(
-								new MessageEmbed({
-									title: "Member Verification Failed",
-									description:
-										"An alternate account was detected, they have been banned.",
-									thumbnail: {
-										url: message.author.displayAvatarURL({
-											dynamic: true,
-										}),
+						sentMessage.edit({
+							embeds: [
+								this.embed(
+									{
+										title: "Banned from Guild",
+										description: `Using alternate accounts in **${
+											message.guild!.name
+										}** is prohibited. If you believe this is an error, please contact the server owner.`,
 									},
-									color: message.guild?.me?.displayHexColor,
-									timestamp: new Date(),
-									fields: [
+									message
+								),
+							],
+						});
+
+						this.client.sendToLogChannel(
+							{
+								embeds: [
+									this.embed(
 										{
-											name: "Member",
-											value: message.member,
-											inline: true,
+											title: "Member Verification Failed",
+											description:
+												"An alternate account was detected, they have been banned.",
+											thumbnail: {
+												url: message.author.displayAvatarURL(
+													{
+														dynamic: true,
+													}
+												),
+											},
+											footer: {},
+											fields: [
+												{
+													name: "Member",
+													value: message.member!.toString(),
+													inline: true,
+												},
+												{
+													name: "Original Account",
+													value: `<@${call.originalAccount}>`,
+													inline: true,
+												},
+											],
 										},
-										{
-											name: "Original Account",
-											value: `<@${call.originalAccount}>`,
-											inline: true,
-										},
-									],
-								})
-							);
+										message
+									),
+								],
+							},
+							message.guild!
+						);
 						break;
 					case "medium":
 						const userPunishments =
@@ -221,128 +209,102 @@ export default class VerifyCommand extends Command {
 
 						if (
 							userPunishments[0]?.memberId ||
-							(await message.guild!.fetchBans()).has(
-								call.originalAccount
-							)
+							message.guild!.bans.cache.has(call.originalAccount)
 						) {
 							message.member?.ban({
 								reason: `Alternate Account of User <@!${call.originalAccount}>`,
 							});
-							sentMessage.edit(
-								new MessageEmbed({
-									title: "Banned from Guild",
-									description: `Evading punishments in **${
-										message.guild!.name
-									}** is prohibited. If you believe this is an error, please contact the server owner.`,
-									color: message.guild?.me?.displayHexColor,
-									timestamp: new Date(),
-									footer: {
-										text: message.author.tag,
-										icon_url:
-											message.author.displayAvatarURL({
-												dynamic: true,
-											}),
-									},
-								})
-							);
-							if (
-								this.client.settings.get(
-									message.guild!.id,
-									"logging",
-									false
-								)
-							)
-								(<TextChannel>(
-									message.guild!.channels.cache.get(
-										this.client.settings.get(
-											message.guild!.id,
-											"loggingChannel",
-											null
-										)
-									)
-								))?.send(
-									new MessageEmbed({
-										title: "Member Verification Failed",
-										description:
-											"An alternate account was detected, they have been banned.",
-										thumbnail: {
-											url: message.author.displayAvatarURL(
-												{ dynamic: true }
-											),
+							sentMessage.edit({
+								embeds: [
+									this.embed(
+										{
+											title: "Banned from Guild",
+											description: `Evading punishments in **${
+												message.guild!.name
+											}** is prohibited. If you believe this is an error, please contact the server owner.`,
 										},
-										color: message.guild?.me
-											?.displayHexColor,
-										timestamp: new Date(),
-										fields: [
+										message
+									),
+								],
+							});
+
+							this.client.sendToLogChannel(
+								{
+									embeds: [
+										this.embed(
 											{
-												name: "Member",
-												value: message.member,
-												inline: true,
+												title: "Member Verification Failed",
+												description:
+													"An alternate account was detected, they have been banned.",
+												thumbnail: {
+													url: message.author.displayAvatarURL(
+														{ dynamic: true }
+													),
+												},
+												footer: {},
+												fields: [
+													{
+														name: "Member",
+														value: message.member!.toString(),
+														inline: true,
+													},
+													{
+														name: "Original Account",
+														value: `<@${call.originalAccount}>`,
+														inline: true,
+													},
+												],
 											},
-											{
-												name: "Original Account",
-												value: `<@${call.originalAccount}>`,
-												inline: true,
-											},
-										],
-									})
-								);
+											message
+										),
+									],
+								},
+								message.guild!
+							);
 						} else {
 							message.member!.roles.add(
 								// @ts-expect-error 2345
 								message.guild!.roles.cache.get(verifiedRole)
 							);
-							sentMessage.edit(
-								new MessageEmbed({
-									title: "Verified Successfully",
-									description: `Welcome to **${
-										message.guild!.name
-									}**! Enjoy your stay!`,
-									color: message.guild?.me?.displayHexColor,
-									timestamp: new Date(),
-									footer: {
-										text: message.author.tag,
-										icon_url:
-											message.author.displayAvatarURL({
-												dynamic: true,
-											}),
-									},
-								})
-							);
-							if (
-								this.client.settings.get(
-									message.guild!.id,
-									"logging",
-									false
-								)
-							)
-								(<TextChannel>(
-									message.guild!.channels.cache.get(
-										this.client.settings.get(
-											message.guild!.id,
-											"loggingChannel",
-											null
-										)
-									)
-								))?.send(
-									new MessageEmbed({
-										title: "Member Verified",
-										thumbnail: {
-											url: message.author.displayAvatarURL(
-												{ dynamic: true }
-											),
+							sentMessage.edit({
+								embeds: [
+									this.embed(
+										{
+											title: "Verified Successfully",
+											description: `Welcome to **${
+												message.guild!.name
+											}**! Enjoy your stay!`,
 										},
-										color: message.guild?.me
-											?.displayHexColor,
-										timestamp: new Date(),
-										fields: [
+										message
+									),
+								],
+							});
+
+							this.client.sendToLogChannel(
+								{
+									embeds: [
+										this.embed(
 											{
-												name: "Member",
-												value: message.member,
+												title: "Member Verified",
+												thumbnail: {
+													url: message.author.displayAvatarURL(
+														{ dynamic: true }
+													),
+												},
+												footer: {},
+												fields: [
+													{
+														name: "Member",
+														value: message.member!.toString(),
+													},
+												],
 											},
-										],
-									})
-								);
+											message
+										),
+									],
+								},
+								message.guild!
+							);
 						}
 						break;
 					case "low":
@@ -350,55 +312,47 @@ export default class VerifyCommand extends Command {
 							// @ts-expect-error 2345
 							message.guild!.roles.cache.get(verifiedRole)
 						);
-						sentMessage.edit(
-							new MessageEmbed({
-								title: "Verified Successfully",
-								description: `Welcome to **${
-									message.guild!.name
-								}**! Enjoy your stay!`,
-								color: message.guild?.me?.displayHexColor,
-								timestamp: new Date(),
-								footer: {
-									text: message.author.tag,
-									icon_url: message.author.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-							})
-						);
-						if (
-							this.client.settings.get(
-								message.guild!.id,
-								"logging",
-								false
-							)
-						)
-							(<TextChannel>(
-								message.guild!.channels.cache.get(
-									this.client.settings.get(
-										message.guild!.id,
-										"loggingChannel",
-										null
-									)
-								)
-							))?.send(
-								new MessageEmbed({
-									title: "Member Verified",
-									thumbnail: {
-										url: message.author.displayAvatarURL({
-											dynamic: true,
-										}),
+						sentMessage.edit({
+							embeds: [
+								this.embed(
+									{
+										title: "Verified Successfully",
+										description: `Welcome to **${
+											message.guild!.name
+										}**! Enjoy your stay!`,
 									},
-									color: message.guild?.me?.displayHexColor,
-									timestamp: new Date(),
-									fields: [
+									message
+								),
+							],
+						});
+
+						this.client.sendToLogChannel(
+							{
+								embeds: [
+									this.embed(
 										{
-											name: "Member",
-											value: message.member,
+											title: "Member Verified",
+											thumbnail: {
+												url: message.author.displayAvatarURL(
+													{
+														dynamic: true,
+													}
+												),
+											},
+											footer: {},
+											fields: [
+												{
+													name: "Member",
+													value: message.member!.toString(),
+												},
+											],
 										},
-									],
-								})
-							);
+										message
+									),
+								],
+							},
+							message.guild!
+						);
 				}
 			}
 			completed = true;

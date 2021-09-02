@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class InviteCommand extends Command {
 	constructor() {
@@ -11,28 +11,26 @@ export default class InviteCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		return message.channel.send(
-			new MessageEmbed({
-				title: `Invite me!`,
-				description: `Want to invite me to your server? [Click me!](${await this.client.generateInvite(
+		return message.channel.send({
+			embeds: [
+				this.embed(
 					{
-						permissions: "ADMINISTRATOR",
-					}
-				)} "Invite Me")`,
-				thumbnail: {
-					url: this.client.user?.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			})
-		);
+						title: `Invite me!`,
+						description: `Want to invite me to your server? [Click me!](${this.client.generateInvite(
+							{
+								permissions: "ADMINISTRATOR",
+								scopes: ["bot"],
+							}
+						)} "Invite Me")`,
+						thumbnail: {
+							url: this.client.user?.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
+					},
+					message
+				),
+			],
+		});
 	}
 }
