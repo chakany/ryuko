@@ -49,10 +49,10 @@
 					<!--prettier-ignore-->
 					<% for(let categoryI = 0; categoryI < categories.length; categoryI++) { %>
 					<a
-						id="<%= categories[categoryI][0].categoryID %>-button"
+						id="<%= categories[categoryI].id  %>-button"
 						class="category-link"
-						href="/commands/<%= categories[categoryI][0].categoryID %>"
-						><%= categories[categoryI][0].categoryID %></a
+						href="/commands/<%= categories[categoryI].id %>"
+						><%= categories[categoryI].id %></a
 					>
 					<% } %>
 					<script>
