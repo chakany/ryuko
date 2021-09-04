@@ -1,11 +1,11 @@
-<script>
-	var head = document.getElementsByTagName("head")[0];
-	head.innerHTML =
-		head.innerHTML +
-		`<meta property="og:url" content="${window.location.href}" />`;
-</script>
 <!DOCTYPE html>
 <html>
+	<script>
+		var head = document.getElementsByTagName("head")[0];
+		head.innerHTML =
+			head.innerHTML +
+			`<meta property="og:url" content="${window.location.href}" />`;
+	</script>
 	<head>
 		<meta charset="utf-8" />
 		<meta
@@ -13,6 +13,12 @@
 			content="width=device-width, initial-scale=1, shrink-to-fit=no"
 		/>
 		<title>Home | <%= username %></title>
+		<link
+			rel="preload stylesheet"
+			as="style"
+			type="text/css"
+			href="/static/styles/base.css"
+		/>
 		<link rel="stylesheet" type="text/css" href="/static/styles/home.css" />
 		<link rel="shortcut icon" type="image/webp" href="<%= avatar %>" />
 		<meta property="og:title" content="Home" />
@@ -29,8 +35,10 @@
 		</script>
 		<div id="container" class="container-fluid">
 			<div id="inspirational">
-				<h1 class="bot-username"><%=username %></h1>
-				<h3>
+				<img class="fullbody" src="static/img/fullbody1.png" />
+				<div id="ins-info">
+					<h1 class="bot-username"><%= username %></h1>
+				<h3 class="bot-desc">
 					A Utility bot with Verification, Music, Tickets, a
 					Starboard, and more.
 				</h3>
@@ -47,13 +55,14 @@
 					class="btn btn-outline-primary inspirational-button"
 					>Get Support</a
 				>
+				</div>
 			</div>
 
 			<div id="features">
-				<h1>Features</h1>
+				<h1 class="title">Features</h1>
 				<hr />
 				<div class="row feature-row justify-content-center">
-					<div class="col col-lg-2">
+					<div class="col col-lg-4 me-auto">
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">Verification</h5>
@@ -69,7 +78,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col col-lg-2">
+					<div class="col col-lg-4 me-auto">
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">Moderation</h5>
@@ -85,7 +94,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col col-lg-2">
+					<div class="col col-lg-4 me-auto">
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">Tickets</h5>
@@ -101,7 +110,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col col-lg-2">
+					<div class="col col-lg-4 me-auto">
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">Logging</h5>
@@ -117,7 +126,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col col-lg-2">
+					<div class="col col-lg-4 me-auto">
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">Starboard</h5>
@@ -133,10 +142,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
-			</br>
-				<div class="row feature-row justify-content-center">
-					<div class="col col-lg-2">
+					<div class="col col-lg-4 me-auto">
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">Economy</h5>
@@ -149,8 +155,9 @@
 						</div>
 					</div>
 				</div>
+			</br>
 				<div id="bottom-section">
-					<h1 id="bottom-title">What are you waiting for?</h1>
+					<h1 class="title">What are you waiting for?</h1>
 					<h4>Add <%= username %> to your Server today!</h4>
 					<a
 					href="<%= invite %>"
@@ -180,5 +187,6 @@
 			</div>
 		</div>
 		<%- include("../components/footer.ejs") %>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 	</body>
 </html>

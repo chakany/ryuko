@@ -1,18 +1,38 @@
-@import "./base.scss";
+@import "./variables.scss";
 
 #container {
 	margin-top: 20px;
 }
 
 #inspirational {
-	text-align: center;
-	padding-top: 27vh;
+	display: flex;
+	text-align: right;
+}
+
+.fullbody {
+	padding-top: 5vh;
+	margin-left: 2vw;
+	width: 25%;
+	height: 25%;
+	vertical-align: middle;
+	user-select: none;
+	//animation: go-in 0.5s ease-in;
+}
+
+#ins-info {
+	padding-top: 20vh;
+	margin-left: auto;
+	padding-right: 8vw;
 }
 
 .bot-username {
 	font-family: "Russo One", sans-serif;
-	font-size: 70px;
+	font-size: 7rem;
 	color: $primary-color;
+}
+
+.bot-desc {
+	width: 50vw;
 }
 
 .inspirational-button {
@@ -33,6 +53,7 @@
 .card {
 	background-color: $body-bg !important;
 	border-color: $lighter-accent !important;
+	margin: 5px;
 }
 
 #bottom-section {
@@ -40,7 +61,7 @@
 	text-align: center;
 }
 
-#bottom-title {
+.title {
 	font-family: "Russo One", sans-serif;
 }
 
@@ -57,4 +78,33 @@
 	font-size: 2.5rem;
 	font-weight: normal;
 	vertical-align: middle;
+}
+
+@media screen and (max-width: 800px) {
+	#inspirational {
+		text-align: center !important;
+	}
+
+	#ins-info {
+		padding-top: 20vh;
+	}
+
+	.bot-desc {
+		width: 100%;
+	}
+
+	.fullbody {
+		display: none;
+	}
+}
+
+@keyframes go-in {
+	from {
+		transform: translateX(-40%) translateY(40%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0%) translateY(0%);
+		opacity: 1;
+	}
 }

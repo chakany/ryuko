@@ -1,4 +1,6 @@
-<script>
+<!DOCTYPE html>
+<html>
+	<script>
 	var head = document.getElementsByTagName("head")[0];
 	head.innerHTML =
 		head.innerHTML +
@@ -11,6 +13,12 @@
 			content="width=device-width, initial-scale=1, shrink-to-fit=no"
 		/>
 	<title>Wiki | <%= username %></title>
+	<link
+			rel="preload stylesheet"
+			as="style"
+			type="text/css"
+			href="/static/styles/base.css"
+		/>
 	<link rel="stylesheet" type="text/css" href="/static/styles/wiki.css" />
 	<link rel="shortcut icon" type="image/webp" href="<%= avatar %>" />
 	<meta property="og:title" content="Wiki" />
@@ -85,4 +93,6 @@
 		</div>
 	</div>
 	<%- include("../components/footer.ejs") %>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 </body>
+</html>

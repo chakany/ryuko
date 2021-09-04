@@ -3,7 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 import os from "os";
 import ms from "ms";
 
-export default class PingCommand extends Command {
+export default class StatsCommand extends Command {
 	constructor() {
 		super("stats", {
 			aliases: ["stats"],

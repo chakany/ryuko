@@ -16,8 +16,8 @@ import verify from "./routes/verify";
 import wiki from "./routes/wiki";
 
 const { token, port, imgApiUrl, topgg_token } = require("../config.json");
-let log = new Logger({ name: "shardmanager" });
-let weblog = new Logger({ name: "webserver" });
+let log = new Logger({ name: "manager" });
+let weblog = new Logger({ name: "web" });
 
 let manager: ShardingManager;
 let redis: Redis;

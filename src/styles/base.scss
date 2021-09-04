@@ -1,15 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
 
-$body-bg: #2b2a2a;
-$body-color: white;
-$primary-color: #e22525;
-$body-accent: #222;
-$lighter-accent: #3d3d3d;
-
-$theme-colors: (
-	primary: $primary-color,
-);
+@import "./variables.scss";
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
