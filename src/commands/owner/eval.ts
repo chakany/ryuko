@@ -51,14 +51,6 @@ export default class EvalCommand extends Command {
 							description: `\`\`\`xl\n${this.clean(
 								evaled
 							)}\`\`\``,
-							color: message.guild?.me?.displayHexColor,
-							timestamp: new Date(),
-							footer: {
-								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
 						},
 						message
 					),
@@ -71,14 +63,6 @@ export default class EvalCommand extends Command {
 						{
 							title: "Eval Error",
 							description: `\`\`\`xl\n${error}\`\`\``,
-							color: message.guild?.me?.displayHexColor,
-							timestamp: new Date(),
-							footer: {
-								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
 						},
 						message
 					),

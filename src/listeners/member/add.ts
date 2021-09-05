@@ -1,5 +1,6 @@
 import Listener from "../../struct/Listener";
-import { GuildMember, MessageEmbed, TextChannel, User } from "discord.js";
+import { GuildMember, TextChannel } from "discord.js";
+import { replace } from "../../utils/command";
 
 export default class MemberAddListener extends Listener {
 	constructor() {
@@ -18,6 +19,27 @@ export default class MemberAddListener extends Listener {
 			);
 
 			if (muteRole) member.roles.add(muteRole);
+		}
+
+		if (this.client.settings.get(member.guild.id, "joinLeave", false)) {
+			const channel = member.guild.channels.cache.get(
+				this.client.settings.get(
+					member.guild.id,
+					"joinLeaveChannel",
+					null
+				)
+			) as TextChannel | undefined;
+
+			channel?.send(
+				replace(
+					this.client.settings.get(
+						member.guild.id,
+						"joinMessage",
+						""
+					),
+					member.user
+				)
+			);
 		}
 
 		member.guild.invites

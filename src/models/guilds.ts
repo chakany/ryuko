@@ -72,6 +72,21 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false,
 		},
+		joinLeave: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		joinLeaveChannel: {
+			type: DataTypes.STRING,
+		},
+		joinMessage: {
+			type: DataTypes.STRING,
+			defaultValue: "Welcome **(tag**, Enjoy your stay!",
+		},
+		leaveMessage: {
+			type: DataTypes.STRING,
+			defaultValue: "Looks like **(tag** left. :(",
+		},
 		someDumbFuckingSetting: {
 			type: DataTypes.BOOLEAN,
 		},

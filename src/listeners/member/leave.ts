@@ -1,5 +1,6 @@
 import Listener from "../../struct/Listener";
-import { GuildMember, MessageEmbed, TextChannel, User } from "discord.js";
+import { GuildMember, TextChannel, User } from "discord.js";
+import { replace } from "../../utils/command";
 
 export default class MemberLeaveListener extends Listener {
 	constructor() {
@@ -10,6 +11,27 @@ export default class MemberLeaveListener extends Listener {
 	}
 
 	async exec(member: GuildMember) {
+		if (this.client.settings.get(member.guild.id, "joinLeave", false)) {
+			const channel = member.guild.channels.cache.get(
+				this.client.settings.get(
+					member.guild.id,
+					"joinLeaveChannel",
+					null
+				)
+			) as TextChannel | undefined;
+
+			channel?.send(
+				replace(
+					this.client.settings.get(
+						member.guild.id,
+						"leaveMessage",
+						""
+					),
+					member.user
+				)
+			);
+		}
+
 		const fetchedLogs = await member.guild.fetchAuditLogs({
 			limit: 1,
 			type: "MEMBER_KICK",

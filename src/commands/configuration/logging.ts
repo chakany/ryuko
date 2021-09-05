@@ -132,7 +132,7 @@ export default class LoggingCommand extends Command {
 									},
 									{
 										name: "After",
-										value: args.channel,
+										value: args.channel.toString(),
 										inline: true,
 									},
 								],
