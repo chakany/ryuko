@@ -150,7 +150,7 @@ router.post("/", async (req, res) => {
 				))) ||
 			(fetchedMember?.ipAddress == req.ip &&
 				fetchedMember?.id !== req.body.id &&
-				fetchedMember?.verifiedAt > current)
+				fetchedMember?.verifiedAt >= current)
 		) {
 			res.render("verify", {
 				verified: true,
