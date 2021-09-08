@@ -12,6 +12,8 @@ import {
 	MessageOptions,
 	TextChannel,
 	Intents,
+	Snowflake,
+	VoiceChannel,
 } from "discord.js";
 import { Shoukaku, Libraries } from "shoukaku";
 import { LavasfyClient } from "lavasfy";
@@ -45,6 +47,17 @@ interface Queue {
 	loop: boolean;
 }
 
+type voiceStateCollection = Collection<
+	Snowflake,
+	Collection<
+		Snowflake,
+		{
+			channel: VoiceChannel;
+			owner: Snowflake;
+		}
+	>
+>;
+
 // Bruh
 declare module "discord-akairo" {
 	interface AkairoClient {
@@ -63,10 +76,11 @@ declare module "discord-akairo" {
 		log: Logger;
 		jobs: Map<string, Map<string, Job>>;
 		invites: Collection<string, any>;
+		voiceLobbies: voiceStateCollection;
 		sendToLogChannel(
 			options: MessageOptions,
 			guild: Guild
-		): Promise<Message> | null;
+		): Promise<Message | null | undefined>;
 	}
 }
 
@@ -82,6 +96,7 @@ export default class RyukoClient extends AkairoClient {
 	public lavasfy: LavasfyClient;
 	public queue: Collection<string, Queue>;
 	public log: Logger;
+	public voiceLobbies: voiceStateCollection;
 	public jobs: Collection<string, Map<string, Job>>;
 	public starboardMessages: Collection<string, Message>;
 	public invites: Collection<string, any>;
@@ -113,6 +128,7 @@ export default class RyukoClient extends AkairoClient {
 		this.log = log;
 		this.jobs = new Collection();
 		this.invites = new Collection();
+		this.voiceLobbies = new Collection();
 		this.starboardMessages = new Collection();
 
 		this.db = new Db();
@@ -262,20 +278,20 @@ export default class RyukoClient extends AkairoClient {
 		return super.login(token);
 	}
 
-	sendToLogChannel(
+	async sendToLogChannel(
 		options: MessageOptions,
 		guild: Guild
-	): Promise<Message> | null {
+	): Promise<Message | null | undefined> {
 		if (
 			!this.settings.get(guild.id, "logging", false) &&
 			this.settings.get(guild.id, "loggingChannel", null)
 		)
 			return null;
 
-		return (<TextChannel>(
-			guild.channels.cache.get(
-				this.settings.get(guild.id, "loggingChannel", null)
-			)
-		))?.send(options);
+		const loggingChannel = (await guild.channels.fetch(
+			this.settings.get(guild.id, "loggingChannel", null)
+		)) as TextChannel | null;
+
+		return loggingChannel?.send(options);
 	}
 }

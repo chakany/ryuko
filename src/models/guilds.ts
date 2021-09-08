@@ -87,6 +87,13 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 			type: DataTypes.STRING,
 			defaultValue: "Looks like **(tag** left. :(",
 		},
+		voiceLobbies: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		voiceLobbyChannel: {
+			type: DataTypes.STRING,
+		},
 		someDumbFuckingSetting: {
 			type: DataTypes.BOOLEAN,
 		},

@@ -1,13 +1,12 @@
-<h1>Moderation</h1>
+<h1 class="header">Moderation</h1>
 The Moderation system has many useful features, but it should be configured properly, and it's good to know some quirks of it.
 
-</br>
-</br>
-<h3>Features</h3>
+<hr>
+<h3 class="header">Features</h3>
 The Moderation System has many <b>critical</b> features, like <a href="/commands/Moderation#mute" >mutes</a>, <a href="/commands/Moderation#purge" >message purging</a>, and more!
 
 </br>  </br> 
-<h3>How it Works</h3>
+<h3 class="header">How it Works</h3>
 There are two ways to execute Moderation Commands, with the Moderator Role
 (configurable with the
 <code
@@ -27,7 +26,7 @@ The <code
 This is done just in case you don't want moderators to have access to those permissions, if you do though, just give the Moderator role the appropriate permissions.
 
 </br> </br>
-<h3>Setting up the Moderator Role</h3>
+<h3 class="header">Setting up the Moderator Role</h3>
 To setup the Moderator role, use the <code
 	><a  href="/commands/Configuration#modrole"
 		><%= prefix %>modrole</a
@@ -40,7 +39,7 @@ To setup the Moderator role, use the <code
 </ol>
 
 </br> 
-<h3>Setting up the Muted Role</h3>
+<h3 class="header">Setting up the Muted Role</h3>
 To setup the Muted role, use the <code
 	><a  href="/commands/Configuration#muterole"
 		><%= prefix %>muterole</a
@@ -54,7 +53,7 @@ This will be given to members when they are muted by a moderator, and when they 
 </ol>
 
 </br>
-<h3 id="filter">Setting up the Word Filter</h3>
+<h3 class="header" id="filter">Setting up the Word Filter</h3>
 The filter is configurable, and allows for Server Administrators, as well as Moderators to add to it, remove from it, enable, or disable it.
 
 To setup the Filter, use the <code
@@ -65,7 +64,7 @@ To setup the Filter, use the <code
 
 </br> </br>
 
-<h4>Setup</h4>
+<h4 class="header">Setup</h4>
 <ol>
 	<li>Enable the filter with <code><%= prefix %>filter enable</code>, this will turn it on, but with no phrases added to it!</li>
 	<li>Add phrases to the filter with <code><%= prefix %>filter add &lt;phrase&gt;</code>, this will add the phrase into the filter, and will automatically delete a message that contains this phrase.</li>
@@ -73,7 +72,7 @@ To setup the Filter, use the <code
 Congratulations! You have just set up the filter!
 
 </br> </br>
-<h4>Subcommands</h4>
+<h4 class="header">Subcommands</h4>
 <ul>
 	<li><code>enable</code> Enable the Filter</li>
 	<li><code>disable</code> Disable the Filter</li>
