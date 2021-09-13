@@ -55,7 +55,7 @@
 		"fast-levenshtein": "^3.0.0",
 		"glob": "^7.1.7",
 		"ioredis": "^4.27.9",
-		"lavasfy": "2.2.1",
+		"lavasfy": "2.3.0",
 		"mariadb": "^2.5.4",
 		"moment": "^2.29.1",
 		"ms": "^2.1.3",
