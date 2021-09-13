@@ -291,10 +291,10 @@ agent-base@6:
   dependencies:
     debug "4"
 
-aki-api@^6.0.7:
-  version "6.0.7"
-  resolved "https://registry.yarnpkg.com/aki-api/-/aki-api-6.0.7.tgz#f6d4d7e62559df91266ad2b1b4dd6080f0bfcd71"
-  integrity sha512-+ScuExO29TLIdYCn94p3lffJ+uhg8N1AjH9GBYi96Ohjd914YcUTQV/mdwPQTAH8081VTXSLGIRBa12CcaR26A==
+aki-api@^6.0.8:
+  version "6.0.8"
+  resolved "https://registry.yarnpkg.com/aki-api/-/aki-api-6.0.8.tgz#2e2091ea1ffdc0773ec4585f0441d00c95b16b2e"
+  integrity sha512-fOMHSPfcyT2WFrf2wsQf5GNpwCSJzWA7+YO3DU8j8wOS16I10lmpIxXkdx3rCiWfmhD6kXVdUaEGJ4DKkiPbMA==
   dependencies:
     axios "^0.21.1"
     https-proxy-agent "^5.0.0"
