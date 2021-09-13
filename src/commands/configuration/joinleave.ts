@@ -1,6 +1,6 @@
 import Command from "../../struct/Command";
 import { Message } from "discord.js";
-import { Argument } from "discord-akairo";
+import { Argument } from "@ryukobot/discord-akairo";
 import { replace } from "../../utils/command";
 
 export default class JoinLeaveCommand extends Command {

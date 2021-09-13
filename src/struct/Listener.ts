@@ -1,4 +1,7 @@
-import { Listener as AkairoListener, ListenerOptions } from "discord-akairo";
+import {
+	Listener as AkairoListener,
+	ListenerOptions,
+} from "@ryukobot/discord-akairo";
 import { MessageEmbedOptions, User, Guild } from "discord.js";
 import Embed from "./Embed";
 

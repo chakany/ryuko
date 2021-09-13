@@ -1,5 +1,5 @@
 import Logger from "./struct/Logger";
-import { Category, Command } from "discord-akairo";
+import { Category, Command } from "@ryukobot/discord-akairo";
 
 let log = new Logger({
 	name: "bot",

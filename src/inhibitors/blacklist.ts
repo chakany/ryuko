@@ -1,4 +1,4 @@
-import { Inhibitor } from "discord-akairo";
+import { Inhibitor } from "@ryukobot/discord-akairo";
 import { Message } from "discord.js";
 
 export default class BlacklistInhibitor extends Inhibitor {

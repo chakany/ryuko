@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes, QueryTypes, Op, ModelCtor } from "sequelize";
 import { Snowflake } from "discord.js";
-import { SequelizeProvider } from "discord-akairo";
+import { SequelizeProvider } from "@ryukobot/discord-akairo";
 import bunyan from "bunyan";
 
 import guildsModel from "../models/guilds";

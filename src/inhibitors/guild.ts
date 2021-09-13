@@ -1,4 +1,4 @@
-import { Inhibitor } from "discord-akairo";
+import { Inhibitor } from "@ryukobot/discord-akairo";
 import Command from "../struct/Command";
 import { Message } from "discord.js";
 

@@ -1,4 +1,4 @@
-import { Argument } from "discord-akairo";
+import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
 import { Message, MessageEmbed, Role } from "discord.js";
 

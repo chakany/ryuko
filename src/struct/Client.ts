@@ -4,7 +4,7 @@ import {
 	InhibitorHandler,
 	ListenerHandler,
 	SequelizeProvider,
-} from "discord-akairo";
+} from "@ryukobot/discord-akairo";
 import {
 	Collection,
 	Message,
@@ -59,7 +59,7 @@ type voiceStateCollection = Collection<
 >;
 
 // Bruh
-declare module "discord-akairo" {
+declare module "@ryukobot/discord-akairo" {
 	interface AkairoClient {
 		db: Db;
 		commandHandler: CommandHandler;

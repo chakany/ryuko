@@ -1,5 +1,9 @@
 import express from "express";
-import { AkairoClient, CommandHandler, Category } from "discord-akairo";
+import {
+	AkairoClient,
+	CommandHandler,
+	Category,
+} from "@ryukobot/discord-akairo";
 
 const { prefix } = require("../../config.json");
 

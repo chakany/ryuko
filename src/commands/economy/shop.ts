@@ -1,6 +1,6 @@
 import Command from "../../struct/Command";
 import { Message, Role } from "discord.js";
-import { Argument } from "discord-akairo";
+import { Argument } from "@ryukobot/discord-akairo";
 import PaginationEmbed from "../../utils/PaginationEmbed";
 
 export default class ShopCommand extends Command {

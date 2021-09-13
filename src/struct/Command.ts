@@ -1,4 +1,7 @@
-import { Command as AkairoCommand, CommandOptions } from "discord-akairo";
+import {
+	Command as AkairoCommand,
+	CommandOptions,
+} from "@ryukobot/discord-akairo";
 import { Message, MessageEmbedOptions } from "discord.js";
 import { generateUsage } from "../utils/command";
 import Embed from "./Embed";

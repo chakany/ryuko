@@ -37,6 +37,7 @@
 		"zx": "^4.0.0"
 	},
 	"dependencies": {
+		"@ryukobot/discord-akairo": "^8.1.2",
 		"aki-api": "^6.0.7",
 		"axios": "^0.21.1",
 		"bcrypt": "^5.0.1",
@@ -46,7 +47,6 @@
 		"cli-table": "^0.3.6",
 		"colors": "^1.4.0",
 		"cookie-parser": "^1.4.5",
-		"discord-akairo": "https://github.com/discord-akairo/discord-akairo",
 		"discord.js": "^13.1.0",
 		"ejs": "^3.1.6",
 		"express": "^4.17.1",
