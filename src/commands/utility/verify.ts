@@ -139,8 +139,8 @@ export default class VerifyCommand extends Command {
 					message.guild!
 				);
 				message.member!.roles.add(
-					// @ts-expect-error 2345
-					message.guild!.roles.cache.get(verifiedRole)
+					// @ts-expect-error
+					await message.guild!.roles.fetch(verifiedRole)
 				);
 			} else if (call.message == "alt") {
 				switch (level) {
@@ -264,7 +264,7 @@ export default class VerifyCommand extends Command {
 						} else {
 							message.member!.roles.add(
 								// @ts-expect-error 2345
-								message.guild!.roles.cache.get(verifiedRole)
+								await message.guild!.roles.fetch(verifiedRole)
 							);
 							sentMessage.edit({
 								embeds: [
@@ -310,7 +310,7 @@ export default class VerifyCommand extends Command {
 					case "low":
 						message.member!.roles.add(
 							// @ts-expect-error 2345
-							message.guild!.roles.cache.get(verifiedRole)
+							await message.guild!.roles.fetch(verifiedRole)
 						);
 						sentMessage.edit({
 							embeds: [

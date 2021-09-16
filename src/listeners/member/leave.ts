@@ -12,13 +12,13 @@ export default class MemberLeaveListener extends Listener {
 
 	async exec(member: GuildMember) {
 		if (this.client.settings.get(member.guild.id, "joinLeave", false)) {
-			const channel = member.guild.channels.cache.get(
+			const channel = (await member.guild.channels.fetch(
 				this.client.settings.get(
 					member.guild.id,
 					"joinLeaveChannel",
 					null
 				)
-			) as TextChannel | undefined;
+			)) as TextChannel | undefined;
 
 			channel?.send(
 				replace(

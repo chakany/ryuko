@@ -53,34 +53,19 @@ export default class UsmapCommand extends Command {
 		);
 
 		if (results) {
-			const amount = Math.floor(Math.random() * 200);
-
-			this.client.economy.addCoins(
-				message.guild!.id,
-				message.author.id,
-				amount
-			);
-			this.client.economy.createTransaction(
-				message.guild!.id,
-				this.client.user!.id,
-				message.author.id,
-				amount,
-				"Correct Answer"
-			);
-
-			return message.channel.send({
+			message.channel.send({
 				embeds: [
 					this.embed(
 						{
 							title: "Correct Answer!",
-							description: `That answer is correct, take **${amount} coins**! ${this.client.emoji.coin}`,
+							description: `Nice Job!`,
 						},
 						message
 					),
 				],
 			});
 		} else
-			return message.channel.send({
+			message.channel.send({
 				embeds: [
 					this.embed(
 						{

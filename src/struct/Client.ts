@@ -26,7 +26,6 @@ import Command from "./Command";
 
 import Db from "../utils/db";
 import Trivia from "./Trivia";
-import Economy from "./Economy";
 import { generateUsage } from "../utils/command";
 
 const config = require("../../config.json");
@@ -67,7 +66,6 @@ declare module "@ryukobot/discord-akairo" {
 		config: any;
 		emoji: any;
 		generateUsage: Function;
-		economy: Economy;
 		trivia: Trivia;
 		settings: SequelizeProvider;
 		shoukaku: Shoukaku;
@@ -89,7 +87,6 @@ export default class RyukoClient extends AkairoClient {
 	public config: any;
 	public emoji: any;
 	public generateUsage: Function;
-	public economy: Economy;
 	public trivia: Trivia;
 	public settings: SequelizeProvider;
 	public shoukaku: Shoukaku;
@@ -132,7 +129,6 @@ export default class RyukoClient extends AkairoClient {
 		this.starboardMessages = new Collection();
 
 		this.db = new Db();
-		this.economy = new Economy("../../app/data", this.db);
 		this.settings = this.db.getSettings();
 
 		this.shoukaku = new Shoukaku(

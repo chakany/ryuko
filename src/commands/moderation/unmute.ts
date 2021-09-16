@@ -19,7 +19,7 @@ export default class MoveCommand extends Command {
 		});
 	}
 
-	exec(message: Message, args: any): any {
+	async exec(message: Message, args: any): Promise<any> {
 		if (!args.member)
 			return message.channel.send({
 				embeds: [
@@ -62,7 +62,7 @@ export default class MoveCommand extends Command {
 				],
 			});
 
-		args.member.roles.remove(message.guild?.roles.cache.get(muteRole));
+		args.member.roles.remove(await message.guild?.roles.fetch(muteRole));
 		mutedMembers.get(args.member.id)?.cancel();
 		mutedMembers.delete(args.member.id);
 

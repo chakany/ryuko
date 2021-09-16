@@ -119,7 +119,7 @@ export default class MuteCommand extends Command {
 				],
 			});
 		}
-		args.member.roles.add(message.guild?.roles.cache.get(muteRole));
+		args.member.roles.add(await message.guild?.roles.fetch(muteRole));
 
 		message.channel.send({
 			embeds: [
@@ -153,52 +153,57 @@ export default class MuteCommand extends Command {
 		const outer = this;
 
 		// Assign them the mute
-		const job = schedule.scheduleJob(args.length[0].toDate(), function () {
-			if (args.member.roles.cache.has(muteRole))
-				// @ts-ignore
-				args.member.roles.remove(
-					message.guild?.roles.cache.get(muteRole)
-				);
+		const job = schedule.scheduleJob(
+			args.length[0].toDate(),
+			async function () {
+				if (args.member.roles.cache.has(muteRole))
+					// @ts-ignore
+					args.member.roles.remove(
+						await message.guild?.roles.fetch(muteRole)
+					);
 
-			outer.client.jobs.get(message.guild!.id)?.delete(args.member.id);
+				outer.client.jobs
+					.get(message.guild!.id)
+					?.delete(args.member.id);
 
-			outer.client.sendToLogChannel(
-				{
-					embeds: [
-						outer.embed(
-							{
-								title: "Member Unmuted",
-								description: `${args.member}'s mute has expired.`,
-								footer: {},
-								thumbnail: {
-									url: args.member.user.displayAvatarURL({
-										dynamic: true,
-									}),
+				outer.client.sendToLogChannel(
+					{
+						embeds: [
+							outer.embed(
+								{
+									title: "Member Unmuted",
+									description: `${args.member}'s mute has expired.`,
+									footer: {},
+									thumbnail: {
+										url: args.member.user.displayAvatarURL({
+											dynamic: true,
+										}),
+									},
+									fields: [
+										{
+											name: "Member",
+											value: args.member.toString(),
+											inline: true,
+										},
+										{
+											name: "Length",
+											value: `**${args.length[0].humanize()}** (<t:${args.length[0].unix()}:f>)`,
+										},
+										{
+											name: "Muted By",
+											value: message.member!.toString(),
+											inline: true,
+										},
+									],
 								},
-								fields: [
-									{
-										name: "Member",
-										value: args.member.toString(),
-										inline: true,
-									},
-									{
-										name: "Length",
-										value: `**${args.length[0].humanize()}** (<t:${args.length[0].unix()}:f>)`,
-									},
-									{
-										name: "Muted By",
-										value: message.member!.toString(),
-										inline: true,
-									},
-								],
-							},
-							message
-						),
-					],
-				},
-				message.guild!
-			);
-		});
+								message
+							),
+						],
+					},
+					message.guild!
+				);
+			}
+		);
 		let guildJobs = this.client.jobs.get(message.guild!.id);
 		if (!guildJobs) guildJobs = new Map();
 		guildJobs?.set(args.member.id, job);

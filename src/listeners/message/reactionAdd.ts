@@ -74,7 +74,7 @@ export default class MessageReactionAddListener extends Listener {
 			embed.setImage(message.embeds[0]?.thumbnail?.url);
 
 		const newMessage = await (<TextChannel>(
-			message.guild?.channels.cache.get(
+			await message.guild?.channels.fetch(
 				this.client.settings.get(
 					reaction.message.guild!.id,
 					"starboardChannel",

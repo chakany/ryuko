@@ -9,10 +9,10 @@ export default class GuildDeleteListener extends Listener {
 		});
 	}
 
-	exec(guild: Guild) {
+	async exec(guild: Guild) {
 		this.client.log.info(
 			`I was removed from guild "${guild.name}" that is owned by ${
-				this.client.users.cache.get(guild.ownerId)?.tag
+				(await this.client.users.fetch(guild.ownerId))?.tag
 			}`
 		);
 	}

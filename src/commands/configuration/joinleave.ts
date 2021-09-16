@@ -70,13 +70,13 @@ export default class JoinLeaveCommand extends Command {
 
 			case "enable":
 				if (
-					!message.guild!.channels.cache.get(
+					!(await message.guild!.channels.fetch(
 						this.client.settings.get(
 							message.guild!.id,
 							"joinLeaveChannel",
 							null
 						)
-					)
+					))
 				)
 					return message.channel.send({
 						embeds: [
