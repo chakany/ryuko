@@ -1,6 +1,7 @@
 import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
+import { channelMention } from "@discordjs/builders";
 
 export default class StarboardCommand extends Command {
 	constructor() {
@@ -23,13 +24,23 @@ export default class StarboardCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
+		const enabled = this.client.settings.get(
+			message.guild!.id,
+			"starboard",
+			false
+		);
+
 		switch (args.action) {
 			default:
 				return message.channel.send({
 					embeds: [
 						this.embed(
 							{
-								title: "Starboard Subcommands",
+								title: `${
+									enabled
+										? this.client.emoji.greenCheck
+										: this.client.emoji.redX
+								} Starboard Subcommands`,
 								description: `See more information on the [Starboard Wiki](${this.client.config.siteUrl}/wiki/Features/Starboard)`,
 								fields: [
 									{
@@ -41,8 +52,22 @@ export default class StarboardCommand extends Command {
 										value: "Disable the Starboard",
 									},
 									{
-										name: "`channel <channel>`",
-										value: "Channel to send starred messages into",
+										name: `\`channel <channel>\``,
+										value: `**Current Channel:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"starboardChannel",
+												null
+											)
+												? `${channelMention(
+														this.client.settings.get(
+															message.guild!.id,
+															"starboardChannel",
+															null
+														)
+												  )}`
+												: "None"
+										}\nChannel to send starred messages into`,
 									},
 								],
 							},
@@ -75,7 +100,6 @@ export default class StarboardCommand extends Command {
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Enabled Starboard`,
-								description: "The Starboard has been enabled",
 							},
 							message
 						),
@@ -90,7 +114,6 @@ export default class StarboardCommand extends Command {
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Disabled Starboard`,
-								description: "The Starboard has been disabled",
 							},
 							message
 						),
@@ -111,7 +134,9 @@ export default class StarboardCommand extends Command {
 								{
 									title: "Current Starboard Channel",
 									description: oldChannel
-										? `The current channel for the starboard is <#${oldChannel}>`
+										? `The current channel for the starboard is ${channelMention(
+												oldChannel
+										  )}`
 										: "There is no current channel for the starboard",
 								},
 								message
@@ -133,7 +158,7 @@ export default class StarboardCommand extends Command {
 									{
 										name: "Before",
 										value: oldChannel
-											? `<#${oldChannel}>`
+											? channelMention(oldChannel)
 											: "None",
 										inline: true,
 									},

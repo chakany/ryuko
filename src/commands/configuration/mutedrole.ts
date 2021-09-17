@@ -1,5 +1,6 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
+import { roleMention } from "@discordjs/builders";
 
 export default class ModroleCommand extends Command {
 	constructor() {
@@ -38,7 +39,7 @@ export default class ModroleCommand extends Command {
 								{
 									name: "Role",
 									value: currentRole
-										? `<&${currentRole}>`
+										? roleMention(currentRole)
 										: "None",
 								},
 							],
@@ -77,7 +78,7 @@ export default class ModroleCommand extends Command {
 							{
 								name: "Before",
 								value: currentRole
-									? `<@&${currentRole}>`
+									? roleMention(currentRole)
 									: "None",
 								inline: true,
 							},

@@ -1,5 +1,6 @@
 import Command from "../../struct/Command";
 import { Message } from "discord.js";
+import { channelMention } from "@discordjs/builders";
 import { Argument } from "@ryukobot/discord-akairo";
 import { replace } from "../../utils/command";
 
@@ -24,13 +25,23 @@ export default class JoinLeaveCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
+		const enabled = this.client.settings.get(
+			message.guild!.id,
+			"joinLeave",
+			false
+		);
+
 		switch (args.subcommand) {
 			default:
 				return message.channel.send({
 					embeds: [
 						this.embed(
 							{
-								title: "Join/Leave Subcommands",
+								title: `${
+									enabled
+										? this.client.emoji.greenCheck
+										: this.client.emoji.redX
+								} Join/Leave Message Subcommands`,
 								description: `**Placeholders:**\n\`(mention\` The User Mention. Ex: ${message.member!.user.toString()}\n\`(username\` The Username of the Member. Ex: ${
 									message.member!.user.username
 								}\n\`(discriminator\` The Discriminator of the Member. Ex: ${
@@ -50,16 +61,54 @@ export default class JoinLeaveCommand extends Command {
 										value: "Disable Join & Leave Messages",
 									},
 									{
-										name: "`channel <channel>`",
-										value: "Change the Channel that Join & Leave messages will be sent into",
+										name: `\`channel <channel>\``,
+										value: `**Current Channel:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"joinLeaveChannel",
+												null
+											)
+												? `${channelMention(
+														this.client.settings.get(
+															message.guild!.id,
+															"joinLeaveChannel",
+															null
+														)
+												  )}`
+												: "None"
+										}\nChange the Channel that Join & Leave messages will be sent into`,
 									},
 									{
 										name: "`join <phrase>`",
-										value: "Change the message that will be sent when someone joins",
+										value: `**Current Phrase:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"joinMessage",
+												null
+											)
+												? `\`${this.client.settings.get(
+														message.guild!.id,
+														"joinMessage",
+														null
+												  )}\``
+												: "None"
+										}\nChange the message that will be sent when someone joins`,
 									},
 									{
 										name: "`leave <phrase>`",
-										value: "Change the message that will be sent when someone leaves",
+										value: `**Current Phrase:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"leaveMessages",
+												null
+											)
+												? `\`${this.client.settings.get(
+														message.guild!.id,
+														"leaveMessages",
+														null
+												  )}\``
+												: "None"
+										}\nChange the message that will be sent when someone leaves`,
 									},
 								],
 							},
@@ -95,11 +144,13 @@ export default class JoinLeaveCommand extends Command {
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Enabled Join & Leave Messages`,
-								description: `They will be sent into <#${this.client.settings.get(
-									message.guild!.id,
-									"joinLeaveChannel",
-									null
-								)}>`,
+								description: `They will be sent into ${channelMention(
+									this.client.settings.get(
+										message.guild!.id,
+										"joinLeaveChannel",
+										null
+									)
+								)}`,
 							},
 							message
 						),
@@ -115,7 +166,6 @@ export default class JoinLeaveCommand extends Command {
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Disabled Join & Leave Messages`,
-								description: `Join & Leave Messages have been disabled`,
 							},
 							message
 						),
@@ -155,7 +205,7 @@ export default class JoinLeaveCommand extends Command {
 									{
 										name: "Before",
 										value: oldChannel
-											? `<#${oldChannel}>`
+											? channelMention(oldChannel)
 											: `None`,
 										inline: true,
 									},

@@ -1,5 +1,6 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
+import { channelMention } from "@discordjs/builders";
 
 export default class VoiceLobbiesCommand extends Command {
 	constructor() {
@@ -21,13 +22,23 @@ export default class VoiceLobbiesCommand extends Command {
 	}
 
 	async exec(message: Message, args: any) {
+		const enabled = this.client.settings.get(
+			message.guild!.id,
+			"voiceLobbies",
+			false
+		);
+
 		switch (args.subcommand) {
 			default:
 				message.channel.send({
 					embeds: [
 						this.embed(
 							{
-								title: "Voice Lobbies Subcommands",
+								title: `${
+									enabled
+										? this.client.emoji.greenCheck
+										: this.client.emoji.redX
+								} Voice Lobbies Subcommands`,
 								description: `See more information on the [Lobbies Wiki](${this.client.config.siteUrl}/wiki/Features/Voice-Lobbies)`,
 								fields: [
 									{
@@ -39,8 +50,22 @@ export default class VoiceLobbiesCommand extends Command {
 										value: "Disable Voice Lobbies",
 									},
 									{
-										name: "`channel`",
-										value: "Set the Lobby Channel",
+										name: `\`channel\``,
+										value: `**Current Channel:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"voiceLobbyChannel",
+												null
+											)
+												? `${channelMention(
+														this.client.settings.get(
+															message.guild!.id,
+															"voiceLobbyChannel",
+															null
+														)
+												  )}`
+												: "None"
+										}\nSet the Lobby Channel`,
 									},
 								],
 							},
@@ -79,7 +104,6 @@ export default class VoiceLobbiesCommand extends Command {
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Enabled Voice Lobbies`,
-								description: "Voice Lobbies have been Enabled",
 							},
 							message
 						),
@@ -99,7 +123,6 @@ export default class VoiceLobbiesCommand extends Command {
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Disabled Voice Lobbies`,
-								description: "Voice Lobbies have been Disabled",
 							},
 							message
 						),
@@ -139,7 +162,7 @@ export default class VoiceLobbiesCommand extends Command {
 									{
 										name: "Before",
 										value: oldChannel
-											? `<#${oldChannel}>`
+											? channelMention(oldChannel)
 											: "None",
 										inline: true,
 									},

@@ -1,6 +1,7 @@
 import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
+import { roleMention } from "@discordjs/builders";
 
 export default class TicketingCommand extends Command {
 	constructor() {
@@ -24,13 +25,23 @@ export default class TicketingCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
+		const enabled = this.client.settings.get(
+			message.guild!.id,
+			"tickets",
+			false
+		);
+
 		switch (args.action) {
 			default:
 				return message.channel.send({
 					embeds: [
 						this.embed(
 							{
-								title: "Ticketing Subcommands",
+								title: `${
+									enabled
+										? this.client.emoji.greenCheck
+										: this.client.emoji.redX
+								} Ticketing Subcommands`,
 								description: `See more information on the [Ticketing Wiki](${this.client.config.siteUrl}/wiki/Features/Ticketing)`,
 								fields: [
 									{
@@ -42,12 +53,38 @@ export default class TicketingCommand extends Command {
 										value: "Disable tickets",
 									},
 									{
-										name: "`role <role>`",
-										value: "Role to automatically give access to tickets",
+										name: `\`role <role>\``,
+										value: `**Current Role:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"ticketRole",
+												null
+											)
+												? `${roleMention(
+														this.client.settings.get(
+															message.guild!.id,
+															"ticketRole",
+															null
+														)
+												  )}`
+												: "None"
+										}\nRole to automatically give access to tickets`,
 									},
 									{
-										name: "`category <value>`",
-										value: "Category to make new tickets under (must be an ID)",
+										name: `\`category <value>\``,
+										value: `**Current Category:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"ticketCategory",
+												null
+											)
+												? `\`${this.client.settings.get(
+														message.guild!.id,
+														"ticketCategory",
+														null
+												  )}\``
+												: "None"
+										}\nCategory to make new tickets under (must be an Id)`,
 									},
 								],
 							},
@@ -64,7 +101,6 @@ export default class TicketingCommand extends Command {
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Enabled Tickets`,
-								description: "Tickets have been enabled",
 							},
 							message
 						),
@@ -79,7 +115,6 @@ export default class TicketingCommand extends Command {
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Disabled Tickets`,
-								description: "Tickets have been disabled",
 							},
 							message
 						),
@@ -100,7 +135,9 @@ export default class TicketingCommand extends Command {
 								{
 									title: "Current Ticket Role",
 									description: oldRole
-										? `The current role for tickets is <#${oldRole}>`
+										? `The current role for tickets is ${roleMention(
+												oldRole
+										  )}`
 										: "There is no current role for tickets",
 								},
 								message
@@ -122,7 +159,7 @@ export default class TicketingCommand extends Command {
 									{
 										name: "Before",
 										value: oldRole
-											? `<@&${oldRole}>`
+											? roleMention(oldRole)
 											: "None",
 										inline: true,
 									},

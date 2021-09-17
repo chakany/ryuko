@@ -25,6 +25,11 @@ export default class FilterCommand extends Command {
 
 	async exec(message: Message, args: any): Promise<any> {
 		const second_arg = args["phrase"];
+		const enabled = this.client.settings.get(
+			message.guild!.id,
+			"filter",
+			false
+		);
 
 		switch (args.action) {
 			default:
@@ -32,7 +37,11 @@ export default class FilterCommand extends Command {
 					embeds: [
 						this.embed(
 							{
-								title: "Filter Subcommands",
+								title: `${
+									enabled
+										? this.client.emoji.greenCheck
+										: this.client.emoji.redX
+								} Filter Subcommands`,
 								description: `See more information on the [Moderation Wiki](${this.client.config.siteUrl}/wiki/Features/Moderation#filter)`,
 								fields: [
 									{
@@ -69,8 +78,7 @@ export default class FilterCommand extends Command {
 					embeds: [
 						this.embed(
 							{
-								title: `${this.client.emoji.greenCheck} Enabled the Filter`,
-								description: "The Filter has been enabled",
+								title: `${this.client.emoji.greenCheck} Enabled Filter`,
 							},
 							message
 						),
@@ -110,8 +118,7 @@ export default class FilterCommand extends Command {
 					embeds: [
 						this.embed(
 							{
-								title: `${this.client.emoji.greenCheck} Disabled the Filter`,
-								description: "The Filter has been disabled",
+								title: `${this.client.emoji.greenCheck} Disabled Filter`,
 							},
 							message
 						),

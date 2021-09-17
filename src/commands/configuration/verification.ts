@@ -1,6 +1,7 @@
 import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
 import { Message, MessageEmbed, Role } from "discord.js";
+import { roleMention } from "@discordjs/builders";
 
 export default class VerificationCommand extends Command {
 	constructor() {
@@ -23,13 +24,29 @@ export default class VerificationCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
+		const enabled = this.client.settings.get(
+			message.guild!.id,
+			"verification",
+			false
+		);
+
+		const level = this.client.settings.get(
+			message.guild!.id,
+			"verificationLevel",
+			"low"
+		);
+
 		switch (args.action) {
 			default:
 				return message.channel.send({
 					embeds: [
 						this.embed(
 							{
-								title: "Verification Subcommands",
+								title: `${
+									enabled
+										? this.client.emoji.greenCheck
+										: this.client.emoji.redX
+								} Verification Subcommands`,
 								description: `See more information on the [Verification Wiki](${this.client.config.siteUrl}/wiki/Features/Verification)`,
 								fields: [
 									{
@@ -42,11 +59,41 @@ export default class VerificationCommand extends Command {
 									},
 									{
 										name: "`level <value>`",
-										value: "Set the level of verification you want\n`strict` Ban all alternate accounts\n`medium` Ban all alternate accounts that have an active punishment (like mute, or ban)\n`w` Take no action against alternate accounts, use this if you only want to present a CAPTCHA to users",
+										value: `Set the level of verification you want\n${
+											level == "strict"
+												? this.client.emoji.greenCheck +
+												  " "
+												: ""
+										}\`strict\` Ban all alternate accounts\n${
+											level == "medium"
+												? this.client.emoji.greenCheck +
+												  " "
+												: ""
+										}\`medium\` Ban all alternate accounts that have an active punishment (like mute, or ban)\n
+										${
+											level == "low"
+												? this.client.emoji.greenCheck +
+												  " "
+												: ""
+										}\`low\` Take no action against alternate accounts, use this if you only want to present a CAPTCHA to keep out bots.`,
 									},
 									{
-										name: "`role <role>`",
-										value: "Set the role that verified users will be given after completing verification",
+										name: `\`role <role>\``,
+										value: `**Current Role:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"verifiedRole",
+												null
+											)
+												? `${roleMention(
+														this.client.settings.get(
+															message.guild!.id,
+															"verifiedRole",
+															null
+														)
+												  )}`
+												: "None"
+										}\nSet the role that verified users will be given after completing verification`,
 									},
 								],
 							},
@@ -128,15 +175,33 @@ export default class VerificationCommand extends Command {
 										title: "Verification Levels",
 										fields: [
 											{
-												name: "`strict`",
+												name: `${
+													level == "strict"
+														? this.client.emoji
+																.greenCheck +
+														  " "
+														: ""
+												}\`strict\``,
 												value: "Ban all alternate accounts",
 											},
 											{
-												name: "`medium`",
+												name: `${
+													level == "medium"
+														? this.client.emoji
+																.greenCheck +
+														  " "
+														: ""
+												}\`medium\``,
 												value: "Ban all alternate accounts that have an active punishment (like mute, or ban)",
 											},
 											{
-												name: "`low`",
+												name: `${
+													level == "low"
+														? this.client.emoji
+																.greenCheck +
+														  " "
+														: ""
+												}\`low\``,
 												value: "Take no action against alternate accounts, use this if you only want to present a CAPTCHA to users",
 											},
 										],
@@ -165,7 +230,7 @@ export default class VerificationCommand extends Command {
 							embeds: [
 								this.embed(
 									{
-										title: `${this.client.emoji.greenCheck} Set verification level`,
+										title: `${this.client.emoji.greenCheck} Set Verification Level`,
 										fields: [
 											{
 												name: "Before",
@@ -218,7 +283,7 @@ export default class VerificationCommand extends Command {
 									{
 										name: "Before",
 										value: oldRole
-											? `<@&${oldRole}>`
+											? roleMention(oldRole)
 											: "None",
 										inline: true,
 									},

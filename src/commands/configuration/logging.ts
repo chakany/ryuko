@@ -1,6 +1,7 @@
 import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
+import { channelMention } from "@discordjs/builders";
 
 export default class LoggingCommand extends Command {
 	constructor() {
@@ -24,13 +25,23 @@ export default class LoggingCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
+		const enabled = this.client.settings.get(
+			message.guild!.id,
+			"logging",
+			false
+		);
+
 		switch (args.action) {
 			default:
 				return message.channel.send({
 					embeds: [
 						this.embed(
 							{
-								title: "Logging Subcommands",
+								title: `${
+									enabled
+										? this.client.emoji.greenCheck
+										: this.client.emoji.redX
+								} Logging Subcommands`,
 								description: `See more information on the [Logging Wiki](${this.client.config.siteUrl}/wiki/Features/Logging)`,
 								fields: [
 									{
@@ -42,8 +53,22 @@ export default class LoggingCommand extends Command {
 										value: "Disable logging",
 									},
 									{
-										name: "`channel <channel>`",
-										value: "Channel to send logs into",
+										name: `\`channel <channel>\``,
+										value: `**Current Channel:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"loggingChannel",
+												null
+											)
+												? `${channelMention(
+														this.client.settings.get(
+															message.guild!.id,
+															"loggingChannel",
+															null
+														)
+												  )}`
+												: "None"
+										}\nChannel to send logs into`,
 									},
 								],
 							},
@@ -60,15 +85,6 @@ export default class LoggingCommand extends Command {
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Enabled Logging`,
-								description: "Logging has been enabled",
-								color: message.guild?.me?.displayHexColor,
-								timestamp: new Date(),
-								footer: {
-									text: message.author.tag,
-									icon_url: message.author.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
 							},
 							message
 						),
@@ -83,7 +99,6 @@ export default class LoggingCommand extends Command {
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Disabled Logging`,
-								description: "Logging has been disabled",
 							},
 							message
 						),
@@ -104,7 +119,9 @@ export default class LoggingCommand extends Command {
 								{
 									title: "Current Logging Channel",
 									description: oldChannel
-										? `The current channel for logging is <#${oldChannel}>`
+										? `The current channel for logging is ${channelMention(
+												oldChannel
+										  )}`
 										: "There is no current channel for logging",
 								},
 								message
@@ -126,7 +143,7 @@ export default class LoggingCommand extends Command {
 									{
 										name: "Before",
 										value: oldChannel
-											? `<#${oldChannel}>`
+											? channelMention(oldChannel)
 											: "None",
 										inline: true,
 									},
