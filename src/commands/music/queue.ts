@@ -1,7 +1,6 @@
 import Command from "../../struct/Command";
-import { Message, TextChannel } from "discord.js";
-
-import PaginationEmbed from "../../utils/PaginationEmbed";
+import { Message } from "discord.js";
+import { MessagePagination } from "@ryukobot/paginationembed";
 
 export default class QueueCommand extends Command {
 	constructor() {
@@ -25,8 +24,19 @@ export default class QueueCommand extends Command {
 				],
 			});
 
-		const queueEmbed = new PaginationEmbed(message)
-			.format((song: any) => {
+		const queueEmbed = new MessagePagination({
+			message,
+			embed: this.embed(
+				{
+					title: `Music Queue`,
+					description: `**Currently Playing:** \`${serverQueue.tracks[0].info.title}\``,
+				},
+				message
+			),
+			itemsPerPage: 6,
+			array: serverQueue.tracks as never[],
+			title: "Songs",
+			callbackfn: (song: any) => {
 				const index = serverQueue.tracks.findIndex(
 					(s) => s.info.identifier === song.info.identifier
 				);
@@ -34,15 +44,9 @@ export default class QueueCommand extends Command {
 					return "**Nothing else in the Queue**";
 				else if (index == 0) return;
 				else return `**${index}.** \`${song.info.title}\``;
-			})
-			.setFieldName("Songs")
-			.setExpireTime(60000);
-
-		queueEmbed.setEmbed({
-			title: `Song Queue`,
-			description: `**Currently Playing:** \`${serverQueue.tracks[0].info.title}\``,
+			},
 		});
 
-		await queueEmbed.send(serverQueue.tracks, 6);
+		queueEmbed.build();
 	}
 }

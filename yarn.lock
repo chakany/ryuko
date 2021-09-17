@@ -73,6 +73,11 @@
   resolved "https://registry.yarnpkg.com/@ryukobot/discord-akairo/-/discord-akairo-8.1.2.tgz#903003b661d84c756415f1ae0ada23046b170720"
   integrity sha512-5Mbfmiwgoc0mRyl1Q5vJ677SlDvHHHGbtT4x8mOdKshx5tFuWS+aD4h2Iz5se86BAwJ94esq/ftc6xmnCC8G0A==
 
+"@ryukobot/paginationembed@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@ryukobot/paginationembed/-/paginationembed-1.0.1.tgz#d6b2326f0916901766edd6dbc6fa2ef4ebeec77a"
+  integrity sha512-wk28WPfo9L5VtktFHARkuh8HEQ+M4hbWibmP2AjFZRJd6+KtEBXuSgqyA6Mpx0mBGopNWAO+xjLKmbhL5vDDSg==
+
 "@sapphire/async-queue@^1.1.4":
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/@sapphire/async-queue/-/async-queue-1.1.4.tgz#ae431310917a8880961cebe8e59df6ffa40f2957"

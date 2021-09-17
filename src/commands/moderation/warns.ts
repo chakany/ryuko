@@ -1,6 +1,6 @@
 import Command from "../../struct/Command";
 import { Message, TextChannel } from "discord.js";
-import PaginationEmbed from "../../utils/PaginationEmbed";
+import { MessagePagination } from "@ryukobot/paginationembed";
 import moment from "moment";
 
 export default class WarnsCommand extends Command {
@@ -22,7 +22,7 @@ export default class WarnsCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		const warns: any[] = await this.client.db.getAllWarns(
+		const warns: never[] = await this.client.db.getAllWarns(
 			args.member.id,
 			message.guild!.id
 		);
@@ -38,25 +38,32 @@ export default class WarnsCommand extends Command {
 				],
 			});
 
-		const warnsEmbed = new PaginationEmbed(message)
-			.format((warn: any) => {
+		const warnsEmbed = new MessagePagination({
+			embed: this.embed(
+				{
+					title: `${args.member.user.tag}'s Warns`,
+					thumbnail: {
+						url: args.member.user.displayAvatarURL({
+							dynamic: true,
+						}),
+					},
+				},
+				message
+			),
+			message,
+			array: warns,
+			title: "Warns",
+			itemsPerPage: 6,
+			callbackfn: (warn: any) => {
 				const created = moment(warn.createdAt);
 				return `Warned By <@!${
 					warn.adminId
 				}>; <t:${created.unix()}:R>; ${
 					warn.reason ? `\`${warn.reason}\`` : "No Reason Provided"
 				}`;
-			})
-			.setFieldName("Warns")
-			.setExpireTime(60000);
-
-		warnsEmbed.setEmbed({
-			title: `${args.member.user.tag}'s Warnings`,
-			thumbnail: {
-				url: args.member.user.displayAvatarURL({ dynamic: true }),
 			},
 		});
 
-		await warnsEmbed.send(warns, 6);
+		warnsEmbed.build();
 	}
 }

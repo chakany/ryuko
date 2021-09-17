@@ -1,6 +1,6 @@
 import Command from "../../struct/Command";
 import { Message, TextChannel } from "discord.js";
-import PaginationEmbed from "../../utils/PaginationEmbed";
+import { MessagePagination } from "@ryukobot/paginationembed";
 
 export default class FilterCommand extends Command {
 	constructor() {
@@ -150,21 +150,26 @@ export default class FilterCommand extends Command {
 					message.guild!.id
 				);
 
-				const phrasesEmbed = new PaginationEmbed(message)
-					.format((phrase: any) => {
-						return `\`${phrase.phrase}\``;
-					})
-					.setFieldName("Phrases")
-					.setExpireTime(60000);
-
-				phrasesEmbed.setEmbed({
-					title: `${message.guild!.name} Filtered Phrases`,
-					thumbnail: {
-						url: message.guild!.iconURL({ dynamic: true }) || "",
-					},
+				const phrasesEmbed = new MessagePagination({
+					message,
+					itemsPerPage: 10,
+					array: phrases,
+					embed: this.embed(
+						{
+							title: `${message.guild!.name}'s Filtered Phrases`,
+							thumbnail: {
+								url:
+									message.guild!.iconURL({ dynamic: true }) ||
+									"",
+							},
+						},
+						message
+					),
+					title: "Phrases",
+					callbackfn: (phrase: any) => `\`${phrase.phrase}\``,
 				});
 
-				await phrasesEmbed.send(phrases, 10);
+				phrasesEmbed.build();
 				break;
 			case "add":
 				if (!second_arg)

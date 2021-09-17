@@ -32,7 +32,7 @@ export default class SkipCommand extends Command {
 		if (
 			!message.member?.voice.channel ||
 			message.member?.voice.channelId !==
-				serverQueue.player?.voiceConnection.voiceChannelID
+				serverQueue.player?.connection.channelId
 		)
 			return message.channel.send({
 				embeds: [

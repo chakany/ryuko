@@ -38,6 +38,7 @@
 	},
 	"dependencies": {
 		"@ryukobot/discord-akairo": "^8.1.2",
+		"@ryukobot/paginationembed": "^1.0.1",
 		"aki-api": "^6.0.7",
 		"axios": "^0.21.1",
 		"bcrypt": "^5.0.1",

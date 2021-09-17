@@ -61,8 +61,8 @@ export default class PlayCommand extends Command {
 			});
 		else if (
 			queue.get(message.guild!.id) &&
-			queue.get(message.guild!.id)?.player?.voiceConnection
-				.voiceChannelID !== message.member?.voice.channelId &&
+			queue.get(message.guild!.id)?.player?.connection.channelId !==
+				message.member?.voice.channelId &&
 			queue.get(message.guild!.id)?.player
 		)
 			return message.channel.send({

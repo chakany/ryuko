@@ -1,6 +1,6 @@
 import Command from "../../struct/Command";
 import { Message, TextChannel } from "discord.js";
-import PaginationEmbed from "../../utils/PaginationEmbed";
+import { MessagePagination } from "@ryukobot/paginationembed";
 import moment from "moment";
 
 export default class MutesCommand extends Command {
@@ -22,7 +22,7 @@ export default class MutesCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		const mutes: any[] = await this.client.db.getAllMutes(
+		const mutes: never[] = await this.client.db.getAllMutes(
 			args.member.id,
 			message.guild!.id
 		);
@@ -38,8 +38,23 @@ export default class MutesCommand extends Command {
 				],
 			});
 
-		const mutesEmbed = new PaginationEmbed(message)
-			.format((mute: any) => {
+		const mutesEmbed = new MessagePagination({
+			message,
+			embed: this.embed(
+				{
+					title: `${args.member.user.tag}'s Mutes`,
+					thumbnail: {
+						url: args.member.user.displayAvatarURL({
+							dynamic: true,
+						}),
+					},
+				},
+				message
+			),
+			array: mutes,
+			itemsPerPage: 6,
+			title: "Mutes",
+			callbackfn: (mute: any) => {
 				const created = moment(mute.createdAt);
 				const expires = moment(mute.expires);
 				const diff = expires.diff(created);
@@ -51,17 +66,9 @@ export default class MutesCommand extends Command {
 				}>; **${duration.humanize()}**; <t:${created.unix()}:f>; ${
 					mute.reason ? `\`${mute.reason}\`` : "No Reason Provided"
 				}${mute.unpunished ? `; **Unmuted**` : ""}`;
-			})
-			.setFieldName("Mutes")
-			.setExpireTime(60000);
-
-		mutesEmbed.setEmbed({
-			title: `${args.member.user.tag}'s Mutes`,
-			thumbnail: {
-				url: args.member.user.displayAvatarURL({ dynamic: true }),
 			},
 		});
 
-		await mutesEmbed.send(mutes, 6);
+		mutesEmbed.build();
 	}
 }
