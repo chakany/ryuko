@@ -27,7 +27,7 @@ export default class ReadyListener extends Listener {
 
 			// Get all members that are muted, check if they are still muted
 			const muteRole = await g.roles.fetch(
-				this.client.settings.get(g.id, "muteRole", null)
+				this.client.settings.get(g.id, "muteRole", "123123")
 			);
 			if (muteRole)
 				for (const [probablyId, member] of muteRole.members) {
