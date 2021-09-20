@@ -10,7 +10,7 @@ export default class BanCommand extends Command {
 			category: "Moderation",
 			clientPermissions: ["BAN_MEMBERS"],
 			userPermissions: ["BAN_MEMBERS"],
-			modOnly: true,
+			adminOnly: true,
 			args: [
 				{
 					id: "member",

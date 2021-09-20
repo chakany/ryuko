@@ -175,13 +175,25 @@ export default class RyukoClient extends AkairoClient {
 			commandUtil: true,
 			// @ts-expect-error 2322
 			ignorePermissions: (message: Message, command: Command) => {
-				if (config.ownerId.includes(message.author.id)) return true;
+				if (this.isOwner(message.author.id)) return true;
 				else if (
-					command.modOnly &&
 					command.userPermissions &&
-					message.member!.roles.cache.has(
-						this.settings.get(message.guild!.id, "modRole", null)
-					)
+					((command.modOnly &&
+						message.member!.roles.cache.has(
+							this.settings.get(
+								message.guild!.id,
+								"modRole",
+								null
+							)
+						)) ||
+						(command.adminOnly &&
+							message.member!.roles.cache.has(
+								this.settings.get(
+									message.guild!.id,
+									"adminRole",
+									null
+								)
+							)))
 				)
 					return true;
 				else return false;

@@ -9,7 +9,6 @@ export default class DragCommand extends Command {
 			description: "Drag other members into your own channel",
 			clientPermissions: ["MOVE_MEMBERS"],
 			userPermissions: ["MOVE_MEMBERS"],
-
 			args: [
 				{
 					id: "member",

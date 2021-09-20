@@ -10,12 +10,14 @@ import ms from "ms";
 
 interface Options extends CommandOptions {
 	modOnly?: boolean;
+	adminOnly?: boolean;
 	nsfw?: boolean;
 	guild?: string[];
 }
 
 export default class Command extends AkairoCommand {
 	public modOnly: boolean;
+	public adminOnly: boolean;
 	public nsfw: boolean;
 	public guild: string[];
 	public args: any;
@@ -27,6 +29,7 @@ export default class Command extends AkairoCommand {
 
 		const {
 			modOnly = false,
+			adminOnly = false,
 			nsfw = false,
 			guild = [],
 			args,
@@ -34,10 +37,16 @@ export default class Command extends AkairoCommand {
 		} = options!;
 
 		/**
-		 * Usable only by the discord mods.
+		 * Usable only by discord mods.
 		 * @type {boolean}
 		 */
 		this.modOnly = modOnly;
+
+		/**
+		 * Usable only by discord admins.
+		 * @type {boolean}
+		 */
+		this.adminOnly = adminOnly;
 
 		/**
 		 * Whether or not the command is NSFW.

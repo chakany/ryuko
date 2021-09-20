@@ -24,6 +24,9 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 		modRole: {
 			type: DataTypes.STRING,
 		},
+		adminRole: {
+			type: DataTypes.STRING,
+		},
 		muteRole: {
 			type: DataTypes.STRING,
 		},

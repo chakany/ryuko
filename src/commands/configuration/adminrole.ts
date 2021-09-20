@@ -2,10 +2,10 @@ import Command from "../../struct/Command";
 import { Message } from "discord.js";
 import { roleMention } from "@discordjs/builders";
 
-export default class ModroleCommand extends Command {
+export default class AdminroleCommand extends Command {
 	constructor() {
-		super("modrole", {
-			aliases: ["modrole"],
+		super("adminrole", {
+			aliases: ["adminrole"],
 			category: "Configuration",
 			args: [
 				{
@@ -13,7 +13,7 @@ export default class ModroleCommand extends Command {
 					type: "role",
 				},
 			],
-			description: "Change the Mod Role",
+			description: "Change the Admin Role",
 			userPermissions: ["MANAGE_GUILD"],
 		});
 	}
@@ -24,7 +24,7 @@ export default class ModroleCommand extends Command {
 		// The third param is the default.
 		const currentRole = this.client.settings.get(
 			message.guild!.id,
-			"modRole",
+			"adminRole",
 			null
 		);
 
@@ -33,7 +33,7 @@ export default class ModroleCommand extends Command {
 				embeds: [
 					this.embed(
 						{
-							title: "Current Mod Role",
+							title: "Current Admin Role",
 							fields: [
 								{
 									name: "Role",
@@ -53,7 +53,7 @@ export default class ModroleCommand extends Command {
 					this.error(
 						message,
 						"Invalid Configuration",
-						`There is no Mod Role set, use the \`${prefix}${message.util?.parsed?.alias}\`command to set it.`
+						`There is no Admin Role set, use the \`${prefix}${message.util?.parsed?.alias}\`command to set it.`
 					),
 				],
 			});
@@ -61,14 +61,14 @@ export default class ModroleCommand extends Command {
 
 		await this.client.settings.set(
 			message.guild!.id,
-			"modRole",
+			"adminRole",
 			args.role.id
 		);
 		return message.channel.send({
 			embeds: [
 				this.embed(
 					{
-						title: `${this.client.emoji.greenCheck} Changed Mod Role`,
+						title: `${this.client.emoji.greenCheck} Changed Admin Role`,
 						fields: [
 							{
 								name: "Before",

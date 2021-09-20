@@ -9,7 +9,7 @@ export default class KickCommand extends Command {
 			category: "Moderation",
 			clientPermissions: ["KICK_MEMBERS"],
 			userPermissions: ["KICK_MEMBERS"],
-			modOnly: true,
+			adminOnly: true,
 			args: [
 				{
 					id: "member",
