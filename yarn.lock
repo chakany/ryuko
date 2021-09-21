@@ -2786,10 +2786,10 @@ yn@3.1.1:
   resolved "https://registry.yarnpkg.com/yn/-/yn-3.1.1.tgz#1e87401a09d767c1d5eab26a6e4c185182d2eb50"
   integrity sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
 
-zx@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/zx/-/zx-4.0.0.tgz#539254f5ec4561923b944e80b81521eec88391f8"
-  integrity sha512-BOKVWyRunZakzH6cn8BvZUlDEQG4VAECmtEZeu+3t6ETDkg606ceG54UUjxQsCFmSL+Bh5HXil75J0IltDmAlQ==
+zx@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/zx/-/zx-4.2.0.tgz#5f7c15f4446ad33ae23717e5aba4c0199aa90851"
+  integrity sha512-/4f7FaJecA9I655KXKXIHO3CFNYjAz2uSmTz6v2eNlKdrQKyz4VyF3RjqFuP6nQG+Hd3+NjOvrVNBkv8Ne9d4Q==
   dependencies:
     "@types/fs-extra" "^9.0.12"
     "@types/minimist" "^1.2.2"
