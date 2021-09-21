@@ -59,7 +59,7 @@ export default class MessageReactionAddListener extends Listener {
 		);
 
 		if (message.attachments.size > 0)
-			embed.setImage(message.attachments.array()[0].url);
+			embed.setImage(Array.from(message.attachments.values())[0].url);
 		else if (message.embeds[0]?.image?.url)
 			embed.setImage(message.embeds[0]?.image?.url);
 		else if (message.embeds[0]?.thumbnail?.url)
