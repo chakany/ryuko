@@ -19,15 +19,14 @@ export default class AdminInhibitor extends Inhibitor {
 		);
 
 		if (
-			!adminRole ||
-			(adminRole &&
-				!message.member!.roles.cache.some(
-					(role) => role.id === adminRole
-				) &&
-				message.channel
-					// @ts-expect-error 2339
-					.permissionsFor(message.author)
-					.missing(command.userPermissions).length)
+			adminRole &&
+			!message.member!.roles.cache.some(
+				(role) => role.id === adminRole
+			) &&
+			message.channel
+				// @ts-expect-error 2339
+				.permissionsFor(message.author)
+				.missing(command.userPermissions).length
 		) {
 			return true;
 		}

@@ -178,25 +178,21 @@ export default class RyukoClient extends AkairoClient {
 				if (this.isOwner(message.author.id)) return true;
 				else if (
 					command.userPermissions &&
-					((command.modOnly &&
+					(command.adminOnly || command.modOnly) &&
+					(message.member!.roles.cache.has(
+						this.settings.get(message.guild!.id, "adminRole", null)
+					) ||
 						message.member!.roles.cache.has(
 							this.settings.get(
 								message.guild!.id,
 								"modRole",
 								null
 							)
-						)) ||
-						(command.adminOnly &&
-							message.member!.roles.cache.has(
-								this.settings.get(
-									message.guild!.id,
-									"adminRole",
-									null
-								)
-							)))
+						))
 				)
 					return true;
-				else return false;
+
+				return false;
 			},
 			ignoreCooldown: config.ownerId,
 		});
