@@ -58,6 +58,13 @@ export default class MessageReactionAddListener extends Listener {
 			message.guild!
 		);
 
+		if (message.attachments.size > 0)
+			embed.setImage(message.attachments.array()[0].url);
+		else if (message.embeds[0]?.image?.url)
+			embed.setImage(message.embeds[0]?.image?.url);
+		else if (message.embeds[0]?.thumbnail?.url)
+			embed.setImage(message.embeds[0]?.thumbnail?.url);
+
 		const starredMessage = this.client.starboardMessages.get(message.id);
 
 		if (starredMessage)
@@ -65,13 +72,6 @@ export default class MessageReactionAddListener extends Listener {
 				content: `${reaction.count} :star: | ${message.channel}`,
 				embeds: [embed],
 			});
-
-		if (message.attachments.size > 0)
-			embed.setImage(Array.from(message.attachments.values())[0].url);
-		else if (message.embeds[0]?.image?.url)
-			embed.setImage(message.embeds[0]?.image?.url);
-		else if (message.embeds[0]?.thumbnail?.url)
-			embed.setImage(message.embeds[0]?.thumbnail?.url);
 
 		const newMessage = await (<TextChannel>(
 			await message.guild?.channels.fetch(
