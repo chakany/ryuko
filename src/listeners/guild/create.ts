@@ -10,6 +10,10 @@ export default class GuildCreateListener extends Listener {
 	}
 
 	async exec(guild: Guild) {
+		guild.invites.fetch().then((guildInvites) => {
+			this.client.invites.set(guild.id, guildInvites);
+		});
+
 		this.client.log.info(
 			`I was added to guild "${guild.name}" that is owned by ${
 				(await this.client.users.fetch(guild.ownerId))?.tag
