@@ -7,6 +7,8 @@ export default class Embed extends MessageEmbed {
 			iconURL: user.displayAvatarURL({ dynamic: true }) || "",
 		};
 
+		options.timestamp ??= new Date();
+
 		options.color ??= guild.me?.displayHexColor;
 
 		super(options);
