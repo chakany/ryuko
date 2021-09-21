@@ -286,16 +286,22 @@ export default class RyukoClient extends AkairoClient {
 		options: MessageOptions,
 		guild: Guild
 	): Promise<Message | null | undefined> {
+		if (!this.settings.get(guild.id, "logging", false)) return;
+
+		const guildChannels = await guild.channels.fetch();
+
 		if (
-			!this.settings.get(guild.id, "logging", false) &&
-			this.settings.get(guild.id, "loggingChannel", null)
+			!this.settings.get(guild.id, "loggingChannel", null) ||
+			!guildChannels.get(
+				this.settings.get(guild.id, "loggingChannel", null)
+			)
 		)
-			return null;
+			return;
 
-		const loggingChannel = (await guild.channels.fetch(
+		const loggingChannel = guildChannels.get(
 			this.settings.get(guild.id, "loggingChannel", null)
-		)) as TextChannel | null;
+		) as TextChannel;
 
-		return loggingChannel?.send(options);
+		return loggingChannel.send(options);
 	}
 }

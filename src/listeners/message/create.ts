@@ -53,6 +53,26 @@ export default class MessageCreateListener extends Listener {
 
 		// Test against filter
 		if (this.client.settings.get(message.guild!.id, "filter", false)) {
+			if (
+				this.client.settings.get(
+					message.guild!.id,
+					"filterBypass",
+					false
+				) &&
+				(message.member!.roles.cache.has(
+					this.client.settings.get(message.guild!.id, "modRole", null)
+				) ||
+					message.member!.roles.cache.has(
+						this.client.settings.get(
+							message.guild!.id,
+							"adminRole",
+							null
+						)
+					) ||
+					message.member!.permissions.has("MANAGE_MESSAGES"))
+			)
+				return;
+
 			const filteredPhrases = await this.client.db.getFilteredPhrases(
 				message.guild!.id
 			);

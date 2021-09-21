@@ -53,6 +53,18 @@ export default class FilterCommand extends Command {
 										value: "Disable the Filter",
 									},
 									{
+										name: `${
+											this.client.settings.get(
+												message.guild!.id,
+												"filterBypass",
+												false
+											)
+												? this.client.emoji.greenCheck
+												: this.client.emoji.redX
+										} \`bypass <value>\``,
+										value: "Toggle the ability for Moderators, Admins, and Members with the Manage Messages Permission to bypass the filter\n`enable` Enable Filter Bypass\n`disable` Disable Filter Bypass",
+									},
+									{
 										name: "`list`",
 										value: "List all Phrases in the Filter",
 									},
@@ -131,13 +143,12 @@ export default class FilterCommand extends Command {
 							this.embed(
 								{
 									title: `Filter Disabled`,
-									color: message.guild?.me?.displayHexColor,
 									thumbnail: {
 										url: message.author.displayAvatarURL({
 											dynamic: true,
 										}),
 									},
-									timestamp: new Date(),
+									footer: {},
 									fields: [
 										{
 											name: "Disabled By",
@@ -151,6 +162,136 @@ export default class FilterCommand extends Command {
 					},
 					message.guild!
 				);
+				break;
+			case "bypass":
+				switch (second_arg) {
+					default:
+						message.channel.send({
+							embeds: [
+								this.embed(
+									{
+										title: `${
+											this.client.settings.get(
+												message.guild!.id,
+												"filterBypass",
+												false
+											)
+												? this.client.emoji.greenCheck
+												: this.client.emoji.redX
+										} Filter Bypass`,
+										description: `Allow Moderators, Admins, and Members with the Manage Messages permission to bypass the filter`,
+										fields: [
+											{
+												name: `\`enable\``,
+												value: "Enable Filter Bypass",
+											},
+											{
+												name: `\`disable\``,
+												value: "Disable Filter Bypass",
+											},
+										],
+									},
+									message
+								),
+							],
+						});
+						break;
+					case "enable":
+						this.client.settings.set(
+							message.guild!.id,
+							"filterBypass",
+							true
+						);
+
+						message.channel.send({
+							embeds: [
+								this.embed(
+									{
+										title: `${this.client.emoji.greenCheck} Enabled Filter Bypass`,
+									},
+									message
+								),
+							],
+						});
+
+						this.client.sendToLogChannel(
+							{
+								embeds: [
+									this.embed(
+										{
+											title: `Filter Bypass Enabled`,
+											description: `Moderators, Admins, and Members with the Manage Messages permission can now bypass the filter.`,
+											thumbnail: {
+												url: message.author.displayAvatarURL(
+													{
+														dynamic: true,
+													}
+												),
+											},
+											footer: {},
+											fields: [
+												{
+													name: "Enabled By",
+													value: message.member!.toString(),
+												},
+											],
+										},
+										message
+									),
+								],
+							},
+							message.guild!
+						);
+						break;
+					case "disable":
+						this.client.settings.set(
+							message.guild!.id,
+							"filterBypass",
+							false
+						);
+
+						message.channel.send({
+							embeds: [
+								this.embed(
+									{
+										title: `${this.client.emoji.greenCheck} Disabled Filter Bypass`,
+									},
+									message
+								),
+							],
+						});
+
+						this.client.sendToLogChannel(
+							{
+								embeds: [
+									this.embed(
+										{
+											title: `Filter Bypass Disabled`,
+											description: `Moderators, Admins, and Members with the Manage Messages permission can no longer bypass the filter.`,
+											thumbnail: {
+												url: message.author.displayAvatarURL(
+													{
+														dynamic: true,
+													}
+												),
+											},
+											footer: {},
+											fields: [
+												{
+													name: "Disabled By",
+													value: message.member!.toString(),
+												},
+											],
+										},
+										message
+									),
+								],
+							},
+							message.guild!
+						);
+						break;
+				}
+
 				break;
 			case "list":
 				const phrases = await this.client.db.getFilteredPhrases(
@@ -311,13 +452,12 @@ export default class FilterCommand extends Command {
 							this.embed(
 								{
 									title: `Phrase Removed from Filter`,
-									color: message.guild?.me?.displayHexColor,
 									thumbnail: {
 										url: message.author.displayAvatarURL({
 											dynamic: true,
 										}),
 									},
-									timestamp: new Date(),
+									footer: {},
 									fields: [
 										{
 											name: "Phrase",

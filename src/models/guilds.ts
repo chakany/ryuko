@@ -75,6 +75,10 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false,
 		},
+		filterBypass: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
 		joinLeave: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false,
