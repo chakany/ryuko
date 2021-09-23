@@ -11,10 +11,10 @@ import path from "path";
 
 import Db from "./utils/db";
 import Redis from "./utils/redis";
-import home from "./routes/home";
-import commands from "./routes/commands";
-import verify from "./routes/verify";
-import wiki from "./routes/wiki";
+
+import Stats from "./routes/stats";
+import Commands from "./routes/commands";
+import Verify from "./routes/verify";
 
 const { token, port, imgApiUrl, topgg_token } = require("../config.json");
 let log = new Logger({ name: "manager" });
@@ -24,7 +24,6 @@ const production = process.env.NODE_ENV === "production";
 
 let manager: ShardingManager;
 let redis: Redis;
-let user: any;
 
 // make this async because so steps are performed in order
 void (async function () {
@@ -151,8 +150,6 @@ void (async function () {
 				const app = express();
 
 				try {
-					app.set("view engine", "ejs");
-					app.set("views", "../app/pages");
 					// @ts-expect-error 2769
 					app.use(bodyParser.urlencoded({ extended: true }));
 					// @ts-expect-error 2769
@@ -162,24 +159,9 @@ void (async function () {
 					// Check if we are in prod, if we are trust the reverse proxy, used for getting user IPs on verification.
 					if (production) app.set("trust proxy", true);
 
-					app.use("/", home);
-					app.use("/commands", commands);
-					app.use("/verify", verify);
-					app.use("/wiki", wiki);
-
-					app.use("/static", express.static("../app/static"));
-
-					user = await (await manager.fetchClientValues("user"))[0];
-
-					// THIS SHOULD ALWAYS BE LAST!
-					app.get("*", function (req, res) {
-						res.status(404).render("error", {
-							username: user.username,
-							avatar: user.avatarURL,
-							code: 404,
-							description: "Page Not Found",
-						});
-					});
+					app.use("/stats", Stats);
+					app.use("/commands", Commands);
+					app.use("/verify", Verify);
 
 					app.use(
 						(
@@ -192,11 +174,8 @@ void (async function () {
 							weblog.error(error.stack);
 
 							// Return error page
-							res.status(500).render("error", {
-								username: user.username,
-								avatar: user.avatarURL,
-								code: 500,
-								description: "Internal Server Error",
+							res.status(500).send({
+								message: "Internal Server Error",
 							});
 						}
 					);
@@ -213,4 +192,4 @@ void (async function () {
 	manager.spawn();
 })();
 
-export { manager, weblog, redis, user };
+export { manager, weblog, redis };

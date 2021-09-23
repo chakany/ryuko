@@ -3,11 +3,11 @@ import {
 	AkairoClient,
 	CommandHandler,
 	Category,
+	MissingPermissionSupplier,
 } from "@ryukobot/discord-akairo";
+import Command from "../struct/Command";
+import { PermissionResolvable } from "discord.js";
 
-const { prefix } = require("../../config.json");
-
-import { manager, weblog, user } from "../index";
 import path from "path";
 
 const router = express.Router();
@@ -28,49 +28,51 @@ class Client extends AkairoClient {
 	}
 }
 
-const temp = new Client();
+const client = new Client();
+
+type Permissions =
+	| PermissionResolvable
+	| PermissionResolvable[]
+	| MissingPermissionSupplier;
+
+interface ICommand {
+	id: string;
+	aliases: string[];
+	ownerOnly: boolean;
+	adminOnly: boolean;
+	modOnly: boolean;
+	clientPermissions?: Permissions;
+	userPermissions?: Permissions;
+	cooldown: string | null;
+	usage: string;
+}
 
 router.get("/", async function (req, res) {
-	res.redirect("commands/Configuration");
-});
+	const categories: { [id: string]: ICommand[] } = {};
 
-router.get("/:category", async function (req, res) {
-	try {
-		if (
-			!temp.handler.categories.find(
-				(category) =>
-					category.size > 0 &&
-					category.first()!.categoryID ===
-						req.params.category.charAt(0).toUpperCase() +
-							req.params.category.slice(1)
-			)
-		)
-			return res.sendStatus(404).render("error", {
-				username: user.username,
-				avatar: user.avatarURL,
-				code: 404,
-				description: "Page not Found",
-			});
+	client.handler.categories.map((category) => {
+		categories[category.id] = [];
 
-		res.render("commands", {
-			categories: Array.from(temp.handler.categories.values()),
-			username: user.username,
-			avatar: user.avatarURL,
-			category: Array.from(
-				temp.handler.categories
-					.find(
-						(category) =>
-							category.size > 0 &&
-							category.first()!.categoryID ===
-								req.params.category.charAt(0).toUpperCase() +
-									req.params.category.slice(1)
-					)
-					?.values() as any
-			),
+		category.map((command) => {
+			const typedCommand = command as Command;
+
+			const formattedCommand: ICommand = {
+				id: typedCommand.id,
+				aliases: typedCommand.aliases,
+				ownerOnly: typedCommand.ownerOnly,
+				adminOnly: typedCommand.adminOnly,
+				modOnly: typedCommand.modOnly,
+				userPermissions: typedCommand.userPermissions,
+				clientPermissions: typedCommand.clientPermissions,
+				cooldown: typedCommand.formattedCooldown,
+				usage: typedCommand.usage,
+			};
+
+			categories[category.id].push(formattedCommand);
 		});
-	} catch (error) {
-		weblog.error(error);
-	}
+	});
+
+	res.status(200).send(categories);
 });
 
 export default router;
