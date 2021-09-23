@@ -7,6 +7,7 @@ import axios from "axios";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { AutoPoster } from "topgg-autoposter";
+import path from "path";
 
 import Db from "./utils/db";
 import Redis from "./utils/redis";
@@ -18,6 +19,8 @@ import wiki from "./routes/wiki";
 const { token, port, imgApiUrl, topgg_token } = require("../config.json");
 let log = new Logger({ name: "manager" });
 let weblog = new Logger({ name: "web" });
+
+const production = process.env.NODE_ENV === "production";
 
 let manager: ShardingManager;
 let redis: Redis;
@@ -51,7 +54,7 @@ void (async function () {
 	});
 	let dberror: any;
 	let rediserror: any;
-	if (process.env.NODE_ENV == "production") {
+	if (production) {
 		log.info("Running pre-initialization checks");
 
 		// db check
@@ -79,20 +82,6 @@ void (async function () {
 			});
 		});
 
-		// image api check
-		if (imgApiUrl !== "")
-			try {
-				await axios.get(imgApiUrl + "/ping");
-				checkStatus.push({ "img-api": colors.green("Passed") });
-			} catch (error) {
-				shardArgs.push("--disable-Images");
-				checkStatus.push({ "img-api": colors.red("Failed") });
-			}
-		else {
-			shardArgs.push("--disable-Images");
-			checkStatus.push({ "img-api": colors.yellow("Skipped") });
-		}
-
 		console.log(checkStatus.toString());
 	} else {
 		log.warn(
@@ -104,7 +93,6 @@ void (async function () {
 		checkStatus.push({
 			redis: colors.yellow("Skipped"),
 		});
-		checkStatus.push({ "img-api": colors.yellow("Skipped") });
 		console.log(checkStatus.toString());
 		try {
 			await db.sync({ alter: true });
@@ -145,21 +133,16 @@ void (async function () {
 	// Initialization
 	log.info("Initializing");
 
-	if (process.env.NODE_ENV !== "production")
-		manager = new ShardingManager("./bot.ts", {
+	manager = new ShardingManager(
+		path.resolve(__dirname, production ? "bot.js" : "bot.ts"),
+		{
 			token,
-			execArgv: ["-r", "ts-node/register"],
+			execArgv: production ? undefined : ["-r", "ts-node/register"],
 			shardArgs,
-		});
-	else
-		manager = new ShardingManager("./bot.js", {
-			token,
-			shardArgs,
-		});
+		}
+	);
 
-	process.env.NODE_ENV !== "production"
-		? null
-		: AutoPoster(topgg_token, manager);
+	production ? AutoPoster(topgg_token, manager) : null;
 
 	manager.on("shardCreate", async (shard) => {
 		log.info(`Launched shard ${shard.id}`);
@@ -177,8 +160,7 @@ void (async function () {
 					app.use(cookieParser());
 
 					// Check if we are in prod, if we are trust the reverse proxy, used for getting user IPs on verification.
-					if (process.env.NODE_ENV === "production")
-						app.set("trust proxy", true);
+					if (production) app.set("trust proxy", true);
 
 					app.use("/", home);
 					app.use("/commands", commands);

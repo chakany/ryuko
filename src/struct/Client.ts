@@ -15,6 +15,7 @@ import {
 	Snowflake,
 	VoiceChannel,
 } from "discord.js";
+import path from "path";
 import { Shoukaku, Libraries } from "shoukaku";
 import { LavasfyClient } from "lavasfy";
 import Logger from "./Logger";
@@ -98,8 +99,8 @@ export default class RyukoClient extends AkairoClient {
 	public starboardMessages: Collection<string, Message>;
 	public invites: Collection<string, any>;
 	public commandHandler: CommandHandler;
-	private inhibitorHandler: InhibitorHandler;
-	private listenerHandler: ListenerHandler;
+	public inhibitorHandler: InhibitorHandler;
+	public listenerHandler: ListenerHandler;
 
 	constructor(log: Logger) {
 		super(
@@ -156,7 +157,7 @@ export default class RyukoClient extends AkairoClient {
 		this.queue = new Collection();
 
 		this.commandHandler = new CommandHandler(this, {
-			directory: "./commands",
+			directory: path.resolve(__dirname, "../commands"),
 			prefix: (message) => {
 				if (message.guild) {
 					// The third param is the default.
@@ -223,11 +224,11 @@ export default class RyukoClient extends AkairoClient {
 		});
 
 		this.inhibitorHandler = new InhibitorHandler(this, {
-			directory: "./inhibitors",
+			directory: path.resolve(__dirname, "../inhibitors"),
 		});
 
 		this.listenerHandler = new ListenerHandler(this, {
-			directory: "./listeners",
+			directory: path.resolve(__dirname, "../listeners"),
 		});
 
 		this.listenerHandler.setEmitters({

@@ -1,11 +1,11 @@
 {
-	"name": "ryuko",
+	"name": "@ryukobot/bot",
 	"version": "2.0.0-alpha",
 	"main": "dist/index.js",
-	"repository": "https://github.com/jacany/ryuko",
+	"repository": "https://github.com/ryukobot/ryuko",
 	"scripts": {
-		"start": "cd dist && cross-env NODE_ENV=production node . | bunyan -L -o short",
-		"dev": "cd src && ts-node-dev --transpile-only . | bunyan -L -o long",
+		"start": "cross-env NODE_ENV=production node . | bunyan -L -o short",
+		"dev": "ts-node-dev --transpile-only src/ | bunyan -L -o long",
 		"build": "tsc",
 		"format": "prettier --write .",
 		"watch": "sass --watch src/styles:app/static/styles",

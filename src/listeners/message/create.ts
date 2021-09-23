@@ -11,7 +11,6 @@ export default class MessageCreateListener extends Listener {
 
 	async exec(message: Message) {
 		if (message.author.bot) return;
-		if (message.channel.type == "DM") return;
 
 		if (
 			message.content === `<@${this.client.user!.id}>` ||
@@ -38,13 +37,7 @@ export default class MessageCreateListener extends Listener {
 		if (message.partial) await message.fetch();
 		this.client.commandHandler.handle(message);
 
-		if (
-			!this.client.settings.get(
-				message.guild!.id,
-				"someDumbFuckingSetting",
-				null
-			)
-		)
+		if (!this.client.settings.items.has(message.guild!.id))
 			this.client.settings.set(
 				message.guild!.id,
 				"someDumbFuckingSetting",
