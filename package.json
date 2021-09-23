@@ -2,7 +2,7 @@
 	"name": "@ryukobot/bot",
 	"version": "2.0.0-alpha",
 	"main": "dist/index.js",
-	"repository": "https://github.com/ryukobot/ryuko",
+	"repository": "https://github.com/ryukobot/bot",
 	"scripts": {
 		"start": "cross-env NODE_ENV=production node . | bunyan -L -o short",
 		"dev": "ts-node-dev --transpile-only src/ | bunyan -L -o long",
