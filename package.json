@@ -48,6 +48,7 @@
 		"cli-table": "^0.3.6",
 		"colors": "^1.4.0",
 		"cookie-parser": "^1.4.5",
+		"cors": "^2.8.5",
 		"discord.js": "^13.1.0",
 		"express": "^4.17.1",
 		"fast-levenshtein": "^3.0.0",
@@ -63,6 +64,7 @@
 		"reddit-grabber": "^2.1.0",
 		"sequelize": "^6.6.5",
 		"shoukaku": "^2.0.3",
+		"socket.io": "^4.2.0",
 		"spotify-url-info": "^2.2.3",
 		"steamid": "^2.0.0",
 		"topgg-autoposter": "^2.0.0"

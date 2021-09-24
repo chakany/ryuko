@@ -11,6 +11,7 @@ export default class MemberLeaveListener extends Listener {
 	}
 
 	async exec(member: GuildMember) {
+		this.client.shard?.send("REFRESH_USERS");
 		if (this.client.settings.get(member.guild.id, "joinLeave", false)) {
 			const channel = (await member.guild.channels.fetch(
 				this.client.settings.get(

@@ -10,6 +10,8 @@ export default class GuildCreateListener extends Listener {
 	}
 
 	async exec(guild: Guild) {
+		this.client.shard?.send("REFRESH_GUILDS");
+
 		guild.invites.fetch().then((guildInvites) => {
 			this.client.invites.set(guild.id, guildInvites);
 		});

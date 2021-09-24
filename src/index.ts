@@ -8,6 +8,9 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { AutoPoster } from "topgg-autoposter";
 import path from "path";
+import http from "http";
+import cors from "cors";
+import { Server as SocketServer } from "socket.io";
 
 import Db from "./utils/db";
 import Redis from "./utils/redis";
@@ -143,11 +146,82 @@ void (async function () {
 
 	production ? AutoPoster(topgg_token, manager) : null;
 
+	const app = express();
+
+	app.use(cors());
+
+	const baseServer = http.createServer(app);
+
+	const io = new SocketServer(baseServer, {
+		cors: {
+			origin: ["https://ryuko.cc", "http://localhost:3000"],
+			methods: ["GET", "POST"],
+		},
+	});
+
 	manager.on("shardCreate", async (shard) => {
 		log.info(`Launched shard ${shard.id}`);
+
+		shard.on("message", async (message) => {
+			switch (message) {
+				case "REFRESH_GUILDS":
+					io.emit(
+						"GUILDS_UPDATE",
+						(
+							await manager.fetchClientValues("guilds.cache.size")
+						).reduce((acc: any, guildCount) => acc + guildCount, 0)
+					);
+					break;
+
+				case "REFRESH_CHANNELS":
+					io.emit(
+						"CHANNELS_UPDATE",
+						(
+							await manager.fetchClientValues(
+								"channels.cache.size"
+							)
+						).reduce(
+							(acc: any, channelCount) => acc + channelCount,
+							0
+						)
+					);
+					break;
+
+				case "REFRESH_USERS":
+					io.emit(
+						"USERS_UPDATE",
+						(
+							await manager.fetchClientValues("users.cache.size")
+						).reduce((acc: any, userCount) => acc + userCount, 0)
+					);
+					break;
+			}
+		});
+
 		if (shard.id == 0) {
 			shard.once("ready", async () => {
-				const app = express();
+				io.on("connection", async (socket) => {
+					socket.emit("ALL", {
+						guilds: (
+							await manager.fetchClientValues("guilds.cache.size")
+						).reduce((acc: any, guildCount) => acc + guildCount, 0),
+						users: (
+							await manager.fetchClientValues("users.cache.size")
+						).reduce(
+							(acc: any, memberCount) => acc + memberCount,
+							0
+						),
+						channels: (
+							await manager.fetchClientValues(
+								"channels.cache.size"
+							)
+						).reduce(
+							(acc: any, channelCount) => acc + channelCount,
+							0
+						),
+						shards: manager.totalShards,
+					});
+				});
 
 				try {
 					// @ts-expect-error 2769
@@ -180,7 +254,7 @@ void (async function () {
 						}
 					);
 
-					app.listen(port, () => {
+					baseServer.listen(port, () => {
 						weblog.info(`Bound to port ${port}`);
 					});
 				} catch (error) {

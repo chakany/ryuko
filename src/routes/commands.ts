@@ -38,6 +38,7 @@ type Permissions =
 interface ICommand {
 	id: string;
 	aliases: string[];
+	description: string;
 	ownerOnly: boolean;
 	adminOnly: boolean;
 	modOnly: boolean;
@@ -59,6 +60,7 @@ router.get("/", async function (req, res) {
 			const formattedCommand: ICommand = {
 				id: typedCommand.id,
 				aliases: typedCommand.aliases,
+				description: typedCommand.description,
 				ownerOnly: typedCommand.ownerOnly,
 				adminOnly: typedCommand.adminOnly,
 				modOnly: typedCommand.modOnly,
