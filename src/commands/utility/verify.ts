@@ -113,31 +113,28 @@ export default class VerifyCommand extends Command {
 					}**!`
 				);
 
-				this.client.sendToLogChannel(
-					{
-						embeds: [
-							this.embed(
-								{
-									title: "Member Verified",
-									thumbnail: {
-										url: message.author.displayAvatarURL({
-											dynamic: true,
-										}),
-									},
-									footer: {},
-									fields: [
-										{
-											name: "Member",
-											value: message.member!.toString(),
-										},
-									],
+				this.client.sendToLogChannel(message.guild!, "member", {
+					embeds: [
+						this.embed(
+							{
+								title: "Member Verified",
+								thumbnail: {
+									url: message.author.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
-								message
-							),
-						],
-					},
-					message.guild!
-				);
+								footer: {},
+								fields: [
+									{
+										name: "Member",
+										value: message.member!.toString(),
+									},
+								],
+							},
+							message
+						),
+					],
+				});
 				message.member!.roles.add(
 					// @ts-expect-error
 					await message.guild!.roles.fetch(verifiedRole)
@@ -162,41 +159,38 @@ export default class VerifyCommand extends Command {
 							],
 						});
 
-						this.client.sendToLogChannel(
-							{
-								embeds: [
-									this.embed(
-										{
-											title: "Member Verification Failed",
-											description:
-												"An alternate account was detected, they have been banned.",
-											thumbnail: {
-												url: message.author.displayAvatarURL(
-													{
-														dynamic: true,
-													}
-												),
-											},
-											footer: {},
-											fields: [
+						this.client.sendToLogChannel(message.guild!, "member", {
+							embeds: [
+								this.embed(
+									{
+										title: "Member Verification Failed",
+										description:
+											"An alternate account was detected, they have been banned.",
+										thumbnail: {
+											url: message.author.displayAvatarURL(
 												{
-													name: "Member",
-													value: message.member!.toString(),
-													inline: true,
-												},
-												{
-													name: "Original Account",
-													value: `<@${call.originalAccount}>`,
-													inline: true,
-												},
-											],
+													dynamic: true,
+												}
+											),
 										},
-										message
-									),
-								],
-							},
-							message.guild!
-						);
+										footer: {},
+										fields: [
+											{
+												name: "Member",
+												value: message.member!.toString(),
+												inline: true,
+											},
+											{
+												name: "Original Account",
+												value: `<@${call.originalAccount}>`,
+												inline: true,
+											},
+										],
+									},
+									message
+								),
+							],
+						});
 						break;
 					case "medium":
 						const userPunishments =
@@ -229,6 +223,8 @@ export default class VerifyCommand extends Command {
 							});
 
 							this.client.sendToLogChannel(
+								message.guild!,
+								"member",
 								{
 									embeds: [
 										this.embed(
@@ -258,8 +254,7 @@ export default class VerifyCommand extends Command {
 											message
 										),
 									],
-								},
-								message.guild!
+								}
 							);
 						} else {
 							message.member!.roles.add(
@@ -281,6 +276,8 @@ export default class VerifyCommand extends Command {
 							});
 
 							this.client.sendToLogChannel(
+								message.guild!,
+								"member",
 								{
 									embeds: [
 										this.embed(
@@ -302,8 +299,7 @@ export default class VerifyCommand extends Command {
 											message
 										),
 									],
-								},
-								message.guild!
+								}
 							);
 						}
 						break;
@@ -326,33 +322,30 @@ export default class VerifyCommand extends Command {
 							],
 						});
 
-						this.client.sendToLogChannel(
-							{
-								embeds: [
-									this.embed(
-										{
-											title: "Member Verified",
-											thumbnail: {
-												url: message.author.displayAvatarURL(
-													{
-														dynamic: true,
-													}
-												),
-											},
-											footer: {},
-											fields: [
+						this.client.sendToLogChannel(message.guild!, "member", {
+							embeds: [
+								this.embed(
+									{
+										title: "Member Verified",
+										thumbnail: {
+											url: message.author.displayAvatarURL(
 												{
-													name: "Member",
-													value: message.member!.toString(),
-												},
-											],
+													dynamic: true,
+												}
+											),
 										},
-										message
-									),
-								],
-							},
-							message.guild!
-						);
+										footer: {},
+										fields: [
+											{
+												name: "Member",
+												value: message.member!.toString(),
+											},
+										],
+									},
+									message
+								),
+							],
+						});
 				}
 			}
 			completed = true;

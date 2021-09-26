@@ -58,6 +58,9 @@ type voiceStateCollection = Collection<
 	>
 >;
 
+export type LogType = "member" | "message" | "voice" | "guild";
+export type JobsType = { mutes: Collection<string, Collection<string, Job>> };
+
 // Bruh
 declare module "@ryukobot/discord-akairo" {
 	interface AkairoClient {
@@ -73,13 +76,16 @@ declare module "@ryukobot/discord-akairo" {
 		lavasfy: LavasfyClient;
 		queue: Collection<string, Queue>;
 		log: Logger;
-		jobs: Map<string, Map<string, Job>>;
+		jobs: JobsType;
 		invites: Collection<string, any>;
 		voiceLobbies: voiceStateCollection;
 		sendToLogChannel(
-			options: MessageOptions,
-			guild: Guild
+			guild: Guild,
+			type: LogType,
+			options: MessageOptions
 		): Promise<Message | null | undefined>;
+		listenerHandler: ListenerHandler;
+		inhibitorHandler: InhibitorHandler;
 	}
 }
 
@@ -95,7 +101,7 @@ export default class RyukoClient extends AkairoClient {
 	public queue: Collection<string, Queue>;
 	public log: Logger;
 	public voiceLobbies: voiceStateCollection;
-	public jobs: Collection<string, Map<string, Job>>;
+	public jobs: JobsType;
 	public starboardMessages: Collection<string, Message>;
 	public invites: Collection<string, any>;
 	public commandHandler: CommandHandler;
@@ -124,7 +130,9 @@ export default class RyukoClient extends AkairoClient {
 		this.trivia = new Trivia("../../app/data/trivia");
 		this.generateUsage = generateUsage;
 		this.log = log;
-		this.jobs = new Collection();
+		this.jobs = {
+			mutes: new Collection(),
+		};
 		this.invites = new Collection();
 		this.voiceLobbies = new Collection();
 		this.starboardMessages = new Collection();
@@ -174,7 +182,7 @@ export default class RyukoClient extends AkairoClient {
 			allowMention: true,
 			handleEdits: true,
 			commandUtil: true,
-			// @ts-expect-error 2322
+			// @ts-expect-error
 			ignorePermissions: (message: Message, command: Command) => {
 				if (this.isOwner(message.author.id)) return true;
 				else if (
@@ -246,7 +254,7 @@ export default class RyukoClient extends AkairoClient {
 		this.commandHandler.loadAll();
 	}
 
-	_setupShoukakuEvents() {
+	private _setupShoukakuEvents() {
 		const log = new Logger({
 			name: "lavalink",
 		});
@@ -284,25 +292,79 @@ export default class RyukoClient extends AkairoClient {
 	}
 
 	async sendToLogChannel(
-		options: MessageOptions,
-		guild: Guild
+		guild: Guild,
+		type: LogType,
+		options: MessageOptions
 	): Promise<Message | null | undefined> {
-		if (!this.settings.get(guild.id, "logging", false)) return;
-
 		const guildChannels = await guild.channels.fetch();
+		let channel: TextChannel;
 
-		if (
-			!this.settings.get(guild.id, "loggingChannel", null) ||
-			!guildChannels.get(
-				this.settings.get(guild.id, "loggingChannel", null)
-			)
-		)
-			return;
+		switch (type) {
+			case "guild":
+				if (!this.settings.get(guild.id, "guildLogs", false)) return;
 
-		const loggingChannel = guildChannels.get(
-			this.settings.get(guild.id, "loggingChannel", null)
-		) as TextChannel;
+				if (
+					!this.settings.get(guild.id, "guildLogsChannel", null) ||
+					!guildChannels.get(
+						this.settings.get(guild.id, "guildLogsChannel", null)
+					)
+				)
+					return;
 
-		return loggingChannel.send(options);
+				channel = guildChannels.get(
+					this.settings.get(guild.id, "guildLogsChannel", null)
+				) as TextChannel;
+				break;
+
+			case "member":
+				if (!this.settings.get(guild.id, "memberLogs", false)) return;
+
+				if (
+					!this.settings.get(guild.id, "memberLogsChannel", null) ||
+					!guildChannels.get(
+						this.settings.get(guild.id, "memberLogsChannel", null)
+					)
+				)
+					return;
+
+				channel = guildChannels.get(
+					this.settings.get(guild.id, "memberLogsChannel", null)
+				) as TextChannel;
+				break;
+
+			case "message":
+				if (!this.settings.get(guild.id, "messageLogs", false)) return;
+
+				if (
+					!this.settings.get(guild.id, "messageLogsChannel", null) ||
+					!guildChannels.get(
+						this.settings.get(guild.id, "messageLogsChannel", null)
+					)
+				)
+					return;
+
+				channel = guildChannels.get(
+					this.settings.get(guild.id, "messageLogsChannel", null)
+				) as TextChannel;
+				break;
+
+			case "voice":
+				if (!this.settings.get(guild.id, "voiceLogs", false)) return;
+
+				if (
+					!this.settings.get(guild.id, "voiceLogsChannel", null) ||
+					!guildChannels.get(
+						this.settings.get(guild.id, "voiceLogsChannel", null)
+					)
+				)
+					return;
+
+				channel = guildChannels.get(
+					this.settings.get(guild.id, "voiceLogsChannel", null)
+				) as TextChannel;
+				break;
+		}
+
+		channel.send(options);
 	}
 }

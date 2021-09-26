@@ -53,7 +53,7 @@ export default class StarboardCommand extends Command {
 									},
 									{
 										name: `\`channel <channel>\``,
-										value: `**Current Channel:** ${
+										value: `Channel to send starred messages into\n**Current Channel:** ${
 											this.client.settings.get(
 												message.guild!.id,
 												"starboardChannel",
@@ -67,7 +67,7 @@ export default class StarboardCommand extends Command {
 														)
 												  )}`
 												: "None"
-										}\nChannel to send starred messages into`,
+										}`,
 									},
 								],
 							},

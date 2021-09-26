@@ -1,16 +1,14 @@
 import Command from "../../struct/Command";
-import { GuildMember } from "discord.js";
-import { Message, MessageEmbed, TextChannel } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 
 export default class MoveCommand extends Command {
 	constructor() {
 		super("move", {
-			aliases: ["move"],
+			aliases: ["move", "drag"],
 			category: "Moderation",
-			description: "Move members into another voice channel",
+			description: "Move a Member into a different voice channel",
 			clientPermissions: ["MOVE_MEMBERS"],
 			userPermissions: ["MOVE_MEMBERS"],
-
 			args: [
 				{
 					id: "member",
@@ -19,6 +17,8 @@ export default class MoveCommand extends Command {
 				{
 					id: "channel",
 					type: "voiceChannel",
+					default: (message: Message) =>
+						message.member!.voice?.channel,
 				},
 			],
 			modOnly: true,
@@ -26,74 +26,80 @@ export default class MoveCommand extends Command {
 	}
 
 	exec(message: Message, args: any): any {
-		const victim = args.member;
-		const oldChannel = (<GuildMember>args.member).voice.channel;
-		const Channel = args.channel;
-
-		// Check if the member is provided
-		if (!victim)
+		// Check if the user is valid
+		if (!args.member)
 			return message.channel.send({
 				embeds: [
 					this.error(
 						message,
-						"Invalid Argument",
+						"Invalid Arguments",
 						"You must provide a user to move!"
 					),
 				],
 			});
 
 		// Check if the channel is valid
-		if (!Channel)
+		if (!args.channel)
 			return message.channel.send({
 				embeds: [
 					this.error(
 						message,
-						"Invalid Argument",
-						"You must provide a voice channel to move to!"
+						"Invalid Usage",
+						"You must provide a voice channel, or be in one!"
 					),
 				],
 			});
 
-		victim.voice.setChannel(Channel);
-
-		this.client.sendToLogChannel(
-			{
+		// Checks if the user is in a voice channel
+		if (!args.member.voice.channel)
+			return message.channel.send({
 				embeds: [
-					this.embed(
-						{
-							title: "Member Moved",
-							thumbnail: {
-								url: args.member.user.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-							footer: {},
-							fields: [
-								{
-									name: "From",
-									value: oldChannel?.toString(),
-									inline: true,
-								},
-								{
-									name: "To",
-									value: Channel.toString(),
-									inline: true,
-								},
-								{
-									name: "Member",
-									value: args.member.toString(),
-								},
-								{
-									name: "Moved by",
-									value: message.member!.toString(),
-								},
-							],
-						},
-						message
+					this.error(
+						message,
+						"Invalid Usage",
+						"The person you are trying to move is not in a voice channel!"
 					),
 				],
-			},
-			message.guild!
-		);
+			});
+
+		const oldChannel = args.member.voice.channel;
+		args.member.voice.setChannel(args.channel);
+
+		this.client.sendToLogChannel(message.guild!, "voice", {
+			embeds: [
+				this.embed(
+					{
+						title: "Member Moved VCs",
+						thumbnail: {
+							url: args.member.user.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
+						footer: {},
+						fields: [
+							{
+								name: "Member",
+								value: args.member.toString(),
+							},
+							{
+								name: "Moved By",
+								value: message.member!.toString(),
+							},
+							{
+								name: "From",
+								value: oldChannel.toString(),
+								inline: true,
+							},
+							{
+								name: "To",
+								value: args.channel.toString(),
+								inline: true,
+							},
+						],
+					},
+					message
+				),
+			],
+		});
 	}
 }

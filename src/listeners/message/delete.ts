@@ -27,124 +27,114 @@ export default class DeleteListener extends Listener {
 				: message.content;
 
 		if (!deletionLog)
-			return this.client.sendToLogChannel(
-				{
-					embeds: [
-						this.embed(
-							{
-								title: "Message Deleted",
-								thumbnail: {
-									url: message.author.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								footer: {},
-								fields: [
-									{
-										name: "Content",
-										value: content,
-									},
-									{
-										name: "Author",
-										value: message.author.toString(),
-										inline: true,
-									},
-									{
-										name: "Channel",
-										value: message.channel.toString(),
-										inline: true,
-									},
-								],
+			return this.client.sendToLogChannel(message.guild, "message", {
+				embeds: [
+					this.embed(
+						{
+							title: "Message Deleted",
+							thumbnail: {
+								url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
-							message.author,
-							message.guild
-						),
-					],
-				},
-				message.guild
-			);
+							footer: {},
+							fields: [
+								{
+									name: "Content",
+									value: content,
+								},
+								{
+									name: "Author",
+									value: message.author.toString(),
+									inline: true,
+								},
+								{
+									name: "Channel",
+									value: message.channel.toString(),
+									inline: true,
+								},
+							],
+						},
+						message.author,
+						message.guild
+					),
+				],
+			});
 
 		const { executor, target } = deletionLog;
 
 		if ((<User>target).id == message.author.id)
-			return this.client.sendToLogChannel(
-				{
-					embeds: [
-						this.embed(
-							{
-								title: "Message Deleted",
-								thumbnail: {
-									url: message.author.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								footer: {},
-								fields: [
-									{
-										name: "Content",
-										value: content,
-									},
-									{
-										name: "Author",
-										value: message.author.toString(),
-										inline: true,
-									},
-									{
-										name: "Deleted by",
-										value:
-											executor?.toString() || "Unknown",
-										inline: true,
-									},
-									{
-										name: "Channel",
-										value: message.channel.toString(),
-										inline: true,
-									},
-								],
+			return this.client.sendToLogChannel(message.guild, "message", {
+				embeds: [
+					this.embed(
+						{
+							title: "Message Deleted",
+							thumbnail: {
+								url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
-							message.author,
-							message.guild
-						),
-					],
-				},
-				message.guild
-			);
+							footer: {},
+							fields: [
+								{
+									name: "Content",
+									value: content,
+								},
+								{
+									name: "Author",
+									value: message.author.toString(),
+									inline: true,
+								},
+								{
+									name: "Deleted by",
+									value: executor?.toString() || "Unknown",
+									inline: true,
+								},
+								{
+									name: "Channel",
+									value: message.channel.toString(),
+									inline: true,
+								},
+							],
+						},
+						message.author,
+						message.guild
+					),
+				],
+			});
 		else
-			return this.client.sendToLogChannel(
-				{
-					embeds: [
-						this.embed(
-							{
-								title: "Message Deleted",
-								thumbnail: {
-									url: message.author.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								footer: {},
-								fields: [
-									{
-										name: "Content",
-										value: content,
-									},
-									{
-										name: "Author",
-										value: message.author.toString(),
-										inline: true,
-									},
-									{
-										name: "Channel",
-										value: message.channel.toString(),
-										inline: true,
-									},
-								],
+			return this.client.sendToLogChannel(message.guild, "message", {
+				embeds: [
+					this.embed(
+						{
+							title: "Message Deleted",
+							thumbnail: {
+								url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
-							message.author,
-							message.guild
-						),
-					],
-				},
-				message.guild
-			);
+							footer: {},
+							fields: [
+								{
+									name: "Content",
+									value: content,
+								},
+								{
+									name: "Author",
+									value: message.author.toString(),
+									inline: true,
+								},
+								{
+									name: "Channel",
+									value: message.channel.toString(),
+									inline: true,
+								},
+							],
+						},
+						message.author,
+						message.guild
+					),
+				],
+			});
 	}
 }

@@ -18,105 +18,96 @@ export default class GuildBanAddListener extends Listener {
 		const banLog = fetchedLogs.entries.first();
 
 		if (!banLog)
-			return this.client.sendToLogChannel(
-				{
-					embeds: [
-						this.embed(
-							{
-								title: "Member Banned",
-								thumbnail: {
-									url: user.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								footer: {},
-								fields: [
-									{
-										name: "Member",
-										value: user.toString(),
-										inline: true,
-									},
-								],
+			return this.client.sendToLogChannel(guild, "member", {
+				embeds: [
+					this.embed(
+						{
+							title: "Member Banned",
+							thumbnail: {
+								url: user.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
-							user,
-							guild
-						),
-					],
-				},
-				guild
-			);
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: user.toString(),
+									inline: true,
+								},
+							],
+						},
+						user,
+						guild
+					),
+				],
+			});
 
 		const { executor, target } = banLog;
 
 		if (executor == guild.me?.user) return;
 
 		if ((<User>target).id === user.id) {
-			return this.client.sendToLogChannel(
-				{
-					embeds: [
-						this.embed(
-							{
-								title: "Member Banned",
-								thumbnail: {
-									url: user.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								footer: {},
-								fields: [
-									{
-										name: "Member",
-										value: user.toString(),
-										inline: true,
-									},
-									{
-										name: "Banned By",
-										value: executor!.toString(),
-										inline: true,
-									},
-									{
-										name: "Reason",
-										value:
-											banLog.reason?.toString() ||
-											"No Reason Provided",
-									},
-								],
+			return this.client.sendToLogChannel(guild, "member", {
+				embeds: [
+					this.embed(
+						{
+							title: "Member Banned",
+							thumbnail: {
+								url: user.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
-							user,
-							guild
-						),
-					],
-				},
-				guild
-			);
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: user.toString(),
+									inline: true,
+								},
+								{
+									name: "Banned By",
+									value: executor!.toString(),
+									inline: true,
+								},
+								{
+									name: "Reason",
+									value:
+										banLog.reason?.toString() ||
+										"No Reason Provided",
+								},
+							],
+						},
+						user,
+						guild
+					),
+				],
+			});
 		} else {
-			return this.client.sendToLogChannel(
-				{
-					embeds: [
-						this.embed(
-							{
-								title: "Member Banned",
-								thumbnail: {
-									url: user.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								footer: {},
-								fields: [
-									{
-										name: "Member",
-										value: user.toString(),
-										inline: true,
-									},
-								],
+			return this.client.sendToLogChannel(guild, "member", {
+				embeds: [
+					this.embed(
+						{
+							title: "Member Banned",
+							thumbnail: {
+								url: user.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
-							user,
-							guild
-						),
-					],
-				},
-				guild
-			);
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: user.toString(),
+									inline: true,
+								},
+							],
+						},
+						user,
+						guild
+					),
+				],
+			});
 		}
 	}
 }

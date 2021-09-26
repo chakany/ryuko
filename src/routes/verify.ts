@@ -168,9 +168,9 @@ router.post("/", async (req, res) => {
 			);
 		} else {
 			const salt = await bcrypt.genSalt(10);
-			const hash = await bcrypt.hash(req.body.id, salt);
+			const hash = await bcrypt.hash(redisRes.userId, salt);
 
-			db.addMember(req.body.id, hash, req.ip!);
+			db.verifyMember(redisRes.userId, hash, req.ip!);
 			res.cookie("_verificationId", hash).render("verify", {
 				verified: true,
 				error: null,

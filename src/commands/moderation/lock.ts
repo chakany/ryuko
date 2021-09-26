@@ -59,36 +59,33 @@ export default class LockCommand extends Command {
 
 		setTimeout(() => signalMessage.delete(), 5000);
 
-		this.client.sendToLogChannel(
-			{
-				embeds: [
-					this.embed(
-						{
-							title: "Channel Locked",
-							thumbnail: {
-								url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-							footer: {},
-							fields: [
-								{
-									name: "Channel",
-									value: args.channel.toString(),
-									inline: true,
-								},
-								{
-									name: "Locked by",
-									value: message.member!.toString(),
-									inline: true,
-								},
-							],
+		this.client.sendToLogChannel(message.guild!, "guild", {
+			embeds: [
+				this.embed(
+					{
+						title: "Channel Locked",
+						thumbnail: {
+							url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
-						message
-					),
-				],
-			},
-			message.guild!
-		);
+						footer: {},
+						fields: [
+							{
+								name: "Channel",
+								value: args.channel.toString(),
+								inline: true,
+							},
+							{
+								name: "Locked by",
+								value: message.member!.toString(),
+								inline: true,
+							},
+						],
+					},
+					message
+				),
+			],
+		});
 	}
 }

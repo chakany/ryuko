@@ -79,7 +79,7 @@ export default class VerificationCommand extends Command {
 									},
 									{
 										name: `\`role <role>\``,
-										value: `**Current Role:** ${
+										value: `Set the role that verified users will be given after completing verification\n**Current Role:** ${
 											this.client.settings.get(
 												message.guild!.id,
 												"verifiedRole",
@@ -93,7 +93,7 @@ export default class VerificationCommand extends Command {
 														)
 												  )}`
 												: "None"
-										}\nSet the role that verified users will be given after completing verification`,
+										}`,
 									},
 								],
 							},

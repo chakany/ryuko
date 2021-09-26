@@ -32,7 +32,7 @@ export default class DisconnectCommand extends Command {
 				embeds: [
 					this.error(
 						message,
-						"Invalid Argument",
+						"Invalid Arguments",
 						"You must provide a user to disconnect!"
 					),
 				],
@@ -45,7 +45,7 @@ export default class DisconnectCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"The person you are trying to disconnect is not in a channel!"
+						"The person you are trying to disconnect is not in a voice channel!"
 					),
 				],
 			});
@@ -56,23 +56,27 @@ export default class DisconnectCommand extends Command {
 			embeds: [
 				this.embed(
 					{
-						title: "Disconnected",
+						title: "Disconnected Member",
 						fields: [
 							{
-								name: "From",
-								value: oldChannel.toString(),
+								name: "Member",
+								value: args.member.toString(),
 								inline: true,
 							},
 							{
-								name: "By",
-								value: message.author.toString(),
+								name: "Disconnected By",
+								value: message.member!.toString(),
 								inline: true,
+							},
+							{
+								name: "From",
+								value: oldChannel.toString(),
 							},
 							{
 								name: "Reason",
 								value: args.reason
 									? `\`${args.reason}\``
-									: "No reason given",
+									: "None",
 							},
 						],
 					},
@@ -81,47 +85,43 @@ export default class DisconnectCommand extends Command {
 			],
 		});
 
-		this.client.sendToLogChannel(
-			{
-				embeds: [
-					this.embed(
-						{
-							title: "Disconnection",
-							thumbnail: {
-								url: args.member.user.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-							footer: {},
-							fields: [
-								{
-									name: "From",
-									value: oldChannel,
-									inline: true,
-								},
-								{
-									name: "Member",
-									value: args.member,
-									inline: true,
-								},
-								{
-									name: "Disconnected By",
-									value: message.member,
-									inline: true,
-								},
-								{
-									name: "Reason",
-									value: args.reason
-										? `\`${args.reason}\``
-										: "No reason given",
-								},
-							],
+		this.client.sendToLogChannel(message.guild!, "voice", {
+			embeds: [
+				this.embed(
+					{
+						title: "Member Disconnected from VC",
+						thumbnail: {
+							url: args.member.user.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
-						message
-					),
-				],
-			},
-			message.guild!
-		);
+						footer: {},
+						fields: [
+							{
+								name: "Member",
+								value: args.member.toString(),
+								inline: true,
+							},
+							{
+								name: "Disconnected By",
+								value: message.member!.toString(),
+								inline: true,
+							},
+							{
+								name: "From",
+								value: oldChannel.toString(),
+							},
+							{
+								name: "Reason",
+								value: args.reason
+									? `\`${args.reason}\``
+									: "None",
+							},
+						],
+					},
+					message
+				),
+			],
+		});
 	}
 }

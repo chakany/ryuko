@@ -91,42 +91,39 @@ export default class WarnCommand extends Command {
 			}`
 		);
 
-		this.client.sendToLogChannel(
-			{
-				embeds: [
-					this.embed(
-						{
-							title: "Member Warned",
-							thumbnail: {
-								url: args.member.user.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-							footer: {},
-							fields: [
-								{
-									name: "Member",
-									value: args.member,
-									inline: true,
-								},
-								{
-									name: "Warned by",
-									value: message.member!,
-									inline: true,
-								},
-								{
-									name: "Reason",
-									value: args.reason
-										? `\`${args.reason}\``
-										: "No Reason Provided",
-								},
-							],
+		this.client.sendToLogChannel(message.guild!, "member", {
+			embeds: [
+				this.embed(
+					{
+						title: "Member Warned",
+						thumbnail: {
+							url: args.member.user.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
-						message
-					),
-				],
-			},
-			message.guild!
-		);
+						footer: {},
+						fields: [
+							{
+								name: "Member",
+								value: args.member,
+								inline: true,
+							},
+							{
+								name: "Warned by",
+								value: message.member!,
+								inline: true,
+							},
+							{
+								name: "Reason",
+								value: args.reason
+									? `\`${args.reason}\``
+									: "No Reason Provided",
+							},
+						],
+					},
+					message
+				),
+			],
+		});
 	}
 }

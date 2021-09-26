@@ -1,9 +1,9 @@
 import Listener from "../struct/Listener";
+import Client from "../struct/Client";
 import { ActivityType } from "discord.js";
-import schedule from "node-schedule";
 import axios from "axios";
 import moment from "moment";
-import ms from "ms";
+import { setMute } from "../utils/command";
 
 export default class ReadyListener extends Listener {
 	constructor() {
@@ -37,71 +37,15 @@ export default class ReadyListener extends Listener {
 					);
 					if (!mute) member.roles.remove(muteRole);
 					else if (mute) {
-						const job = schedule.scheduleJob(
-							mute.expires,
-							function () {
-								if (member.roles.cache.has(muteRole.id))
-									// @ts-ignore
-									member.roles.remove(muteRole);
-
-								outer.client.jobs.get(g.id)?.delete(member.id);
-
-								const expired = moment(mute.expires);
-								const created = moment(mute.createdAt);
-
-								const length = created.diff(expired);
-
-								outer.client.sendToLogChannel(
-									{
-										embeds: [
-											outer.embed(
-												{
-													title: "Member Unmuted",
-													description: `${member.toString()}'s mute has expired.`,
-													footer: {},
-													thumbnail: {
-														url: member.user.displayAvatarURL(
-															{
-																dynamic: true,
-															}
-														),
-													},
-													fields: [
-														{
-															name: "Member",
-															value: member.toString(),
-															inline: true,
-														},
-														{
-															name: "Length",
-															value: `**${ms(
-																length,
-																{ long: true }
-															)}** (<t:${created.unix()}:f>)`,
-														},
-														{
-															name: "Muted By",
-															value:
-																g.members.cache
-																	.get(
-																		mute.adminId
-																	)
-																	?.toString() ||
-																"Unknown",
-															inline: true,
-														},
-													],
-												},
-												member.user,
-												g
-											),
-										],
-									},
-									g
-								);
-							}
+						setMute(
+							this.client as unknown as Client,
+							g,
+							member,
+							await g.members.fetch(mute.adminId),
+							muteRole.id,
+							moment(mute.expires),
+							mute.reason
 						);
-						outer.client.jobs.get(g.id)?.set(member.id, job);
 					}
 				}
 		});

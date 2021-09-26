@@ -55,36 +55,33 @@ export default class UnlockCommand extends Command {
 
 		setTimeout(() => signalMessage.delete(), 5000);
 
-		this.client.sendToLogChannel(
-			{
-				embeds: [
-					this.embed(
-						{
-							title: "Channel Unlocked",
-							thumbnail: {
-								url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-							footer: {},
-							fields: [
-								{
-									name: "Channel",
-									value: args.channel.toString(),
-									inline: true,
-								},
-								{
-									name: "Unlocked by",
-									value: message.member!.toString(),
-									inline: true,
-								},
-							],
+		this.client.sendToLogChannel(message.guild!, "guild", {
+			embeds: [
+				this.embed(
+					{
+						title: "Channel Unlocked",
+						thumbnail: {
+							url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
-						message
-					),
-				],
-			},
-			message.guild!
-		);
+						footer: {},
+						fields: [
+							{
+								name: "Channel",
+								value: args.channel.toString(),
+								inline: true,
+							},
+							{
+								name: "Unlocked by",
+								value: message.member!.toString(),
+								inline: true,
+							},
+						],
+					},
+					message
+				),
+			],
+		});
 	}
 }
