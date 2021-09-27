@@ -145,7 +145,7 @@ router.post("/:state", async (req, res) => {
 			const salt = await bcrypt.genSalt(10);
 			const hash = await bcrypt.hash(redisRes.userId, salt);
 
-			db.addMember(req.body.id, hash, req.ip!);
+			db.verifyMember(req.body.id, hash, req.ip!);
 			res.cookie("_verificationId", hash).status(200).send({
 				message: "SUCCESS",
 			});
