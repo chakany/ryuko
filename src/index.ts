@@ -3,14 +3,11 @@ import Logger from "./struct/Logger";
 import express, { Request, Response, NextFunction } from "express";
 import colors from "colors";
 import table from "cli-table";
-import axios from "axios";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { AutoPoster } from "topgg-autoposter";
 import path from "path";
-import http from "http";
 import cors from "cors";
-import { Server as SocketServer } from "socket.io";
 
 import Db from "./utils/db";
 import Redis from "./utils/redis";
@@ -148,114 +145,41 @@ void (async function () {
 
 	const app = express();
 
+	app.disable("x-powered-by");
+
 	app.use(cors());
 
-	const baseServer = http.createServer(app);
+	// @ts-expect-error 2769
+	app.use(bodyParser.urlencoded({ extended: true }));
+	// @ts-expect-error 2769
+	app.use(bodyParser.json());
+	app.use(cookieParser());
 
-	const io = new SocketServer(baseServer, {
-		cors: {
-			origin: ["https://ryuko.cc", "http://localhost:3000"],
-			methods: ["GET", "POST"],
-		},
+	// Check if we are in prod, if we are trust the reverse proxy, used for getting user IPs on verification.
+	if (production) app.set("trust proxy", true);
+
+	app.use("/stats", Stats);
+	app.use("/commands", Commands);
+	app.use("/verify", Verify);
+
+	app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+		// Log to console
+		weblog.error(error.stack);
+
+		// Return error page
+		res.status(500).send({
+			message: "Internal Server Error",
+		});
 	});
 
 	manager.on("shardCreate", async (shard) => {
 		log.info(`Launched shard ${shard.id}`);
 
-		shard.on("message", async (message) => {
-			switch (message) {
-				case "REFRESH_GUILDS":
-					io.emit(
-						"GUILDS_UPDATE",
-						(
-							await manager.fetchClientValues("guilds.cache.size")
-						).reduce((acc: any, guildCount) => acc + guildCount, 0)
-					);
-					break;
-
-				case "REFRESH_CHANNELS":
-					io.emit(
-						"CHANNELS_UPDATE",
-						(
-							await manager.fetchClientValues(
-								"channels.cache.size"
-							)
-						).reduce(
-							(acc: any, channelCount) => acc + channelCount,
-							0
-						)
-					);
-					break;
-
-				case "REFRESH_USERS":
-					io.emit(
-						"USERS_UPDATE",
-						(
-							await manager.fetchClientValues("users.cache.size")
-						).reduce((acc: any, userCount) => acc + userCount, 0)
-					);
-					break;
-			}
-		});
-
 		if (shard.id == 0) {
 			shard.once("ready", async () => {
-				io.on("connection", async (socket) => {
-					socket.emit("ALL", {
-						guilds: (
-							await manager.fetchClientValues("guilds.cache.size")
-						).reduce((acc: any, guildCount) => acc + guildCount, 0),
-						users: (
-							await manager.fetchClientValues("users.cache.size")
-						).reduce(
-							(acc: any, memberCount) => acc + memberCount,
-							0
-						),
-						channels: (
-							await manager.fetchClientValues(
-								"channels.cache.size"
-							)
-						).reduce(
-							(acc: any, channelCount) => acc + channelCount,
-							0
-						),
-						shards: manager.totalShards,
-					});
-				});
-
 				try {
-					// @ts-expect-error 2769
-					app.use(bodyParser.urlencoded({ extended: true }));
-					// @ts-expect-error 2769
-					app.use(bodyParser.json());
-					app.use(cookieParser());
-
-					// Check if we are in prod, if we are trust the reverse proxy, used for getting user IPs on verification.
-					if (production) app.set("trust proxy", true);
-
-					app.use("/stats", Stats);
-					app.use("/commands", Commands);
-					app.use("/verify", Verify);
-
-					app.use(
-						(
-							error: any,
-							req: Request,
-							res: Response,
-							next: NextFunction
-						) => {
-							// Log to console
-							weblog.error(error.stack);
-
-							// Return error page
-							res.status(500).send({
-								message: "Internal Server Error",
-							});
-						}
-					);
-
-					baseServer.listen(port, () => {
-						weblog.info(`Bound to port ${port}`);
+					app.listen(port, () => {
+						weblog.info(`Listening on port ${port}`);
 					});
 				} catch (error) {
 					weblog.error(error);

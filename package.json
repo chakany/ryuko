@@ -20,6 +20,7 @@
 		"@types/bunyan": "^1.8.7",
 		"@types/cli-table": "^0.3.0",
 		"@types/cookie-parser": "^1.4.2",
+		"@types/cors": "^2.8.12",
 		"@types/express": "^4.17.13",
 		"@types/fast-levenshtein": "^0.0.2",
 		"@types/glob": "^7.1.4",
@@ -64,7 +65,6 @@
 		"reddit-grabber": "^2.1.0",
 		"sequelize": "^6.6.5",
 		"shoukaku": "^2.0.3",
-		"socket.io": "^4.2.0",
 		"spotify-url-info": "^2.2.3",
 		"steamid": "^2.0.0",
 		"topgg-autoposter": "^2.0.0"
