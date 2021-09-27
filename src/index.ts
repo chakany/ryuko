@@ -1,18 +1,14 @@
 import { ShardingManager } from "discord.js";
 import Logger from "./struct/Logger";
-import express, { Request, Response, NextFunction } from "express";
 import colors from "colors";
 import table from "cli-table";
-import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
 import { AutoPoster } from "topgg-autoposter";
 import path from "path";
-import cors from "cors";
 import Db from "./utils/db";
 import Redis from "./utils/redis";
 import * as Web from "./web";
 
-const { token, port, imgApiUrl, topgg_token } = require("../config.json");
+const { token, topgg_token } = require("../config.json");
 const log = new Logger({ name: "manager" });
 
 const production = process.env.NODE_ENV === "production";
