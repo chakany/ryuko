@@ -84,7 +84,7 @@ export default class ModroleCommand extends Command {
 							},
 							{
 								name: "After",
-								value: args.role,
+								value: args.role.toString(),
 								inline: true,
 							},
 						],

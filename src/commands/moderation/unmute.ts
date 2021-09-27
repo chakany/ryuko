@@ -31,8 +31,7 @@ export default class MoveCommand extends Command {
 				],
 			});
 
-		const mutedMembers = this.client.jobs.get(message.guild!.id);
-		if (!mutedMembers?.get(args.member.id))
+		if (!this.client.jobs.mutes.get(message.guild!.id)?.get(args.member.id))
 			return message.channel.send({
 				embeds: [
 					this.error(
@@ -63,10 +62,11 @@ export default class MoveCommand extends Command {
 			});
 
 		args.member.roles.remove(await message.guild?.roles.fetch(muteRole));
-		mutedMembers.get(args.member.id)?.cancel();
-		mutedMembers.delete(args.member.id);
-
-		this.client.jobs.set(message.guild!.id, mutedMembers);
+		this.client.jobs.mutes
+			.get(message.guild!.id)
+			?.get(args.member.id)
+			?.cancel();
+		this.client.jobs.mutes.get(message.guild!.id)?.delete(args.member.id);
 
 		this.client.db.unpunishMember(
 			args.member.id,
@@ -97,38 +97,35 @@ export default class MoveCommand extends Command {
 			],
 		});
 
-		this.client.sendToLogChannel(
-			{
-				embeds: [
-					this.embed(
-						{
-							title: "Member Unmuted",
-							thumbnail: {
-								url: (<GuildMember>(
-									args.member
-								)).user.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-							footer: {},
-							fields: [
-								{
-									name: "Unmuted",
-									value: args.member,
-									inline: true,
-								},
-								{
-									name: "Unmuted By",
-									value: message.member,
-									inline: true,
-								},
-							],
+		this.client.sendToLogChannel(message.guild!, "member", {
+			embeds: [
+				this.embed(
+					{
+						title: "Member Unmuted",
+						thumbnail: {
+							url: (<GuildMember>(
+								args.member
+							)).user.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
-						message
-					),
-				],
-			},
-			message.guild!
-		);
+						footer: {},
+						fields: [
+							{
+								name: "Unmuted",
+								value: args.member,
+								inline: true,
+							},
+							{
+								name: "Unmuted By",
+								value: message.member,
+								inline: true,
+							},
+						],
+					},
+					message
+				),
+			],
+		});
 	}
 }

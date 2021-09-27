@@ -62,7 +62,7 @@ export default class JoinLeaveCommand extends Command {
 									},
 									{
 										name: `\`channel <channel>\``,
-										value: `**Current Channel:** ${
+										value: `Change the Channel that Join & Leave messages will be sent into\n**Current Channel:** ${
 											this.client.settings.get(
 												message.guild!.id,
 												"joinLeaveChannel",
@@ -76,11 +76,11 @@ export default class JoinLeaveCommand extends Command {
 														)
 												  )}`
 												: "None"
-										}\nChange the Channel that Join & Leave messages will be sent into`,
+										}`,
 									},
 									{
 										name: "`join <phrase>`",
-										value: `**Current Phrase:** ${
+										value: `Change the message that will be sent when someone joins\n**Current Phrase:** ${
 											this.client.settings.get(
 												message.guild!.id,
 												"joinMessage",
@@ -92,11 +92,11 @@ export default class JoinLeaveCommand extends Command {
 														null
 												  )}\``
 												: "None"
-										}\nChange the message that will be sent when someone joins`,
+										}`,
 									},
 									{
 										name: "`leave <phrase>`",
-										value: `**Current Phrase:** ${
+										value: `Change the message that will be sent when someone leaves\n**Current Phrase:** ${
 											this.client.settings.get(
 												message.guild!.id,
 												"leaveMessages",
@@ -108,7 +108,7 @@ export default class JoinLeaveCommand extends Command {
 														null
 												  )}\``
 												: "None"
-										}\nChange the message that will be sent when someone leaves`,
+										}`,
 									},
 								],
 							},

@@ -1,5 +1,10 @@
 import Listener from "../struct/Listener";
-import { VoiceState, Permissions, CategoryChannelResolvable } from "discord.js";
+import {
+	VoiceState,
+	Permissions,
+	CategoryChannelResolvable,
+	User,
+} from "discord.js";
 import { Collection } from "discord.js";
 
 export default class VoiceStateUpdateListener extends Listener {
@@ -11,6 +16,208 @@ export default class VoiceStateUpdateListener extends Listener {
 	}
 
 	async exec(before: VoiceState, after: VoiceState) {
+		// wrap this in a function, we don't want to return lmao
+		await (async () => {
+			if (!this.client.settings.get(before.guild.id, "voiceLogs", false))
+				return;
+
+			if (!before.channel && after.channel) {
+				// Compare values to eachother, try to find a change.
+
+				// Assume that they joined a channel
+				return this.client.sendToLogChannel(before.guild, "voice", {
+					embeds: [
+						this.embed(
+							{
+								title: "Member Joined VC",
+								thumbnail: {
+									url: after.member!.user.displayAvatarURL({
+										dynamic: true,
+									}),
+								},
+								footer: {},
+								fields: [
+									{
+										name: "Member",
+										value: after.member!.toString(),
+									},
+									{
+										name: "Channel",
+										value: after.channel.toString(),
+									},
+								],
+							},
+							before.member!.user,
+							before.guild
+						),
+					],
+				});
+			}
+
+			// Assume that they left a channel
+			if (before.channel && !after.channel) {
+				const fetchedLogs = await after.guild.fetchAuditLogs({
+					limit: 1,
+					type: "MEMBER_DISCONNECT",
+				});
+
+				const disconnectLog = fetchedLogs.entries.first();
+
+				if (!disconnectLog)
+					return this.client.sendToLogChannel(before.guild, "voice", {
+						embeds: [
+							this.embed(
+								{
+									title: "Member Left VC",
+									thumbnail: {
+										url: before.member!.user.displayAvatarURL(
+											{
+												dynamic: true,
+											}
+										),
+									},
+									footer: {},
+									fields: [
+										{
+											name: "Member",
+											value: before.member!.toString(),
+										},
+										{
+											name: "Channel",
+											value: before.channel.toString(),
+										},
+									],
+								},
+								before.member!.user,
+								before.guild
+							),
+						],
+					});
+
+				const { executor } = disconnectLog;
+
+				if (executor?.id === this.client.user!.id) return;
+
+				return this.client.sendToLogChannel(before.guild, "voice", {
+					embeds: [
+						this.embed(
+							{
+								title: "Member Left VC",
+								thumbnail: {
+									url: before.member!.user.displayAvatarURL({
+										dynamic: true,
+									}),
+								},
+								footer: {},
+								fields: [
+									{
+										name: "Member",
+										value: before.member!.toString(),
+									},
+									{
+										name: "Channel",
+										value: before.channel.toString(),
+									},
+								],
+							},
+							before.member!.user,
+							before.guild
+						),
+					],
+				});
+			}
+
+			// Assume that they moved channels
+			if (
+				before.channel &&
+				after.channel &&
+				before.channel?.id !== after.channel?.id
+			) {
+				// Fetch audit logs, see if we can get data
+				const fetchedLogs = await after.guild.fetchAuditLogs({
+					limit: 1,
+					type: "MEMBER_MOVE",
+				});
+
+				const moveLog = fetchedLogs.entries.first();
+
+				if (!moveLog)
+					return this.client.sendToLogChannel(before.guild, "voice", {
+						embeds: [
+							this.embed(
+								{
+									title: "Member Moved VCs",
+									thumbnail: {
+										url: after.member!.user.displayAvatarURL(
+											{
+												dynamic: true,
+											}
+										),
+									},
+									footer: {},
+									fields: [
+										{
+											name: "Member",
+											value: after.member!.toString(),
+										},
+										{
+											name: "From",
+											value: before.channel.toString(),
+											inline: true,
+										},
+										{
+											name: "To",
+											value: after.channel.toString(),
+											inline: true,
+										},
+									],
+								},
+								before.member!.user,
+								before.guild
+							),
+						],
+					});
+
+				const { executor } = moveLog;
+
+				if (executor?.id === this.client.user!.id) return;
+
+				return this.client.sendToLogChannel(before.guild, "voice", {
+					embeds: [
+						this.embed(
+							{
+								title: "Member Moved VCs",
+								thumbnail: {
+									url: after.member!.user.displayAvatarURL({
+										dynamic: true,
+									}),
+								},
+								footer: {},
+								fields: [
+									{
+										name: "Member",
+										value: after.member!.toString(),
+									},
+									{
+										name: "From",
+										value: before.channel.toString(),
+										inline: true,
+									},
+									{
+										name: "To",
+										value: after.channel.toString(),
+										inline: true,
+									},
+								],
+							},
+							before.member!.user,
+							before.guild
+						),
+					],
+				});
+			}
+		})();
+
 		// Lobby Logic
 		if (
 			!this.client.settings.get(before.guild.id, "voiceLobbies", false) ||

@@ -56,82 +56,76 @@ export default class MemberAddListener extends Listener {
 					(i) => ei.get(i.code).uses < i.uses!
 				);
 
-				return this.client.sendToLogChannel(
-					{
-						embeds: [
-							this.embed(
-								{
-									title: "Member Joined",
-									description: `They are member #${
-										member.guild!.memberCount
-									}!`,
-									thumbnail: {
-										url: member.user.displayAvatarURL({
-											dynamic: true,
-										}),
-									},
-									footer: {},
-									fields: [
-										{
-											name: "Member",
-											value: member.toString(),
-											inline: true,
-										},
-										{
-											name: "Invited by",
-											value:
-												invite?.inviter?.toString() ||
-												"Unknown",
-											inline: true,
-										},
-										{
-											name: "Invite Code",
-											value: invite
-												? `\`${invite?.code}\``
-												: "None",
-											inline: true,
-										},
-									],
+				return this.client.sendToLogChannel(member.guild, "member", {
+					embeds: [
+						this.embed(
+							{
+								title: "Member Joined",
+								description: `They are member #${
+									member.guild!.memberCount
+								}!`,
+								thumbnail: {
+									url: member.user.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
-								member.user,
-								member.guild
-							),
-						],
-					},
-					member.guild
-				);
+								footer: {},
+								fields: [
+									{
+										name: "Member",
+										value: member.toString(),
+										inline: true,
+									},
+									{
+										name: "Invited by",
+										value:
+											invite?.inviter?.toString() ||
+											"Unknown",
+										inline: true,
+									},
+									{
+										name: "Invite Code",
+										value: invite
+											? `\`${invite?.code}\``
+											: "None",
+										inline: true,
+									},
+								],
+							},
+							member.user,
+							member.guild
+						),
+					],
+				});
 			})
 			.catch((error: any) => {
-				return this.client.sendToLogChannel(
-					{
-						embeds: [
-							this.embed(
-								{
-									title: "Member Joined",
-									description: `They are member #${
-										member.guild!.memberCount
-									}!`,
-									thumbnail: {
-										url: member.user.displayAvatarURL({
-											dynamic: true,
-										}),
-									},
-									footer: {},
-									fields: [
-										{
-											name: "Member",
-											value: member.toString(),
-											inline: true,
-										},
-									],
+				return this.client.sendToLogChannel(member.guild, "member", {
+					embeds: [
+						this.embed(
+							{
+								title: "Member Joined",
+								description: `They are member #${
+									member.guild!.memberCount
+								}!`,
+								thumbnail: {
+									url: member.user.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
-								member.user,
-								member.guild
-							),
-						],
-					},
-					member.guild
-				);
+								footer: {},
+								fields: [
+									{
+										name: "Member",
+										value: member.toString(),
+										inline: true,
+									},
+								],
+							},
+							member.user,
+							member.guild
+						),
+					],
+				});
 			});
 	}
 }

@@ -54,7 +54,7 @@ export default class TicketingCommand extends Command {
 									},
 									{
 										name: `\`role <role>\``,
-										value: `**Current Role:** ${
+										value: `Role to automatically give access to tickets\n**Current Role:** ${
 											this.client.settings.get(
 												message.guild!.id,
 												"ticketRole",
@@ -68,11 +68,11 @@ export default class TicketingCommand extends Command {
 														)
 												  )}`
 												: "None"
-										}\nRole to automatically give access to tickets`,
+										}`,
 									},
 									{
 										name: `\`category <value>\``,
-										value: `**Current Category:** ${
+										value: `Category to make new tickets under (must be an id)\n**Current Category:** ${
 											this.client.settings.get(
 												message.guild!.id,
 												"ticketCategory",
@@ -84,7 +84,7 @@ export default class TicketingCommand extends Command {
 														null
 												  )}\``
 												: "None"
-										}\nCategory to make new tickets under (must be an Id)`,
+										}`,
 									},
 								],
 							},

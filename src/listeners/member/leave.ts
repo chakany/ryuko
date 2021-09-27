@@ -40,97 +40,87 @@ export default class MemberLeaveListener extends Listener {
 		const kickLog = fetchedLogs.entries.first();
 
 		if (!kickLog)
-			return this.client.sendToLogChannel(
-				{
-					embeds: [
-						this.embed(
-							{
-								title: "Member Left",
-								thumbnail: {
-									url: member.user.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								footer: {},
-								fields: [
-									{
-										name: "Member",
-										value: member.toString(),
-									},
-								],
+			return this.client.sendToLogChannel(member.guild, "member", {
+				embeds: [
+					this.embed(
+						{
+							title: "Member Left",
+							thumbnail: {
+								url: member.user.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
-							member.user,
-							member.guild
-						),
-					],
-				},
-				member.guild
-			);
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: member.toString(),
+								},
+							],
+						},
+						member.user,
+						member.guild
+					),
+				],
+			});
 
 		const { executor, target } = kickLog;
 		if (executor?.id === this.client.user!.id) return;
 
 		if ((<User>target).id === member.id) {
-			return this.client.sendToLogChannel(
-				{
-					embeds: [
-						this.embed(
-							{
-								title: "Member Kicked",
-								thumbnail: {
-									url: member.user.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								footer: {},
-								fields: [
-									{
-										name: "Member",
-										value: member.toString(),
-										inline: true,
-									},
-									{
-										name: "Kicked by",
-										value:
-											executor?.toString() || "Unknown",
-										inline: true,
-									},
-								],
+			return this.client.sendToLogChannel(member.guild, "member", {
+				embeds: [
+					this.embed(
+						{
+							title: "Member Kicked",
+							thumbnail: {
+								url: member.user.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
-							member.user,
-							member.guild
-						),
-					],
-				},
-				member.guild
-			);
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: member.toString(),
+									inline: true,
+								},
+								{
+									name: "Kicked by",
+									value: executor?.toString() || "Unknown",
+									inline: true,
+								},
+							],
+						},
+						member.user,
+						member.guild
+					),
+				],
+			});
 		} else {
-			return this.client.sendToLogChannel(
-				{
-					embeds: [
-						this.embed(
-							{
-								title: "Member Left",
-								thumbnail: {
-									url: member.user.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								footer: {},
-								fields: [
-									{
-										name: "Member",
-										value: member.toString(),
-									},
-								],
+			return this.client.sendToLogChannel(member.guild, "member", {
+				embeds: [
+					this.embed(
+						{
+							title: "Member Left",
+							thumbnail: {
+								url: member.user.displayAvatarURL({
+									dynamic: true,
+								}),
 							},
-							member.user,
-							member.guild
-						),
-					],
-				},
-				member.guild
-			);
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: member.toString(),
+								},
+							],
+						},
+						member.user,
+						member.guild
+					),
+				],
+			});
 		}
 	}
 }

@@ -121,42 +121,39 @@ export default class PurgeCommand extends Command {
 			],
 		});
 
-		this.client.sendToLogChannel(
-			{
-				embeds: [
-					this.embed(
-						{
-							title: "Purge",
-							thumbnail: {
-								url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-							footer: {},
-							fields: [
-								{
-									name: "Purged By",
-									value: message.member!.toString(),
-									inline: true,
-								},
-								{
-									name: "Channel",
-									value: message.channel!.toString(),
-									inline: true,
-								},
-								{
-									name: "Number of Messages",
-									value: `\`${deleted.size}\``,
-									inline: true,
-								},
-							],
+		this.client.sendToLogChannel(message.guild!, "message", {
+			embeds: [
+				this.embed(
+					{
+						title: "Purge",
+						thumbnail: {
+							url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
-						message
-					),
-				],
-			},
-			message.guild!
-		);
+						footer: {},
+						fields: [
+							{
+								name: "Purged By",
+								value: message.member!.toString(),
+								inline: true,
+							},
+							{
+								name: "Channel",
+								value: message.channel!.toString(),
+								inline: true,
+							},
+							{
+								name: "Number of Messages",
+								value: `\`${deleted.size}\``,
+								inline: true,
+							},
+						],
+					},
+					message
+				),
+			],
+		});
 
 		setTimeout(() => tempMessage.delete(), 5000);
 	}

@@ -73,6 +73,14 @@
   resolved "https://registry.yarnpkg.com/@ryukobot/discord-akairo/-/discord-akairo-8.1.2.tgz#903003b661d84c756415f1ae0ada23046b170720"
   integrity sha512-5Mbfmiwgoc0mRyl1Q5vJ677SlDvHHHGbtT4x8mOdKshx5tFuWS+aD4h2Iz5se86BAwJ94esq/ftc6xmnCC8G0A==
 
+"@ryukobot/erlpack@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@ryukobot/erlpack/-/erlpack-0.1.3.tgz#96974544640fd2fc51e00bfdb39fa754cb3907f3"
+  integrity sha512-4BYJO+9b4nMw4MGiecN0MCcUUfynchkr4SK80N5qaGLBVdcorK2QrbfgCuXwyCl+CfhRdx/0Nkja2HsX9AxNHA==
+  dependencies:
+    bindings "^1.5.0"
+    nan "^2.14.0"
+
 "@ryukobot/paginationembed@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@ryukobot/paginationembed/-/paginationembed-1.0.1.tgz#d6b2326f0916901766edd6dbc6fa2ef4ebeec77a"
@@ -429,6 +437,13 @@ binary-extensions@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
+
+bindings@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
+  integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
+  dependencies:
+    file-uri-to-path "1.0.0"
 
 body-parser@1.19.0, body-parser@^1.19.0:
   version "1.19.0"

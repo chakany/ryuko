@@ -51,7 +51,7 @@ export default class VoiceLobbiesCommand extends Command {
 									},
 									{
 										name: `\`channel\``,
-										value: `**Current Channel:** ${
+										value: `Set the Lobby Channel\n**Current Channel:** ${
 											this.client.settings.get(
 												message.guild!.id,
 												"voiceLobbyChannel",
@@ -65,7 +65,7 @@ export default class VoiceLobbiesCommand extends Command {
 														)
 												  )}`
 												: "None"
-										}\nSet the Lobby Channel`,
+										}`,
 									},
 								],
 							},

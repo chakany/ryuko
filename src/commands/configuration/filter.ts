@@ -97,31 +97,28 @@ export default class FilterCommand extends Command {
 					],
 				});
 
-				this.client.sendToLogChannel(
-					{
-						embeds: [
-							this.embed(
-								{
-									title: `Filter Enabled`,
-									thumbnail: {
-										url: message.author.displayAvatarURL({
-											dynamic: true,
-										}),
-									},
-									footer: {},
-									fields: [
-										{
-											name: "Enabled By",
-											value: message.member!.toString(),
-										},
-									],
+				this.client.sendToLogChannel(message.guild!, "guild", {
+					embeds: [
+						this.embed(
+							{
+								title: `Filter Enabled`,
+								thumbnail: {
+									url: message.author.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
-								message
-							),
-						],
-					},
-					message.guild!
-				);
+								footer: {},
+								fields: [
+									{
+										name: "Enabled By",
+										value: message.member!.toString(),
+									},
+								],
+							},
+							message
+						),
+					],
+				});
 				break;
 			case "disable":
 				this.client.settings.set(message.guild!.id, "filter", false);
@@ -137,31 +134,28 @@ export default class FilterCommand extends Command {
 					],
 				});
 
-				this.client.sendToLogChannel(
-					{
-						embeds: [
-							this.embed(
-								{
-									title: `Filter Disabled`,
-									thumbnail: {
-										url: message.author.displayAvatarURL({
-											dynamic: true,
-										}),
-									},
-									footer: {},
-									fields: [
-										{
-											name: "Disabled By",
-											value: message.member!.toString(),
-										},
-									],
+				this.client.sendToLogChannel(message.guild!, "guild", {
+					embeds: [
+						this.embed(
+							{
+								title: `Filter Disabled`,
+								thumbnail: {
+									url: message.author.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
-								message
-							),
-						],
-					},
-					message.guild!
-				);
+								footer: {},
+								fields: [
+									{
+										name: "Disabled By",
+										value: message.member!.toString(),
+									},
+								],
+							},
+							message
+						),
+					],
+				});
 				break;
 			case "bypass":
 				switch (second_arg) {
@@ -214,34 +208,31 @@ export default class FilterCommand extends Command {
 							],
 						});
 
-						this.client.sendToLogChannel(
-							{
-								embeds: [
-									this.embed(
-										{
-											title: `Filter Bypass Enabled`,
-											description: `Moderators, Admins, and Members with the Manage Messages permission can now bypass the filter.`,
-											thumbnail: {
-												url: message.author.displayAvatarURL(
-													{
-														dynamic: true,
-													}
-												),
-											},
-											footer: {},
-											fields: [
+						this.client.sendToLogChannel(message.guild!, "guild", {
+							embeds: [
+								this.embed(
+									{
+										title: `Filter Bypass Enabled`,
+										description: `Moderators, Admins, and Members with the Manage Messages permission can now bypass the filter.`,
+										thumbnail: {
+											url: message.author.displayAvatarURL(
 												{
-													name: "Enabled By",
-													value: message.member!.toString(),
-												},
-											],
+													dynamic: true,
+												}
+											),
 										},
-										message
-									),
-								],
-							},
-							message.guild!
-						);
+										footer: {},
+										fields: [
+											{
+												name: "Enabled By",
+												value: message.member!.toString(),
+											},
+										],
+									},
+									message
+								),
+							],
+						});
 						break;
 					case "disable":
 						this.client.settings.set(
@@ -261,34 +252,31 @@ export default class FilterCommand extends Command {
 							],
 						});
 
-						this.client.sendToLogChannel(
-							{
-								embeds: [
-									this.embed(
-										{
-											title: `Filter Bypass Disabled`,
-											description: `Moderators, Admins, and Members with the Manage Messages permission can no longer bypass the filter.`,
-											thumbnail: {
-												url: message.author.displayAvatarURL(
-													{
-														dynamic: true,
-													}
-												),
-											},
-											footer: {},
-											fields: [
+						this.client.sendToLogChannel(message.guild!, "guild", {
+							embeds: [
+								this.embed(
+									{
+										title: `Filter Bypass Disabled`,
+										description: `Moderators, Admins, and Members with the Manage Messages permission can no longer bypass the filter.`,
+										thumbnail: {
+											url: message.author.displayAvatarURL(
 												{
-													name: "Disabled By",
-													value: message.member!.toString(),
-												},
-											],
+													dynamic: true,
+												}
+											),
 										},
-										message
-									),
-								],
-							},
-							message.guild!
-						);
+										footer: {},
+										fields: [
+											{
+												name: "Disabled By",
+												value: message.member!.toString(),
+											},
+										],
+									},
+									message
+								),
+							],
+						});
 						break;
 				}
 
@@ -366,35 +354,32 @@ export default class FilterCommand extends Command {
 					],
 				});
 
-				this.client.sendToLogChannel(
-					{
-						embeds: [
-							this.embed(
-								{
-									title: `Phrase Added to Filter`,
-									thumbnail: {
-										url: message.author.displayAvatarURL({
-											dynamic: true,
-										}),
-									},
-									footer: {},
-									fields: [
-										{
-											name: "Phrase",
-											value: `\`${second_arg}\``,
-										},
-										{
-											name: "Added By",
-											value: message.member!.toString(),
-										},
-									],
+				this.client.sendToLogChannel(message.guild!, "guild", {
+					embeds: [
+						this.embed(
+							{
+								title: `Phrase Added to Filter`,
+								thumbnail: {
+									url: message.author.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
-								message
-							),
-						],
-					},
-					message.guild!
-				);
+								footer: {},
+								fields: [
+									{
+										name: "Phrase",
+										value: `\`${second_arg}\``,
+									},
+									{
+										name: "Added By",
+										value: message.member!.toString(),
+									},
+								],
+							},
+							message
+						),
+					],
+				});
 				break;
 			case "remove":
 				if (!second_arg)
@@ -446,35 +431,32 @@ export default class FilterCommand extends Command {
 					],
 				});
 
-				this.client.sendToLogChannel(
-					{
-						embeds: [
-							this.embed(
-								{
-									title: `Phrase Removed from Filter`,
-									thumbnail: {
-										url: message.author.displayAvatarURL({
-											dynamic: true,
-										}),
-									},
-									footer: {},
-									fields: [
-										{
-											name: "Phrase",
-											value: `\`${second_arg}\``,
-										},
-										{
-											name: "Removed By",
-											value: message.member!.toString(),
-										},
-									],
+				this.client.sendToLogChannel(message.guild!, "guild", {
+					embeds: [
+						this.embed(
+							{
+								title: `Phrase Removed from Filter`,
+								thumbnail: {
+									url: message.author.displayAvatarURL({
+										dynamic: true,
+									}),
 								},
-								message
-							),
-						],
-					},
-					message.guild!
-				);
+								footer: {},
+								fields: [
+									{
+										name: "Phrase",
+										value: `\`${second_arg}\``,
+									},
+									{
+										name: "Removed By",
+										value: message.member!.toString(),
+									},
+								],
+							},
+							message
+						),
+					],
+				});
 		}
 	}
 }

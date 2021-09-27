@@ -35,42 +35,39 @@ export default class MessageEditListener extends Listener {
 				: newMessage.content;
 
 		// Cast to please typescript
-		return this.client.sendToLogChannel(
-			{
-				embeds: [
-					new MessageEmbed({
-						title: "Message Edited",
-						description: `[Jump to Message!](${oldMessage.url} "Jump to Message")`,
-						thumbnail: {
-							url: oldMessage.author.displayAvatarURL({
-								dynamic: true,
-							}),
+		return this.client.sendToLogChannel(oldMessage.guild, "message", {
+			embeds: [
+				new MessageEmbed({
+					title: "Message Edited",
+					description: `[Jump to Message!](${oldMessage.url} "Jump to Message")`,
+					thumbnail: {
+						url: oldMessage.author.displayAvatarURL({
+							dynamic: true,
+						}),
+					},
+					footer: {},
+					fields: [
+						{
+							name: "Before",
+							value: _oldmessage,
 						},
-						footer: {},
-						fields: [
-							{
-								name: "Before",
-								value: _oldmessage,
-							},
-							{
-								name: "After",
-								value: _newmessage,
-							},
-							{
-								name: "Author",
-								value: oldMessage.author.toString(),
-								inline: true,
-							},
-							{
-								name: "Channel",
-								value: oldMessage.channel.toString(),
-								inline: true,
-							},
-						],
-					}),
-				],
-			},
-			oldMessage.guild
-		);
+						{
+							name: "After",
+							value: _newmessage,
+						},
+						{
+							name: "Author",
+							value: oldMessage.author.toString(),
+							inline: true,
+						},
+						{
+							name: "Channel",
+							value: oldMessage.channel.toString(),
+							inline: true,
+						},
+					],
+				}),
+			],
+		});
 	}
 }

@@ -43,6 +43,34 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 		loggingChannel: {
 			type: DataTypes.STRING,
 		},
+		guildLogs: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		memberLogs: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		voiceLogs: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		messageLogs: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		guildLogsChannel: {
+			type: DataTypes.STRING,
+		},
+		memberLogsChannel: {
+			type: DataTypes.STRING,
+		},
+		voiceLogsChannel: {
+			type: DataTypes.STRING,
+		},
+		messageLogsChannel: {
+			type: DataTypes.STRING,
+		},
 		verification: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false,

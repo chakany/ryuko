@@ -84,7 +84,13 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	addMember(id: string, cookieId: string, ipAddress: string) {
+	addMember(id: string) {
+		return this.members.upsert({
+			id,
+		});
+	}
+
+	verifyMember(id: string, cookieId: string, ipAddress: string) {
 		return this.members.upsert({
 			id,
 			cookieId,

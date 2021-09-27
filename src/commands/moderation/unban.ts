@@ -110,42 +110,39 @@ export default class UnbanCommand extends Command {
 			],
 		});
 
-		this.client.sendToLogChannel(
-			{
-				embeds: [
-					this.embed(
-						{
-							title: "Member Unbanned",
-							thumbnail: {
-								url: user.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-							footer: {},
-							fields: [
-								{
-									name: "Member",
-									value: user.toString(),
-									inline: true,
-								},
-								{
-									name: "Unbanned by",
-									value: message.member!.toString(),
-									inline: true,
-								},
-								{
-									name: "Reason",
-									value: args.reason
-										? args.reason
-										: "None Provided",
-								},
-							],
+		this.client.sendToLogChannel(message.guild!, "member", {
+			embeds: [
+				this.embed(
+					{
+						title: "Member Unbanned",
+						thumbnail: {
+							url: user.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
-						message
-					),
-				],
-			},
-			message.guild!
-		);
+						footer: {},
+						fields: [
+							{
+								name: "Member",
+								value: user.toString(),
+								inline: true,
+							},
+							{
+								name: "Unbanned by",
+								value: message.member!.toString(),
+								inline: true,
+							},
+							{
+								name: "Reason",
+								value: args.reason
+									? args.reason
+									: "None Provided",
+							},
+						],
+					},
+					message
+				),
+			],
+		});
 	}
 }

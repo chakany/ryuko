@@ -1,8 +1,9 @@
 import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
+import Client from "../../struct/Client";
+import { Moment } from "moment";
 import { Message, MessageEmbed } from "discord.js";
-import schedule from "node-schedule";
-import ms from "ms";
+import { setMute } from "../../utils/command";
 
 export default class MuteCommand extends Command {
 	constructor() {
@@ -54,17 +55,6 @@ export default class MuteCommand extends Command {
 				],
 			});
 
-		if (!args.reason)
-			return message.channel.send({
-				embeds: [
-					this.error(
-						message,
-						"Invalid Argument",
-						"You must provide a reason!"
-					),
-				],
-			});
-
 		const modRole = this.client.settings.get(
 			message.guild!.id,
 			"modRole",
@@ -108,7 +98,9 @@ export default class MuteCommand extends Command {
 			});
 
 		// Check if they are already muted
-		if (this.client.jobs.get(message.guild!.id)?.get(args.member.id)) {
+		if (
+			this.client.jobs.mutes.get(message.guild!.id)?.get(args.member.id)
+		) {
 			return message.channel.send({
 				embeds: [
 					this.error(
@@ -125,7 +117,7 @@ export default class MuteCommand extends Command {
 			embeds: [
 				this.embed(
 					{
-						title: "Member Muted",
+						title: "Muted Member",
 						fields: [
 							{
 								name: "Member",
@@ -139,10 +131,18 @@ export default class MuteCommand extends Command {
 							},
 							{
 								name: "Length",
-								value: args.length[0].humanize(),
-								inline: true,
+								value: `<t:${(<Moment>(
+									args.length[0]
+								)).unix()}:R> (<t:${(<Moment>(
+									args.length[0]
+								)).unix()}:f>)`,
 							},
-							{ name: "Reason", value: `\`${args.reason}\`` },
+							{
+								name: "Reason",
+								value: args.reason
+									? `\`${args.reason}\``
+									: "None",
+							},
 						],
 					},
 					message
@@ -150,64 +150,15 @@ export default class MuteCommand extends Command {
 			],
 		});
 
-		const outer = this;
-
-		// Assign them the mute
-		const job = schedule.scheduleJob(
-			args.length[0].toDate(),
-			async function () {
-				if (args.member.roles.cache.has(muteRole))
-					// @ts-ignore
-					args.member.roles.remove(
-						await message.guild?.roles.fetch(muteRole)
-					);
-
-				outer.client.jobs
-					.get(message.guild!.id)
-					?.delete(args.member.id);
-
-				outer.client.sendToLogChannel(
-					{
-						embeds: [
-							outer.embed(
-								{
-									title: "Member Unmuted",
-									description: `${args.member}'s mute has expired.`,
-									footer: {},
-									thumbnail: {
-										url: args.member.user.displayAvatarURL({
-											dynamic: true,
-										}),
-									},
-									fields: [
-										{
-											name: "Member",
-											value: args.member.toString(),
-											inline: true,
-										},
-										{
-											name: "Length",
-											value: `**${args.length[0].humanize()}** (<t:${args.length[0].unix()}:f>)`,
-										},
-										{
-											name: "Muted By",
-											value: message.member!.toString(),
-											inline: true,
-										},
-									],
-								},
-								message
-							),
-						],
-					},
-					message.guild!
-				);
-			}
+		setMute(
+			this.client as unknown as Client,
+			message.guild!,
+			args.member,
+			message.member!,
+			muteRole,
+			args.length[0],
+			args.reason
 		);
-		let guildJobs = this.client.jobs.get(message.guild!.id);
-		if (!guildJobs) guildJobs = new Map();
-		guildJobs?.set(args.member.id, job);
-		this.client.jobs.set(message.guild!.id, guildJobs!);
 
 		this.client.db.muteUser(
 			message.guild!.id,
@@ -218,41 +169,47 @@ export default class MuteCommand extends Command {
 			args.length[0]
 		);
 
-		this.client.sendToLogChannel(
-			{
-				embeds: [
-					this.embed(
-						{
-							title: "Member Muted",
-							thumbnail: {
-								url: args.member.user.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-							fields: [
-								{
-									name: "Member",
-									value: args.member.toString(),
-									inline: true,
-								},
-								{
-									name: "Muted by",
-									value: message.member!.toString(),
-									inline: true,
-								},
-								{
-									name: "Length",
-									value: args.length[0].humanize(),
-									inline: true,
-								},
-								{ name: "Reason", value: `\`${args.reason}\`` },
-							],
+		this.client.sendToLogChannel(message.guild!, "member", {
+			embeds: [
+				this.embed(
+					{
+						title: "Member Muted",
+						thumbnail: {
+							url: args.member.user.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
-						message
-					),
-				],
-			},
-			message.guild!
-		);
+						footer: {},
+						fields: [
+							{
+								name: "Member",
+								value: args.member.toString(),
+								inline: true,
+							},
+							{
+								name: "Muted by",
+								value: message.member!.toString(),
+								inline: true,
+							},
+							{
+								name: "Length",
+								value: `<t:${(<Moment>(
+									args.length[0]
+								)).unix()}:R> (<t:${(<Moment>(
+									args.length[0]
+								)).unix()}:f>)`,
+							},
+							{
+								name: "Reason",
+								value: args.reason
+									? `\`${args.reason}\``
+									: "None",
+							},
+						],
+					},
+					message
+				),
+			],
+		});
 	}
 }

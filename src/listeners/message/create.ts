@@ -10,6 +10,7 @@ export default class MessageCreateListener extends Listener {
 	}
 
 	async exec(message: Message) {
+		if (message.partial) await message.fetch();
 		if (message.author.bot) return;
 
 		if (
@@ -34,7 +35,9 @@ export default class MessageCreateListener extends Listener {
 			);
 		}
 
-		if (message.partial) await message.fetch();
+		// Insert member into database before we handle
+		await this.client.db.addMember(message.author.id);
+
 		this.client.commandHandler.handle(message);
 
 		if (!this.client.settings.items.has(message.guild!.id))
