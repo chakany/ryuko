@@ -11,7 +11,6 @@ export default class MemberAddListener extends Listener {
 	}
 
 	async exec(member: GuildMember) {
-		this.client.shard?.send("REFRESH_USERS");
 		if (
 			await this.client.db.getCurrentUserMutes(member.id, member.guild.id)
 		) {
