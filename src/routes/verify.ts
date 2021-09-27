@@ -1,12 +1,11 @@
 import express from "express";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import bcrypt from "bcrypt";
-
 import Db from "../utils/db";
 
 const db = new Db();
 
-import { redis, user } from "../index";
+import { redis } from "../index";
 
 const {
 	clientID,
@@ -52,88 +51,67 @@ async function checkCaptcha(response: any): Promise<any> {
 
 const router = express.Router();
 
-// Our main route
-router.get("/", async (req, res) => {
-	if (!req.query.state)
-		return res.status(400).render("error", {
-			username: user.username,
-			avatar: user.avatarURL,
-			code: 400,
-			description: "Bad Request",
-		});
-	let redisRes = await redis.getVerificationKey(req.query.state);
+router.get("/:state", async (req, res) => {
+	let redisRes = await redis.getVerificationKey(req.params.state);
 	if (!redisRes.userId)
-		return res.status(400).render("error", {
-			username: user.username,
-			avatar: user.avatarURL,
-			code: 400,
-			description: "Bad Request",
+		return res.status(400).send({
+			message: "Bad Request",
 		});
-	if (!req.query.code) {
-		res.render("verify", {
-			verified: false,
-			error: null,
-			redirectUri: new URL(
-				`https://discord.com/oauth2/authorize?client_id=${clientID}&redirect_uri=${siteUrl}/verify&response_type=code&scope=identify%20guilds&state=${req.query.state}`
-			).toString(),
-			username: user.username,
-			avatar: user.avatarURL,
+
+	res.status(200).send({
+		redirectUri: new URL(
+			`https://discord.com/oauth2/authorize?client_id=${clientID}&redirect_uri=${siteUrl}/verify&response_type=code&scope=identify%20guilds&state=${req.params.state}`
+		).toString(),
+	});
+});
+
+router.get("/:state/:code", async (req, res) => {
+	let redisRes = await redis.getVerificationKey(req.params.state);
+	if (!redisRes.userId)
+		return res.status(400).send({
+			message: "Bad Request",
 		});
-	} else if (req.query.code) {
-		let tokens: TokenResponse;
-		tokens = await getTokens(req.query.code);
 
-		const requestedUser = await axios.get(
-			"https://discord.com/api/users/@me",
-			{
-				headers: {
-					authorization: `${tokens.token_type} ${tokens.access_token}`,
-				},
-			}
-		);
+	let tokens: TokenResponse;
 
-		if (requestedUser.data.id !== redisRes.userId)
-			res.render("verify", {
-				verified: false,
-				error: "You signed in with a different account",
-				username: user.username,
-				avatar: user.avatarURL,
-				redirectUri: null,
-			});
-		else
-			res.render("verify", {
-				user: requestedUser.data,
-				verified: false,
-				error: null,
-				siteKey: recaptchaSiteKey,
-				state: req.query.state,
-				id: redisRes.userId,
-				username: user.username,
-				avatar: user.avatarURL,
-				redirectUri: null,
-			});
-	} else
-		return res.status(400).render("error", {
-			username: user.username,
-			avatar: user.avatarURL,
-			code: 400,
-			description: "Bad Request",
+	try {
+		tokens = await getTokens(req.params.code);
+	} catch (error) {
+		return res.status(500).send({
+			message: "Internal Server Error",
+		});
+	}
+
+	const requestedUser = await axios.get("https://discord.com/api/users/@me", {
+		headers: {
+			authorization: `${tokens.token_type} ${tokens.access_token}`,
+		},
+	});
+
+	if (requestedUser.data.id !== redisRes.userId)
+		res.status(403).send({
+			message: "INVALID_USER",
+		});
+	else
+		res.status(200).send({
+			state: req.params.state,
+			id: redisRes.userId,
+			username: requestedUser.data.username,
+			discriminator: requestedUser.data.discriminator,
+			avatar: requestedUser.data.avatar
+				? `https://cdn.discordapp.com/avatars/${requestedUser.data.id}/${requestedUser.data.avatar}`
+				: `https://cdn.discordapp.com/embed/avatars/${requestedUser.data.discriminator}.png`,
 		});
 });
 
-router.post("/", async (req, res) => {
-	if (!req.body["g-recaptcha-response"] || !req.body.state || !req.body.id)
-		return res.status(400).render("error", {
-			username: user.username,
-			avatar: user.avatarURL,
-			code: 400,
-			description: "Bad Request",
-		});
+router.post("/:state", async (req, res) => {
+	if (!req.body["g-recaptcha-response"] || !req.params.state || !req.body.id)
+		return res.status(400);
 
 	const results = await checkCaptcha(req.body["g-recaptcha-response"]);
 
 	if (results.success) {
-		let redisRes = await redis.getVerificationKey(req.body.state);
+		let redisRes = await redis.getVerificationKey(req.params.state);
 
 		const fetchedMember = await db.getMembersByIdentifier(
 			req.cookies._verificationId,
@@ -152,15 +130,12 @@ router.post("/", async (req, res) => {
 				fetchedMember?.id !== req.body.id &&
 				fetchedMember?.verifiedAt >= current)
 		) {
-			res.render("verify", {
-				verified: true,
-				error: null,
-				username: user.username,
-				avatar: user.avatarURL,
-				redirectUri: null,
+			res.status(200).send({
+				message: "ALT_DETECTED",
 			});
+
 			redis.publish(
-				`verification-${req.body.state}`,
+				`verification-${req.params.state}`,
 				JSON.stringify({
 					message: "alt",
 					originalAccount: fetchedMember?.id,
@@ -170,21 +145,18 @@ router.post("/", async (req, res) => {
 			const salt = await bcrypt.genSalt(10);
 			const hash = await bcrypt.hash(redisRes.userId, salt);
 
-			db.verifyMember(redisRes.userId, hash, req.ip!);
-			res.cookie("_verificationId", hash).render("verify", {
-				verified: true,
-				error: null,
-				username: user.username,
-				avatar: user.avatarURL,
+			db.addMember(req.body.id, hash, req.ip!);
+			res.cookie("_verificationId", hash).status(200).send({
+				message: "SUCCESS",
 			});
 			redis.publish(
-				`verification-${req.body.state}`,
+				`verification-${req.params.state}`,
 				JSON.stringify({
 					message: "verified",
 				})
 			);
 		}
-		redis.removeVerification(req.body.state);
+		redis.removeVerification(req.params.state);
 	}
 });
 
