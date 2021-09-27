@@ -2,6 +2,7 @@ import express from "express";
 import { manager } from "../index";
 
 const router = express.Router();
+
 router.get("/", async function (req, res) {
 	res.status(200).send({
 		guilds: (await manager.fetchClientValues("guilds.cache.size")).reduce(

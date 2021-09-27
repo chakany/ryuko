@@ -7,7 +7,6 @@ import {
 } from "@ryukobot/discord-akairo";
 import Command from "../struct/Command";
 import { PermissionResolvable } from "discord.js";
-
 import path from "path";
 
 const router = express.Router();

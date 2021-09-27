@@ -8,17 +8,12 @@ import cookieParser from "cookie-parser";
 import { AutoPoster } from "topgg-autoposter";
 import path from "path";
 import cors from "cors";
-
 import Db from "./utils/db";
 import Redis from "./utils/redis";
-
-import Stats from "./routes/stats";
-import Commands from "./routes/commands";
-import Verify from "./routes/verify";
+import * as Web from "./web";
 
 const { token, port, imgApiUrl, topgg_token } = require("../config.json");
-let log = new Logger({ name: "manager" });
-let weblog = new Logger({ name: "web" });
+const log = new Logger({ name: "manager" });
 
 const production = process.env.NODE_ENV === "production";
 
@@ -143,51 +138,16 @@ void (async function () {
 
 	production ? AutoPoster(topgg_token, manager) : null;
 
-	const app = express();
-
-	app.disable("x-powered-by");
-
-	app.use(cors());
-
-	// @ts-expect-error 2769
-	app.use(bodyParser.urlencoded({ extended: true }));
-	// @ts-expect-error 2769
-	app.use(bodyParser.json());
-	app.use(cookieParser());
-
-	// Check if we are in prod, if we are trust the reverse proxy, used for getting user IPs on verification.
-	if (production) app.set("trust proxy", true);
-
-	app.use("/stats", Stats);
-	app.use("/commands", Commands);
-	app.use("/verify", Verify);
-
-	app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-		// Log to console
-		weblog.error(error.stack);
-
-		// Return error page
-		res.status(500).send({
-			message: "Internal Server Error",
-		});
-	});
-
 	manager.on("shardCreate", async (shard) => {
 		log.info(`Launched shard ${shard.id}`);
 
 		if (shard.id == 0) {
 			shard.once("ready", async () => {
-				try {
-					app.listen(port, () => {
-						weblog.info(`Listening on port ${port}`);
-					});
-				} catch (error) {
-					weblog.error(error);
-				}
+				Web.start();
 			});
 		}
 	});
 	manager.spawn();
 })();
 
-export { manager, weblog, redis };
+export { manager, redis };

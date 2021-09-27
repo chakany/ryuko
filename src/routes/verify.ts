@@ -1,12 +1,11 @@
 import express from "express";
 import axios, { AxiosResponse } from "axios";
 import bcrypt from "bcrypt";
-
 import Db from "../utils/db";
 
 const db = new Db();
 
-import { manager, redis } from "../index";
+import { redis } from "../index";
 
 const {
 	clientID,
