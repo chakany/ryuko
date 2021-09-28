@@ -230,8 +230,10 @@ export default class VoiceStateUpdateListener extends Listener {
 			return;
 
 		if (
-			after.channelId !==
-			this.client.settings.get(before.guild.id, "voiceLobbyChannel", null)
+			before.channel &&
+			this.client.voiceLobbies
+				.get(before.channel!.guild.id)
+				?.get(before.channel!.id)
 		) {
 			const grabbed = this.client.voiceLobbies
 				.get(before.guild.id)
@@ -244,11 +246,13 @@ export default class VoiceStateUpdateListener extends Listener {
 					.get(before.guild.id)!
 					.delete(before.channelId!);
 			}
-
-			return;
 		}
 
-		if (!after.channelId) return;
+		if (
+			after.channel?.id !==
+			this.client.settings.get(before.guild.id, "voiceLobbyChannel", null)
+		)
+			return;
 
 		const newChannel = await before.guild.channels.create(
 			`${before.member!.user.username}'s Lobby`,
