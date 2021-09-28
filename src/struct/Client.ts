@@ -14,6 +14,7 @@ import {
 	Intents,
 	Snowflake,
 	VoiceChannel,
+	Invite,
 } from "discord.js";
 import path from "path";
 import { Shoukaku, Libraries } from "shoukaku";
@@ -61,34 +62,6 @@ type voiceStateCollection = Collection<
 export type LogType = "member" | "message" | "voice" | "guild";
 export type JobsType = { mutes: Collection<string, Collection<string, Job>> };
 
-// Bruh
-declare module "@ryukobot/discord-akairo" {
-	interface AkairoClient {
-		db: Db;
-		commandHandler: CommandHandler;
-		starboardMessages: Collection<string, Message>;
-		config: any;
-		emoji: any;
-		generateUsage: Function;
-		trivia: Trivia;
-		settings: SequelizeProvider;
-		shoukaku: Shoukaku;
-		lavasfy: LavasfyClient;
-		queue: Collection<string, Queue>;
-		log: Logger;
-		jobs: JobsType;
-		invites: Collection<string, any>;
-		voiceLobbies: voiceStateCollection;
-		sendToLogChannel(
-			guild: Guild,
-			type: LogType,
-			options: MessageOptions
-		): Promise<Message | null | undefined>;
-		listenerHandler: ListenerHandler;
-		inhibitorHandler: InhibitorHandler;
-	}
-}
-
 export default class RyukoClient extends AkairoClient {
 	public db: Db;
 	public config: any;
@@ -103,7 +76,7 @@ export default class RyukoClient extends AkairoClient {
 	public voiceLobbies: voiceStateCollection;
 	public jobs: JobsType;
 	public starboardMessages: Collection<string, Message>;
-	public invites: Collection<string, any>;
+	public invites: Collection<string, Collection<string, Invite>>;
 	public commandHandler: CommandHandler;
 	public inhibitorHandler: InhibitorHandler;
 	public listenerHandler: ListenerHandler;

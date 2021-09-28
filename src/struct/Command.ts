@@ -6,6 +6,7 @@ import { Message, MessageEmbedOptions } from "discord.js";
 import { generateUsage } from "../utils/command";
 import Embed from "./Embed";
 const { prefix } = require("../../config.json");
+import Client from "./Client";
 import ms from "ms";
 
 interface Options extends CommandOptions {
@@ -16,6 +17,7 @@ interface Options extends CommandOptions {
 }
 
 export default class Command extends AkairoCommand {
+	public override client!: Client;
 	public modOnly: boolean;
 	public adminOnly: boolean;
 	public nsfw: boolean;
