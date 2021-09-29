@@ -10,6 +10,9 @@ import Embed from "./Embed";
 import Client from "./Client";
 import ms from "ms";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { prefix } = require("../../config.json");
+
 export default class Command extends AkairoCommand {
 	public override client!: Client;
 	public modOnly: boolean;
@@ -61,7 +64,7 @@ export default class Command extends AkairoCommand {
 		this.args = args;
 
 		// For website usage
-		this.usage = generateUsage(this, this.client.config.prefix);
+		this.usage = generateUsage(this, prefix);
 	}
 
 	embed(options: MessageEmbedOptions, message: Message): Embed {

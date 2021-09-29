@@ -128,7 +128,7 @@ export default class PlayCommand extends Command {
 						);
 						embedToSend.setURL(response.tracks[0].info.uri);
 						embedToSend.setThumbnail(
-							response.spotifyMetadata.album.images[0].url,
+							response.metadata.album.images[0].url,
 						);
 						break;
 					}
@@ -157,7 +157,7 @@ export default class PlayCommand extends Command {
 						}
 						embedToSend.setDescription(playlistDescription);
 						embedToSend.setThumbnail(
-							response.spotifyMetadata.images[0].url,
+							response.metadata.images[0].url,
 						);
 						embedToSend.setURL(args.song);
 						break;

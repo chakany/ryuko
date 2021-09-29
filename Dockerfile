@@ -5,7 +5,7 @@ WORKDIR /home/node/bot
 COPY package.json yarn.lock ./
 COPY patches patches
 COPY app app
-RUN yarn --frozen-lockfile
+RUN yarn --immutable
 
 COPY . ./
 
@@ -22,7 +22,7 @@ RUN apk add --update make gcc g++ python3 git
 
 COPY package.json yarn.lock ./
 COPY patches/ patches
-RUN yarn --frozen-lockfile --production
+RUN yarn --immutable --production
 
 RUN ls
 COPY --from=build /home/node/bot/dist/ dist

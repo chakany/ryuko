@@ -2,14 +2,14 @@
 	"name": "@ryukobot/bot",
 	"version": "2.0.0-alpha",
 	"main": "dist/index.js",
+	"private": true,
 	"repository": "https://github.com/ryukobot/bot",
 	"scripts": {
 		"start": "cross-env NODE_ENV=production node . | bunyan -L -o short",
 		"dev": "cross-env NODE_ENV=development ts-node-dev --transpile-only src/ | bunyan -L -o long",
 		"build": "tsc",
 		"lint": "eslint .",
-		"format": "prettier --write .",
-		"postinstall": "patch-package"
+		"format": "prettier --write ."
 	},
 	"author": "Jack C <jack@chaker.net>",
 	"license": "MIT",
@@ -36,14 +36,13 @@
 		"@typescript-eslint/parser": "^4.32.0",
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
-		"patch-package": "^6.4.7",
-		"postinstall-postinstall": "^2.1.0",
 		"prettier": "^2.4.1",
 		"ts-node-dev": "^1.1.8",
 		"typescript": "^4.4.3",
 		"zx": "^4.0.0"
 	},
 	"dependencies": {
+		"@discordjs/builders": "^0.6.0",
 		"@ryukobot/discord-akairo": "^8.1.2",
 		"@ryukobot/erlpack": "^0.1.3",
 		"@ryukobot/paginationembed": "^1.0.1",
@@ -75,5 +74,8 @@
 		"spotify-url-info": "^2.2.3",
 		"steamid": "^2.0.0",
 		"topgg-autoposter": "^2.0.0"
+	},
+	"resolutions": {
+		"lavasfy@2.2.1": "patch:lavasfy@npm:2.2.1#.yarn/patches/lavasfy-npm-2.2.1-94e280387f"
 	}
 }

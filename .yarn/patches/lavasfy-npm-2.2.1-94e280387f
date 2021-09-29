@@ -1,12 +1,12 @@
-diff --git a/node_modules/lavasfy/dist/structures/Resolver.js b/node_modules/lavasfy/dist/structures/Resolver.js
-index 73723a6..bd573d0 100644
---- a/node_modules/lavasfy/dist/structures/Resolver.js
-+++ b/node_modules/lavasfy/dist/structures/Resolver.js
+diff --git a/dist/structures/Resolver.js b/dist/structures/Resolver.js
+index 73723a6a9e0d7c6230875e59e3aceb252d85a92c..6351d5e903a311821d2eb341336f46b72dcc6d9e 100644
+--- a/dist/structures/Resolver.js
++++ b/dist/structures/Resolver.js
 @@ -30,6 +30,7 @@ class Resolver {
              playlistInfo: {
                  name: album === null || album === void 0 ? void 0 : album.name
              },
-+            spotifyMetadata: album,
++            metadata: album,
              tracks: album
                  ? (await Promise.all(album.tracks.items.map(x => this.resolve(x)))).filter(Boolean)
                  : []
@@ -14,27 +14,29 @@ index 73723a6..bd573d0 100644
              playlistInfo: {
                  name: playlist === null || playlist === void 0 ? void 0 : playlist.name
              },
-+            spotifyMetadata: playlist,
++            metadata: playlist,
              tracks: (await Promise.all(playlistTracks.map(x => x.track && this.resolve(x.track)))).filter(Boolean)
          };
      }
-@@ -60,6 +62,7 @@ class Resolver {
+@@ -60,7 +62,8 @@ class Resolver {
          return {
              loadType: lavaTrack ? "TRACK_LOADED" : "NO_MATCHES",
              playlistInfo: {},
-+            spotifyMetadata: track,
-             tracks: lavaTrack ? [lavaTrack] : []
+-            tracks: lavaTrack ? [lavaTrack] : []
++            metadata: track,
++            tracks: lavaTrack ? [lavaTrack] : [],
          };
      }
-diff --git a/node_modules/lavasfy/dist/typings/Lavalink/index.d.ts b/node_modules/lavasfy/dist/typings/Lavalink/index.d.ts
-index 7cb8634..526c9c3 100644
---- a/node_modules/lavasfy/dist/typings/Lavalink/index.d.ts
-+++ b/node_modules/lavasfy/dist/typings/Lavalink/index.d.ts
+     async getPlaylistTracks(playlist, currPage = 1) {
+diff --git a/dist/typings/Lavalink/index.d.ts b/dist/typings/Lavalink/index.d.ts
+index 7cb8634d8936008618e3bcadacc03007b3f186fa..f40d69fa33e65d318fde0788fc2d5b70e68af0df 100644
+--- a/dist/typings/Lavalink/index.d.ts
++++ b/dist/typings/Lavalink/index.d.ts
 @@ -24,6 +24,7 @@ export interface LavalinkTrackResponse {
          selectedTrack?: number;
      };
      tracks: LavalinkTrack[];
-+    spotifyMetadata: any;
++    metadata: any;
      exception?: {
          message: string;
          severity: string;
