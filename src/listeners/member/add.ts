@@ -53,7 +53,7 @@ export default class MemberAddListener extends Listener {
 
 				// Look through the invites, find the one for which the uses went up.
 				const invite = guildInvites.find(
-					(i) => ei.get(i.code).uses < i.uses!
+					(i) => (ei?.get(i.code)?.uses || 0) < i.uses!
 				);
 
 				return this.client.sendToLogChannel(member.guild, "member", {
