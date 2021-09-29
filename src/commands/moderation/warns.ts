@@ -22,7 +22,7 @@ export default class WarnsCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		const warns: never[] = await this.client.db.getAllWarns(
+		const warns = await this.client.db.getAllWarns(
 			args.member.id,
 			message.guild!.id,
 		);
@@ -51,7 +51,7 @@ export default class WarnsCommand extends Command {
 				message,
 			),
 			message,
-			array: warns,
+			array: warns as never[],
 			title: "Warns",
 			itemsPerPage: 6,
 			callbackfn: (warn: any) => {

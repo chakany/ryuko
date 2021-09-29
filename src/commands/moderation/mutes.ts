@@ -22,7 +22,7 @@ export default class MutesCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		const mutes: never[] = await this.client.db.getAllMutes(
+		const mutes = await this.client.db.getAllMutes(
 			args.member.id,
 			message.guild!.id,
 		);
@@ -51,7 +51,7 @@ export default class MutesCommand extends Command {
 				},
 				message,
 			),
-			array: mutes,
+			array: mutes as never[],
 			itemsPerPage: 6,
 			title: "Mutes",
 			callbackfn: (mute: any) => {

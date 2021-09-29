@@ -160,7 +160,7 @@ export default class MuteCommand extends Command {
 			args.reason,
 		);
 
-		this.client.db.muteUser(
+		this.client.db.addPunishment(
 			message.guild!.id,
 			"mute",
 			args.member.id,

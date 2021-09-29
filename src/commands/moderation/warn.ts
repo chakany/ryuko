@@ -22,7 +22,7 @@ export default class WarnCommand extends Command {
 		});
 	}
 
-	async exec(message: Message, args: any): Promise<any> {
+	exec(message: Message, args: any) {
 		if (!args.member)
 			return message.channel.send({
 				embeds: [
@@ -49,9 +49,10 @@ export default class WarnCommand extends Command {
 				],
 			});
 
-		this.client.db.warnMember(
-			args.member.user.id,
+		this.client.db.addPunishment(
 			message.guild!.id,
+			"warn",
+			args.member.user.id,
 			message.author.id,
 			args.reason,
 		);

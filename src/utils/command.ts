@@ -1,4 +1,5 @@
 import Command from "../struct/Command";
+import { ArgumentOptions } from "@ryukobot/discord-akairo";
 import Client from "../struct/Client";
 import { User, Guild, GuildMember, Snowflake, Collection } from "discord.js";
 import Embed from "../struct/Embed";
@@ -12,7 +13,7 @@ export function generateUsage(command: Command, prefix: string): string {
 	let arglist = "";
 
 	if (command.args)
-		for (const arg of command.args) {
+		for (const arg of <ArgumentOptions[]>command.args) {
 			if (!arg.prompt && !arg.flag && !arg.match)
 				arglist = arglist + ` <${arg.id}>`;
 			else if (arg.match == "flag") flags = flags + ` [${arg.flag}]`;
@@ -42,7 +43,7 @@ export function setMute(
 	expires: Moment,
 	reason: string,
 ): void {
-	const job = schedule.scheduleJob(expires.toDate(), async function () {
+	const job = schedule.scheduleJob(expires.toDate(), function () {
 		if (member.roles.cache.has(muteRole)) member.roles.remove(muteRole);
 
 		client.jobs.mutes.get(guild!.id)?.delete(member.id);

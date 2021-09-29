@@ -164,21 +164,6 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	warnMember(
-		memberId: Snowflake,
-		guildId: Snowflake,
-		adminId: Snowflake,
-		reason = "",
-	): Promise<any> {
-		return this.punishments.create({
-			memberId,
-			guildId,
-			type: "warn",
-			adminId,
-			reason,
-		});
-	}
-
 	getAllWarns(memberId: Snowflake, guildId: Snowflake): Promise<any[]> {
 		return this.punishments.findAll({
 			where: {
@@ -232,7 +217,7 @@ export default class Db extends Sequelize {
 		memberId: Snowflake,
 		adminId: Snowflake,
 		reason: string,
-		expires: Date,
+		expires?: Date,
 	): Promise<any> {
 		await this.members.upsert({
 			id: memberId,
