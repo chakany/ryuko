@@ -30,7 +30,7 @@ export default class KickCommand extends Command {
 					this.error(
 						message,
 						"Invalid Arguments",
-						"You must provide a member to kick!"
+						"You must provide a member to kick!",
 					),
 				],
 			});
@@ -45,7 +45,7 @@ export default class KickCommand extends Command {
 					this.error(
 						message,
 						"Invalid Permissions",
-						"You cannot kick someone that has the same, or a higher role than you!"
+						"You cannot kick someone that has the same, or a higher role than you!",
 					),
 				],
 			});
@@ -57,7 +57,7 @@ export default class KickCommand extends Command {
 					this.error(
 						message,
 						"Invalid Permissions",
-						"I cannot kick this person! Please check the role hierarchy!"
+						"I cannot kick this person! Please check the role hierarchy!",
 					),
 				],
 			});
@@ -66,7 +66,7 @@ export default class KickCommand extends Command {
 		(<GuildMember>args.member).kick(
 			args.reason
 				? `${args.reason} | Kicked by ${message.member}`
-				: `No Reason Provided | Kicked by ${message.member}`
+				: `No Reason Provided | Kicked by ${message.member}`,
 		);
 
 		message.channel.send({
@@ -93,7 +93,7 @@ export default class KickCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

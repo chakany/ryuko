@@ -31,7 +31,7 @@ export default class AvatarCommand extends Command {
 								}),
 							},
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -47,7 +47,7 @@ export default class AvatarCommand extends Command {
 							}),
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

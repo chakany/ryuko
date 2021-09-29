@@ -33,7 +33,7 @@ export default class MoveCommand extends Command {
 					this.error(
 						message,
 						"Invalid Arguments",
-						"You must provide a user to move!"
+						"You must provide a user to move!",
 					),
 				],
 			});
@@ -45,7 +45,7 @@ export default class MoveCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"You must provide a voice channel, or be in one!"
+						"You must provide a voice channel, or be in one!",
 					),
 				],
 			});
@@ -57,7 +57,7 @@ export default class MoveCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"The person you are trying to move is not in a voice channel!"
+						"The person you are trying to move is not in a voice channel!",
 					),
 				],
 			});
@@ -97,7 +97,7 @@ export default class MoveCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

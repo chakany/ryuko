@@ -8,6 +8,7 @@ import Db from "./utils/db";
 import Redis from "./utils/redis";
 import * as Web from "./web";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { token, topgg_token } = require("../config.json");
 const log = new Logger({ name: "manager" });
 
@@ -18,11 +19,11 @@ let redis: Redis;
 
 // make this async because so steps are performed in order
 void (async function () {
-	let shardArgs: string[] = [];
+	const shardArgs: string[] = [];
 
 	// Pre-Initialization Checks
 	const db = new Db();
-	let checkStatus = new table({
+	const checkStatus = new table({
 		head: ["Check", "Status"],
 		chars: {
 			top: "═",
@@ -75,7 +76,7 @@ void (async function () {
 		console.log(checkStatus.toString());
 	} else {
 		log.warn(
-			"Skipping pre-initialization checks; NODE_ENV is not 'production'"
+			"Skipping pre-initialization checks; NODE_ENV is not 'production'",
 		);
 		checkStatus.push({
 			db: colors.yellow("Skipped"),
@@ -129,7 +130,7 @@ void (async function () {
 			token,
 			execArgv: production ? undefined : ["-r", "ts-node/register"],
 			shardArgs,
-		}
+		},
 	);
 
 	production ? AutoPoster(topgg_token, manager) : null;

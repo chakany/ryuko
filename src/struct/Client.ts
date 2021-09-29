@@ -1,6 +1,5 @@
 import {
 	AkairoClient,
-	CommandHandler,
 	InhibitorHandler,
 	ListenerHandler,
 	SequelizeProvider,
@@ -16,6 +15,7 @@ import {
 	VoiceChannel,
 	Invite,
 } from "discord.js";
+import { LavasfyConfig, Queue } from "./Client.d";
 import path from "path";
 import { Shoukaku, Libraries } from "shoukaku";
 import { LavasfyClient } from "lavasfy";
@@ -24,14 +24,16 @@ import { Job } from "node-schedule";
 import ms from "ms";
 import moment from "moment";
 
+import CommandHandler from "./CommandHandler";
 import Command from "./Command";
 
 import Db from "../utils/db";
 import Trivia from "./Trivia";
-import { generateUsage } from "../utils/command";
 
+/* eslint-disable @typescript-eslint/no-var-requires */
 const config = require("../../config.json");
 const emojis = require("../../app/data/emojis.json");
+/* eslint-enable @typescript-eslint/no-var-requires */
 
 const ShoukakuOptions = {
 	moveOnDisconnect: false,
@@ -41,40 +43,27 @@ const ShoukakuOptions = {
 	restTimeout: 10000,
 };
 
-interface Queue {
-	player: any | null;
-	tracks: any[];
-	paused: boolean;
-	loop: boolean;
-}
-
-type voiceStateCollection = Collection<
-	Snowflake,
-	Collection<
-		Snowflake,
-		{
-			channel: VoiceChannel;
-			owner: Snowflake;
-		}
-	>
->;
-
-export type LogType = "member" | "message" | "voice" | "guild";
-export type JobsType = { mutes: Collection<string, Collection<string, Job>> };
-
 export default class RyukoClient extends AkairoClient {
 	public db: Db;
-	public config: any;
-	public emoji: any;
-	public generateUsage: Function;
+	public config: typeof config;
+	public emoji: typeof emojis;
 	public trivia: Trivia;
 	public settings: SequelizeProvider;
 	public shoukaku: Shoukaku;
 	public lavasfy: LavasfyClient;
 	public queue: Collection<string, Queue>;
 	public log: Logger;
-	public voiceLobbies: voiceStateCollection;
-	public jobs: JobsType;
+	public voiceLobbies: Collection<
+		Snowflake,
+		Collection<
+			Snowflake,
+			{
+				channel: VoiceChannel;
+				owner: Snowflake;
+			}
+		>
+	>;
+	public jobs: { mutes: Collection<string, Collection<string, Job>> };
 	public starboardMessages: Collection<string, Message>;
 	public invites: Collection<string, Collection<string, Invite>>;
 	public commandHandler: CommandHandler;
@@ -96,12 +85,11 @@ export default class RyukoClient extends AkairoClient {
 					Intents.FLAGS.GUILD_MEMBERS,
 					Intents.FLAGS.GUILD_VOICE_STATES,
 				],
-			}
+			},
 		);
 		this.config = config;
 		this.emoji = emojis;
 		this.trivia = new Trivia("../../app/data/trivia");
-		this.generateUsage = generateUsage;
 		this.log = log;
 		this.jobs = {
 			mutes: new Collection(),
@@ -116,11 +104,11 @@ export default class RyukoClient extends AkairoClient {
 		this.shoukaku = new Shoukaku(
 			new Libraries.DiscordJS(this),
 			config.lavalink,
-			ShoukakuOptions
+			ShoukakuOptions,
 		);
 
-		const lavalinkConfig = (): any[] => {
-			let nodes = [];
+		const lavalinkConfig = (): LavasfyConfig[] => {
+			const nodes: LavasfyConfig[] = [];
 			let node;
 			for (let i = 0; (node = config.lavalink[i]); i++) {
 				const splitted = (<string>node.url).split(":");
@@ -145,7 +133,7 @@ export default class RyukoClient extends AkairoClient {
 					return this.settings.get(
 						message.guild.id,
 						"prefix",
-						config.prefix
+						config.prefix,
 					);
 				}
 
@@ -155,21 +143,20 @@ export default class RyukoClient extends AkairoClient {
 			allowMention: true,
 			handleEdits: true,
 			commandUtil: true,
-			// @ts-expect-error
 			ignorePermissions: (message: Message, command: Command) => {
 				if (this.isOwner(message.author.id)) return true;
 				else if (
 					command.userPermissions &&
 					(command.adminOnly || command.modOnly) &&
 					(message.member!.roles.cache.has(
-						this.settings.get(message.guild!.id, "adminRole", null)
+						this.settings.get(message.guild!.id, "adminRole", null),
 					) ||
 						message.member!.roles.cache.has(
 							this.settings.get(
 								message.guild!.id,
 								"modRole",
-								null
-							)
+								null,
+							),
 						))
 				)
 					return true;
@@ -234,20 +221,20 @@ export default class RyukoClient extends AkairoClient {
 
 		this.shoukaku.on("ready", (name) => log.info(`[${name}] Connected.`));
 		this.shoukaku.on("error", (name, error) =>
-			log.error(`[${name}]`, error)
+			log.error(`[${name}]`, error),
 		);
 		this.shoukaku.on("close", (name, code, reason) =>
 			log.warn(
 				`[${name}] Connection Closed. Code ${code}. Reason ${
 					reason || "No reason"
-				}`
-			)
+				}`,
+			),
 		);
 		this.shoukaku.on("disconnect", (name, reason) =>
-			log.warn(`[${name}] Disconnected. Reason ${reason || "No reason"}`)
+			log.warn(`[${name}] Disconnected. Reason ${reason || "No reason"}`),
 		);
 		this.shoukaku.on("debug", (name, data) =>
-			log.debug(`[${name}] ` + JSON.stringify(data))
+			log.debug(`[${name}] ` + JSON.stringify(data)),
 		);
 	}
 
@@ -259,16 +246,16 @@ export default class RyukoClient extends AkairoClient {
 		return this;
 	}
 
-	async login(token: string) {
+	async login(token: string): Promise<string> {
 		await this.settings.init();
 		return super.login(token);
 	}
 
 	async sendToLogChannel(
 		guild: Guild,
-		type: LogType,
-		options: MessageOptions
-	): Promise<Message | null | undefined> {
+		type: "member" | "message" | "voice" | "guild",
+		options: MessageOptions,
+	): Promise<Message | void> {
 		const guildChannels = await guild.channels.fetch();
 		let channel: TextChannel;
 
@@ -279,13 +266,13 @@ export default class RyukoClient extends AkairoClient {
 				if (
 					!this.settings.get(guild.id, "guildLogsChannel", null) ||
 					!guildChannels.get(
-						this.settings.get(guild.id, "guildLogsChannel", null)
+						this.settings.get(guild.id, "guildLogsChannel", null),
 					)
 				)
 					return;
 
 				channel = guildChannels.get(
-					this.settings.get(guild.id, "guildLogsChannel", null)
+					this.settings.get(guild.id, "guildLogsChannel", null),
 				) as TextChannel;
 				break;
 
@@ -295,13 +282,13 @@ export default class RyukoClient extends AkairoClient {
 				if (
 					!this.settings.get(guild.id, "memberLogsChannel", null) ||
 					!guildChannels.get(
-						this.settings.get(guild.id, "memberLogsChannel", null)
+						this.settings.get(guild.id, "memberLogsChannel", null),
 					)
 				)
 					return;
 
 				channel = guildChannels.get(
-					this.settings.get(guild.id, "memberLogsChannel", null)
+					this.settings.get(guild.id, "memberLogsChannel", null),
 				) as TextChannel;
 				break;
 
@@ -311,13 +298,13 @@ export default class RyukoClient extends AkairoClient {
 				if (
 					!this.settings.get(guild.id, "messageLogsChannel", null) ||
 					!guildChannels.get(
-						this.settings.get(guild.id, "messageLogsChannel", null)
+						this.settings.get(guild.id, "messageLogsChannel", null),
 					)
 				)
 					return;
 
 				channel = guildChannels.get(
-					this.settings.get(guild.id, "messageLogsChannel", null)
+					this.settings.get(guild.id, "messageLogsChannel", null),
 				) as TextChannel;
 				break;
 
@@ -327,13 +314,13 @@ export default class RyukoClient extends AkairoClient {
 				if (
 					!this.settings.get(guild.id, "voiceLogsChannel", null) ||
 					!guildChannels.get(
-						this.settings.get(guild.id, "voiceLogsChannel", null)
+						this.settings.get(guild.id, "voiceLogsChannel", null),
 					)
 				)
 					return;
 
 				channel = guildChannels.get(
-					this.settings.get(guild.id, "voiceLogsChannel", null)
+					this.settings.get(guild.id, "voiceLogsChannel", null),
 				) as TextChannel;
 				break;
 		}

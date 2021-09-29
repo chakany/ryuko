@@ -29,7 +29,7 @@ export default class WarnCommand extends Command {
 					this.error(
 						message,
 						"Invalid Arguments",
-						"You must provide a member to warn!"
+						"You must provide a member to warn!",
 					),
 				],
 			});
@@ -44,7 +44,7 @@ export default class WarnCommand extends Command {
 					this.error(
 						message,
 						"Invalid Permissions",
-						"You cannot warn someone that has the same, or a higher role than you!"
+						"You cannot warn someone that has the same, or a higher role than you!",
 					),
 				],
 			});
@@ -53,7 +53,7 @@ export default class WarnCommand extends Command {
 			args.member.user.id,
 			message.guild!.id,
 			message.author.id,
-			args.reason
+			args.reason,
 		);
 
 		message.channel.send({
@@ -80,7 +80,7 @@ export default class WarnCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});
@@ -88,7 +88,7 @@ export default class WarnCommand extends Command {
 		args.member.send(
 			`You have been Warned\n\n**Warned By:** ${message.member!}\n**Reason:** ${
 				args.reason ? `\`${args.reason}\`` : "No Reason Provided"
-			}`
+			}`,
 		);
 
 		this.client.sendToLogChannel(message.guild!, "member", {
@@ -121,7 +121,7 @@ export default class WarnCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

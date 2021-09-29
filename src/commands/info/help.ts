@@ -1,6 +1,6 @@
 import { Argument, Category } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import ms from "ms";
 
 export default class HelpCommand extends Command {
@@ -16,14 +16,14 @@ export default class HelpCommand extends Command {
 						"commandAlias",
 						"command",
 						"category",
-						"string"
+						"string",
 					),
 				},
 			],
 		});
 	}
 
-	async exec(message: Message, args: any): Promise<any> {
+	exec(message: Message, args: any) {
 		const input = <Command | Category<string, Command> | string>(
 			args["command|category"]
 		);
@@ -32,7 +32,7 @@ export default class HelpCommand extends Command {
 		let disabledCommands = this.client.settings.get(
 			message.guild!.id,
 			"disabledCommands",
-			null
+			null,
 		);
 		if (typeof disabledCommands === "string")
 			disabledCommands = JSON.parse(disabledCommands);
@@ -49,7 +49,7 @@ export default class HelpCommand extends Command {
 						url: "https://camo.githubusercontent.com/f7fd8d93e6f7a4ccba321076f2599b0390d13bbbe621adfe8af15d908b36a822/68747470733a2f2f692e696d6775722e636f6d2f336e79336d387a2e6a7067",
 					},
 				},
-				message
+				message,
 			);
 			for (const [name, category] of this.handler.categories) {
 				embed.addField(
@@ -59,7 +59,7 @@ export default class HelpCommand extends Command {
 					}/commands/${category.id} "${
 						this.client.config.siteUrl
 					}/commands/${category.id}")`,
-					true
+					true,
 				);
 			}
 
@@ -76,7 +76,7 @@ export default class HelpCommand extends Command {
 					url: `${this.client.config.siteUrl}/commands/${input.categoryID}#${input.id}`,
 					description: input.description,
 				},
-				message
+				message,
 			);
 
 			// Various fields to add depending if they exist or not
@@ -92,16 +92,16 @@ export default class HelpCommand extends Command {
 			)
 				embed.addField(
 					"Required User Permissions",
-					// @ts-ignore
+					// @ts-expect-error This works i think
 					input.userPermissions.join(", "),
-					true
+					true,
 				);
 			if (input.clientPermissions)
 				embed.addField(
 					"Required Bot Permissions",
-					// @ts-ignore
+					// @ts-expect-error This works i think
 					input.clientPermissions.join(", "),
-					true
+					true,
 				);
 			if (input.nsfw) embed.addField("NSFW", "Yes", true);
 			if (input.modOnly) embed.addField("Moderator Only", "Yes", true);
@@ -110,19 +110,16 @@ export default class HelpCommand extends Command {
 				embed.addField(
 					"Cooldown",
 					ms(input.cooldown, { long: true }),
-					true
+					true,
 				);
 			if (input.ratelimit != 1 && input.cooldown)
 				embed.addField(
 					"Ratelimit",
 					`${input.ratelimit} uses per ${input.cooldown} ms`,
-					true
+					true,
 				);
 
-			embed.addField(
-				"Usage",
-				`\`${this.client.generateUsage(input, prefix)}\``
-			);
+			embed.addField("Usage", `\`${input.usage}\``);
 
 			return message.channel.send({
 				embeds: [embed],
@@ -133,7 +130,7 @@ export default class HelpCommand extends Command {
 					title: `${input.id} Category`,
 					url: `${this.client.config.siteUrl}/commands/${input.id}`,
 				},
-				message
+				message,
 			);
 			let description = `Use \`${prefix}${alias} <command>\` to learn about a command\n\n`;
 

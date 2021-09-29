@@ -1,5 +1,6 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
+import { inspect } from "util";
 
 export default class EvalCommand extends Command {
 	constructor() {
@@ -32,16 +33,15 @@ export default class EvalCommand extends Command {
 					this.error(
 						message,
 						"Invalid Arguments",
-						"You must provide some code to evaluate!"
+						"You must provide some code to evaluate!",
 					),
 				],
 			});
 		try {
-			const code = message.util?.parsed?.content!;
+			const code = message.util!.parsed!.content!;
 			let evaled = await eval(code);
 
-			if (typeof evaled !== "string")
-				evaled = require("util").inspect(evaled);
+			if (typeof evaled !== "string") evaled = inspect(evaled);
 
 			message.channel.send({
 				embeds: [
@@ -49,10 +49,10 @@ export default class EvalCommand extends Command {
 						{
 							title: "Eval Result",
 							description: `\`\`\`xl\n${this.clean(
-								evaled
+								evaled,
 							)}\`\`\``,
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -64,7 +64,7 @@ export default class EvalCommand extends Command {
 							title: "Eval Error",
 							description: `\`\`\`xl\n${error}\`\`\``,
 						},
-						message
+						message,
 					),
 				],
 			});

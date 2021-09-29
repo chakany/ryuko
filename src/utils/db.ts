@@ -1,7 +1,8 @@
-import { Sequelize, DataTypes, QueryTypes, Op, ModelCtor } from "sequelize";
+import { Sequelize, Op, ModelCtor } from "sequelize";
 import { Snowflake } from "discord.js";
 import { SequelizeProvider } from "@ryukobot/discord-akairo";
 import bunyan from "bunyan";
+import { PunishmentType } from "./db.d";
 
 import guildsModel from "../models/guilds";
 import ticketsModel from "../models/tickets";
@@ -9,9 +10,10 @@ import punishmentsModel from "../models/punishments";
 import membersModel from "../models/members";
 import filteredPhrasesModel from "../models/filteredPhrases";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const config = require("../../config.json");
 
-let log = bunyan.createLogger({
+const log = bunyan.createLogger({
 	name: "db",
 	stream: process.stdout,
 	level: process.env.NODE_ENV !== "production" ? "debug" : "info",
@@ -39,13 +41,13 @@ export default class Db extends Sequelize {
 		this.filteredPhrases = filteredPhrasesModel(this);
 	}
 
-	getSettings() {
+	getSettings(): SequelizeProvider {
 		return new SequelizeProvider(this.guilds, {
 			idColumn: "id",
 		});
 	}
 
-	getMember(id: string) {
+	getMember(id: Snowflake): Promise<any> {
 		return this.members.findOne({
 			where: {
 				id,
@@ -53,10 +55,15 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	async addTicket(guildId: string, memberId: string, channelId: string) {
+	async addTicket(
+		guildId: Snowflake,
+		memberId: Snowflake,
+		channelId: Snowflake,
+	): Promise<any> {
 		await this.members.upsert({
 			id: memberId,
 		});
+
 		return this.tickets.create({
 			guildId,
 			memberId,
@@ -64,7 +71,7 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	findTicket(guildId: string, channelId: string): Promise<any> {
+	findTicket(guildId: Snowflake, channelId: Snowflake): Promise<any> {
 		return this.tickets.findOne({
 			attributes: ["memberId"],
 			where: {
@@ -74,7 +81,11 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	deleteTicket(guildId: string, memberId: string, channelId: string) {
+	deleteTicket(
+		guildId: Snowflake,
+		memberId: Snowflake,
+		channelId: Snowflake,
+	): Promise<number> {
 		return this.tickets.destroy({
 			where: {
 				guildId,
@@ -84,13 +95,17 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	addMember(id: string) {
+	addMember(id: Snowflake): Promise<[any, boolean | null]> {
 		return this.members.upsert({
 			id,
 		});
 	}
 
-	verifyMember(id: string, cookieId: string, ipAddress: string) {
+	verifyMember(
+		id: Snowflake,
+		cookieId: string,
+		ipAddress: string,
+	): Promise<[any, boolean | null]> {
 		return this.members.upsert({
 			id,
 			cookieId,
@@ -109,8 +124,8 @@ export default class Db extends Sequelize {
 	}
 
 	async getCurrentUserPunishments(
-		memberId: string,
-		guildId: string
+		memberId: Snowflake,
+		guildId: Snowflake,
 	): Promise<any[]> {
 		return await this.punishments.findAll({
 			where: {
@@ -124,7 +139,7 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	async getCurrentUserMutes(memberId: string, guildId: string): Promise<any> {
+	getCurrentUserMutes(memberId: Snowflake, guildId: Snowflake): Promise<any> {
 		return this.punishments.findOne({
 			where: {
 				memberId,
@@ -138,7 +153,7 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	async getAllMutes(memberId: string, guildId: string): Promise<any> {
+	getAllMutes(memberId: Snowflake, guildId: Snowflake): Promise<any[]> {
 		return this.punishments.findAll({
 			where: {
 				memberId,
@@ -150,10 +165,10 @@ export default class Db extends Sequelize {
 	}
 
 	warnMember(
-		memberId: string,
-		guildId: string,
-		adminId: string,
-		reason = ""
+		memberId: Snowflake,
+		guildId: Snowflake,
+		adminId: Snowflake,
+		reason = "",
 	): Promise<any> {
 		return this.punishments.create({
 			memberId,
@@ -164,7 +179,7 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	getAllWarns(memberId: string, guildId: string): Promise<any> {
+	getAllWarns(memberId: Snowflake, guildId: Snowflake): Promise<any[]> {
 		return this.punishments.findAll({
 			where: {
 				memberId,
@@ -175,7 +190,7 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	async hasPhrase(guildId: string, phrase: string): Promise<boolean> {
+	async hasPhrase(guildId: Snowflake, phrase: string): Promise<boolean> {
 		const found = await this.filteredPhrases.findOne({
 			where: {
 				guildId,
@@ -187,14 +202,14 @@ export default class Db extends Sequelize {
 		else return false;
 	}
 
-	addPhrase(guildId: string, phrase: string): Promise<any> {
+	addPhrase(guildId: Snowflake, phrase: string): Promise<any> {
 		return this.filteredPhrases.create({
 			guildId,
 			phrase,
 		});
 	}
 
-	removePhrase(guildId: string, phrase: string): Promise<any> {
+	removePhrase(guildId: Snowflake, phrase: string): Promise<number> {
 		return this.filteredPhrases.destroy({
 			where: {
 				guildId,
@@ -203,7 +218,7 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	getFilteredPhrases(guildId: string): Promise<any> {
+	getFilteredPhrases(guildId: Snowflake): Promise<any[]> {
 		return this.filteredPhrases.findAll({
 			where: {
 				guildId,
@@ -211,41 +226,34 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	async muteUser(
-		guildId: string,
-		type: string,
-		memberId: string,
-		adminId: string,
+	async addPunishment(
+		guildId: Snowflake,
+		type: PunishmentType,
+		memberId: Snowflake,
+		adminId: Snowflake,
 		reason: string,
-		expires: Date
-	) {
-		try {
-			await this.members.upsert({
-				id: memberId,
-			});
+		expires: Date,
+	): Promise<any> {
+		await this.members.upsert({
+			id: memberId,
+		});
 
-			await this.punishments.create({
-				guildId,
-				type,
-				memberId,
-				adminId,
-				reason,
-				expires,
-			});
-
-			return true;
-		} catch (err) {
-			log.error(err);
-			throw err;
-		}
+		return this.punishments.create({
+			guildId,
+			type,
+			memberId,
+			adminId,
+			reason,
+			expires,
+		});
 	}
 
-	async unpunishMember(
-		memberId: string,
-		guildId: string,
-		type: string
-	): Promise<any[]> {
-		return await this.punishments.update(
+	unpunishMember(
+		memberId: Snowflake,
+		guildId: Snowflake,
+		type: PunishmentType,
+	): Promise<[number, any[]]> {
+		return this.punishments.update(
 			{
 				unpunished: true,
 			},
@@ -259,7 +267,7 @@ export default class Db extends Sequelize {
 						[Op.gte]: new Date(),
 					},
 				},
-			}
+			},
 		);
 	}
 }

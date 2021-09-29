@@ -1,20 +1,14 @@
 import {
 	Command as AkairoCommand,
-	CommandOptions,
+	ArgumentOptions,
+	ArgumentGenerator,
 } from "@ryukobot/discord-akairo";
+import { CommandOptions } from "./Command.d";
 import { Message, MessageEmbedOptions } from "discord.js";
 import { generateUsage } from "../utils/command";
 import Embed from "./Embed";
-const { prefix } = require("../../config.json");
 import Client from "./Client";
 import ms from "ms";
-
-interface Options extends CommandOptions {
-	modOnly?: boolean;
-	adminOnly?: boolean;
-	nsfw?: boolean;
-	guild?: string[];
-}
 
 export default class Command extends AkairoCommand {
 	public override client!: Client;
@@ -22,11 +16,11 @@ export default class Command extends AkairoCommand {
 	public adminOnly: boolean;
 	public nsfw: boolean;
 	public guild: string[];
-	public args: any;
+	public args?: ArgumentOptions[] | ArgumentGenerator;
 	public formattedCooldown: string | null;
 	public usage: string;
 
-	constructor(id: string, options: Options | undefined) {
+	constructor(id: string, options?: CommandOptions) {
 		super(id, options);
 
 		const {
@@ -67,14 +61,14 @@ export default class Command extends AkairoCommand {
 		this.args = args;
 
 		// For website usage
-		this.usage = generateUsage(this, prefix);
+		this.usage = generateUsage(this, this.client.config.prefix);
 	}
 
-	embed(options: MessageEmbedOptions, message: Message) {
+	embed(options: MessageEmbedOptions, message: Message): Embed {
 		return new Embed(options, message.author, message.guild!);
 	}
 
-	error(message: Message, error: string, description: string) {
+	error(message: Message, error: string, description: string): Embed {
 		return new Embed(
 			{
 				title: error,
@@ -103,7 +97,7 @@ export default class Command extends AkairoCommand {
 				],
 			},
 			message.author,
-			message.guild!
+			message.guild!,
 		);
 	}
 }

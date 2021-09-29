@@ -22,7 +22,7 @@ export default class MessageReactionAddListener extends Listener {
 			!this.client.settings.get(
 				reaction.message.guild!.id,
 				"starboard",
-				false
+				false,
 			)
 		)
 			return;
@@ -55,7 +55,7 @@ export default class MessageReactionAddListener extends Listener {
 				fields: fields,
 			},
 			message.author,
-			message.guild!
+			message.guild!,
 		);
 
 		if (message.attachments.size > 0)
@@ -78,8 +78,8 @@ export default class MessageReactionAddListener extends Listener {
 				this.client.settings.get(
 					reaction.message.guild!.id,
 					"starboardChannel",
-					null
-				)
+					null,
+				),
 			)
 		)).send({
 			content: `${reaction.count} :star: | ${message.channel}`,

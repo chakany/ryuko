@@ -32,22 +32,22 @@ export default class LoggingCommand extends Command {
 		const guildLogs = this.client.settings.get(
 			message.guild!.id,
 			"guildLogs",
-			false
+			false,
 		);
 		const memberLogs = this.client.settings.get(
 			message.guild!.id,
 			"memberLogs",
-			false
+			false,
 		);
 		const voiceLogs = this.client.settings.get(
 			message.guild!.id,
 			"voiceLogs",
-			false
+			false,
 		);
 		const messageLogs = this.client.settings.get(
 			message.guild!.id,
 			"messageLogs",
-			false
+			false,
 		);
 
 		switch (args.subcommand) {
@@ -65,14 +65,14 @@ export default class LoggingCommand extends Command {
 									this.client.settings.get(
 										message.guild!.id,
 										"guildLogsChannel",
-										null
+										null,
 									)
 										? channelMention(
 												this.client.settings.get(
 													message.guild!.id,
 													"guildLogsChannel",
-													null
-												)
+													null,
+												),
 										  )
 										: "None"
 								} \`server\` General server things, like configuration updates, and typical changes in your server.\n${
@@ -83,14 +83,14 @@ export default class LoggingCommand extends Command {
 									this.client.settings.get(
 										message.guild!.id,
 										"memberLogsChannel",
-										null
+										null,
 									)
 										? channelMention(
 												this.client.settings.get(
 													message.guild!.id,
 													"memberLogsChannel",
-													null
-												)
+													null,
+												),
 										  )
 										: "None"
 								} \`member\` Events like joins, leaves, bans, kicks, etc.\n${
@@ -101,14 +101,14 @@ export default class LoggingCommand extends Command {
 									this.client.settings.get(
 										message.guild!.id,
 										"voiceLogsChannel",
-										null
+										null,
 									)
 										? channelMention(
 												this.client.settings.get(
 													message.guild!.id,
 													"voiceLogsChannel",
-													null
-												)
+													null,
+												),
 										  )
 										: "None"
 								} \`voice\` Voice channel joins, moves, and disconnects.\n${
@@ -119,14 +119,14 @@ export default class LoggingCommand extends Command {
 									this.client.settings.get(
 										message.guild!.id,
 										"messageLogsChannel",
-										null
+										null,
 									)
 										? channelMention(
 												this.client.settings.get(
 													message.guild!.id,
 													"messageLogsChannel",
-													null
-												)
+													null,
+												),
 										  )
 										: "None"
 								} \`message\` Events like message deletions, edits, and purges. \n\nSee more information on the [Logging Wiki](${
@@ -147,7 +147,7 @@ export default class LoggingCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -160,7 +160,7 @@ export default class LoggingCommand extends Command {
 							!this.client.settings.get(
 								message.guild!.id,
 								"guildLogsChannel",
-								null
+								null,
 							)
 						)
 							return message.channel.send({
@@ -168,7 +168,7 @@ export default class LoggingCommand extends Command {
 									this.error(
 										message,
 										"Invalid Configuration",
-										`You must set the channel for server logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel server <channel>\``
+										`You must set the channel for server logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel server <channel>\``,
 									),
 								],
 							});
@@ -177,7 +177,7 @@ export default class LoggingCommand extends Command {
 							!this.client.settings.get(
 								message.guild!.id,
 								"memberLogsChannel",
-								null
+								null,
 							)
 						)
 							return message.channel.send({
@@ -185,7 +185,7 @@ export default class LoggingCommand extends Command {
 									this.error(
 										message,
 										"Invalid Configuration",
-										`You must set the channel for member logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel member <channel>\``
+										`You must set the channel for member logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel member <channel>\``,
 									),
 								],
 							});
@@ -194,7 +194,7 @@ export default class LoggingCommand extends Command {
 							!this.client.settings.get(
 								message.guild!.id,
 								"voiceLogsChannel",
-								null
+								null,
 							)
 						)
 							return message.channel.send({
@@ -202,7 +202,7 @@ export default class LoggingCommand extends Command {
 									this.error(
 										message,
 										"Invalid Configuration",
-										`You must set the channel for voice logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel voice <channel>\``
+										`You must set the channel for voice logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel voice <channel>\``,
 									),
 								],
 							});
@@ -211,7 +211,7 @@ export default class LoggingCommand extends Command {
 							!this.client.settings.get(
 								message.guild!.id,
 								"messageLogsChannel",
-								null
+								null,
 							)
 						)
 							return message.channel.send({
@@ -219,7 +219,7 @@ export default class LoggingCommand extends Command {
 									this.error(
 										message,
 										"Invalid Configuration",
-										`You must set the channel for message logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel messsage <channel>\``
+										`You must set the channel for message logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel messsage <channel>\``,
 									),
 								],
 							});
@@ -227,22 +227,22 @@ export default class LoggingCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"guildLogs",
-							true
+							true,
 						);
 						this.client.settings.set(
 							message.guild!.id,
 							"memberLogs",
-							true
+							true,
 						);
 						this.client.settings.set(
 							message.guild!.id,
 							"voiceLogs",
-							true
+							true,
 						);
 						this.client.settings.set(
 							message.guild!.id,
 							"messageLogs",
-							true
+							true,
 						);
 
 						message.channel.send({
@@ -254,29 +254,29 @@ export default class LoggingCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"guildLogsChannel",
-												null
-											)
+												null,
+											),
 										)}\n\`member\` - ${channelMention(
 											this.client.settings.get(
 												message.guild!.id,
 												"memberLogsChannel",
-												null
-											)
+												null,
+											),
 										)}\n\`voice\` - ${channelMention(
 											this.client.settings.get(
 												message.guild!.id,
 												"voiceLogsChannel",
-												null
-											)
+												null,
+											),
 										)}\n\`message\` - ${channelMention(
 											this.client.settings.get(
 												message.guild!.id,
 												"messageLogsChannel",
-												null
-											)
+												null,
+											),
 										)}`,
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -287,7 +287,7 @@ export default class LoggingCommand extends Command {
 							!this.client.settings.get(
 								message.guild!.id,
 								"guildLogsChannel",
-								null
+								null,
 							)
 						)
 							return message.channel.send({
@@ -295,7 +295,7 @@ export default class LoggingCommand extends Command {
 									this.error(
 										message,
 										"Invalid Configuration",
-										`You must set the channel for server logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel server <channel>\``
+										`You must set the channel for server logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel server <channel>\``,
 									),
 								],
 							});
@@ -303,7 +303,7 @@ export default class LoggingCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"guildLogs",
-							true
+							true,
 						);
 
 						message.channel.send({
@@ -318,13 +318,13 @@ export default class LoggingCommand extends Command {
 													this.client.settings.get(
 														message.guild!.id,
 														"guildLogsChannel",
-														null
-													)
+														null,
+													),
 												),
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -335,7 +335,7 @@ export default class LoggingCommand extends Command {
 							!this.client.settings.get(
 								message.guild!.id,
 								"memberLogsChannel",
-								null
+								null,
 							)
 						)
 							return message.channel.send({
@@ -343,7 +343,7 @@ export default class LoggingCommand extends Command {
 									this.error(
 										message,
 										"Invalid Configuration",
-										`You must set the channel for member logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel member <channel>\``
+										`You must set the channel for member logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel member <channel>\``,
 									),
 								],
 							});
@@ -351,7 +351,7 @@ export default class LoggingCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"memberLogs",
-							true
+							true,
 						);
 
 						message.channel.send({
@@ -366,13 +366,13 @@ export default class LoggingCommand extends Command {
 													this.client.settings.get(
 														message.guild!.id,
 														"memberLogsChannel",
-														null
-													)
+														null,
+													),
 												),
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -383,7 +383,7 @@ export default class LoggingCommand extends Command {
 							!this.client.settings.get(
 								message.guild!.id,
 								"voiceLogsChannel",
-								null
+								null,
 							)
 						)
 							return message.channel.send({
@@ -391,7 +391,7 @@ export default class LoggingCommand extends Command {
 									this.error(
 										message,
 										"Invalid Configuration",
-										`You must set the channel for voice logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel voice <channel>\``
+										`You must set the channel for voice logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel voice <channel>\``,
 									),
 								],
 							});
@@ -399,7 +399,7 @@ export default class LoggingCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"voiceLogs",
-							true
+							true,
 						);
 
 						message.channel.send({
@@ -414,13 +414,13 @@ export default class LoggingCommand extends Command {
 													this.client.settings.get(
 														message.guild!.id,
 														"voiceLogsChannel",
-														null
-													)
+														null,
+													),
 												),
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -431,7 +431,7 @@ export default class LoggingCommand extends Command {
 							!this.client.settings.get(
 								message.guild!.id,
 								"messageLogsChannel",
-								null
+								null,
 							)
 						)
 							return message.channel.send({
@@ -439,7 +439,7 @@ export default class LoggingCommand extends Command {
 									this.error(
 										message,
 										"Invalid Configuration",
-										`You must set the channel for message logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel message <channel>\``
+										`You must set the channel for message logs first! Use the \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel message <channel>\``,
 									),
 								],
 							});
@@ -447,7 +447,7 @@ export default class LoggingCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"messageLogs",
-							true
+							true,
 						);
 
 						message.channel.send({
@@ -462,13 +462,13 @@ export default class LoggingCommand extends Command {
 													this.client.settings.get(
 														message.guild!.id,
 														"messageLogsChannel",
-														null
-													)
+														null,
+													),
 												),
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -481,22 +481,22 @@ export default class LoggingCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"guildLogs",
-							false
+							false,
 						);
 						this.client.settings.set(
 							message.guild!.id,
 							"memberLogs",
-							false
+							false,
 						);
 						this.client.settings.set(
 							message.guild!.id,
 							"voiceLogs",
-							false
+							false,
 						);
 						this.client.settings.set(
 							message.guild!.id,
 							"messageLogs",
-							false
+							false,
 						);
 
 						message.channel.send({
@@ -505,7 +505,7 @@ export default class LoggingCommand extends Command {
 									{
 										title: `${this.client.emoji.greenCheck} Disabled All Logging Categories`,
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -515,7 +515,7 @@ export default class LoggingCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"guildLogs",
-							false
+							false,
 						);
 
 						message.channel.send({
@@ -524,7 +524,7 @@ export default class LoggingCommand extends Command {
 									{
 										title: `${this.client.emoji.greenCheck} Disabled Server Logs`,
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -534,7 +534,7 @@ export default class LoggingCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"memberLogs",
-							false
+							false,
 						);
 
 						message.channel.send({
@@ -543,7 +543,7 @@ export default class LoggingCommand extends Command {
 									{
 										title: `${this.client.emoji.greenCheck} Disabled Member Logs`,
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -553,7 +553,7 @@ export default class LoggingCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"voiceLogs",
-							false
+							false,
 						);
 
 						message.channel.send({
@@ -562,7 +562,7 @@ export default class LoggingCommand extends Command {
 									{
 										title: `${this.client.emoji.greenCheck} Disabled Voice Logs`,
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -572,7 +572,7 @@ export default class LoggingCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"messageLogs",
-							false
+							false,
 						);
 
 						message.channel.send({
@@ -581,7 +581,7 @@ export default class LoggingCommand extends Command {
 									{
 										title: `${this.client.emoji.greenCheck} Disabled Message Logs`,
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -606,15 +606,15 @@ export default class LoggingCommand extends Command {
 												this.client.settings.get(
 													message.guild!.id,
 													"guildLogsChannel",
-													null
+													null,
 												)
 													? channelMention(
 															this.client.settings.get(
 																message.guild!
 																	.id,
 																"guildLogsChannel",
-																null
-															)
+																null,
+															),
 													  )
 													: "None"
 											}\n${
@@ -626,15 +626,15 @@ export default class LoggingCommand extends Command {
 												this.client.settings.get(
 													message.guild!.id,
 													"memberLogsChannel",
-													null
+													null,
 												)
 													? channelMention(
 															this.client.settings.get(
 																message.guild!
 																	.id,
 																"memberLogsChannel",
-																null
-															)
+																null,
+															),
 													  )
 													: "None"
 											}\n${
@@ -646,15 +646,15 @@ export default class LoggingCommand extends Command {
 												this.client.settings.get(
 													message.guild!.id,
 													"voiceLogsChannel",
-													null
+													null,
 												)
 													? channelMention(
 															this.client.settings.get(
 																message.guild!
 																	.id,
 																"voiceLogsChannel",
-																null
-															)
+																null,
+															),
 													  )
 													: "None"
 											}\n${
@@ -666,20 +666,20 @@ export default class LoggingCommand extends Command {
 												this.client.settings.get(
 													message.guild!.id,
 													"messageLogsChannel",
-													null
+													null,
 												)
 													? channelMention(
 															this.client.settings.get(
 																message.guild!
 																	.id,
 																"messageLogsChannel",
-																null
-															)
+																null,
+															),
 													  )
 													: "None"
 											}`,
 										},
-										message
+										message,
 									),
 								],
 							});
@@ -687,25 +687,25 @@ export default class LoggingCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"guildLogsChannel",
-							args.channel.id
+							args.channel.id,
 						);
 
 						this.client.settings.set(
 							message.guild!.id,
 							"memberLogsChannel",
-							args.channel.id
+							args.channel.id,
 						);
 
 						this.client.settings.set(
 							message.guild!.id,
 							"voiceLogsChannel",
-							args.channel.id
+							args.channel.id,
 						);
 
 						this.client.settings.set(
 							message.guild!.id,
 							"messageLogsChannel",
-							args.channel.id
+							args.channel.id,
 						);
 
 						message.channel.send({
@@ -721,14 +721,14 @@ export default class LoggingCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"guildLogsChannel",
-												null
+												null,
 											)
 												? channelMention(
 														this.client.settings.get(
 															message.guild!.id,
 															"guildLogsChannel",
-															null
-														)
+															null,
+														),
 												  )
 												: "None"
 										}\n${
@@ -739,14 +739,14 @@ export default class LoggingCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"memberLogsChannel",
-												null
+												null,
 											)
 												? channelMention(
 														this.client.settings.get(
 															message.guild!.id,
 															"memberLogsChannel",
-															null
-														)
+															null,
+														),
 												  )
 												: "None"
 										}\n${
@@ -757,14 +757,14 @@ export default class LoggingCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"voiceLogsChannel",
-												null
+												null,
 											)
 												? channelMention(
 														this.client.settings.get(
 															message.guild!.id,
 															"voiceLogsChannel",
-															null
-														)
+															null,
+														),
 												  )
 												: "None"
 										}\n${
@@ -775,25 +775,25 @@ export default class LoggingCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"messageLogsChannel",
-												null
+												null,
 											)
 												? channelMention(
 														this.client.settings.get(
 															message.guild!.id,
 															"messageLogsChannel",
-															null
-														)
+															null,
+														),
 												  )
 												: "None"
 										}`,
 									},
-									message
+									message,
 								),
 							],
 						});
 						break;
 
-					case "server":
+					case "server": {
 						if (!args.channel)
 							return message.channel.send({
 								embeds: [
@@ -811,21 +811,21 @@ export default class LoggingCommand extends Command {
 													value: this.client.settings.get(
 														message.guild!.id,
 														"guildLogsChannel",
-														null
+														null,
 													)
 														? channelMention(
 																this.client.settings.get(
 																	message.guild!
 																		.id,
 																	"guildLogsChannel",
-																	null
-																)
+																	null,
+																),
 														  )
 														: "None",
 												},
 											],
 										},
-										message
+										message,
 									),
 								],
 							});
@@ -833,13 +833,13 @@ export default class LoggingCommand extends Command {
 						const oldGuildLogsChannel = this.client.settings.get(
 							message.guild!.id,
 							"guildLogsChannel",
-							null
+							null,
 						);
 
 						this.client.settings.set(
 							message.guild!.id,
 							"guildLogsChannel",
-							args.channel.id
+							args.channel.id,
 						);
 
 						message.channel.send({
@@ -852,7 +852,7 @@ export default class LoggingCommand extends Command {
 												name: "Before",
 												value: oldGuildLogsChannel
 													? channelMention(
-															oldGuildLogsChannel
+															oldGuildLogsChannel,
 													  )
 													: "None",
 												inline: true,
@@ -864,13 +864,14 @@ export default class LoggingCommand extends Command {
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
 						break;
+					}
 
-					case "member":
+					case "member": {
 						if (!args.channel)
 							return message.channel.send({
 								embeds: [
@@ -888,21 +889,21 @@ export default class LoggingCommand extends Command {
 													value: this.client.settings.get(
 														message.guild!.id,
 														"memberLogsChannel",
-														null
+														null,
 													)
 														? channelMention(
 																this.client.settings.get(
 																	message.guild!
 																		.id,
 																	"memberLogsChannel",
-																	null
-																)
+																	null,
+																),
 														  )
 														: "None",
 												},
 											],
 										},
-										message
+										message,
 									),
 								],
 							});
@@ -910,13 +911,13 @@ export default class LoggingCommand extends Command {
 						const oldMemberLogsChannel = this.client.settings.get(
 							message.guild!.id,
 							"memberLogsChannel",
-							null
+							null,
 						);
 
 						this.client.settings.set(
 							message.guild!.id,
 							"memberLogsChannel",
-							args.channel.id
+							args.channel.id,
 						);
 
 						message.channel.send({
@@ -929,7 +930,7 @@ export default class LoggingCommand extends Command {
 												name: "Before",
 												value: oldMemberLogsChannel
 													? channelMention(
-															oldMemberLogsChannel
+															oldMemberLogsChannel,
 													  )
 													: "None",
 												inline: true,
@@ -941,13 +942,14 @@ export default class LoggingCommand extends Command {
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
 						break;
+					}
 
-					case "voice":
+					case "voice": {
 						if (!args.channel)
 							return message.channel.send({
 								embeds: [
@@ -965,21 +967,21 @@ export default class LoggingCommand extends Command {
 													value: this.client.settings.get(
 														message.guild!.id,
 														"voiceLogsChannel",
-														null
+														null,
 													)
 														? channelMention(
 																this.client.settings.get(
 																	message.guild!
 																		.id,
 																	"voiceLogsChannel",
-																	null
-																)
+																	null,
+																),
 														  )
 														: "None",
 												},
 											],
 										},
-										message
+										message,
 									),
 								],
 							});
@@ -987,13 +989,13 @@ export default class LoggingCommand extends Command {
 						const oldVoiceLogsChannel = this.client.settings.get(
 							message.guild!.id,
 							"voiceLogsChannel",
-							null
+							null,
 						);
 
 						this.client.settings.set(
 							message.guild!.id,
 							"voiceLogsChannel",
-							args.channel.id
+							args.channel.id,
 						);
 
 						message.channel.send({
@@ -1006,7 +1008,7 @@ export default class LoggingCommand extends Command {
 												name: "Before",
 												value: oldVoiceLogsChannel
 													? channelMention(
-															oldVoiceLogsChannel
+															oldVoiceLogsChannel,
 													  )
 													: "None",
 												inline: true,
@@ -1018,13 +1020,14 @@ export default class LoggingCommand extends Command {
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
 						break;
+					}
 
-					case "message":
+					case "message": {
 						if (!args.channel)
 							return message.channel.send({
 								embeds: [
@@ -1042,21 +1045,21 @@ export default class LoggingCommand extends Command {
 													value: this.client.settings.get(
 														message.guild!.id,
 														"messageLogsChannel",
-														null
+														null,
 													)
 														? channelMention(
 																this.client.settings.get(
 																	message.guild!
 																		.id,
 																	"messageLogsChannel",
-																	null
-																)
+																	null,
+																),
 														  )
 														: "None",
 												},
 											],
 										},
-										message
+										message,
 									),
 								],
 							});
@@ -1064,13 +1067,13 @@ export default class LoggingCommand extends Command {
 						const oldMessageLogsChannel = this.client.settings.get(
 							message.guild!.id,
 							"messageLogsChannel",
-							null
+							null,
 						);
 
 						this.client.settings.set(
 							message.guild!.id,
 							"messageLogsChannel",
-							args.channel.id
+							args.channel.id,
 						);
 
 						message.channel.send({
@@ -1083,7 +1086,7 @@ export default class LoggingCommand extends Command {
 												name: "Before",
 												value: oldMessageLogsChannel
 													? channelMention(
-															oldMessageLogsChannel
+															oldMessageLogsChannel,
 													  )
 													: "None",
 												inline: true,
@@ -1095,11 +1098,12 @@ export default class LoggingCommand extends Command {
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
 						break;
+					}
 				}
 				break;
 		}

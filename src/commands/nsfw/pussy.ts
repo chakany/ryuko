@@ -24,7 +24,7 @@ export default class PussyCommand extends Command {
 							url: request.media,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

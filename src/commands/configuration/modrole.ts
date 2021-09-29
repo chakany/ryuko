@@ -25,7 +25,7 @@ export default class ModroleCommand extends Command {
 		const currentRole = this.client.settings.get(
 			message.guild!.id,
 			"modRole",
-			null
+			null,
 		);
 
 		if (!args.role && currentRole) {
@@ -43,7 +43,7 @@ export default class ModroleCommand extends Command {
 								},
 							],
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -53,7 +53,7 @@ export default class ModroleCommand extends Command {
 					this.error(
 						message,
 						"Invalid Configuration",
-						`There is no Mod Role set, use the \`${prefix}${message.util?.parsed?.alias}\`command to set it.`
+						`There is no Mod Role set, use the \`${prefix}${message.util?.parsed?.alias}\`command to set it.`,
 					),
 				],
 			});
@@ -62,7 +62,7 @@ export default class ModroleCommand extends Command {
 		await this.client.settings.set(
 			message.guild!.id,
 			"modRole",
-			args.role.id
+			args.role.id,
 		);
 		return message.channel.send({
 			embeds: [
@@ -84,7 +84,7 @@ export default class ModroleCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

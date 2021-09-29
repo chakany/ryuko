@@ -24,7 +24,7 @@ export default class ThighsCommand extends Command {
 							url: request.media,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

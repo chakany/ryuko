@@ -15,13 +15,13 @@ export default class AdminInhibitor extends Inhibitor {
 		const adminRole = this.client.settings.get(
 			message.guild!.id,
 			"adminRole",
-			null
+			null,
 		);
 
 		if (
 			adminRole &&
 			!message.member!.roles.cache.some(
-				(role) => role.id === adminRole
+				(role) => role.id === adminRole,
 			) &&
 			message.channel
 				// @ts-expect-error 2339

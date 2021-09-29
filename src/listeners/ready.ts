@@ -14,8 +14,6 @@ export default class ReadyListener extends Listener {
 	}
 
 	async exec() {
-		const outer = this;
-
 		// Schedule Jobs
 		this.client.log.info("Scheduling Jobs");
 
@@ -27,13 +25,13 @@ export default class ReadyListener extends Listener {
 
 			// Get all members that are muted, check if they are still muted
 			const muteRole = await g.roles.fetch(
-				this.client.settings.get(g.id, "muteRole", "123123")
+				this.client.settings.get(g.id, "muteRole", "123123"),
 			);
 			if (muteRole)
 				for (const [probablyId, member] of muteRole.members) {
 					const mute = await this.client.db.getCurrentUserMutes(
 						member.id,
-						g.id
+						g.id,
 					);
 					if (!mute) member.roles.remove(muteRole);
 					else if (mute) {
@@ -44,7 +42,7 @@ export default class ReadyListener extends Listener {
 							await g.members.fetch(mute.adminId),
 							muteRole.id,
 							moment(mute.expires),
-							mute.reason
+							mute.reason,
 						);
 					}
 				}
@@ -53,12 +51,12 @@ export default class ReadyListener extends Listener {
 		this.client.log.info(`${this.client.user!.username} is ready to roll!`);
 
 		const guilds = await this.client.shard!.fetchClientValues(
-			"guilds.cache.size"
+			"guilds.cache.size",
 		);
 
 		const totalGuilds = guilds.reduce(
 			(acc: any, guildCount: any) => acc + guildCount,
-			0
+			0,
 		);
 
 		// Set Discord Status
@@ -78,17 +76,6 @@ export default class ReadyListener extends Listener {
 						{
 							type: "LISTENING",
 							text: `your commands. | ${this.client.config.prefix}help`,
-						},
-						{
-							type: "PLAYING",
-							text: `with ${(
-								await this.client.shard!.fetchClientValues(
-									"users.cache.size"
-								)
-							).reduce(
-								(acc: any, guildCount: any) => acc + guildCount,
-								0
-							)} members! | ${this.client.config.prefix}help`,
 						},
 						{
 							type: "PLAYING",
@@ -122,7 +109,7 @@ export default class ReadyListener extends Listener {
 					headers: {
 						Authorization: this.client.config.discord_bots_gg_token,
 					},
-				}
+				},
 			);
 
 			// discordbotlist.com
@@ -140,7 +127,7 @@ export default class ReadyListener extends Listener {
 						Authorization:
 							this.client.config.discordbotlist_com_token,
 					},
-				}
+				},
 			);
 		}
 	}

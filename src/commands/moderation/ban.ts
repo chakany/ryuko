@@ -31,7 +31,7 @@ export default class BanCommand extends Command {
 					this.error(
 						message,
 						"Invalid Arguments",
-						"You must provide a member to ban!"
+						"You must provide a member to ban!",
 					),
 				],
 			});
@@ -55,7 +55,7 @@ export default class BanCommand extends Command {
 							this.error(
 								message,
 								"Invalid Permissions",
-								"You cannot kick someone that has the same, or a higher role than you!"
+								"You cannot kick someone that has the same, or a higher role than you!",
 							),
 						],
 					});
@@ -67,7 +67,7 @@ export default class BanCommand extends Command {
 							this.error(
 								message,
 								"Invalid Permissions",
-								"I cannot ban this person! Please check the role hierarchy!"
+								"I cannot ban this person! Please check the role hierarchy!",
 							),
 						],
 					});
@@ -86,7 +86,7 @@ export default class BanCommand extends Command {
 							this.error(
 								message,
 								"Invalid Usage",
-								"That member is already banned!"
+								"That member is already banned!",
 							),
 						],
 					});
@@ -103,7 +103,7 @@ export default class BanCommand extends Command {
 					this.error(
 						message,
 						"An Error Occurred",
-						"Make sure that you entered a valid User ID, and try again."
+						"Make sure that you entered a valid User ID, and try again.",
 					),
 				],
 			});
@@ -133,7 +133,7 @@ export default class BanCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});
@@ -168,7 +168,7 @@ export default class BanCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

@@ -22,7 +22,7 @@ export default class PrefixCommand extends Command {
 		const oldPrefix = this.client.settings.get(
 			message.guild!.id,
 			"prefix",
-			this.client.config.prefix
+			this.client.config.prefix,
 		);
 
 		if (!args.prefix) {
@@ -38,7 +38,7 @@ export default class PrefixCommand extends Command {
 								},
 							],
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -47,7 +47,7 @@ export default class PrefixCommand extends Command {
 		await this.client.settings.set(
 			message.guild!.id,
 			"prefix",
-			args.prefix
+			args.prefix,
 		);
 
 		message.channel.send({
@@ -68,7 +68,7 @@ export default class PrefixCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

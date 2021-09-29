@@ -20,7 +20,7 @@ export default class InviteCommand extends Command {
 							{
 								permissions: "ADMINISTRATOR",
 								scopes: ["bot"],
-							}
+							},
 						)} "Invite Me")`,
 						thumbnail: {
 							url: this.client.user?.displayAvatarURL({
@@ -28,7 +28,7 @@ export default class InviteCommand extends Command {
 							}),
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

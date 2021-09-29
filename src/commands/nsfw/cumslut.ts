@@ -24,7 +24,7 @@ export default class CumslutCommand extends Command {
 							url: request.media,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

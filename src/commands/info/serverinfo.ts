@@ -40,7 +40,7 @@ export default class ServerinfoCommand extends Command {
 							{
 								name: "Created At",
 								value: `<t:${Math.round(
-									message.guild!.createdAt.getTime() / 1000
+									message.guild!.createdAt.getTime() / 1000,
 								)}:f>`,
 								inline: true,
 							},
@@ -93,7 +93,7 @@ export default class ServerinfoCommand extends Command {
 							url: message.guild!.bannerURL()!,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

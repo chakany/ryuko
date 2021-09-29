@@ -23,22 +23,22 @@ export default class VerificationCommand extends Command {
 		});
 	}
 
-	async exec(message: Message, args: any): Promise<any> {
+	exec(message: Message, args: any) {
 		const enabled = this.client.settings.get(
 			message.guild!.id,
 			"verification",
-			false
+			false,
 		);
 
 		const level = this.client.settings.get(
 			message.guild!.id,
 			"verificationLevel",
-			"low"
+			"low",
 		);
 
 		switch (args.action) {
 			default:
-				return message.channel.send({
+				message.channel.send({
 					embeds: [
 						this.embed(
 							{
@@ -83,21 +83,21 @@ export default class VerificationCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"verifiedRole",
-												null
+												null,
 											)
 												? `${roleMention(
 														this.client.settings.get(
 															message.guild!.id,
 															"verifiedRole",
-															null
-														)
+															null,
+														),
 												  )}`
 												: "None"
 										}`,
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -107,7 +107,7 @@ export default class VerificationCommand extends Command {
 					!this.client.settings.get(
 						message.guild!.id,
 						"verifiedRole",
-						null
+						null,
 					)
 				)
 					return message.channel.send({
@@ -115,7 +115,7 @@ export default class VerificationCommand extends Command {
 							this.error(
 								message,
 								"Invalid Configuration",
-								`You must set a role to give to verified users! To do this, run \`${message.util?.parsed?.alias} role <value>\``
+								`You must set a role to give to verified users! To do this, run \`${message.util?.parsed?.alias} role <value>\``,
 							),
 						],
 					});
@@ -123,10 +123,10 @@ export default class VerificationCommand extends Command {
 				this.client.settings.set(
 					message.guild!.id,
 					"verification",
-					true
+					true,
 				);
 
-				return message.channel.send({
+				message.channel.send({
 					embeds: [
 						this.embed(
 							{
@@ -137,12 +137,12 @@ export default class VerificationCommand extends Command {
 										value: this.client.settings.get(
 											message.guild!.id,
 											"verificationLevel",
-											"low"
+											"low",
 										),
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -151,24 +151,24 @@ export default class VerificationCommand extends Command {
 				this.client.settings.set(
 					message.guild!.id,
 					"verification",
-					false
+					false,
 				);
 
-				return message.channel.send({
+				message.channel.send({
 					embeds: [
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Disabled User Verification`,
 							},
-							message
+							message,
 						),
 					],
 				});
 				break;
-			case "level":
+			case "level": {
 				switch (args.value) {
 					default:
-						return message.channel.send({
+						message.channel.send({
 							embeds: [
 								this.embed(
 									{
@@ -206,7 +206,7 @@ export default class VerificationCommand extends Command {
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -214,50 +214,54 @@ export default class VerificationCommand extends Command {
 					case "strict":
 					case "medium":
 					case "low":
-						const oldLevel = this.client.settings.get(
-							message.guild!.id,
-							"verificationLevel",
-							"low"
-						);
+						{
+							const oldLevel = this.client.settings.get(
+								message.guild!.id,
+								"verificationLevel",
+								"low",
+							);
 
-						this.client.settings.set(
-							message.guild!.id,
-							"verificationLevel",
-							args.value
-						);
+							this.client.settings.set(
+								message.guild!.id,
+								"verificationLevel",
+								args.value,
+							);
 
-						return message.channel.send({
-							embeds: [
-								this.embed(
-									{
-										title: `${this.client.emoji.greenCheck} Set Verification Level`,
-										fields: [
-											{
-												name: "Before",
-												value: oldLevel,
-												inline: true,
-											},
-											{
-												name: "After",
-												value: args.value,
-												inline: true,
-											},
-										],
-									},
-									message
-								),
-							],
-						});
+							message.channel.send({
+								embeds: [
+									this.embed(
+										{
+											title: `${this.client.emoji.greenCheck} Set Verification Level`,
+											fields: [
+												{
+													name: "Before",
+													value: oldLevel,
+													inline: true,
+												},
+												{
+													name: "After",
+													value: args.value,
+													inline: true,
+												},
+											],
+										},
+										message,
+									),
+								],
+							});
+						}
+						break;
 				}
 				break;
-			case "role":
+			}
+			case "role": {
 				if (!args.value)
 					return message.channel.send({
 						embeds: [
 							this.error(
 								message,
 								"Invalid Arguments",
-								"You must provide a role to set!"
+								"You must provide a role to set!",
 							),
 						],
 					});
@@ -265,16 +269,16 @@ export default class VerificationCommand extends Command {
 				const oldRole = this.client.settings.get(
 					message.guild!.id,
 					"verifiedRole",
-					null
+					null,
 				);
 
 				this.client.settings.set(
 					message.guild!.id,
 					"verifiedRole",
-					(<Role>args.value).id
+					(<Role>args.value).id,
 				);
 
-				return message.channel.send({
+				message.channel.send({
 					embeds: [
 						this.embed(
 							{
@@ -294,10 +298,12 @@ export default class VerificationCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
+				break;
+			}
 		}
 	}
 }

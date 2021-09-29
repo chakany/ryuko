@@ -34,7 +34,7 @@ export default class UnbanCommand extends Command {
 					this.error(
 						message,
 						"An Error Occurred",
-						"Make sure that you entered a valid User ID, and try again."
+						"Make sure that you entered a valid User ID, and try again.",
 					),
 				],
 			});
@@ -46,7 +46,7 @@ export default class UnbanCommand extends Command {
 					this.error(
 						message,
 						"Invalid Arguments",
-						"You must provide a user to unban!"
+						"You must provide a user to unban!",
 					),
 				],
 			});
@@ -57,7 +57,7 @@ export default class UnbanCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"That member is not currently banned!"
+						"That member is not currently banned!",
 					),
 				],
 			});
@@ -67,7 +67,7 @@ export default class UnbanCommand extends Command {
 				args.member,
 				args.reason
 					? `${args.reason} | Unbanned by ${message.member}`
-					: `No Reason Provided | Unbanned by ${message.member}`
+					: `No Reason Provided | Unbanned by ${message.member}`,
 			);
 		} catch (error) {
 			return message.channel.send({
@@ -75,7 +75,7 @@ export default class UnbanCommand extends Command {
 					this.error(
 						message,
 						"An Error Occurred",
-						"Make sure that you entered a valid User ID, and try again."
+						"Make sure that you entered a valid User ID, and try again.",
 					),
 				],
 			});
@@ -105,7 +105,7 @@ export default class UnbanCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});
@@ -140,7 +140,7 @@ export default class UnbanCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

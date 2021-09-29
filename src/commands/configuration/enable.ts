@@ -19,12 +19,12 @@ export default class DisableCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		let toEnable = args.toenable;
+		const toEnable = args.toenable;
 
 		let oldSettings = this.client.settings.get(
 			message.guild!.id,
 			"disabledCommands",
-			null
+			null,
 		);
 
 		if (typeof oldSettings === "string")
@@ -35,13 +35,11 @@ export default class DisableCommand extends Command {
 				{
 					title: "Commands",
 				},
-				message
+				message,
 			);
 
 			let enabledCommands = "";
-			for (const [key, dvalue] of new Map(
-				message.util?.handler.categories!
-			)) {
+			for (const [key, dvalue] of new Map(this.handler.categories)) {
 				// For each category
 				for (const [key2, fvalue] of new Map(dvalue)) {
 					// For each command in that category
@@ -72,7 +70,7 @@ export default class DisableCommand extends Command {
 						this.error(
 							message,
 							"Invalid Argument",
-							"That command is already enabled!"
+							"That command is already enabled!",
 						),
 					],
 				});
@@ -82,13 +80,13 @@ export default class DisableCommand extends Command {
 			else enabledCommands = oldSettings;
 
 			enabledCommands = enabledCommands.filter(
-				(command: any) => ![toEnable.id].includes(command)
+				(command: any) => ![toEnable.id].includes(command),
 			);
 
 			this.client.settings.set(
 				message.guild!.id,
 				"disabledCommands",
-				JSON.stringify(enabledCommands)
+				JSON.stringify(enabledCommands),
 			);
 			return message.channel.send({
 				embeds: [
@@ -96,7 +94,7 @@ export default class DisableCommand extends Command {
 						{
 							title: `${this.client.emoji.greenCheck} Enabled command: \`${toEnable.aliases[0]}\``,
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -123,19 +121,19 @@ export default class DisableCommand extends Command {
 					}
 				}
 				commands = oldSettings.filter(
-					(command: any) => !commands.includes(command)
+					(command: any) => !commands.includes(command),
 				);
 				this.client.settings.set(
 					message.guild!.id,
 					"disabledCommands",
-					JSON.stringify(commands)
+					JSON.stringify(commands),
 				);
 				const embed = this.embed(
 					{
 						title: `${this.client.emoji.greenCheck} Enabled category: \`${category.id}\``,
 						fields: [{ name: "Enabled", value: enabledCommands }],
 					},
-					message
+					message,
 				);
 
 				return message.channel.send({
@@ -147,7 +145,7 @@ export default class DisableCommand extends Command {
 						this.error(
 							message,
 							"Invalid Argument",
-							"You must provide a command or a category!"
+							"You must provide a command or a category!",
 						),
 					],
 				});

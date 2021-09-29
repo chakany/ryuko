@@ -29,7 +29,7 @@ export default class StatusCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You must set a type of status!"
+						"You must set a type of status!",
 					),
 				],
 			});
@@ -40,7 +40,7 @@ export default class StatusCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You must set a status!"
+						"You must set a status!",
 					),
 				],
 			});
@@ -48,7 +48,7 @@ export default class StatusCommand extends Command {
 		// Run the actual command
 		const content = message.util!.parsed!.content!.replace(
 			`${args.type} `,
-			""
+			"",
 		);
 		this.client.shard!.broadcastEval((client) => {
 			client.user?.setActivity(content, {
@@ -65,11 +65,11 @@ export default class StatusCommand extends Command {
 							"Changed to `" +
 							message.util!.parsed!.content!.replace(
 								`${args.type} `,
-								""
+								"",
 							) +
 							"`.",
 					},
-					message
+					message,
 				),
 			],
 		});

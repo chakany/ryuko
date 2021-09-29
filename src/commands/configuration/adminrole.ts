@@ -25,7 +25,7 @@ export default class AdminroleCommand extends Command {
 		const currentRole = this.client.settings.get(
 			message.guild!.id,
 			"adminRole",
-			null
+			null,
 		);
 
 		if (!args.role && currentRole) {
@@ -43,7 +43,7 @@ export default class AdminroleCommand extends Command {
 								},
 							],
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -53,7 +53,7 @@ export default class AdminroleCommand extends Command {
 					this.error(
 						message,
 						"Invalid Configuration",
-						`There is no Admin Role set, use the \`${prefix}${message.util?.parsed?.alias}\`command to set it.`
+						`There is no Admin Role set, use the \`${prefix}${message.util?.parsed?.alias}\`command to set it.`,
 					),
 				],
 			});
@@ -62,7 +62,7 @@ export default class AdminroleCommand extends Command {
 		await this.client.settings.set(
 			message.guild!.id,
 			"adminRole",
-			args.role.id
+			args.role.id,
 		);
 		return message.channel.send({
 			embeds: [
@@ -84,7 +84,7 @@ export default class AdminroleCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

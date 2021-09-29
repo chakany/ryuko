@@ -14,7 +14,7 @@ export default class TicketCommand extends Command {
 	async exec(message: Message): Promise<any> {
 		const ticketResult = await this.client.db.findTicket(
 			message.guild!.id,
-			message.channel.id
+			message.channel.id,
 		);
 
 		if (!ticketResult)
@@ -23,7 +23,7 @@ export default class TicketCommand extends Command {
 					this.error(
 						message,
 						"Invalid Channel",
-						"This is not a ticket channel!"
+						"This is not a ticket channel!",
 					),
 				],
 			});
@@ -31,24 +31,24 @@ export default class TicketCommand extends Command {
 		const ticketRole = this.client.settings.get(
 			message.guild!.id,
 			"ticketRole",
-			null
+			null,
 		);
 
 		if (
 			(ticketRole &&
 				message.member!.roles.cache.find(
-					(role) => role.id == ticketRole
+					(role) => role.id == ticketRole,
 				)) ||
 			message.member!.permissions.has("MANAGE_CHANNELS") ||
 			message.author.id == ticketResult?.memberId
 		) {
 			message.channel.delete(
-				`Closed by ${message.author.tag} at ${new Date().toString()}`
+				`Closed by ${message.author.tag} at ${new Date().toString()}`,
 			);
 			this.client.db.deleteTicket(
 				message.guild!.id,
 				message.member!.id,
-				message.channel.id
+				message.channel.id,
 			);
 		}
 	}

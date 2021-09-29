@@ -28,7 +28,7 @@ export default class FilterCommand extends Command {
 		const enabled = this.client.settings.get(
 			message.guild!.id,
 			"filter",
-			false
+			false,
 		);
 
 		switch (args.action) {
@@ -57,7 +57,7 @@ export default class FilterCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"filterBypass",
-												false
+												false,
 											)
 												? this.client.emoji.greenCheck
 												: this.client.emoji.redX
@@ -78,7 +78,7 @@ export default class FilterCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -92,7 +92,7 @@ export default class FilterCommand extends Command {
 							{
 								title: `${this.client.emoji.greenCheck} Enabled Filter`,
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -115,7 +115,7 @@ export default class FilterCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -129,7 +129,7 @@ export default class FilterCommand extends Command {
 							{
 								title: `${this.client.emoji.greenCheck} Disabled Filter`,
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -152,7 +152,7 @@ export default class FilterCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -168,7 +168,7 @@ export default class FilterCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"filterBypass",
-												false
+												false,
 											)
 												? this.client.emoji.greenCheck
 												: this.client.emoji.redX
@@ -185,7 +185,7 @@ export default class FilterCommand extends Command {
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -194,7 +194,7 @@ export default class FilterCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"filterBypass",
-							true
+							true,
 						);
 
 						message.channel.send({
@@ -203,7 +203,7 @@ export default class FilterCommand extends Command {
 									{
 										title: `${this.client.emoji.greenCheck} Enabled Filter Bypass`,
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -218,7 +218,7 @@ export default class FilterCommand extends Command {
 											url: message.author.displayAvatarURL(
 												{
 													dynamic: true,
-												}
+												},
 											),
 										},
 										footer: {},
@@ -229,7 +229,7 @@ export default class FilterCommand extends Command {
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -238,7 +238,7 @@ export default class FilterCommand extends Command {
 						this.client.settings.set(
 							message.guild!.id,
 							"filterBypass",
-							false
+							false,
 						);
 
 						message.channel.send({
@@ -247,7 +247,7 @@ export default class FilterCommand extends Command {
 									{
 										title: `${this.client.emoji.greenCheck} Disabled Filter Bypass`,
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -262,7 +262,7 @@ export default class FilterCommand extends Command {
 											url: message.author.displayAvatarURL(
 												{
 													dynamic: true,
-												}
+												},
 											),
 										},
 										footer: {},
@@ -273,7 +273,7 @@ export default class FilterCommand extends Command {
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -281,25 +281,26 @@ export default class FilterCommand extends Command {
 				}
 
 				break;
-			case "list":
+			case "list": {
 				const phrases = await this.client.db.getFilteredPhrases(
-					message.guild!.id
+					message.guild!.id,
 				);
 
 				const phrasesEmbed = new MessagePagination({
 					message,
 					itemsPerPage: 10,
-					array: phrases,
+					array: phrases as never[],
 					embed: this.embed(
 						{
 							title: `${message.guild!.name}'s Filtered Phrases`,
 							thumbnail: {
 								url:
-									message.guild!.iconURL({ dynamic: true }) ||
-									"",
+									message.guild!.iconURL({
+										dynamic: true,
+									}) || "",
 							},
 						},
-						message
+						message,
 					),
 					title: "Phrases",
 					callbackfn: (phrase: any) => `\`${phrase.phrase}\``,
@@ -307,6 +308,7 @@ export default class FilterCommand extends Command {
 
 				phrasesEmbed.build();
 				break;
+			}
 			case "add":
 				if (!second_arg)
 					return message.channel.send({
@@ -314,7 +316,7 @@ export default class FilterCommand extends Command {
 							this.error(
 								message,
 								"Invalid Arguments",
-								"You must provide a Phrase to add!"
+								"You must provide a Phrase to add!",
 							),
 						],
 					});
@@ -322,7 +324,7 @@ export default class FilterCommand extends Command {
 				if (
 					await this.client.db.hasPhrase(
 						message.guild!.id,
-						second_arg
+						second_arg,
 					)
 				)
 					return message.channel.send({
@@ -330,7 +332,7 @@ export default class FilterCommand extends Command {
 							this.error(
 								message,
 								"Invalid Argument",
-								"That Phrase has already been added!"
+								"That Phrase has already been added!",
 							),
 						],
 					});
@@ -349,7 +351,7 @@ export default class FilterCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -376,7 +378,7 @@ export default class FilterCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -388,7 +390,7 @@ export default class FilterCommand extends Command {
 							this.error(
 								message,
 								"Invalid Arguments",
-								"You must provide a Phrase to remove!"
+								"You must provide a Phrase to remove!",
 							),
 						],
 					});
@@ -396,7 +398,7 @@ export default class FilterCommand extends Command {
 				if (
 					!(await this.client.db.hasPhrase(
 						message.guild!.id,
-						second_arg
+						second_arg,
 					))
 				)
 					return message.channel.send({
@@ -404,14 +406,14 @@ export default class FilterCommand extends Command {
 							this.error(
 								message,
 								"Invalid Argument",
-								"That Phrase has not been added!"
+								"That Phrase has not been added!",
 							),
 						],
 					});
 
 				await this.client.db.removePhrase(
 					message.guild!.id,
-					second_arg
+					second_arg,
 				);
 
 				message.channel.send({
@@ -426,7 +428,7 @@ export default class FilterCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -453,7 +455,7 @@ export default class FilterCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});

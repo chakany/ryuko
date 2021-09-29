@@ -26,7 +26,7 @@ export default class MoveCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You must provide a member to unmute!"
+						"You must provide a member to unmute!",
 					),
 				],
 			});
@@ -37,14 +37,14 @@ export default class MoveCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"That user is not currently muted!"
+						"That user is not currently muted!",
 					),
 				],
 			});
 		const muteRole = this.client.settings.get(
 			message.guild!.id,
 			"muteRole",
-			null
+			null,
 		);
 		if (!muteRole)
 			return message.channel.send({
@@ -56,7 +56,7 @@ export default class MoveCommand extends Command {
 							message.util?.parsed?.prefix
 						}${
 							this.handler.findCommand("muterole").aliases[0]
-						} to set one.`
+						} to set one.`,
 					),
 				],
 			});
@@ -71,7 +71,7 @@ export default class MoveCommand extends Command {
 		this.client.db.unpunishMember(
 			args.member.id,
 			message.guild!.id,
-			"mute"
+			"mute",
 		);
 
 		message.channel.send({
@@ -92,7 +92,7 @@ export default class MoveCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});
@@ -123,7 +123,7 @@ export default class MoveCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

@@ -26,7 +26,7 @@ export default class RepeatCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"There is no song currently playing"
+						"There is no song currently playing",
 					),
 				],
 			});
@@ -40,7 +40,7 @@ export default class RepeatCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"You have to be in the voice channel to loop the song!"
+						"You have to be in the voice channel to loop the song!",
 					),
 				],
 			});
@@ -64,7 +64,7 @@ export default class RepeatCommand extends Command {
 							serverQueue.loop ? "Enabled" : "Disabled"
 						}**`,
 					},
-					message
+					message,
 				),
 			],
 		});

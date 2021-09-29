@@ -24,7 +24,7 @@ export default class LesbianCommand extends Command {
 							url: request.media,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

@@ -60,14 +60,14 @@ export default class MemberinfoCommand extends Command {
 							{
 								name: "Created At",
 								value: `<t:${Math.round(
-									member.user.createdAt.getTime() / 1000
+									member.user.createdAt.getTime() / 1000,
 								)}:f>`,
 								inline: true,
 							},
 							{
 								name: "Joined At",
 								value: `<t:${Math.round(
-									member.joinedAt!.getTime() / 1000
+									member.joinedAt!.getTime() / 1000,
 								)}:f>`,
 								inline: true,
 							},
@@ -86,7 +86,7 @@ export default class MemberinfoCommand extends Command {
 								value: member.premiumSinceTimestamp
 									? `<t:${Math.round(
 											member.premiumSince!.getTime() /
-												1000
+												1000,
 									  )}:f>`
 									: "Not currently boosting server",
 								inline: true,
@@ -97,7 +97,7 @@ export default class MemberinfoCommand extends Command {
 					url: member.user.banner,
 				},*/
 					},
-					message
+					message,
 				),
 			],
 		});

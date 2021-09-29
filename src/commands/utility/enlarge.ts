@@ -26,7 +26,7 @@ export default class EnlargeCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You must provide a valid emoji!"
+						"You must provide a valid emoji!",
 					),
 				],
 			});
@@ -52,7 +52,7 @@ export default class EnlargeCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

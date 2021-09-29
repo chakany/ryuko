@@ -27,7 +27,7 @@ export default class VolumeCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"There is no song currently playing"
+						"There is no song currently playing",
 					),
 				],
 			});
@@ -41,7 +41,7 @@ export default class VolumeCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"You have to be in the voice channel to change the volume!"
+						"You have to be in the voice channel to change the volume!",
 					),
 				],
 			});
@@ -55,7 +55,7 @@ export default class VolumeCommand extends Command {
 							title: `Current Volume`,
 							description: "`" + oldVolume + "`",
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -65,7 +65,7 @@ export default class VolumeCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You cannot set a volume greater than 100!"
+						"You cannot set a volume greater than 100!",
 					),
 				],
 			});
@@ -82,7 +82,7 @@ export default class VolumeCommand extends Command {
 							args.volume +
 							"`",
 					},
-					message
+					message,
 				),
 			],
 		});

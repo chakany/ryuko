@@ -1,5 +1,5 @@
 import Listener from "../../struct/Listener";
-import { Message, MessageEmbed, TextChannel } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 
 export default class MessageEditListener extends Listener {
 	constructor() {
@@ -24,12 +24,12 @@ export default class MessageEditListener extends Listener {
 		if (oldMessage.author.bot) return;
 
 		// Concatinate our message content if it is too long
-		let _oldmessage =
+		const _oldmessage =
 			oldMessage.content.length > 900
 				? oldMessage.content.substr(0, 600) + "..."
 				: oldMessage.content;
 
-		let _newmessage =
+		const _newmessage =
 			newMessage.content.length > 900
 				? newMessage.content.substr(0, 600) + "..."
 				: newMessage.content;

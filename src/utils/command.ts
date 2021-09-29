@@ -4,7 +4,7 @@ import { User, Guild, GuildMember, Snowflake, Collection } from "discord.js";
 import Embed from "../struct/Embed";
 import schedule from "node-schedule";
 import { Moment } from "moment";
-const str_replace = require("locutus/php/strings/str_replace");
+import str_replace from "locutus/php/strings/str_replace";
 
 export function generateUsage(command: Command, prefix: string): string {
 	let flags = "";
@@ -20,7 +20,7 @@ export function generateUsage(command: Command, prefix: string): string {
 				arglist = arglist + ` {${arg.id}:${arg.default || "?"}}`;
 		}
 
-	let usage = `${prefix}${command.aliases[0]}${flags}${arglist}`;
+	const usage = `${prefix}${command.aliases[0]}${flags}${arglist}`;
 
 	return usage;
 }
@@ -29,7 +29,7 @@ export function replace(input: string, user: User): string {
 	return str_replace(
 		["(username", "(tag", "(discriminator", "(id", "(mention"],
 		[user.username, user.tag, user.discriminator, user.id, user.toString()],
-		input
+		input,
 	);
 }
 
@@ -40,8 +40,8 @@ export function setMute(
 	admin: GuildMember,
 	muteRole: Snowflake,
 	expires: Moment,
-	reason: string
-) {
+	reason: string,
+): void {
 	const job = schedule.scheduleJob(expires.toDate(), async function () {
 		if (member.roles.cache.has(muteRole)) member.roles.remove(muteRole);
 
@@ -81,7 +81,7 @@ export function setMute(
 						],
 					},
 					member.user,
-					guild
+					guild,
 				),
 			],
 		});

@@ -19,7 +19,7 @@ export default class QueueCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"There is nothing in the queue!"
+						"There is nothing in the queue!",
 					),
 				],
 			});
@@ -31,14 +31,14 @@ export default class QueueCommand extends Command {
 					title: `Music Queue`,
 					description: `**Currently Playing:** \`${serverQueue.tracks[0].info.title}\``,
 				},
-				message
+				message,
 			),
 			itemsPerPage: 6,
 			array: serverQueue.tracks as never[],
 			title: "Songs",
 			callbackfn: (song: any) => {
 				const index = serverQueue.tracks.findIndex(
-					(s) => s.info.identifier === song.info.identifier
+					(s) => s.info.identifier === song.info.identifier,
 				);
 				if (index == 0 && !serverQueue.tracks[1])
 					return "**Nothing else in the Queue**";

@@ -23,11 +23,11 @@ export default class UnlockCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		if (this.client.settings.get(message.guild!.id, "modRole", null))
 			(<TextChannel>args.channel).permissionOverwrites.delete(
-				`Channel Unlock Requested by ${message.author.tag}`
+				`Channel Unlock Requested by ${message.author.tag}`,
 			);
 
 		(<TextChannel>args.channel).permissionOverwrites.delete(
-			`Channel Unlock Requested by ${message.author.tag}`
+			`Channel Unlock Requested by ${message.author.tag}`,
 		);
 
 		const signalMessage = await message.channel.send({
@@ -48,7 +48,7 @@ export default class UnlockCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});
@@ -79,7 +79,7 @@ export default class UnlockCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

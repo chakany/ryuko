@@ -24,7 +24,7 @@ export default class SayCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You must provide something to say!"
+						"You must provide something to say!",
 					),
 				],
 			});

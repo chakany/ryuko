@@ -25,13 +25,13 @@ export default class LockCommand extends Command {
 			(<TextChannel>args.channel).permissionOverwrites.create(
 				this.client.settings.get(message.guild!.id, "modRole", null),
 				{ SEND_MESSAGES: true },
-				{ reason: `Channel Lock requested by ${message.author.tag}` }
+				{ reason: `Channel Lock requested by ${message.author.tag}` },
 			);
 
 		(<TextChannel>args.channel).permissionOverwrites.create(
 			message.guild!.roles.everyone,
 			{ SEND_MESSAGES: false },
-			{ reason: `Channel Lock requested by ${message.author.tag}` }
+			{ reason: `Channel Lock requested by ${message.author.tag}` },
 		);
 
 		const signalMessage = await message.channel.send({
@@ -52,7 +52,7 @@ export default class LockCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});
@@ -83,7 +83,7 @@ export default class LockCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

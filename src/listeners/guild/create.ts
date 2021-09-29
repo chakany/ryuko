@@ -17,7 +17,7 @@ export default class GuildCreateListener extends Listener {
 		this.client.log.info(
 			`I was added to guild "${guild.name}" that is owned by ${
 				(await this.client.users.fetch(guild.ownerId))?.tag
-			}`
+			}`,
 		);
 	}
 }

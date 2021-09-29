@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message, version } from "discord.js";
 import os from "os";
 import ms from "ms";
 
@@ -26,12 +27,12 @@ export default class StatsCommand extends Command {
 								name: "Total Servers",
 								value: `\`${(
 									await this.client.shard!.fetchClientValues(
-										"guilds.cache.size"
+										"guilds.cache.size",
 									)
 								).reduce(
 									(acc: any, guildCount: any) =>
 										acc + guildCount,
-									0
+									0,
 								)}\``,
 								inline: true,
 							},
@@ -39,12 +40,12 @@ export default class StatsCommand extends Command {
 								name: "Total Members",
 								value: `\`${(
 									await this.client.shard!.fetchClientValues(
-										"users.cache.size"
+										"users.cache.size",
 									)
 								).reduce(
 									(acc: any, memberCount: any) =>
 										acc + memberCount,
-									0
+									0,
 								)}\``,
 								inline: true,
 							},
@@ -80,10 +81,7 @@ export default class StatsCommand extends Command {
 							},
 							{
 								name: "Discord.js Version",
-								value: `\`v${
-									require("../../../node_modules/discord.js/package.json")
-										.version
-								}\``,
+								value: `\`v${version}\``,
 								inline: true,
 							},
 							{
@@ -100,7 +98,7 @@ export default class StatsCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

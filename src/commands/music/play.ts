@@ -1,5 +1,6 @@
 import Command from "../../struct/Command";
 import { Message } from "discord.js";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const ShoukakuTrack = require("../../../node_modules/shoukaku/src/struct/ShoukakuTrack");
 
 export default class PlayCommand extends Command {
@@ -45,7 +46,7 @@ export default class PlayCommand extends Command {
 					this.error(
 						message,
 						"Invalid Arguments",
-						"You must provide a search query, or a URL!"
+						"You must provide a search query, or a URL!",
 					),
 				],
 			});
@@ -55,7 +56,7 @@ export default class PlayCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"You must join a voice channel first!"
+						"You must join a voice channel first!",
 					),
 				],
 			});
@@ -70,7 +71,7 @@ export default class PlayCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"You must be in the same voice channel as me!"
+						"You must be in the same voice channel as me!",
 					),
 				],
 			});
@@ -93,7 +94,7 @@ export default class PlayCommand extends Command {
 						description:
 							"I am searching for your song(s), if you queued a big playlist this will take a minute!",
 					},
-					message
+					message,
 				),
 			],
 		});
@@ -101,7 +102,7 @@ export default class PlayCommand extends Command {
 			{
 				title: "Now Playing",
 			},
-			message
+			message,
 		);
 
 		// Make embeds more stylish lolol
@@ -117,26 +118,27 @@ export default class PlayCommand extends Command {
 				const response = await lavasfyNode?.load(args.song);
 
 				switch (response?.loadType) {
-					case "TRACK_LOADED":
+					case "TRACK_LOADED": {
 						console.log(response.tracks[0]);
 						guildQueue.tracks.push(
-							new ShoukakuTrack(response.tracks[0])
+							new ShoukakuTrack(response.tracks[0]),
 						);
 						embedToSend.setDescription(
-							`\`${response.tracks[0].info.title} - ${response?.tracks[0].info.author}\``
+							`\`${response.tracks[0].info.title} - ${response?.tracks[0].info.author}\``,
 						);
 						embedToSend.setURL(response.tracks[0].info.uri);
 						embedToSend.setThumbnail(
-							response.spotifyMetadata.album.images[0].url
+							response.spotifyMetadata.album.images[0].url,
 						);
 						break;
-					case "PLAYLIST_LOADED":
-						for (let track of response.tracks) {
+					}
+					case "PLAYLIST_LOADED": {
+						for (const track of response.tracks) {
 							guildQueue.tracks.push(new ShoukakuTrack(track));
 						}
 						let playlistCount = 0;
 						let playlistDescription = "";
-						for await (let track of response.tracks) {
+						for await (const track of response.tracks) {
 							if (playlistCount == 0)
 								playlistDescription =
 									playlistDescription +
@@ -155,10 +157,11 @@ export default class PlayCommand extends Command {
 						}
 						embedToSend.setDescription(playlistDescription);
 						embedToSend.setThumbnail(
-							response.spotifyMetadata.images[0].url
+							response.spotifyMetadata.images[0].url,
 						);
 						embedToSend.setURL(args.song);
 						break;
+					}
 					case "LOAD_FAILED":
 					case "NO_MATCHES":
 						return message.channel.send({
@@ -166,7 +169,7 @@ export default class PlayCommand extends Command {
 								this.error(
 									message,
 									"An error occurred",
-									"I could not play that, try again?"
+									"I could not play that, try again?",
 								),
 							],
 						});
@@ -178,15 +181,15 @@ export default class PlayCommand extends Command {
 						this.error(
 							message,
 							"An error occurred",
-							"I could not play that, try again?"
+							"I could not play that, try again?",
 						),
 					],
 				});
 			}
 		} else if (!this._checkURL(args.song)) {
 			const data = await node.rest.resolve(
-				message.util?.parsed?.content!,
-				"youtube"
+				message.util!.parsed!.content!,
+				"youtube",
 			);
 			if (!data)
 				return sentMessage.edit({
@@ -194,19 +197,19 @@ export default class PlayCommand extends Command {
 						this.error(
 							message,
 							"An error occurred",
-							"I could not play that, try again?"
+							"I could not play that, try again?",
 						),
 					],
 				});
 			if (data?.tracks[0]) guildQueue.tracks.push(data?.tracks[0]);
 			embedToSend.setDescription("`" + data?.tracks[0].info.title + "`");
 			embedToSend.setThumbnail(
-				`https://img.youtube.com/vi/${data?.tracks[0].info.identifier}/default.jpg`
+				`https://img.youtube.com/vi/${data?.tracks[0].info.identifier}/default.jpg`,
 			);
-			embedToSend.setURL(data?.tracks[0].info.uri!);
+			embedToSend.setURL(data!.tracks[0].info.uri!);
 		} else {
 			const data = await node.rest.resolve(
-				message.util?.parsed?.content!
+				message.util!.parsed!.content!,
 			);
 			if (!data)
 				return sentMessage.edit({
@@ -214,14 +217,14 @@ export default class PlayCommand extends Command {
 						this.error(
 							message,
 							"An error occurred",
-							"I could not play that, try again?"
+							"I could not play that, try again?",
 						),
 					],
 				});
 			if (data?.playlistName) {
 				let playlistCount = 0;
 				let playlistDescription = "";
-				for await (let track of data?.tracks) {
+				for await (const track of data?.tracks) {
 					if (playlistCount == 0)
 						playlistDescription =
 							playlistDescription + `\`${track.info.title}\`\n`;
@@ -235,7 +238,7 @@ export default class PlayCommand extends Command {
 							`\nand **${data?.tracks.length - 6}** more.`;
 					playlistCount++;
 				}
-				for (let track of data?.tracks) {
+				for (const track of data?.tracks) {
 					guildQueue.tracks.push(new ShoukakuTrack(track));
 				}
 				embedToSend.setDescription(playlistDescription);
@@ -245,9 +248,9 @@ export default class PlayCommand extends Command {
 			}
 			if (data?.tracks[0].info.uri?.startsWith("https://www.youtube.com"))
 				embedToSend.setThumbnail(
-					`https://img.youtube.com/vi/${data?.tracks[0].info.identifier}/default.jpg`
+					`https://img.youtube.com/vi/${data?.tracks[0].info.identifier}/default.jpg`,
 				);
-			embedToSend.setURL(data?.tracks[0].info.uri!);
+			embedToSend.setURL(data!.tracks[0].info.uri!);
 		}
 
 		if (!guildQueue.player) {
@@ -287,7 +290,7 @@ export default class PlayCommand extends Command {
 						this.error(
 							message,
 							"An error occurred",
-							`\`\`\`${reason.exception.message}\n${reason.exception.cause}\`\`\``
+							`\`\`\`${reason.exception.message}\n${reason.exception.cause}\`\`\``,
 						),
 					],
 				});

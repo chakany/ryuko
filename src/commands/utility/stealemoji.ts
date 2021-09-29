@@ -26,7 +26,7 @@ export default class StealEmojiCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You must provide a valid emoji!"
+						"You must provide a valid emoji!",
 					),
 				],
 			});
@@ -38,7 +38,7 @@ export default class StealEmojiCommand extends Command {
 				: `https://cdn.discordapp.com/emojis/${args.emoji
 						.split(":")[2]
 						.slice(0, -1)}.png`,
-			args.emoji.split(":")[1]
+			args.emoji.split(":")[1],
 		);
 
 		return message.channel.send({
@@ -57,7 +57,7 @@ export default class StealEmojiCommand extends Command {
 										.slice(0, -1)}.png`,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

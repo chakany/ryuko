@@ -26,7 +26,7 @@ export default class ModroleCommand extends Command {
 		const currentRole = this.client.settings.get(
 			message.guild!.id,
 			"muteRole",
-			null
+			null,
 		);
 
 		if (!args.role && currentRole) {
@@ -44,7 +44,7 @@ export default class ModroleCommand extends Command {
 								},
 							],
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -57,7 +57,7 @@ export default class ModroleCommand extends Command {
 						"There is no mute role set, use the `" +
 							prefix +
 							this.handler.findCommand("muterole").aliases[0] +
-							"` to set it."
+							"` to set it.",
 					),
 				],
 			});
@@ -66,7 +66,7 @@ export default class ModroleCommand extends Command {
 		await this.client.settings.set(
 			message.guild!.id,
 			"muteRole",
-			args.role.id
+			args.role.id,
 		);
 
 		return message.channel.send({
@@ -89,7 +89,7 @@ export default class ModroleCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

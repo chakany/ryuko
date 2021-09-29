@@ -11,7 +11,15 @@ export default class InvalidCommandListener extends Listener {
 	}
 
 	async exec(message: Message) {
-		if (!message.content.startsWith(message.util?.parsed?.prefix!))
+		if (
+			!message.content.startsWith(
+				this.client.settings.get(
+					message.guild!.id,
+					"prefix",
+					this.client.config.prefix,
+				),
+			)
+		)
 			return true;
 		// When a non-existent command was ran try to use the levenshtein algorithm to find a close match.
 		const distances = [];
@@ -19,7 +27,7 @@ export default class InvalidCommandListener extends Listener {
 
 		for (const cmd of usableCommands!) {
 			distances.push({
-				dist: levenshtein.get(cmd[0], message.util?.parsed?.alias!),
+				dist: levenshtein.get(cmd[0], message.util!.parsed!.alias!),
 				cmd,
 			});
 		}
@@ -30,7 +38,7 @@ export default class InvalidCommandListener extends Listener {
 
 		if (distances[0].dist > 0 && distances[0].dist <= 2) {
 			const command = this.client.commandHandler.findCommand(
-				distances[0].cmd[0]
+				distances[0].cmd[0],
 			);
 			return message.channel.send({
 				embeds: [
@@ -48,7 +56,7 @@ export default class InvalidCommandListener extends Listener {
 							},
 						},
 						message.author,
-						message.guild!
+						message.guild!,
 					),
 				],
 			});

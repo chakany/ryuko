@@ -17,20 +17,20 @@ export default class QrcodeCommand extends Command {
 		});
 	}
 
-	async exec(message: Message, args: any): Promise<any> {
+	async exec(message: Message, args: any) {
 		if (!args.content)
 			return message.channel.send({
 				embeds: [
 					this.error(
 						message,
 						"Invalid Arguments",
-						"You must input some text to turn into a QR Code!"
+						"You must input some text to turn into a QR Code!",
 					),
 				],
 			});
 		const code = new MessageAttachment(
-			await qrcode.toBuffer(message.util?.parsed?.content!),
-			"qrcode.png"
+			await qrcode.toBuffer(message.util!.parsed!.content!),
+			"qrcode.png",
 		);
 
 		return message.channel.send({
@@ -41,14 +41,14 @@ export default class QrcodeCommand extends Command {
 						fields: [
 							{
 								name: "Input",
-								value: `\`${message.util?.parsed?.content!}\``,
+								value: `\`${message.util!.parsed!.content!}\``,
 							},
 						],
 						image: {
 							url: "attachment://qrcode.png",
 						},
 					},
-					message
+					message,
 				),
 			],
 			files: [code],

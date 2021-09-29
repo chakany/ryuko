@@ -1,6 +1,8 @@
 import driver from "ioredis";
 import bunyan from "bunyan";
+import { Snowflake } from "discord.js";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { redis } = require("../../config.json");
 
 export default class Redis extends driver {
@@ -12,12 +14,12 @@ export default class Redis extends driver {
 		this.log = bunyan.createLogger({ name: "redis" });
 	}
 
-	async addNewVerification(
-		guildId: string,
-		userId: string,
-		level: string,
-		key: string
-	) {
+	addNewVerification(
+		guildId: Snowflake,
+		userId: Snowflake,
+		level: "low" | "medium" | "strict",
+		key: string,
+	): Promise<[Error | null, any][]> {
 		return this.pipeline()
 			.hmset(`verification:${key}`, {
 				guildId,
@@ -28,11 +30,11 @@ export default class Redis extends driver {
 			.exec();
 	}
 
-	async getVerificationKey(key: any) {
+	getVerificationKey(key: string): Promise<Record<string, string>> {
 		return this.hgetall(`verification:${key}`);
 	}
 
-	async removeVerification(key: any) {
+	removeVerification(key: string): Promise<number> {
 		return this.del(`verification:${key}`);
 	}
 }

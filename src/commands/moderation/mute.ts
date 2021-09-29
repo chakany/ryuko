@@ -39,7 +39,7 @@ export default class MuteCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You must provide a user to mute!"
+						"You must provide a user to mute!",
 					),
 				],
 			});
@@ -50,7 +50,7 @@ export default class MuteCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You must provide a valid length to mute for!\nIt must be specified too! Ex: '10m' is 10 minutes"
+						"You must provide a valid length to mute for!\nIt must be specified too! Ex: '10m' is 10 minutes",
 					),
 				],
 			});
@@ -58,7 +58,7 @@ export default class MuteCommand extends Command {
 		const modRole = this.client.settings.get(
 			message.guild!.id,
 			"modRole",
-			null
+			null,
 		);
 
 		// Check role hierarchy
@@ -71,7 +71,7 @@ export default class MuteCommand extends Command {
 					this.error(
 						message,
 						"Invalid Permissions",
-						"You cannot mute someone that has the same, or a higher role than you!"
+						"You cannot mute someone that has the same, or a higher role than you!",
 					),
 				],
 			});
@@ -80,7 +80,7 @@ export default class MuteCommand extends Command {
 		const muteRole = this.client.settings.get(
 			message.guild!.id,
 			"muteRole",
-			null
+			null,
 		);
 		if (muteRole === null)
 			return message.channel.send({
@@ -92,7 +92,7 @@ export default class MuteCommand extends Command {
 							message.util?.parsed?.prefix
 						}${
 							this.handler.findCommand("muterole").aliases[0]
-						} to set one.`
+						} to set one.`,
 					),
 				],
 			});
@@ -106,7 +106,7 @@ export default class MuteCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"That person is already muted!"
+						"That person is already muted!",
 					),
 				],
 			});
@@ -145,7 +145,7 @@ export default class MuteCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});
@@ -157,7 +157,7 @@ export default class MuteCommand extends Command {
 			message.member!,
 			muteRole,
 			args.length[0],
-			args.reason
+			args.reason,
 		);
 
 		this.client.db.muteUser(
@@ -166,7 +166,7 @@ export default class MuteCommand extends Command {
 			args.member.id,
 			message.author.id,
 			args.reason,
-			args.length[0]
+			args.length[0],
 		);
 
 		this.client.sendToLogChannel(message.guild!, "member", {
@@ -207,7 +207,7 @@ export default class MuteCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

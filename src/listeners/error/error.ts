@@ -16,7 +16,7 @@ export default class HandlerErrorListener extends Listener {
 				command.error(
 					message,
 					"An Error Occurred",
-					`\`\`\`${error}\`\`\``
+					`\`\`\`${error}\`\`\``,
 				),
 			],
 		});

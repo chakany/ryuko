@@ -23,7 +23,7 @@ export default class CoinflipCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You must ask a question!"
+						"You must ask a question!",
 					),
 				],
 			});
@@ -63,7 +63,7 @@ export default class CoinflipCommand extends Command {
 							name: "🎱 8 Ball",
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

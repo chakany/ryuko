@@ -17,7 +17,7 @@ export default class NpmCommand extends Command {
 		});
 	}
 
-	async _getPackage(query: string): Promise<AxiosResponse> {
+	_getPackage(query: string): Promise<AxiosResponse> {
 		return axios.get(`https://api.npms.io/v2/package/${query}`);
 	}
 
@@ -28,14 +28,12 @@ export default class NpmCommand extends Command {
 					this.error(
 						message,
 						"Invalid Arguments",
-						"You must provide a package!"
+						"You must provide a package!",
 					),
 				],
 			});
 		try {
-			const request = await this._getPackage(
-				message.util?.parsed?.content!
-			);
+			const request = await this._getPackage(args.package);
 			const data = request.data;
 
 			return message.channel.send({
@@ -71,7 +69,7 @@ export default class NpmCommand extends Command {
 										data.collected.metadata.dependencies
 											? data.collected.metadata
 													.dependencies
-											: {}
+											: {},
 									).length,
 									inline: true,
 								},
@@ -81,13 +79,13 @@ export default class NpmCommand extends Command {
 										data.collected.metadata.devDependencies
 											? data.collected.metadata
 													.devDependencies
-											: {}
+											: {},
 									).length,
 									inline: true,
 								},
 							],
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -98,7 +96,7 @@ export default class NpmCommand extends Command {
 						this.error(
 							message,
 							"Invalid Arguments",
-							"I could not find that package!"
+							"I could not find that package!",
 						),
 					],
 				});

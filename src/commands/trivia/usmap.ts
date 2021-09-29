@@ -26,7 +26,7 @@ export default class UsmapCommand extends Command {
 							url: question?.image,
 						},
 					},
-					message
+					message,
 				),
 				timeout: this.embed(
 					{
@@ -37,7 +37,7 @@ export default class UsmapCommand extends Command {
 								: question?.answer
 						}**.`,
 					},
-					message
+					message,
 				),
 				time: 15000,
 			},
@@ -49,7 +49,7 @@ export default class UsmapCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		const results = this.client.trivia.isCorrect(
 			args.question,
-			args.answer
+			args.answer,
 		);
 
 		if (results) {
@@ -60,7 +60,7 @@ export default class UsmapCommand extends Command {
 							title: "Correct Answer!",
 							description: `Nice Job!`,
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -76,7 +76,7 @@ export default class UsmapCommand extends Command {
 									: args.question.answer
 							}**.`,
 						},
-						message
+						message,
 					),
 				],
 			});

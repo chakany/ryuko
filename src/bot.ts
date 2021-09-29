@@ -1,12 +1,13 @@
 import Logger from "./struct/Logger";
 import { Category, Command } from "@ryukobot/discord-akairo";
 
-let log = new Logger({
+const log = new Logger({
 	name: "bot",
 });
 
 import Bot from "./struct/Client";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { token } = require("../config.json");
 
 const client = new Bot(log);

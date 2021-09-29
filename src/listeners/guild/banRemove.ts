@@ -38,7 +38,7 @@ export default class GuildBanRemoveListener extends Listener {
 							],
 						},
 						user,
-						guild
+						guild,
 					),
 				],
 			});
@@ -73,7 +73,7 @@ export default class GuildBanRemoveListener extends Listener {
 							],
 						},
 						user,
-						guild
+						guild,
 					),
 				],
 			});
@@ -98,7 +98,7 @@ export default class GuildBanRemoveListener extends Listener {
 							],
 						},
 						user,
-						guild
+						guild,
 					),
 				],
 			});

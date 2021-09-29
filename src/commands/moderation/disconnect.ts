@@ -33,7 +33,7 @@ export default class DisconnectCommand extends Command {
 					this.error(
 						message,
 						"Invalid Arguments",
-						"You must provide a user to disconnect!"
+						"You must provide a user to disconnect!",
 					),
 				],
 			});
@@ -45,7 +45,7 @@ export default class DisconnectCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"The person you are trying to disconnect is not in a voice channel!"
+						"The person you are trying to disconnect is not in a voice channel!",
 					),
 				],
 			});
@@ -80,7 +80,7 @@ export default class DisconnectCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});
@@ -119,7 +119,7 @@ export default class DisconnectCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

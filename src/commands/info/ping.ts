@@ -30,7 +30,7 @@ export default class PingCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

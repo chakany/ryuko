@@ -24,7 +24,7 @@ export default class BoobsCommand extends Command {
 							url: request.media,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

@@ -14,7 +14,7 @@ export default class AkinatorCommand extends Command {
 	// @ts-expect-error 2425
 	async *args(message: Message) {
 		const loadMessage = await message.channel.send(
-			`${this.client.emoji.loading} ***Please Wait...***`
+			`${this.client.emoji.loading} ***Please Wait...***`,
 		);
 
 		const akinator = new Aki({ region: "en" });
@@ -30,7 +30,7 @@ export default class AkinatorCommand extends Command {
 					start: `**${
 						akinator.question
 					}**\n\n**Answers:**\n${akinator.answers.join(
-						", "
+						", ",
 					)}, Back, or Stop`,
 				},
 			};
@@ -38,7 +38,7 @@ export default class AkinatorCommand extends Command {
 			const index = <0 | 1 | 2 | 3 | 4>(
 				akinator.answers.findIndex(
 					(value) =>
-						(<String>value).toLowerCase() == result.toLowerCase()
+						(<string>value).toLowerCase() == result.toLowerCase(),
 				)
 			);
 
@@ -66,7 +66,7 @@ export default class AkinatorCommand extends Command {
 							url: args.answers[0].absolute_picture_path,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

@@ -34,7 +34,7 @@ export default class GithubCommand extends Command {
 					this.error(
 						message,
 						"Invalid Arguments",
-						"You must provide a repo!"
+						"You must provide a repo!",
 					),
 				],
 			});
@@ -48,7 +48,7 @@ export default class GithubCommand extends Command {
 					this.error(
 						message,
 						"Invalid Repo",
-						"I could not find that repo!"
+						"I could not find that repo!",
 					),
 				],
 			});
@@ -71,7 +71,7 @@ export default class GithubCommand extends Command {
 								name: "Language",
 								value: repo.language
 									? `[${repo.language}](${new URL(
-											`https://www.google.com/search?q=${repo.language} Programming Language`
+											`https://www.google.com/search?q=${repo.language} Programming Language`,
 									  )})`
 									: "None",
 								inline: true,
@@ -112,7 +112,7 @@ export default class GithubCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

@@ -52,7 +52,7 @@ export default class MessageReactionRemoveListener extends Listener {
 				fields: fields,
 			},
 			message.author,
-			message.guild!
+			message.guild!,
 		);
 
 		if (message.attachments.size > 0)

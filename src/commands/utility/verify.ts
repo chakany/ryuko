@@ -21,14 +21,14 @@ export default class VerifyCommand extends Command {
 		const verifiedRole = this.client.settings.get(
 			message.guild!.id,
 			"verifiedRole",
-			null
+			null,
 		);
 
 		if (
 			!this.client.settings.get(
 				message.guild!.id,
 				"verification",
-				false
+				false,
 			) ||
 			!verifiedRole
 		)
@@ -40,8 +40,8 @@ export default class VerifyCommand extends Command {
 						`You must configure verification first! Use the \`${
 							message.util?.parsed?.prefix
 						}${this.handler.findCommand(
-							"verification"
-						)}\` command to set it up.`
+							"verification",
+						)}\` command to set it up.`,
 					),
 				],
 			});
@@ -51,7 +51,7 @@ export default class VerifyCommand extends Command {
 					this.error(
 						message,
 						"Invalid Member",
-						"You have already been verified!"
+						"You have already been verified!",
 					),
 				],
 			});
@@ -60,7 +60,7 @@ export default class VerifyCommand extends Command {
 		const level = this.client.settings.get(
 			message.guild!.id,
 			"verificationLevel",
-			"low"
+			"low",
 		);
 
 		const redis = new myRedis();
@@ -70,7 +70,7 @@ export default class VerifyCommand extends Command {
 			message.guild!.id,
 			message.author.id,
 			level,
-			key
+			key,
 		);
 
 		redis.subscribe(`verification-${key}`);
@@ -84,7 +84,7 @@ export default class VerifyCommand extends Command {
 					this.client.config.siteUrl
 				}/verify?state=${key}\n\nThis expires <t:${moment()
 					.add(ms("10m"), "ms")
-					.unix()}:R>`
+					.unix()}:R>`,
 			);
 		} catch (error) {
 			await redis.unsubscribe(`verification-${key}`);
@@ -94,7 +94,7 @@ export default class VerifyCommand extends Command {
 					this.error(
 						message,
 						"",
-						"I cannot DM you! Check your privacy settings and try again"
+						"I cannot DM you! Check your privacy settings and try again",
 					),
 				],
 			});
@@ -104,13 +104,13 @@ export default class VerifyCommand extends Command {
 
 		const miCallback = async (channel: any, recieved: any) => {
 			if (channel !== `verification-${key}`) return;
-			let call = JSON.parse(recieved);
+			const call = JSON.parse(recieved);
 
 			if (call.message == "verified") {
 				sentMessage.edit(
 					`Verified Successfully, Welcome to **${
 						message.guild!.name
-					}**!`
+					}**!`,
 				);
 
 				this.client.sendToLogChannel(message.guild!, "member", {
@@ -131,17 +131,14 @@ export default class VerifyCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
-				message.member!.roles.add(
-					// @ts-expect-error
-					await message.guild!.roles.fetch(verifiedRole)
-				);
+				await message.member!.roles.add(verifiedRole);
 			} else if (call.message == "alt") {
 				switch (level) {
-					case "strict":
+					case "strict": {
 						message.member?.ban({
 							reason: `Alternate Account of User <@!${call.originalAccount}>`,
 						});
@@ -154,7 +151,7 @@ export default class VerifyCommand extends Command {
 											message.guild!.name
 										}** is prohibited. If you believe this is an error, please contact the server owner.`,
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -170,7 +167,7 @@ export default class VerifyCommand extends Command {
 											url: message.author.displayAvatarURL(
 												{
 													dynamic: true,
-												}
+												},
 											),
 										},
 										footer: {},
@@ -187,18 +184,19 @@ export default class VerifyCommand extends Command {
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
 						break;
-					case "medium":
+					}
+					case "medium": {
 						const userPunishments =
 							await this.client.db.getCurrentUserPunishments(
 								call.originalAccount
 									? call.originalAccount
 									: null,
-								message.guild!.id
+								message.guild!.id,
 							);
 
 						if (
@@ -217,7 +215,7 @@ export default class VerifyCommand extends Command {
 												message.guild!.name
 											}** is prohibited. If you believe this is an error, please contact the server owner.`,
 										},
-										message
+										message,
 									),
 								],
 							});
@@ -234,7 +232,7 @@ export default class VerifyCommand extends Command {
 													"An alternate account was detected, they have been banned.",
 												thumbnail: {
 													url: message.author.displayAvatarURL(
-														{ dynamic: true }
+														{ dynamic: true },
 													),
 												},
 												footer: {},
@@ -251,16 +249,13 @@ export default class VerifyCommand extends Command {
 													},
 												],
 											},
-											message
+											message,
 										),
 									],
-								}
+								},
 							);
 						} else {
-							message.member!.roles.add(
-								// @ts-expect-error 2345
-								await message.guild!.roles.fetch(verifiedRole)
-							);
+							await message.member!.roles.add(verifiedRole);
 							sentMessage.edit({
 								embeds: [
 									this.embed(
@@ -270,7 +265,7 @@ export default class VerifyCommand extends Command {
 												message.guild!.name
 											}**! Enjoy your stay!`,
 										},
-										message
+										message,
 									),
 								],
 							});
@@ -285,7 +280,7 @@ export default class VerifyCommand extends Command {
 												title: "Member Verified",
 												thumbnail: {
 													url: message.author.displayAvatarURL(
-														{ dynamic: true }
+														{ dynamic: true },
 													),
 												},
 												footer: {},
@@ -296,18 +291,16 @@ export default class VerifyCommand extends Command {
 													},
 												],
 											},
-											message
+											message,
 										),
 									],
-								}
+								},
 							);
 						}
 						break;
-					case "low":
-						message.member!.roles.add(
-							// @ts-expect-error 2345
-							await message.guild!.roles.fetch(verifiedRole)
-						);
+					}
+					case "low": {
+						await message.member!.roles.add(verifiedRole);
 						sentMessage.edit({
 							embeds: [
 								this.embed(
@@ -317,7 +310,7 @@ export default class VerifyCommand extends Command {
 											message.guild!.name
 										}**! Enjoy your stay!`,
 									},
-									message
+									message,
 								),
 							],
 						});
@@ -331,7 +324,7 @@ export default class VerifyCommand extends Command {
 											url: message.author.displayAvatarURL(
 												{
 													dynamic: true,
-												}
+												},
 											),
 										},
 										footer: {},
@@ -342,10 +335,11 @@ export default class VerifyCommand extends Command {
 											},
 										],
 									},
-									message
+									message,
 								),
 							],
 						});
+					}
 				}
 			}
 			completed = true;

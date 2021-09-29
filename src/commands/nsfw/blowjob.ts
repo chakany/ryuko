@@ -24,7 +24,7 @@ export default class BlowjobCommand extends Command {
 							url: request.media,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

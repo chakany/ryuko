@@ -25,7 +25,7 @@ export default class RewindCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"There is no song currently playing"
+						"There is no song currently playing",
 					),
 				],
 			});
@@ -39,7 +39,7 @@ export default class RewindCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"You have to be in the voice channel to rewind the music!"
+						"You have to be in the voice channel to rewind the music!",
 					),
 				],
 			});
@@ -47,7 +47,7 @@ export default class RewindCommand extends Command {
 			serverQueue.player.seekTo(0);
 
 		serverQueue.player.seekTo(
-			serverQueue.player.position - args.seconds * 1000
+			serverQueue.player.position - args.seconds * 1000,
 		);
 	}
 }

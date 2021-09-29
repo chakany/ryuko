@@ -15,13 +15,13 @@ export default class ModInhibitor extends Inhibitor {
 		const modRole = this.client.settings.get(
 			message.guild!.id,
 			"modRole",
-			null
+			null,
 		);
 
 		const adminRole = this.client.settings.get(
 			message.guild!.id,
 			"adminRole",
-			null
+			null,
 		);
 
 		if (

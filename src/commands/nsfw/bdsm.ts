@@ -24,7 +24,7 @@ export default class BdsmCommand extends Command {
 							url: request.media,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

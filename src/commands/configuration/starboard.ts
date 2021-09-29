@@ -27,12 +27,12 @@ export default class StarboardCommand extends Command {
 		const enabled = this.client.settings.get(
 			message.guild!.id,
 			"starboard",
-			false
+			false,
 		);
 
 		switch (args.action) {
 			default:
-				return message.channel.send({
+				message.channel.send({
 					embeds: [
 						this.embed(
 							{
@@ -57,21 +57,21 @@ export default class StarboardCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"starboardChannel",
-												null
+												null,
 											)
 												? `${channelMention(
 														this.client.settings.get(
 															message.guild!.id,
 															"starboardChannel",
-															null
-														)
+															null,
+														),
 												  )}`
 												: "None"
 										}`,
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -81,7 +81,7 @@ export default class StarboardCommand extends Command {
 					!this.client.settings.get(
 						message.guild!.id,
 						"starboardChannel",
-						null
+						null,
 					)
 				)
 					return message.channel.send({
@@ -89,19 +89,19 @@ export default class StarboardCommand extends Command {
 							this.error(
 								message,
 								"Invalid Configuration",
-								"You must set a channel to send starred messages into!"
+								"You must set a channel to send starred messages into!",
 							),
 						],
 					});
 				this.client.settings.set(message.guild!.id, "starboard", true);
 
-				return message.channel.send({
+				message.channel.send({
 					embeds: [
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Enabled Starboard`,
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -109,22 +109,22 @@ export default class StarboardCommand extends Command {
 			case "disable":
 				this.client.settings.set(message.guild!.id, "starboard", false);
 
-				return message.channel.send({
+				message.channel.send({
 					embeds: [
 						this.embed(
 							{
 								title: `${this.client.emoji.greenCheck} Disabled Starboard`,
 							},
-							message
+							message,
 						),
 					],
 				});
 				break;
-			case "channel":
+			case "channel": {
 				const oldChannel = this.client.settings.get(
 					message.guild!.id,
 					"starboardChannel",
-					null
+					null,
 				);
 
 				if (!args.channel)
@@ -135,21 +135,21 @@ export default class StarboardCommand extends Command {
 									title: "Current Starboard Channel",
 									description: oldChannel
 										? `The current channel for the starboard is ${channelMention(
-												oldChannel
+												oldChannel,
 										  )}`
 										: "There is no current channel for the starboard",
 								},
-								message
+								message,
 							),
 						],
 					});
 				this.client.settings.set(
 					message.guild!.id,
 					"starboardChannel",
-					args.channel.id
+					args.channel.id,
 				);
 
-				return message.channel.send({
+				message.channel.send({
 					embeds: [
 						this.embed(
 							{
@@ -169,10 +169,12 @@ export default class StarboardCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
+				break;
+			}
 		}
 	}
 }

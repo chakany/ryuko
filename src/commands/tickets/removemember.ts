@@ -24,14 +24,14 @@ export default class RemoveMemberCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You must provide a member to remove!"
+						"You must provide a member to remove!",
 					),
 				],
 			});
 
 		const ticketResult = await this.client.db.findTicket(
 			message.guild!.id,
-			message.channel.id
+			message.channel.id,
 		);
 
 		if (!ticketResult)
@@ -40,7 +40,7 @@ export default class RemoveMemberCommand extends Command {
 					this.error(
 						message,
 						"Invalid Channel",
-						"This is not a ticket channel!"
+						"This is not a ticket channel!",
 					),
 				],
 			});
@@ -48,19 +48,19 @@ export default class RemoveMemberCommand extends Command {
 		const ticketRole = this.client.settings.get(
 			message.guild!.id,
 			"ticketRole",
-			null
+			null,
 		);
 
 		if (
 			(ticketRole &&
 				message.member!.roles.cache.find(
-					(role) => role.id == ticketRole
+					(role) => role.id == ticketRole,
 				)) ||
 			message.member!.permissions.has("MANAGE_CHANNELS")
 		) {
 			// for some reason updateOverwrite didn't exist unless i casted...
 			(<TextChannel>message.channel).permissionOverwrites.delete(
-				args.member.id
+				args.member.id,
 			);
 
 			return message.channel.send({
@@ -81,7 +81,7 @@ export default class RemoveMemberCommand extends Command {
 								},
 							],
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -95,7 +95,7 @@ export default class RemoveMemberCommand extends Command {
 							ticketRole
 								? `, and members with the <@&${ticketRole}> role`
 								: ""
-						} can run this command!`
+						} can run this command!`,
 					),
 				],
 			});

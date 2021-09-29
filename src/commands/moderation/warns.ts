@@ -24,7 +24,7 @@ export default class WarnsCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		const warns: never[] = await this.client.db.getAllWarns(
 			args.member.id,
-			message.guild!.id
+			message.guild!.id,
 		);
 
 		if (!warns.length)
@@ -33,7 +33,7 @@ export default class WarnsCommand extends Command {
 					this.error(
 						message,
 						"Invalid Member",
-						"That Member has no warns!"
+						"That Member has no warns!",
 					),
 				],
 			});
@@ -48,7 +48,7 @@ export default class WarnsCommand extends Command {
 						}),
 					},
 				},
-				message
+				message,
 			),
 			message,
 			array: warns,

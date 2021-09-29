@@ -24,14 +24,14 @@ export default class AddMemberCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You must provide a member to add!"
+						"You must provide a member to add!",
 					),
 				],
 			});
 
 		const ticketResult = await this.client.db.findTicket(
 			message.guild!.id,
-			message.channel.id
+			message.channel.id,
 		);
 
 		if (!ticketResult)
@@ -40,7 +40,7 @@ export default class AddMemberCommand extends Command {
 					this.error(
 						message,
 						"Invalid Channel",
-						"This is not a ticket channel!"
+						"This is not a ticket channel!",
 					),
 				],
 			});
@@ -48,13 +48,13 @@ export default class AddMemberCommand extends Command {
 		const ticketRole = this.client.settings.get(
 			message.guild!.id,
 			"ticketRole",
-			null
+			null,
 		);
 
 		if (
 			(ticketRole &&
 				message.member!.roles.cache.find(
-					(role) => role.id == ticketRole
+					(role) => role.id == ticketRole,
 				)) ||
 			message.member!.permissions.has("MANAGE_CHANNELS")
 		) {
@@ -64,7 +64,7 @@ export default class AddMemberCommand extends Command {
 				{
 					VIEW_CHANNEL: true,
 					SEND_MESSAGES: true,
-				}
+				},
 			);
 
 			return message.channel.send({
@@ -85,7 +85,7 @@ export default class AddMemberCommand extends Command {
 								},
 							],
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -99,7 +99,7 @@ export default class AddMemberCommand extends Command {
 							ticketRole
 								? `, and members with the <@&${ticketRole}> role`
 								: ""
-						} can run this command!`
+						} can run this command!`,
 					),
 				],
 			});

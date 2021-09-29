@@ -22,7 +22,7 @@ export default class MissingPermissionsListener extends Listener {
 						type == "client"
 							? " Please check my permissions, and make the nessary changes."
 							: ""
-					}`
+					}`,
 				),
 			],
 		});

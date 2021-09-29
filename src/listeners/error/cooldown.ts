@@ -19,8 +19,8 @@ export default class CooldownListener extends Listener {
 					"Command Blocked",
 					`You are currently on a cooldown for this command, you will be able to use it again in **${ms(
 						remaining,
-						{ long: true }
-					)}**.`
+						{ long: true },
+					)}**.`,
 				),
 			],
 		});

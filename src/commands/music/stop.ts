@@ -18,7 +18,7 @@ export default class StopCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"There is no song currently playing"
+						"There is no song currently playing",
 					),
 				],
 			});
@@ -32,7 +32,7 @@ export default class StopCommand extends Command {
 					this.error(
 						message,
 						"Invalid Usage",
-						"You have to be in the same voice channel as me to stop the music!"
+						"You have to be in the same voice channel as me to stop the music!",
 					),
 				],
 			});

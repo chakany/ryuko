@@ -18,7 +18,7 @@ export default class SupportCommand extends Command {
 						title: "Support",
 						description: `Need help? Join my [Support Server](${this.client.config.supportInvite} "Join support server")`,
 					},
-					message
+					message,
 				),
 			],
 		});

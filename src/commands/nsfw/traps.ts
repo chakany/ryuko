@@ -24,7 +24,7 @@ export default class TrapsCommand extends Command {
 							url: request.media,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

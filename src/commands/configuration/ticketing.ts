@@ -24,11 +24,11 @@ export default class TicketingCommand extends Command {
 		});
 	}
 
-	async exec(message: Message, args: any): Promise<any> {
+	exec(message: Message, args: any) {
 		const enabled = this.client.settings.get(
 			message.guild!.id,
 			"tickets",
-			false
+			false,
 		);
 
 		switch (args.action) {
@@ -58,14 +58,14 @@ export default class TicketingCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"ticketRole",
-												null
+												null,
 											)
 												? `${roleMention(
 														this.client.settings.get(
 															message.guild!.id,
 															"ticketRole",
-															null
-														)
+															null,
+														),
 												  )}`
 												: "None"
 										}`,
@@ -76,19 +76,19 @@ export default class TicketingCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"ticketCategory",
-												null
+												null,
 											)
 												? `\`${this.client.settings.get(
 														message.guild!.id,
 														"ticketCategory",
-														null
+														null,
 												  )}\``
 												: "None"
 										}`,
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -102,7 +102,7 @@ export default class TicketingCommand extends Command {
 							{
 								title: `${this.client.emoji.greenCheck} Enabled Tickets`,
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -116,16 +116,16 @@ export default class TicketingCommand extends Command {
 							{
 								title: `${this.client.emoji.greenCheck} Disabled Tickets`,
 							},
-							message
+							message,
 						),
 					],
 				});
 				break;
-			case "role":
+			case "role": {
 				const oldRole = this.client.settings.get(
 					message.guild!.id,
 					"ticketRole",
-					null
+					null,
 				);
 
 				if (!args.value)
@@ -136,21 +136,21 @@ export default class TicketingCommand extends Command {
 									title: "Current Ticket Role",
 									description: oldRole
 										? `The current role for tickets is ${roleMention(
-												oldRole
+												oldRole,
 										  )}`
 										: "There is no current role for tickets",
 								},
-								message
+								message,
 							),
 						],
 					});
 				this.client.settings.set(
 					message.guild!.id,
 					"ticketRole",
-					args.value.id
+					args.value.id,
 				);
 
-				return message.channel.send({
+				message.channel.send({
 					embeds: [
 						this.embed(
 							{
@@ -170,16 +170,17 @@ export default class TicketingCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
 				break;
-			case "category":
+			}
+			case "category": {
 				const oldCategory = this.client.settings.get(
 					message.guild!.id,
 					"ticketCategory",
-					null
+					null,
 				);
 
 				if (!args.value)
@@ -192,17 +193,17 @@ export default class TicketingCommand extends Command {
 										? `The current category for tickets is \`${oldCategory}\``
 										: "There is no current category for tickets",
 								},
-								message
+								message,
 							),
 						],
 					});
 				this.client.settings.set(
 					message.guild!.id,
 					"ticketCategory",
-					args.value
+					args.value,
 				);
 
-				return message.channel.send({
+				message.channel.send({
 					embeds: [
 						this.embed(
 							{
@@ -222,10 +223,13 @@ export default class TicketingCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
+
+				break;
+			}
 		}
 	}
 }

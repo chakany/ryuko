@@ -13,7 +13,7 @@ export default class GuildDeleteListener extends Listener {
 		this.client.log.info(
 			`I was removed from guild "${guild.name}" that is owned by ${
 				(await this.client.users.fetch(guild.ownerId))?.tag
-			}`
+			}`,
 		);
 	}
 }

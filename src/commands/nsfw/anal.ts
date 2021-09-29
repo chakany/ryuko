@@ -24,7 +24,7 @@ export default class AnalCommand extends Command {
 							url: request.media,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

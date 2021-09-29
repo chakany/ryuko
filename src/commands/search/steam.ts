@@ -30,13 +30,13 @@ export default class SteamCommand extends Command {
 
 	private getProfile(id: string) {
 		return axios.get(
-			`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${this.client.config.steamApiKey}&steamids=${id}`
+			`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${this.client.config.steamApiKey}&steamids=${id}`,
 		);
 	}
 
 	private getIdFromVanityUrl(vanityUrl: string) {
 		return axios.get(
-			`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${this.client.config.steamApiKey}&vanityurl=${vanityUrl}`
+			`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${this.client.config.steamApiKey}&vanityurl=${vanityUrl}`,
 		);
 	}
 
@@ -51,7 +51,7 @@ export default class SteamCommand extends Command {
 				idObj = new steamid(vanityUrl.data.response.steamid);
 
 				const profile = await this.getProfile(
-					vanityUrl.data.response.steamid
+					vanityUrl.data.response.steamid,
 				);
 
 				data = profile.data.response.players[0];
@@ -61,7 +61,7 @@ export default class SteamCommand extends Command {
 						this.error(
 							message,
 							"An Error Occurred",
-							"I could not find that profile! Please check the spelling and try again."
+							"I could not find that profile! Please check the spelling and try again.",
 						),
 					],
 				});
@@ -74,7 +74,7 @@ export default class SteamCommand extends Command {
 			data = profile.data.response.players[0];
 		}
 
-		let status: string = "";
+		let status = "";
 
 		switch (data.personastate) {
 			case 0:
@@ -144,7 +144,7 @@ export default class SteamCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

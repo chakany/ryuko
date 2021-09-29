@@ -7,11 +7,11 @@ router.get("/", async function (req, res) {
 	res.status(200).send({
 		guilds: (await manager.fetchClientValues("guilds.cache.size")).reduce(
 			(acc: any, guildCount) => acc + guildCount,
-			0
+			0,
 		),
 		users: (await manager.fetchClientValues("users.cache.size")).reduce(
 			(acc: any, memberCount) => acc + memberCount,
-			0
+			0,
 		),
 		channels: (
 			await manager.fetchClientValues("channels.cache.size")

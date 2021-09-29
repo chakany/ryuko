@@ -27,12 +27,12 @@ export default class TicketCommand extends Command {
 							message.util?.parsed?.prefix
 						}${
 							this.handler.findCommand("ticketing").aliases[0]
-						}\` command!`
+						}\` command!`,
 					),
 				],
 			});
 
-		let perms: OverwriteResolvable[] = [
+		const perms: OverwriteResolvable[] = [
 			{
 				id: message.guild!.roles.everyone,
 				deny: ["VIEW_CHANNEL", "SEND_MESSAGES"],
@@ -50,7 +50,7 @@ export default class TicketCommand extends Command {
 		const roleToAdd = this.client.settings.get(
 			message.guild!.id,
 			"ticketRole",
-			null
+			null,
 		);
 
 		if (roleToAdd)
@@ -67,7 +67,7 @@ export default class TicketCommand extends Command {
 				`ticket-${message.author.username}`,
 				{
 					topic: `Opened on <t:${Math.round(
-						new Date().getTime() / 1000
+						new Date().getTime() / 1000,
 					)}:f> by ${message.member}`,
 					reason: `${
 						message.author.tag
@@ -76,31 +76,31 @@ export default class TicketCommand extends Command {
 					parent: this.client.settings.get(
 						message.guild!.id,
 						"ticketCategory",
-						undefined
+						undefined,
 					),
-				}
+				},
 			);
 		} catch (error) {
 			channel = await message.guild?.channels.create(
 				`ticket-${message.author.username}`,
 				{
 					topic: `Opened on <t:${Math.round(
-						new Date().getTime() / 1000
+						new Date().getTime() / 1000,
 					)}:f> by ${message.member}`,
 					reason: `${
 						message.author.tag
 					} opened a ticket on <t:${Math.round(
-						new Date().getTime() / 1000
+						new Date().getTime() / 1000,
 					)}:f>`,
 					permissionOverwrites: perms,
-				}
+				},
 			);
 		}
 
 		await this.client.db.addTicket(
 			message.guild!.id,
 			message.author.id,
-			channel!.id
+			channel!.id,
 		);
 
 		channel!.send({
@@ -124,7 +124,7 @@ export default class TicketCommand extends Command {
 							this.handler.findCommand("removemember").description
 						}`,
 					},
-					message
+					message,
 				),
 			],
 		});

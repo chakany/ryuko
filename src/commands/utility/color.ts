@@ -33,13 +33,13 @@ export default class ColorCommand extends Command {
 					this.error(
 						message,
 						"Invalid Arguments",
-						"You must provide a color!"
+						"You must provide a color!",
 					),
 				],
 			});
 
 		const loadMessage = await message.channel.send(
-			this.client.emoji.loading + "*Please wait..*"
+			this.client.emoji.loading + "*Please wait..*",
 		);
 
 		const image = await this._getImage(args.hexcode);
@@ -57,7 +57,7 @@ export default class ColorCommand extends Command {
 							url: "attachment://image.png",
 						},
 					},
-					message
+					message,
 				),
 			],
 			files: [attachment],

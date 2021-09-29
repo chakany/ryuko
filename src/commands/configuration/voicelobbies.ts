@@ -21,11 +21,11 @@ export default class VoiceLobbiesCommand extends Command {
 		});
 	}
 
-	async exec(message: Message, args: any) {
+	exec(message: Message, args: any) {
 		const enabled = this.client.settings.get(
 			message.guild!.id,
 			"voiceLobbies",
-			false
+			false,
 		);
 
 		switch (args.subcommand) {
@@ -55,21 +55,21 @@ export default class VoiceLobbiesCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"voiceLobbyChannel",
-												null
+												null,
 											)
 												? `${channelMention(
 														this.client.settings.get(
 															message.guild!.id,
 															"voiceLobbyChannel",
-															null
-														)
+															null,
+														),
 												  )}`
 												: "None"
 										}`,
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -80,7 +80,7 @@ export default class VoiceLobbiesCommand extends Command {
 					!this.client.settings.get(
 						message.guild!.id,
 						"voiceLobbyChannel",
-						null
+						null,
 					)
 				)
 					return message.channel.send({
@@ -88,7 +88,7 @@ export default class VoiceLobbiesCommand extends Command {
 							this.error(
 								message,
 								"Invalid Configuration",
-								`You must set a lobby voice channel first!\nUse \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel <channel>\` to set it`
+								`You must set a lobby voice channel first!\nUse \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel <channel>\` to set it`,
 							),
 						],
 					});
@@ -96,7 +96,7 @@ export default class VoiceLobbiesCommand extends Command {
 				this.client.settings.set(
 					message.guild!.id,
 					"voiceLobbies",
-					true
+					true,
 				);
 
 				message.channel.send({
@@ -105,7 +105,7 @@ export default class VoiceLobbiesCommand extends Command {
 							{
 								title: `${this.client.emoji.greenCheck} Enabled Voice Lobbies`,
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -115,7 +115,7 @@ export default class VoiceLobbiesCommand extends Command {
 				this.client.settings.set(
 					message.guild!.id,
 					"voiceLobbies",
-					false
+					false,
 				);
 
 				message.channel.send({
@@ -124,13 +124,13 @@ export default class VoiceLobbiesCommand extends Command {
 							{
 								title: `${this.client.emoji.greenCheck} Disabled Voice Lobbies`,
 							},
-							message
+							message,
 						),
 					],
 				});
 				break;
 
-			case "channel":
+			case "channel": {
 				const channel = args.channel;
 				if (!channel || channel.type !== "GUILD_VOICE")
 					return message.channel.send({
@@ -138,19 +138,19 @@ export default class VoiceLobbiesCommand extends Command {
 							this.error(
 								message,
 								"Invalid Arguments",
-								"That is not a Voice Channel!"
+								"That is not a Voice Channel!",
 							),
 						],
 					});
 				const oldChannel = this.client.settings.get(
 					message.guild!.id,
 					"voiceLobbyChannel",
-					null
+					null,
 				);
 				this.client.settings.set(
 					message.guild!.id,
 					"voiceLobbyChannel",
-					channel!.id
+					channel!.id,
 				);
 
 				message.channel.send({
@@ -175,11 +175,12 @@ export default class VoiceLobbiesCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
 				break;
+			}
 		}
 	}
 }

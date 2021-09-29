@@ -24,7 +24,7 @@ export default class MutesCommand extends Command {
 	async exec(message: Message, args: any): Promise<any> {
 		const mutes: never[] = await this.client.db.getAllMutes(
 			args.member.id,
-			message.guild!.id
+			message.guild!.id,
 		);
 
 		if (!mutes.length)
@@ -33,7 +33,7 @@ export default class MutesCommand extends Command {
 					this.error(
 						message,
 						"Invalid Member",
-						"That Member has no mutes!"
+						"That Member has no mutes!",
 					),
 				],
 			});
@@ -49,7 +49,7 @@ export default class MutesCommand extends Command {
 						}),
 					},
 				},
-				message
+				message,
 			),
 			array: mutes,
 			itemsPerPage: 6,

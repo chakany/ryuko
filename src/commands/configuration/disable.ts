@@ -19,12 +19,12 @@ export default class DisableCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		let toDisable = args.todisable;
+		const toDisable = args.todisable;
 
 		let oldSettings = this.client.settings.get(
 			message.guild!.id,
 			"disabledCommands",
-			null
+			null,
 		);
 
 		if (typeof oldSettings === "string")
@@ -35,13 +35,11 @@ export default class DisableCommand extends Command {
 				{
 					title: "Commands",
 				},
-				message
+				message,
 			);
 
 			let enabledCommands = "";
-			for (const [key, dvalue] of new Map(
-				message.util?.handler.categories!
-			)) {
+			for (const [key, dvalue] of new Map(this.handler.categories)) {
 				// For each category
 				for (const [key2, fvalue] of new Map(dvalue)) {
 					// For each command in that category
@@ -72,7 +70,7 @@ export default class DisableCommand extends Command {
 						this.error(
 							message,
 							"Invalid Argument",
-							"That command is already disabled!"
+							"That command is already disabled!",
 						),
 					],
 				});
@@ -86,7 +84,7 @@ export default class DisableCommand extends Command {
 			this.client.settings.set(
 				message.guild!.id,
 				"disabledCommands",
-				JSON.stringify(disabledCommands)
+				JSON.stringify(disabledCommands),
 			);
 			return message.channel.send({
 				embeds: [
@@ -94,7 +92,7 @@ export default class DisableCommand extends Command {
 						{
 							title: `${this.client.emoji.greenCheck} Disabled command: \`${toDisable.aliases[0]}\``,
 						},
-						message
+						message,
 					),
 				],
 			});
@@ -123,14 +121,14 @@ export default class DisableCommand extends Command {
 				this.client.settings.set(
 					message.guild!.id,
 					"disabledCommands",
-					JSON.stringify(commands)
+					JSON.stringify(commands),
 				);
 				const embed = this.embed(
 					{
 						title: `${this.client.emoji.greenCheck} Disabled category: \`${category.id}\``,
 						fields: [{ name: "Disabled", value: disabledCommands }],
 					},
-					message
+					message,
 				);
 
 				return message.channel.send({ embeds: [embed] });
@@ -140,7 +138,7 @@ export default class DisableCommand extends Command {
 						this.error(
 							message,
 							"Invalid Argument",
-							"You must provide a command or a category!"
+							"You must provide a command or a category!",
 						),
 					],
 				});

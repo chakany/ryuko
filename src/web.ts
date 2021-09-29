@@ -12,6 +12,7 @@ import Logger from "./struct/Logger";
 import Commands from "./routes/commands";
 import Stats from "./routes/stats";
 import Verify from "./routes/verify";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { port } = require("../config.json");
 
 const production = process.env.NODE_ENV === "production";
@@ -34,17 +35,17 @@ app.use("/verify", Verify);
 
 if (production) app.set("trust proxy", true);
 
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
 	// Log to console
-	log.error(error.stack);
+	log.error(error);
 
 	// Return error page
-	res.status(500).send({
-		message: "Internal Server Error",
-	});
+	res.sendStatus(500);
+
+	next(error);
 });
 
-export function start() {
+export function start(): void {
 	try {
 		server.listen(port, () => {
 			log.info(`Listening on port ${port}`);

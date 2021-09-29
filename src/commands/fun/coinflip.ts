@@ -20,7 +20,7 @@ export default class CoinflipCommand extends Command {
 							Math.random() < 0.5 ? "Heads" : "Tails"
 						}**!`,
 					},
-					message
+					message,
 				),
 			],
 		});

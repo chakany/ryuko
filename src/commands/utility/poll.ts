@@ -32,7 +32,7 @@ export default class PollCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"Please provide a question!"
+						"Please provide a question!",
 					),
 				],
 			});
@@ -42,7 +42,7 @@ export default class PollCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"Please provide a second choice!"
+						"Please provide a second choice!",
 					),
 				],
 			});
@@ -60,7 +60,7 @@ export default class PollCommand extends Command {
 						{ name: ":two:", value: "No", inline: true },
 					],
 				},
-				message
+				message,
 			);
 		else
 			pollEmbed = this.embed(
@@ -74,9 +74,9 @@ export default class PollCommand extends Command {
 						{ name: ":two:", value: args.choice2, inline: true },
 					],
 				},
-				message
+				message,
 			);
-		let pollmessage = message.channel.send({ embeds: [pollEmbed] });
+		const pollmessage = message.channel.send({ embeds: [pollEmbed] });
 		(await pollmessage).react("1️⃣");
 		(await pollmessage).react("2️⃣");
 		return;

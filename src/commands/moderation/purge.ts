@@ -35,7 +35,7 @@ export default class PurgeCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You must provide how many messages to delete!"
+						"You must provide how many messages to delete!",
 					),
 				],
 			});
@@ -45,7 +45,7 @@ export default class PurgeCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"You cannot purge more than 100 message at once!"
+						"You cannot purge more than 100 message at once!",
 					),
 				],
 			});
@@ -58,7 +58,7 @@ export default class PurgeCommand extends Command {
 		// Fetches the messages
 		if (victim) {
 			deleted = messages.filter(
-				(m) => m.author.id === victim.id || m.id === message.id
+				(m) => m.author.id === victim.id || m.id === message.id,
 			);
 		} else {
 			deleted = messages;
@@ -69,14 +69,14 @@ export default class PurgeCommand extends Command {
 					this.error(
 						message,
 						"Invalid Argument",
-						"I could not find that user!"
+						"I could not find that user!",
 					),
 				],
 			});
 
 		await (<TextChannel>message.channel)
 			.bulkDelete(
-				deleted // Bulk deletes all messages that have been fetched and are not older than 14 days (due to the Discord API)
+				deleted, // Bulk deletes all messages that have been fetched and are not older than 14 days (due to the Discord API)
 			)
 			.catch((error) => {
 				throw error;
@@ -85,7 +85,7 @@ export default class PurgeCommand extends Command {
 		const logchannel = this.client.settings.get(
 			message.guild!.id,
 			"loggingChannel",
-			null
+			null,
 		);
 		if (
 			!logchannel ||
@@ -116,7 +116,7 @@ export default class PurgeCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});
@@ -150,7 +150,7 @@ export default class PurgeCommand extends Command {
 							},
 						],
 					},
-					message
+					message,
 				),
 			],
 		});

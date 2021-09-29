@@ -24,7 +24,7 @@ export default class AssCommand extends Command {
 							url: request.media,
 						},
 					},
-					message
+					message,
 				),
 			],
 		});

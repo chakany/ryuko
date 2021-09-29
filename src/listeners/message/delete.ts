@@ -1,5 +1,5 @@
 import Listener from "../../struct/Listener";
-import { Message, MessageEmbed, TextChannel, User } from "discord.js";
+import { Message, User } from "discord.js";
 
 export default class DeleteListener extends Listener {
 	constructor() {
@@ -21,7 +21,7 @@ export default class DeleteListener extends Listener {
 		const deletionLog = fetchedLogs.entries.first();
 
 		// concatinate message content if it is too long
-		let content =
+		const content =
 			message.content.length > 1900
 				? message.content.substr(0, 1900) + "..."
 				: message.content;
@@ -56,7 +56,7 @@ export default class DeleteListener extends Listener {
 							],
 						},
 						message.author,
-						message.guild
+						message.guild,
 					),
 				],
 			});
@@ -98,7 +98,7 @@ export default class DeleteListener extends Listener {
 							],
 						},
 						message.author,
-						message.guild
+						message.guild,
 					),
 				],
 			});
@@ -132,7 +132,7 @@ export default class DeleteListener extends Listener {
 							],
 						},
 						message.author,
-						message.guild
+						message.guild,
 					),
 				],
 			});

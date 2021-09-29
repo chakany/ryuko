@@ -1,10 +1,5 @@
 import Listener from "../struct/Listener";
-import {
-	VoiceState,
-	Permissions,
-	CategoryChannelResolvable,
-	User,
-} from "discord.js";
+import { VoiceState, Permissions, CategoryChannelResolvable } from "discord.js";
 import { Collection } from "discord.js";
 
 export default class VoiceStateUpdateListener extends Listener {
@@ -48,7 +43,7 @@ export default class VoiceStateUpdateListener extends Listener {
 								],
 							},
 							before.member!.user,
-							before.guild
+							before.guild,
 						),
 					],
 				});
@@ -73,7 +68,7 @@ export default class VoiceStateUpdateListener extends Listener {
 										url: before.member!.user.displayAvatarURL(
 											{
 												dynamic: true,
-											}
+											},
 										),
 									},
 									footer: {},
@@ -89,7 +84,7 @@ export default class VoiceStateUpdateListener extends Listener {
 									],
 								},
 								before.member!.user,
-								before.guild
+								before.guild,
 							),
 						],
 					});
@@ -121,7 +116,7 @@ export default class VoiceStateUpdateListener extends Listener {
 								],
 							},
 							before.member!.user,
-							before.guild
+							before.guild,
 						),
 					],
 				});
@@ -151,7 +146,7 @@ export default class VoiceStateUpdateListener extends Listener {
 										url: after.member!.user.displayAvatarURL(
 											{
 												dynamic: true,
-											}
+											},
 										),
 									},
 									footer: {},
@@ -173,7 +168,7 @@ export default class VoiceStateUpdateListener extends Listener {
 									],
 								},
 								before.member!.user,
-								before.guild
+								before.guild,
 							),
 						],
 					});
@@ -211,7 +206,7 @@ export default class VoiceStateUpdateListener extends Listener {
 								],
 							},
 							before.member!.user,
-							before.guild
+							before.guild,
 						),
 					],
 				});
@@ -224,7 +219,7 @@ export default class VoiceStateUpdateListener extends Listener {
 			!this.client.settings.get(
 				before.guild.id,
 				"voiceLobbyChannel",
-				null
+				null,
 			)
 		)
 			return;
@@ -268,7 +263,7 @@ export default class VoiceStateUpdateListener extends Listener {
 						],
 					},
 				],
-			}
+			},
 		);
 
 		if (!this.client.voiceLobbies.get(before.guild.id))

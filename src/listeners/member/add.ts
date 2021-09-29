@@ -15,7 +15,7 @@ export default class MemberAddListener extends Listener {
 			await this.client.db.getCurrentUserMutes(member.id, member.guild.id)
 		) {
 			const muteRole = await member.guild.roles.fetch(
-				this.client.settings.get(member.guild.id, "muteRole", null)
+				this.client.settings.get(member.guild.id, "muteRole", null),
 			);
 
 			if (muteRole) member.roles.add(muteRole);
@@ -26,8 +26,8 @@ export default class MemberAddListener extends Listener {
 				this.client.settings.get(
 					member.guild.id,
 					"joinLeaveChannel",
-					null
-				)
+					null,
+				),
 			)) as TextChannel | undefined;
 
 			channel?.send(
@@ -35,10 +35,10 @@ export default class MemberAddListener extends Listener {
 					this.client.settings.get(
 						member.guild.id,
 						"joinMessage",
-						""
+						"",
 					),
-					member.user
-				)
+					member.user,
+				),
 			);
 		}
 
@@ -53,7 +53,7 @@ export default class MemberAddListener extends Listener {
 
 				// Look through the invites, find the one for which the uses went up.
 				const invite = guildInvites.find(
-					(i) => (ei?.get(i.code)?.uses || 0) < i.uses!
+					(i) => (ei?.get(i.code)?.uses || 0) < i.uses!,
 				);
 
 				return this.client.sendToLogChannel(member.guild, "member", {
@@ -93,7 +93,7 @@ export default class MemberAddListener extends Listener {
 								],
 							},
 							member.user,
-							member.guild
+							member.guild,
 						),
 					],
 				});
@@ -122,7 +122,7 @@ export default class MemberAddListener extends Listener {
 								],
 							},
 							member.user,
-							member.guild
+							member.guild,
 						),
 					],
 				});

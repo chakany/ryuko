@@ -28,12 +28,12 @@ export default class JoinLeaveCommand extends Command {
 		const enabled = this.client.settings.get(
 			message.guild!.id,
 			"joinLeave",
-			false
+			false,
 		);
 
 		switch (args.subcommand) {
 			default:
-				return message.channel.send({
+				message.channel.send({
 					embeds: [
 						this.embed(
 							{
@@ -66,14 +66,14 @@ export default class JoinLeaveCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"joinLeaveChannel",
-												null
+												null,
 											)
 												? `${channelMention(
 														this.client.settings.get(
 															message.guild!.id,
 															"joinLeaveChannel",
-															null
-														)
+															null,
+														),
 												  )}`
 												: "None"
 										}`,
@@ -84,12 +84,12 @@ export default class JoinLeaveCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"joinMessage",
-												null
+												null,
 											)
 												? `\`${this.client.settings.get(
 														message.guild!.id,
 														"joinMessage",
-														null
+														null,
 												  )}\``
 												: "None"
 										}`,
@@ -100,22 +100,23 @@ export default class JoinLeaveCommand extends Command {
 											this.client.settings.get(
 												message.guild!.id,
 												"leaveMessages",
-												null
+												null,
 											)
 												? `\`${this.client.settings.get(
 														message.guild!.id,
 														"leaveMessages",
-														null
+														null,
 												  )}\``
 												: "None"
 										}`,
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
+				break;
 
 			case "enable":
 				if (
@@ -123,8 +124,8 @@ export default class JoinLeaveCommand extends Command {
 						this.client.settings.get(
 							message.guild!.id,
 							"joinLeaveChannel",
-							null
-						)
+							null,
+						),
 					))
 				)
 					return message.channel.send({
@@ -132,7 +133,7 @@ export default class JoinLeaveCommand extends Command {
 							this.error(
 								message,
 								"Invalid Configuration",
-								`You must set a channel first!\nUse \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel <channel>\``
+								`You must set a channel first!\nUse \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} channel <channel>\``,
 							),
 						],
 					});
@@ -148,11 +149,11 @@ export default class JoinLeaveCommand extends Command {
 									this.client.settings.get(
 										message.guild!.id,
 										"joinLeaveChannel",
-										null
-									)
+										null,
+									),
 								)}`,
 							},
-							message
+							message,
 						),
 					],
 				});
@@ -167,19 +168,19 @@ export default class JoinLeaveCommand extends Command {
 							{
 								title: `${this.client.emoji.greenCheck} Disabled Join & Leave Messages`,
 							},
-							message
+							message,
 						),
 					],
 				});
 				break;
-			case "channel":
+			case "channel": {
 				if (!args.input || typeof args.input == "string")
 					return message.channel.send({
 						embeds: [
 							this.error(
 								message,
 								"Invalid Arguments",
-								`That is not a valid Text Channel!`
+								`That is not a valid Text Channel!`,
 							),
 						],
 					});
@@ -187,13 +188,13 @@ export default class JoinLeaveCommand extends Command {
 				const oldChannel = this.client.settings.get(
 					message.guild!.id,
 					"joinLeaveChannel",
-					null
+					null,
 				);
 
 				this.client.settings.set(
 					message.guild!.id,
 					"joinLeaveChannel",
-					args.input.id
+					args.input.id,
 				);
 
 				message.channel.send({
@@ -216,17 +217,18 @@ export default class JoinLeaveCommand extends Command {
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
 				break;
+			}
 
-			case "join":
+			case "join": {
 				const oldValue = this.client.settings.get(
 					message.guild!.id,
 					"joinMessage",
-					""
+					"",
 				);
 
 				if (!args.input || typeof args.input !== "string")
@@ -244,12 +246,12 @@ export default class JoinLeaveCommand extends Command {
 											name: "Current Formatted",
 											value: replace(
 												oldValue,
-												message.author
+												message.author,
 											),
 										},
 									],
 								},
-								message
+								message,
 							),
 						],
 					});
@@ -257,7 +259,7 @@ export default class JoinLeaveCommand extends Command {
 				this.client.settings.set(
 					message.guild!.id,
 					"joinMessage",
-					args.input
+					args.input,
 				);
 
 				message.channel.send({
@@ -279,28 +281,29 @@ export default class JoinLeaveCommand extends Command {
 										name: "Before Formatted",
 										value: replace(
 											oldValue,
-											message.author
+											message.author,
 										),
 									},
 									{
 										name: "After Formatted",
 										value: replace(
 											args.input,
-											message.author
+											message.author,
 										),
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
 				break;
-			case "leave":
+			}
+			case "leave": {
 				const leaveValue = this.client.settings.get(
 					message.guild!.id,
 					"leaveMessage",
-					""
+					"",
 				);
 
 				if (!args.input || typeof args.input !== "string")
@@ -318,12 +321,12 @@ export default class JoinLeaveCommand extends Command {
 											name: "Current Formatted",
 											value: replace(
 												leaveValue,
-												message.author
+												message.author,
 											),
 										},
 									],
 								},
-								message
+								message,
 							),
 						],
 					});
@@ -331,7 +334,7 @@ export default class JoinLeaveCommand extends Command {
 				this.client.settings.set(
 					message.guild!.id,
 					"leaveMessage",
-					args.input
+					args.input,
 				);
 
 				message.channel.send({
@@ -353,22 +356,24 @@ export default class JoinLeaveCommand extends Command {
 										name: "Before Formatted",
 										value: replace(
 											leaveValue,
-											message.author
+											message.author,
 										),
 									},
 									{
 										name: "After Formatted",
 										value: replace(
 											args.input,
-											message.author
+											message.author,
 										),
 									},
 								],
 							},
-							message
+							message,
 						),
 					],
 				});
+				break;
+			}
 		}
 	}
 }

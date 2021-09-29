@@ -1,5 +1,5 @@
 import Listener from "../../struct/Listener";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class MessageCreateListener extends Listener {
 	constructor() {
@@ -20,7 +20,7 @@ export default class MessageCreateListener extends Listener {
 			const prefix = this.client.settings.get(
 				message.guild!.id,
 				"prefix",
-				this.client.config.prefix
+				this.client.config.prefix,
 			);
 
 			return message.channel.send(
@@ -31,7 +31,7 @@ export default class MessageCreateListener extends Listener {
 						this.client.commandHandler.findCommand("prefix")
 							.aliases[0]
 					}` +
-					"` command."
+					"` command.",
 			);
 		}
 
@@ -44,7 +44,7 @@ export default class MessageCreateListener extends Listener {
 			this.client.settings.set(
 				message.guild!.id,
 				"someDumbFuckingSetting",
-				true
+				true,
 			);
 
 		// Test against filter
@@ -53,24 +53,28 @@ export default class MessageCreateListener extends Listener {
 				this.client.settings.get(
 					message.guild!.id,
 					"filterBypass",
-					false
+					false,
 				) &&
 				(message.member!.roles.cache.has(
-					this.client.settings.get(message.guild!.id, "modRole", null)
+					this.client.settings.get(
+						message.guild!.id,
+						"modRole",
+						null,
+					),
 				) ||
 					message.member!.roles.cache.has(
 						this.client.settings.get(
 							message.guild!.id,
 							"adminRole",
-							null
-						)
+							null,
+						),
 					) ||
 					message.member!.permissions.has("MANAGE_MESSAGES"))
 			)
 				return;
 
 			const filteredPhrases = await this.client.db.getFilteredPhrases(
-				message.guild!.id
+				message.guild!.id,
 			);
 
 			const phrases = filteredPhrases.map((col: any) => col.phrase);
@@ -78,7 +82,7 @@ export default class MessageCreateListener extends Listener {
 			if (phrases.length) {
 				const regex = new RegExp(
 					`^(.*?(${phrases.join("|")})[^$]*)$`,
-					"gim"
+					"gim",
 				);
 
 				if (regex.test(message.content)) {
@@ -86,7 +90,7 @@ export default class MessageCreateListener extends Listener {
 					message.author.send(
 						`Please do not use filtered words in **${
 							message.guild!.name
-						}**!`
+						}**!`,
 					);
 				}
 			}

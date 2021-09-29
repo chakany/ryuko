@@ -1,13 +1,8 @@
 import express from "express";
-import {
-	AkairoClient,
-	CommandHandler,
-	Category,
-	MissingPermissionSupplier,
-} from "@ryukobot/discord-akairo";
+import { AkairoClient, CommandHandler } from "@ryukobot/discord-akairo";
 import Command from "../struct/Command";
-import { PermissionResolvable } from "discord.js";
 import path from "path";
+import { Command as ICommand } from "./commands.d";
 
 const router = express.Router();
 
@@ -28,24 +23,6 @@ class Client extends AkairoClient {
 }
 
 const client = new Client();
-
-type Permissions =
-	| PermissionResolvable
-	| PermissionResolvable[]
-	| MissingPermissionSupplier;
-
-interface ICommand {
-	id: string;
-	aliases: string[];
-	description: string;
-	ownerOnly: boolean;
-	adminOnly: boolean;
-	modOnly: boolean;
-	clientPermissions?: Permissions;
-	userPermissions?: Permissions;
-	cooldown: string | null;
-	usage: string;
-}
 
 router.get("/", async function (req, res) {
 	const categories: { [id: string]: ICommand[] } = {};

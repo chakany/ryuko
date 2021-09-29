@@ -16,8 +16,8 @@ export default class MemberLeaveListener extends Listener {
 				this.client.settings.get(
 					member.guild.id,
 					"joinLeaveChannel",
-					null
-				)
+					null,
+				),
 			)) as TextChannel | undefined;
 
 			channel?.send(
@@ -25,10 +25,10 @@ export default class MemberLeaveListener extends Listener {
 					this.client.settings.get(
 						member.guild.id,
 						"leaveMessage",
-						""
+						"",
 					),
-					member.user
-				)
+					member.user,
+				),
 			);
 		}
 
@@ -59,7 +59,7 @@ export default class MemberLeaveListener extends Listener {
 							],
 						},
 						member.user,
-						member.guild
+						member.guild,
 					),
 				],
 			});
@@ -93,7 +93,7 @@ export default class MemberLeaveListener extends Listener {
 							],
 						},
 						member.user,
-						member.guild
+						member.guild,
 					),
 				],
 			});
@@ -117,7 +117,7 @@ export default class MemberLeaveListener extends Listener {
 							],
 						},
 						member.user,
-						member.guild
+						member.guild,
 					),
 				],
 			});
