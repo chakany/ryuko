@@ -76,6 +76,7 @@
 		"topgg-autoposter": "^2.0.0"
 	},
 	"resolutions": {
+		"discord.js@13.1.0": "patch:discord.js@npm:13.1.0#.yarn/patches/discord.js-npm-13.1.0-8440b31213",
 		"lavasfy@2.2.1": "patch:lavasfy@npm:2.2.1#.yarn/patches/lavasfy-npm-2.2.1-94e280387f"
 	}
 }
