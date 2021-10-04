@@ -41,25 +41,15 @@ export default class PlayCommand extends Command {
 			guild!.paused = false;
 			return guild!.player?.setPaused(false);
 		} else if (!args.song)
-			return message.channel.send({
-				embeds: [
-					this.error(
-						message,
-						"Invalid Arguments",
-						"You must provide a search query, or a URL!",
-					),
-				],
-			});
-		else if (message.member!.voice.channelId == null)
-			return message.channel.send({
-				embeds: [
-					this.error(
-						message,
-						"Invalid Usage",
-						"You must join a voice channel first!",
-					),
-				],
-			});
+		else if (!message.member!.voice.channelId)
+			return message.channel.send(
+				this.client.error(
+					message,
+					this,
+					"Invalid Usage",
+					"You must join a voice channel first!"
+				)
+			);
 		else if (
 			queue.get(message.guild!.id) &&
 			queue.get(message.guild!.id)?.player?.connection.channelId !==
@@ -265,10 +255,33 @@ export default class PlayCommand extends Command {
 			player.playTrack(guildQueue.tracks[0]);
 			guildQueue.paused = false;
 
+			let previousFailed = "";
+
 			player.on("end", (reason) => {
-				if (!guildQueue.loop) guildQueue.tracks.shift();
-				if (guildQueue.tracks[0])
-					return player.playTrack(guildQueue.tracks[0]);
+				switch (reason.reason) {
+					case "LOAD_FAILED":
+						const fromTracks = guildQueue.tracks.find(
+							(track) => track.track == reason.track
+						);
+
+						if (fromTracks && reason.track != previousFailed) {
+							previousFailed = reason.track;
+							return player.playTrack(fromTracks);
+						}
+					case "STOPPED":
+					case "CLEANUP":
+					case "FINISHED":
+						if (!guildQueue.loop) guildQueue.tracks.shift();
+						if (guildQueue.tracks[0])
+							return player.playTrack(guildQueue.tracks[0]);
+						break;
+				}
+
+				player.connection.disconnect();
+				return queue.delete(message.guild!.id);
+			});
+
+			player.on("closed", (data) => {
 				player.connection.disconnect();
 				return queue.delete(message.guild!.id);
 			});
@@ -284,16 +297,16 @@ export default class PlayCommand extends Command {
 				return queue.delete(message.guild!.id);
 			});
 
-			player.on("exception", (reason: any) => {
-				message.channel.send({
-					embeds: [
-						this.error(
-							message,
-							"An error occurred",
-							`\`\`\`${reason.exception.message}\n${reason.exception.cause}\`\`\``,
-						),
-					],
-				});
+			player.on("exception", (reason) => {
+				if (reason.track == previousFailed) {
+					return message.channel.send(
+						`${this.client.emoji.redX} \`${reason.exception.message}\` - Skipping...`
+					);
+				}
+
+				message.channel.send(
+					`${this.client.emoji.redX} \`${reason.exception.message}\` - Retrying...`
+				);
 			});
 
 			return sentMessage.edit({
