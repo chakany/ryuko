@@ -64,18 +64,18 @@ export default class VerificationCommand extends Command {
 												? this.client.emoji.greenCheck +
 												  " "
 												: ""
-										}\`strict\` Ban all alternate accounts\n${
+										}\`strict\` Ban all alts & Members using a VPN/Proxy\n${
 											level == "medium"
 												? this.client.emoji.greenCheck +
 												  " "
 												: ""
-										}\`medium\` Ban all alternate accounts that have an active punishment (like mute, or ban)\n
+										}\`medium\` Ban all alts that have an active punishment (like mute, or ban) & Members using a VPN/Proxy\n
 										${
 											level == "low"
 												? this.client.emoji.greenCheck +
 												  " "
 												: ""
-										}\`low\` Take no action against alternate accounts, use this if you only want to present a CAPTCHA to keep out bots.`,
+										}\`low\` Take no action against alts and Members using a VPN/Proxy, use this if you only want to present a CAPTCHA to keep out bots.`,
 									},
 									{
 										name: `\`role <role>\``,
@@ -182,7 +182,7 @@ export default class VerificationCommand extends Command {
 														  " "
 														: ""
 												}\`strict\``,
-												value: "Ban all alternate accounts",
+												value: "Ban all alts & Members using a VPN/Proxy",
 											},
 											{
 												name: `${
@@ -192,7 +192,7 @@ export default class VerificationCommand extends Command {
 														  " "
 														: ""
 												}\`medium\``,
-												value: "Ban all alternate accounts that have an active punishment (like mute, or ban)",
+												value: "Ban all alts that have an active punishment (like mute, or ban) & Members using a VPN/Proxy",
 											},
 											{
 												name: `${
@@ -202,7 +202,7 @@ export default class VerificationCommand extends Command {
 														  " "
 														: ""
 												}\`low\``,
-												value: "Take no action against alternate accounts, use this if you only want to present a CAPTCHA to users",
+												value: "Take no action against alts and Members using a VPN/Proxy, use this if you only want to present a CAPTCHA to users",
 											},
 										],
 									},

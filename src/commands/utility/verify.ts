@@ -136,6 +136,143 @@ export default class VerifyCommand extends Command {
 					],
 				});
 				await message.member!.roles.add(verifiedRole);
+			} else if (call.message == "vpn") {
+				switch (level) {
+					case "strict": {
+						message.member?.ban({
+							reason: `Using a VPN/Proxy`,
+						});
+						sentMessage.edit({
+							embeds: [
+								this.embed(
+									{
+										title: "Banned from Server",
+										description: `Using a VPN/Proxy in **${
+											message.guild!.name
+										}** is prohibited. If you believe this is an error, please contact the server owner.`,
+									},
+									message,
+								),
+							],
+						});
+
+						this.client.sendToLogChannel(message.guild!, "member", {
+							embeds: [
+								this.embed(
+									{
+										title: "Member Verification Failed",
+										description:
+											"A VPN/Proxy was detected, they have been banned.",
+										thumbnail: {
+											url: message.author.displayAvatarURL(
+												{
+													dynamic: true,
+												},
+											),
+										},
+										footer: {},
+										fields: [
+											{
+												name: "Member",
+												value: message.member!.toString(),
+												inline: true,
+											},
+										],
+									},
+									message,
+								),
+							],
+						});
+						break;
+					}
+					case "medium": {
+						message.member?.ban({
+							reason: `Using a VPN/Proxy`,
+						});
+						sentMessage.edit({
+							embeds: [
+								this.embed(
+									{
+										title: "Banned from Server",
+										description: `Using a VPN/Proxy in **${
+											message.guild!.name
+										}** is prohibited. If you believe this is an error, please contact the server owner.`,
+									},
+									message,
+								),
+							],
+						});
+
+						this.client.sendToLogChannel(message.guild!, "member", {
+							embeds: [
+								this.embed(
+									{
+										title: "Member Verification Failed",
+										description:
+											"A VPN/Proxy was detected, they have been banned.",
+										thumbnail: {
+											url: message.author.displayAvatarURL(
+												{
+													dynamic: true,
+												},
+											),
+										},
+										footer: {},
+										fields: [
+											{
+												name: "Member",
+												value: message.member!.toString(),
+												inline: true,
+											},
+										],
+									},
+									message,
+								),
+							],
+						});
+						break;
+					}
+					case "low": {
+						await message.member!.roles.add(verifiedRole);
+						sentMessage.edit({
+							embeds: [
+								this.embed(
+									{
+										title: "Verified Successfully",
+										description: `Welcome to **${
+											message.guild!.name
+										}**! Enjoy your stay!`,
+									},
+									message,
+								),
+							],
+						});
+
+						this.client.sendToLogChannel(message.guild!, "member", {
+							embeds: [
+								this.embed(
+									{
+										title: "Member Verified",
+										thumbnail: {
+											url: message.author.displayAvatarURL(
+												{ dynamic: true },
+											),
+										},
+										footer: {},
+										fields: [
+											{
+												name: "Member",
+												value: message.member!.toString(),
+											},
+										],
+									},
+									message,
+								),
+							],
+						});
+						break;
+					}
+				}
 			} else if (call.message == "alt") {
 				switch (level) {
 					case "strict": {
@@ -146,7 +283,7 @@ export default class VerifyCommand extends Command {
 							embeds: [
 								this.embed(
 									{
-										title: "Banned from Guild",
+										title: "Banned from Server",
 										description: `Using alternate accounts in **${
 											message.guild!.name
 										}** is prohibited. If you believe this is an error, please contact the server owner.`,
@@ -210,7 +347,7 @@ export default class VerifyCommand extends Command {
 								embeds: [
 									this.embed(
 										{
-											title: "Banned from Guild",
+											title: "Banned from Server",
 											description: `Evading punishments in **${
 												message.guild!.name
 											}** is prohibited. If you believe this is an error, please contact the server owner.`,
