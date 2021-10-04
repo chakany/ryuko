@@ -1,6 +1,6 @@
 import Listener from "../struct/Listener";
 import Client from "../struct/Client";
-import { ActivityType } from "discord.js";
+import { ActivityType, Collection } from "discord.js";
 import axios from "axios";
 import moment from "moment";
 import { setMute } from "../utils/command";
@@ -14,13 +14,30 @@ export default class ReadyListener extends Listener {
 	}
 
 	async exec() {
+		// Output total modules loaded for each handler
+		this.client.log.info(
+			`Loaded ${this.client.commandHandler.modules.size} Commands`,
+		);
+		this.client.log.info(
+			`Loaded ${this.client.listenerHandler.modules.size} Listeners`,
+		);
+		this.client.log.info(
+			`Loaded ${this.client.inhibitorHandler.modules.size} Inhibitors`,
+		);
+
 		// Schedule Jobs
 		this.client.log.info("Scheduling Jobs");
 
 		this.client.guilds.cache.forEach(async (g) => {
-			// Get all guild invites, save to collection
+			// Get all guild invites, save to collection()
 			g.invites.fetch().then((guildInvites) => {
-				this.client.invites.set(g.id, guildInvites);
+				const invites = new Collection<string, number>();
+
+				for (const [key, invite] of guildInvites) {
+					invites.set(key, invite.uses?.valueOf() || 0);
+				}
+
+				this.client.invites.set(g.id, invites);
 			});
 
 			// Get all members that are muted, check if they are still muted

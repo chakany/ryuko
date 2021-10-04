@@ -65,7 +65,7 @@ export default class RyukoClient extends AkairoClient {
 	>;
 	public jobs: { mutes: Collection<string, Collection<string, Job>> };
 	public starboardMessages: Collection<string, Message>;
-	public invites: Collection<string, Collection<string, Invite>>;
+	public invites: Collection<string, Collection<string, number>>;
 	public commandHandler: CommandHandler;
 	public inhibitorHandler: InhibitorHandler;
 	public listenerHandler: ListenerHandler;

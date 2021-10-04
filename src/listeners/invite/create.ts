@@ -13,8 +13,8 @@ export default class InviteCreateListener extends Listener {
 		if (!this.client.invites.has(invite.guild!.id))
 			this.client.invites.set(invite.guild!.id, new Collection());
 
-		(<Collection<string, Invite>>(
-			this.client.invites.get(invite.guild!.id)
-		)).set(invite.code, invite);
+		this.client.invites
+			.get(invite.guild!.id)
+			?.set(invite.code, invite.uses?.valueOf() || 0);
 	}
 }

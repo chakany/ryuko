@@ -1,5 +1,5 @@
 import Listener from "../../struct/Listener";
-import { Guild } from "discord.js";
+import { Guild, Collection } from "discord.js";
 
 export default class GuildCreateListener extends Listener {
 	constructor() {
@@ -11,7 +11,13 @@ export default class GuildCreateListener extends Listener {
 
 	async exec(guild: Guild) {
 		guild.invites.fetch().then((guildInvites) => {
-			this.client.invites.set(guild.id, guildInvites);
+			const invites = new Collection<string, number>();
+
+			for (const [key, invite] of guildInvites) {
+				invites.set(key, invite.uses?.valueOf() || 0);
+			}
+
+			this.client.invites.set(guild.id, invites);
 		});
 
 		this.client.log.info(
