@@ -51,7 +51,7 @@ export default class PlayCommand extends Command {
 					"You must provide a search query, or a URL!"
 				)
 			);
-		else if (message.member!.voice.channelID == null)
+		else if (!message.member!.voice.channelID)
 			return message.channel.send(
 				this.client.error(
 					message,
@@ -264,10 +264,33 @@ export default class PlayCommand extends Command {
 			player.playTrack(guildQueue.tracks[0]);
 			guildQueue.paused = false;
 
+			let previousFailed = "";
+
 			player.on("end", (reason) => {
-				if (!guildQueue.loop) guildQueue.tracks.shift();
-				if (guildQueue.tracks[0])
-					return player.playTrack(guildQueue.tracks[0]);
+				switch (reason.reason) {
+					case "LOAD_FAILED":
+						const fromTracks = guildQueue.tracks.find(
+							(track) => track.track == reason.track
+						);
+
+						if (fromTracks && reason.track != previousFailed) {
+							previousFailed = reason.track;
+							return player.playTrack(fromTracks);
+						}
+					case "STOPPED":
+					case "CLEANUP":
+					case "FINISHED":
+						if (!guildQueue.loop) guildQueue.tracks.shift();
+						if (guildQueue.tracks[0])
+							return player.playTrack(guildQueue.tracks[0]);
+						break;
+				}
+
+				player.disconnect();
+				return queue.delete(message.guild!.id);
+			});
+
+			player.on("closed", (data) => {
 				player.disconnect();
 				return queue.delete(message.guild!.id);
 			});
@@ -286,14 +309,15 @@ export default class PlayCommand extends Command {
 				return queue.delete(message.guild!.id);
 			});
 
-			player.on("trackException", (reason: any) => {
+			player.on("trackException", (reason) => {
+				if (reason.track == previousFailed) {
+					return message.channel.send(
+						`${this.client.emoji.redX} \`${reason.exception.message}\` - Skipping...`
+					);
+				}
+
 				message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"An error occurred",
-						`\`\`\`${reason.exception.message}\n${reason.exception.cause}\`\`\``
-					)
+					`${this.client.emoji.redX} \`${reason.exception.message}\` - Retrying...`
 				);
 			});
 
