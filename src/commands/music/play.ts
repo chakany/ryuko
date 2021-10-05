@@ -41,15 +41,25 @@ export default class PlayCommand extends Command {
 			guild!.paused = false;
 			return guild!.player?.setPaused(false);
 		} else if (!args.song)
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You must provide a search query, or a URL!",
+					),
+				],
+			});
 		else if (!message.member!.voice.channelId)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Usage",
-					"You must join a voice channel first!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Usage",
+						"You must join a voice channel first!",
+					),
+				],
+			});
 		else if (
 			queue.get(message.guild!.id) &&
 			queue.get(message.guild!.id)?.player?.connection.channelId !==
@@ -259,15 +269,13 @@ export default class PlayCommand extends Command {
 
 			player.on("end", (reason) => {
 				switch (reason.reason) {
-					case "LOAD_FAILED":
-						const fromTracks = guildQueue.tracks.find(
-							(track) => track.track == reason.track
-						);
-
-						if (fromTracks && reason.track != previousFailed) {
+					case "LOAD_FAILED": {
+						if (reason.track && reason.track != previousFailed) {
 							previousFailed = reason.track;
-							return player.playTrack(fromTracks);
+							return player.playTrack(reason.track);
 						}
+					}
+					// eslint-disable-next-line no-fallthrough
 					case "STOPPED":
 					case "CLEANUP":
 					case "FINISHED":
@@ -297,15 +305,19 @@ export default class PlayCommand extends Command {
 				return queue.delete(message.guild!.id);
 			});
 
-			player.on("exception", (reason) => {
+			player.on("exception", (reason: any) => {
 				if (reason.track == previousFailed) {
 					return message.channel.send(
-						`${this.client.emoji.redX} \`${reason.exception.message}\` - Skipping...`
+						`${this.client.emoji.redX} \`${
+							reason.exception?.message || "Unknown"
+						}\` - Skipping...`,
 					);
 				}
 
 				message.channel.send(
-					`${this.client.emoji.redX} \`${reason.exception.message}\` - Retrying...`
+					`${this.client.emoji.redX} \`${
+						reason.exception?.message || "Unknown"
+					}\` - Retrying...`,
 				);
 			});
 
