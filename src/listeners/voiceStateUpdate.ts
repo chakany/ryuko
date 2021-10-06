@@ -79,7 +79,9 @@ export default class VoiceStateUpdateListener extends Listener {
 										},
 										{
 											name: "Channel",
-											value: before.channel.toString(),
+											value:
+												before.channel?.toString() ||
+												"Unknown",
 										},
 									],
 								},
@@ -111,7 +113,9 @@ export default class VoiceStateUpdateListener extends Listener {
 									},
 									{
 										name: "Channel",
-										value: before.channel.toString(),
+										value:
+											before.channel?.toString() ||
+											"Unknown",
 									},
 								],
 							},
@@ -157,7 +161,9 @@ export default class VoiceStateUpdateListener extends Listener {
 										},
 										{
 											name: "From",
-											value: before.channel.toString(),
+											value:
+												before.channel?.toString() ||
+												"Unknown",
 											inline: true,
 										},
 										{
@@ -195,7 +201,9 @@ export default class VoiceStateUpdateListener extends Listener {
 									},
 									{
 										name: "From",
-										value: before.channel.toString(),
+										value:
+											before.channel?.toString() ||
+											"Unknown",
 										inline: true,
 									},
 									{
