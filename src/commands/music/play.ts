@@ -119,7 +119,6 @@ export default class PlayCommand extends Command {
 
 				switch (response?.loadType) {
 					case "TRACK_LOADED": {
-						console.log(response.tracks[0]);
 						guildQueue.tracks.push(
 							new ShoukakuTrack(response.tracks[0]),
 						);
