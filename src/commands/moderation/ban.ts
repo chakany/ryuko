@@ -1,6 +1,6 @@
 import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
-import { Message, GuildMember } from "discord.js";
+import { Message, GuildMember, User } from "discord.js";
 
 export default class BanCommand extends Command {
 	constructor() {
@@ -36,7 +36,7 @@ export default class BanCommand extends Command {
 				],
 			});
 
-		let user;
+		let user: User;
 
 		try {
 			user =
@@ -117,12 +117,12 @@ export default class BanCommand extends Command {
 						fields: [
 							{
 								name: "Member",
-								value: user,
+								value: user.toString(),
 								inline: true,
 							},
 							{
 								name: "Banned by",
-								value: message.member,
+								value: message.member!.toString(),
 								inline: true,
 							},
 							{
@@ -152,7 +152,7 @@ export default class BanCommand extends Command {
 						fields: [
 							{
 								name: "Member",
-								value: user!.toString(),
+								value: user.toString(),
 								inline: true,
 							},
 							{

@@ -240,7 +240,9 @@ export default class JoinLeaveCommand extends Command {
 									fields: [
 										{
 											name: "Current Unformatted",
-											value: oldValue,
+											value: oldValue
+												? `\`${oldValue}\``
+												: "None",
 										},
 										{
 											name: "Current Formatted",
@@ -270,7 +272,9 @@ export default class JoinLeaveCommand extends Command {
 								fields: [
 									{
 										name: "Before",
-										value: oldValue,
+										value: oldValue
+											? `\`${oldValue}\``
+											: "None",
 										inline: true,
 									},
 									{
@@ -279,10 +283,9 @@ export default class JoinLeaveCommand extends Command {
 									},
 									{
 										name: "Before Formatted",
-										value: replace(
-											oldValue,
-											message.author,
-										),
+										value: oldValue
+											? replace(oldValue, message.author)
+											: "None",
 									},
 									{
 										name: "After Formatted",
@@ -315,14 +318,18 @@ export default class JoinLeaveCommand extends Command {
 									fields: [
 										{
 											name: "Current Unformatted",
-											value: leaveValue,
+											value: leaveValue
+												? `\`${leaveValue}\``
+												: "None",
 										},
 										{
 											name: "Current Formatted",
-											value: replace(
-												leaveValue,
-												message.author,
-											),
+											value: leaveValue
+												? replace(
+														leaveValue,
+														message.author,
+												  )
+												: "None",
 										},
 									],
 								},
@@ -345,7 +352,9 @@ export default class JoinLeaveCommand extends Command {
 								fields: [
 									{
 										name: "Before",
-										value: leaveValue,
+										value: leaveValue
+											? `\`${leaveValue}\``
+											: "None",
 										inline: true,
 									},
 									{
@@ -354,10 +363,12 @@ export default class JoinLeaveCommand extends Command {
 									},
 									{
 										name: "Before Formatted",
-										value: replace(
-											leaveValue,
-											message.author,
-										),
+										value: leaveValue
+											? replace(
+													leaveValue,
+													message.author,
+											  )
+											: "None",
 									},
 									{
 										name: "After Formatted",
