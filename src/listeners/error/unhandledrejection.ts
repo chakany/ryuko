@@ -8,6 +8,6 @@ export default class UnhandledRejectionListener extends Listener {
 	}
 
 	exec(error: any) {
-		this.client.log.debug(error);
+		this.client.log.error(error);
 	}
 }
