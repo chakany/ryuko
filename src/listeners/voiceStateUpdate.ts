@@ -13,7 +13,14 @@ export default class VoiceStateUpdateListener extends Listener {
 	async exec(before: VoiceState, after: VoiceState) {
 		// wrap this in a function, we don't want to return lmao
 		await (async () => {
-			if (!this.client.settings.get(before.guild.id, "voiceLogs", false))
+			if (
+				!this.client.settings.get(
+					before.guild.id,
+					"voiceLogs",
+					false,
+				) ||
+				before.member?.user.bot
+			)
 				return;
 
 			if (!before.channel && after.channel) {
