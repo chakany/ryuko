@@ -33,14 +33,16 @@ import Trivia from "./Trivia";
 /* eslint-disable @typescript-eslint/no-var-requires */
 const config = require("../../config.json");
 const emojis = require("../../app/data/emojis.json");
+const { version } = require("../../package.json");
 /* eslint-enable @typescript-eslint/no-var-requires */
 
 const ShoukakuOptions = {
-	moveOnDisconnect: false,
-	resumable: false,
-	resumableTimeout: 30,
+	moveOnDisconnect: true,
+	resumable: true,
+	resumableTimeout: 120,
 	reconnectTries: 2,
 	restTimeout: 10000,
+	userAgent: `ryuko/${version}`,
 };
 
 export default class RyukoClient extends AkairoClient {
