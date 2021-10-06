@@ -17,7 +17,7 @@ export default class NpmCommand extends Command {
 		});
 	}
 
-	_getPackage(query: string): Promise<AxiosResponse> {
+	_getPackage(query: string): Promise<AxiosResponse<any>> {
 		return axios.get(`https://api.npms.io/v2/package/${query}`);
 	}
 

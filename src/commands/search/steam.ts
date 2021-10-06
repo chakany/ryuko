@@ -1,6 +1,6 @@
 import Command from "../../struct/Command";
 import { Message, MessageEmbed } from "discord.js";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import steamid from "steamid";
 
 export default class SteamCommand extends Command {
@@ -28,13 +28,13 @@ export default class SteamCommand extends Command {
 		}
 	}
 
-	private getProfile(id: string) {
+	private getProfile(id: string): Promise<AxiosResponse<any>> {
 		return axios.get(
 			`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${this.client.config.steamApiKey}&steamids=${id}`,
 		);
 	}
 
-	private getIdFromVanityUrl(vanityUrl: string) {
+	private getIdFromVanityUrl(vanityUrl: string): Promise<AxiosResponse<any>> {
 		return axios.get(
 			`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${this.client.config.steamApiKey}&vanityurl=${vanityUrl}`,
 		);

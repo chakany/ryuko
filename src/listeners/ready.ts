@@ -77,7 +77,10 @@ export default class ReadyListener extends Listener {
 		);
 
 		// Set Discord Status
-		const statuses =
+		const statuses: Array<{
+			type: Exclude<ActivityType, "CUSTOM">;
+			text: string;
+		}> =
 			process.env.NODE_ENV !== "production"
 				? [
 						{
@@ -105,7 +108,7 @@ export default class ReadyListener extends Listener {
 			else i++;
 
 			this.client.user!.setActivity(statuses[i].text, {
-				type: <ActivityType>statuses[i].type,
+				type: statuses[i].type,
 			});
 		}, 15000);
 

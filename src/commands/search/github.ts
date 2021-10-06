@@ -19,7 +19,7 @@ export default class GithubCommand extends Command {
 		});
 	}
 
-	async _getRepo(repo: string): Promise<AxiosResponse> {
+	_getRepo(repo: string): Promise<AxiosResponse<any>> {
 		return axios.get(githubUrl + `/repos/${repo}`, {
 			headers: {
 				Accept: "application/vnd.github.v3+json",

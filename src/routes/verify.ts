@@ -1,5 +1,5 @@
 import express from "express";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import bcrypt from "bcrypt";
 import Db from "../utils/db";
 import { DiscordTokenResponse } from "./verify.d";
@@ -17,7 +17,7 @@ const {
 } = require("../../config.json");
 
 async function getTokens(code: string): Promise<DiscordTokenResponse> {
-	const req = await axios.post(
+	const req: AxiosResponse<DiscordTokenResponse> = await axios.post(
 		"https://discord.com/api/oauth2/token",
 		new URLSearchParams({
 			client_id: clientID,
@@ -33,14 +33,17 @@ async function getTokens(code: string): Promise<DiscordTokenResponse> {
 }
 
 async function checkIp(ip: string): Promise<boolean> {
-	const req = await axios.get("https://check.getipintel.net/check.php", {
-		params: {
-			ip,
-			contact: "jack@chaker.net", // For status updates
-			flags: "b", // Quickly, matches better with vpns/proxys
-			format: "json",
+	const req: AxiosResponse<any> = await axios.get(
+		"https://check.getipintel.net/check.php",
+		{
+			params: {
+				ip,
+				contact: "jack@chaker.net", // For status updates
+				flags: "b", // Quickly, matches better with vpns/proxys
+				format: "json",
+			},
 		},
-	});
+	);
 
 	if (req.data.status == "success" && 0.8 <= parseFloat(req.data.result))
 		return true;
@@ -49,7 +52,7 @@ async function checkIp(ip: string): Promise<boolean> {
 }
 
 async function checkCaptcha(response: string): Promise<boolean> {
-	const req = await axios.post(
+	const req: AxiosResponse<any> = await axios.post(
 		"https://www.google.com/recaptcha/api/siteverify",
 		new URLSearchParams({
 			secret: recaptchaSecret,
@@ -89,11 +92,14 @@ router.get("/:state/:code", async (req, res) => {
 		});
 	}
 
-	const requestedUser = await axios.get("https://discord.com/api/users/@me", {
-		headers: {
-			authorization: `${tokens.token_type} ${tokens.access_token}`,
+	const requestedUser: AxiosResponse<any> = await axios.get(
+		"https://discord.com/api/users/@me",
+		{
+			headers: {
+				authorization: `${tokens.token_type} ${tokens.access_token}`,
+			},
 		},
-	});
+	);
 
 	if (requestedUser.data.id !== redisRes.userId) res.sendStatus(403);
 	else
