@@ -99,12 +99,12 @@ export default class JoinLeaveCommand extends Command {
 										value: `Change the message that will be sent when someone leaves\n**Current Phrase:** ${
 											this.client.settings.get(
 												message.guild!.id,
-												"leaveMessages",
+												"leaveMessage",
 												null,
 											)
 												? `\`${this.client.settings.get(
 														message.guild!.id,
-														"leaveMessages",
+														"leaveMessage",
 														null,
 												  )}\``
 												: "None"
@@ -246,10 +246,12 @@ export default class JoinLeaveCommand extends Command {
 										},
 										{
 											name: "Current Formatted",
-											value: replace(
-												oldValue,
-												message.author,
-											),
+											value: oldValue
+												? replace(
+														oldValue,
+														message.author,
+												  )
+												: "None",
 										},
 									],
 								},
@@ -278,14 +280,14 @@ export default class JoinLeaveCommand extends Command {
 										inline: true,
 									},
 									{
-										name: "After",
-										value: args.input,
-									},
-									{
 										name: "Before Formatted",
 										value: oldValue
 											? replace(oldValue, message.author)
 											: "None",
+									},
+									{
+										name: "After",
+										value: args.input,
 									},
 									{
 										name: "After Formatted",
@@ -358,10 +360,6 @@ export default class JoinLeaveCommand extends Command {
 										inline: true,
 									},
 									{
-										name: "After",
-										value: args.input,
-									},
-									{
 										name: "Before Formatted",
 										value: leaveValue
 											? replace(
@@ -369,6 +367,10 @@ export default class JoinLeaveCommand extends Command {
 													message.author,
 											  )
 											: "None",
+									},
+									{
+										name: "After",
+										value: args.input,
 									},
 									{
 										name: "After Formatted",
