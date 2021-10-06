@@ -20,16 +20,13 @@ export default class MemberLeaveListener extends Listener {
 				),
 			)) as TextChannel | undefined;
 
-			channel?.send(
-				replace(
-					this.client.settings.get(
-						member.guild.id,
-						"leaveMessage",
-						"",
-					),
-					member.user,
-				),
+			const leaveMessage = this.client.settings.get(
+				member.guild.id,
+				"leaveMessage",
+				null,
 			);
+
+			if (leaveMessage) channel?.send(replace(leaveMessage, member.user));
 		}
 
 		const fetchedLogs = await member.guild.fetchAuditLogs({

@@ -74,7 +74,7 @@ export default class StatsCommand extends Command {
 							{
 								name: "Akairo Version",
 								value: `\`v${
-									require("../../../node_modules/discord-akairo/package.json")
+									require("../../../node_modules/@ryukobot/discord-akairo/package.json")
 										.version
 								}\``,
 								inline: true,

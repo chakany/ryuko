@@ -31,16 +31,13 @@ export default class MemberAddListener extends Listener {
 				),
 			)) as TextChannel | undefined;
 
-			channel?.send(
-				replace(
-					this.client.settings.get(
-						member.guild.id,
-						"joinMessage",
-						"",
-					),
-					member.user,
-				),
+			const joinMessage = this.client.settings.get(
+				member.guild.id,
+				"joinMessage",
+				null,
 			);
+
+			if (joinMessage) channel?.send(replace(joinMessage, member.user));
 		}
 
 		const ei = this.client.invites.get(member.guild.id);
