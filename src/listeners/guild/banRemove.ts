@@ -1,5 +1,5 @@
 import Listener from "../../struct/Listener";
-import { Guild, User, TextChannel, MessageEmbed } from "discord.js";
+import { Guild, User, TextChannel } from "discord.js";
 
 export default class GuildBanRemoveListener extends Listener {
 	constructor() {

@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, MessageAttachment } from "discord.js";
+import { Message, MessageAttachment } from "discord.js";
 import axios, { AxiosResponse } from "axios";
 
 export default class ColorCommand extends Command {

@@ -1,4 +1,4 @@
-import { MessageEmbed, MessageEmbedOptions, User, Guild } from "discord.js";
+import { MessageEmbedOptions, User, Guild, MessageEmbed } from "discord.js";
 
 export default class Embed extends MessageEmbed {
 	constructor(options: MessageEmbedOptions, user: User, guild: Guild) {

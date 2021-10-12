@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, GuildMember } from "discord.js";
+import { Message, GuildMember } from "discord.js";
 
 export default class MemberinfoCommand extends Command {
 	constructor() {

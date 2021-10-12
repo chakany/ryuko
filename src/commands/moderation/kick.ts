@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, GuildMember, TextChannel } from "discord.js";
+import { Message, GuildMember, TextChannel } from "discord.js";
 
 export default class KickCommand extends Command {
 	constructor() {
@@ -100,32 +100,37 @@ export default class KickCommand extends Command {
 
 		this.client.sendToLogChannel(message.guild!, "member", {
 			embeds: [
-				new MessageEmbed({
-					title: "Member Kicked",
-					thumbnail: {
-						url: args.member.user.displayAvatarURL({
-							dynamic: true,
-						}),
+				this.embed(
+					{
+						title: "Member Kicked",
+						thumbnail: {
+							url: args.member.user.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
+						color: message.guild!.me?.displayHexColor,
+						timestamp: new Date(),
+						fields: [
+							{
+								name: "Member",
+								value: args.member.toString(),
+								inline: true,
+							},
+							{
+								name: "Kicked by",
+								value: message.member!.toString(),
+								inline: true,
+							},
+							{
+								name: "Reason",
+								value: args.reason
+									? args.reason
+									: "None Provided",
+							},
+						],
 					},
-					color: message.guild!.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
-						{
-							name: "Member",
-							value: args.member.toString(),
-							inline: true,
-						},
-						{
-							name: "Kicked by",
-							value: message.member!.toString(),
-							inline: true,
-						},
-						{
-							name: "Reason",
-							value: args.reason ? args.reason : "None Provided",
-						},
-					],
-				}),
+					message,
+				),
 			],
 		});
 	}

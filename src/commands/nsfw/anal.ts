@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import { get } from "reddit-grabber";
 
 export default class AnalCommand extends Command {

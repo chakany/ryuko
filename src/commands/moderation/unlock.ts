@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, TextChannel } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 
 export default class UnlockCommand extends Command {
 	constructor() {

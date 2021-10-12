@@ -1,5 +1,5 @@
 import Listener from "../../struct/Listener";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class MessageEditListener extends Listener {
 	constructor() {
@@ -37,36 +37,40 @@ export default class MessageEditListener extends Listener {
 		// Cast to please typescript
 		return this.client.sendToLogChannel(oldMessage.guild, "message", {
 			embeds: [
-				new MessageEmbed({
-					title: "Message Edited",
-					description: `[Jump to Message!](${oldMessage.url} "Jump to Message")`,
-					thumbnail: {
-						url: oldMessage.author.displayAvatarURL({
-							dynamic: true,
-						}),
+				this.embed(
+					{
+						title: "Message Edited",
+						description: `[Jump to Message!](${oldMessage.url} "Jump to Message")`,
+						thumbnail: {
+							url: oldMessage.author.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
+						footer: {},
+						fields: [
+							{
+								name: "Before",
+								value: _oldmessage,
+							},
+							{
+								name: "After",
+								value: _newmessage,
+							},
+							{
+								name: "Author",
+								value: oldMessage.author.toString(),
+								inline: true,
+							},
+							{
+								name: "Channel",
+								value: oldMessage.channel.toString(),
+								inline: true,
+							},
+						],
 					},
-					footer: {},
-					fields: [
-						{
-							name: "Before",
-							value: _oldmessage,
-						},
-						{
-							name: "After",
-							value: _newmessage,
-						},
-						{
-							name: "Author",
-							value: oldMessage.author.toString(),
-							inline: true,
-						},
-						{
-							name: "Channel",
-							value: oldMessage.channel.toString(),
-							inline: true,
-						},
-					],
-				}),
+					oldMessage.author,
+					oldMessage.guild,
+				),
 			],
 		});
 	}

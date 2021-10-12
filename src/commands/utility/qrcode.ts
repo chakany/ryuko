@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, MessageAttachment } from "discord.js";
+import { Message, MessageAttachment } from "discord.js";
 import qrcode from "qrcode";
 
 export default class QrcodeCommand extends Command {

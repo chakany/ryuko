@@ -1,10 +1,5 @@
 import Listener from "../../struct/Listener";
-import {
-	MessageReaction,
-	TextChannel,
-	Message,
-	MessageEmbed,
-} from "discord.js";
+import { MessageReaction, TextChannel, Message } from "discord.js";
 
 export default class MessageReactionAddListener extends Listener {
 	constructor() {
@@ -37,7 +32,7 @@ export default class MessageReactionAddListener extends Listener {
 			? message.embeds[0].description
 			: message.content;
 
-		const embed: MessageEmbed = this.embed(
+		const embed = this.embed(
 			{
 				title: "Jump to Message",
 				url: `https://discord.com/channels/${message.guild!.id}/${

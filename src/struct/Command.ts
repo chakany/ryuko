@@ -4,7 +4,7 @@ import {
 	ArgumentGenerator,
 } from "@ryukobot/discord-akairo";
 import { CommandOptions } from "./Command.d";
-import { Message, MessageEmbedOptions } from "discord.js";
+import { MessageEmbedOptions, Message } from "discord.js";
 import { generateUsage } from "../utils/command";
 import Embed from "./Embed";
 import Client from "./Client";

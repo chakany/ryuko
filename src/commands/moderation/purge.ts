@@ -1,6 +1,6 @@
 import Command from "../../struct/Command";
 import { TextChannel } from "discord.js";
-import { Message, MessageEmbed, Collection } from "discord.js";
+import { Message, Collection } from "discord.js";
 
 export default class PurgeCommand extends Command {
 	constructor() {

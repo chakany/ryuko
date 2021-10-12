@@ -1,6 +1,6 @@
 import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, Role } from "discord.js";
+import { Message, Role } from "discord.js";
 import { roleMention } from "@discordjs/builders";
 
 export default class VerificationCommand extends Command {

@@ -1,6 +1,6 @@
 import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, User } from "discord.js";
+import { Message, User } from "discord.js";
 
 export default class DisconnectCommand extends Command {
 	constructor() {

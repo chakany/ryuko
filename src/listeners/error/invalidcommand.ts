@@ -10,7 +10,7 @@ export default class InvalidCommandListener extends Listener {
 		});
 	}
 
-	async exec(message: Message) {
+	exec(message: Message) {
 		if (
 			!message.content.startsWith(
 				this.client.settings.get(
@@ -18,7 +18,13 @@ export default class InvalidCommandListener extends Listener {
 					"prefix",
 					this.client.config.prefix,
 				),
-			)
+			) ||
+			message.content ==
+				this.client.settings.get(
+					message.guild!.id,
+					"prefix",
+					this.client.config.prefix,
+				)
 		)
 			return true;
 		// When a non-existent command was ran try to use the levenshtein algorithm to find a close match.

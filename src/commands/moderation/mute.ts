@@ -2,7 +2,7 @@ import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
 import Client from "../../struct/Client";
 import { Moment } from "moment";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import { setMute } from "../../utils/command";
 
 export default class MuteCommand extends Command {

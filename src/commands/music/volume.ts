@@ -1,5 +1,4 @@
 import Command from "../../struct/Command";
-import { MessageEmbed } from "discord.js";
 import { Message } from "discord.js";
 
 export default class VolumeCommand extends Command {

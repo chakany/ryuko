@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, TextChannel } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 import crypto from "crypto";
 import ms from "ms";
 import moment from "moment";

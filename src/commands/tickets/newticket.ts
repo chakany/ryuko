@@ -1,10 +1,5 @@
 import Command from "../../struct/Command";
-import {
-	Message,
-	MessageEmbed,
-	OverwriteResolvable,
-	TextChannel,
-} from "discord.js";
+import { Message, OverwriteResolvable, TextChannel } from "discord.js";
 
 export default class TicketCommand extends Command {
 	constructor() {
