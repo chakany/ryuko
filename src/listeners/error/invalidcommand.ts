@@ -56,7 +56,7 @@ export default class InvalidCommandListener extends Listener {
 								message.util?.parsed?.prefix +
 								distances[0].cmd[0] +
 								"`" +
-								`](${this.client.config.siteUrl}/commands/${command.categoryID}#${command.id})?`,
+								`](${this.client.config.siteUrl}/commands#${command.id}-command)?`,
 							author: {
 								name: `❌ Error: ${message.util?.parsed?.alias}`,
 							},

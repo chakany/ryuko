@@ -90,7 +90,7 @@ export default class Command extends AkairoCommand {
 				},
 				author: {
 					name: `❌ Error: ${message.util?.parsed?.alias}`,
-					url: `${this.client.config.siteUrl}/commands/${this.categoryID}/${this.id}`,
+					url: `${this.client.config.siteUrl}/commands#${this.id}-category`,
 				},
 				fields: [
 					{

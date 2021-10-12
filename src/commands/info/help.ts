@@ -43,8 +43,8 @@ export default class HelpCommand extends Command {
 					title: `${this.client.user!.username}'s Commands`,
 					url: `${
 						this.client.config.siteUrl
-					}/commands/${this.handler.categories.firstKey()}`,
-					description: `Run \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} <category>\` to see all commands in a category.\nRun \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} <command>\` to view information about a command.\n\nNeed help? Join my [Support Server](${this.client.config.supportInvite} "Join support server") or read my [Wiki](${this.client.config.siteUrl}/wiki "Read Wiki")`,
+					}/commands#${this.handler.categories.firstKey()}-category`,
+					description: `Run \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} <category>\` to see all commands in a category.\nRun \`${message.util?.parsed?.prefix}${message.util?.parsed?.alias} <command>\` to view information about a command.\n\nNeed help? Join my [Support Server](${this.client.config.supportInvite} "Join support server") or read my [Documentation](${this.client.config.siteUrl}/docs "Read Documentation")`,
 					image: {
 						url: "https://camo.githubusercontent.com/f7fd8d93e6f7a4ccba321076f2599b0390d13bbbe621adfe8af15d908b36a822/68747470733a2f2f692e696d6775722e636f6d2f336e79336d387a2e6a7067",
 					},
@@ -56,9 +56,7 @@ export default class HelpCommand extends Command {
 					category.id,
 					`\`${prefix}${alias} ${category.id.toLowerCase()}\`\n[Learn More](${
 						this.client.config.siteUrl
-					}/commands/${category.id} "${
-						this.client.config.siteUrl
-					}/commands/${category.id}")`,
+					}/commands#${category.id}-cateogory "See this Category")`,
 					true,
 				);
 			}
@@ -128,7 +126,7 @@ export default class HelpCommand extends Command {
 			const embed = this.embed(
 				{
 					title: `${input.id} Category`,
-					url: `${this.client.config.siteUrl}/commands/${input.id}`,
+					url: `${this.client.config.siteUrl}/commands#${input.id}-category`,
 				},
 				message,
 			);
