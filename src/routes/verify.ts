@@ -72,6 +72,7 @@ router.get("/:state", async (req, res) => {
 	if (!redisRes.userId) return res.sendStatus(400);
 
 	res.status(200).send({
+		message: "REDIRECT",
 		redirectUri: new URL(
 			`https://discord.com/oauth2/authorize?client_id=${clientID}&redirect_uri=${siteUrl}/verify&response_type=code&scope=identify%20guilds&state=${req.params.state}`,
 		).toString(),
@@ -87,9 +88,7 @@ router.get("/:state/:code", async (req, res) => {
 	try {
 		tokens = await getTokens(req.params.code);
 	} catch (error) {
-		return res.status(500).send({
-			message: "Internal Server Error",
-		});
+		return res.sendStatus(500);
 	}
 
 	const requestedUser: AxiosResponse<any> = await axios.get(
@@ -104,6 +103,7 @@ router.get("/:state/:code", async (req, res) => {
 	if (requestedUser.data.id !== redisRes.userId) res.sendStatus(403);
 	else
 		res.status(200).send({
+			message: "CAPTCHA",
 			state: req.params.state,
 			id: redisRes.userId,
 			username: requestedUser.data.username,

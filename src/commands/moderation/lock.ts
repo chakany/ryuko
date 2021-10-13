@@ -57,7 +57,10 @@ export default class LockCommand extends Command {
 			],
 		});
 
-		setTimeout(() => signalMessage.delete(), 5000);
+		setTimeout(
+			() => Promise.all([signalMessage.delete(), message.delete()]),
+			5000,
+		);
 
 		this.client.sendToLogChannel(message.guild!, "guild", {
 			embeds: [

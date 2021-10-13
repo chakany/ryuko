@@ -82,17 +82,6 @@ export default class PurgeCommand extends Command {
 				throw error;
 			});
 
-		const logchannel = this.client.settings.get(
-			message.guild!.id,
-			"loggingChannel",
-			null,
-		);
-		if (
-			!logchannel ||
-			!this.client.settings.get(message.guild!.id, "logging", false)
-		)
-			return;
-
 		const tempMessage = await message.channel.send({
 			embeds: [
 				this.embed(
@@ -155,6 +144,9 @@ export default class PurgeCommand extends Command {
 			],
 		});
 
-		setTimeout(() => tempMessage.delete(), 5000);
+		setTimeout(
+			() => Promise.all([tempMessage.delete(), message.delete()]),
+			5000,
+		);
 	}
 }
