@@ -1,5 +1,5 @@
 import Listener from "../../struct/Listener";
-import { Guild, User, TextChannel } from "discord.js";
+import { GuildBan, User } from "discord.js";
 
 export default class GuildBanAddListener extends Listener {
 	constructor() {
@@ -9,8 +9,8 @@ export default class GuildBanAddListener extends Listener {
 		});
 	}
 
-	async exec(guild: Guild, user: User) {
-		const fetchedLogs = await guild.fetchAuditLogs({
+	async exec(ban: GuildBan) {
+		const fetchedLogs = await ban.guild.fetchAuditLogs({
 			limit: 1,
 			type: "MEMBER_BAN_ADD",
 		});
@@ -18,13 +18,13 @@ export default class GuildBanAddListener extends Listener {
 		const banLog = fetchedLogs.entries.first();
 
 		if (!banLog)
-			return this.client.sendToLogChannel(guild, "member", {
+			return this.client.sendToLogChannel(ban.guild, "member", {
 				embeds: [
 					this.embed(
 						{
 							title: "Member Banned",
 							thumbnail: {
-								url: user.displayAvatarURL({
+								url: ban.user.displayAvatarURL({
 									dynamic: true,
 								}),
 							},
@@ -32,29 +32,29 @@ export default class GuildBanAddListener extends Listener {
 							fields: [
 								{
 									name: "Member",
-									value: user.toString(),
+									value: ban.user.toString(),
 									inline: true,
 								},
 							],
 						},
-						user,
-						guild,
+						ban.user,
+						ban.guild,
 					),
 				],
 			});
 
 		const { executor, target } = banLog;
 
-		if (executor == guild.me?.user) return;
+		if (executor == ban.guild.me?.user) return;
 
-		if ((<User>target).id === user.id) {
-			return this.client.sendToLogChannel(guild, "member", {
+		if ((<User>target).id === ban.user.id) {
+			return this.client.sendToLogChannel(ban.guild, "member", {
 				embeds: [
 					this.embed(
 						{
 							title: "Member Banned",
 							thumbnail: {
-								url: user.displayAvatarURL({
+								url: ban.user.displayAvatarURL({
 									dynamic: true,
 								}),
 							},
@@ -62,7 +62,7 @@ export default class GuildBanAddListener extends Listener {
 							fields: [
 								{
 									name: "Member",
-									value: user.toString(),
+									value: ban.user.toString(),
 									inline: true,
 								},
 								{
@@ -78,19 +78,19 @@ export default class GuildBanAddListener extends Listener {
 								},
 							],
 						},
-						user,
-						guild,
+						ban.user,
+						ban.guild,
 					),
 				],
 			});
 		} else {
-			return this.client.sendToLogChannel(guild, "member", {
+			return this.client.sendToLogChannel(ban.guild, "member", {
 				embeds: [
 					this.embed(
 						{
 							title: "Member Banned",
 							thumbnail: {
-								url: user.displayAvatarURL({
+								url: ban.user.displayAvatarURL({
 									dynamic: true,
 								}),
 							},
@@ -98,13 +98,13 @@ export default class GuildBanAddListener extends Listener {
 							fields: [
 								{
 									name: "Member",
-									value: user.toString(),
+									value: ban.user.toString(),
 									inline: true,
 								},
 							],
 						},
-						user,
-						guild,
+						ban.user,
+						ban.guild,
 					),
 				],
 			});
