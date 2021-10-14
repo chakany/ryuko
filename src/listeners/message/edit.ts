@@ -10,14 +10,9 @@ export default class MessageEditListener extends Listener {
 	}
 
 	async exec(oldMessage: Message, newMessage: Message) {
-		// Stupid fucking checks
-		if (oldMessage.partial) await oldMessage.fetch();
-		if (newMessage.partial) await newMessage.fetch();
 		if (oldMessage.content === newMessage.content) return;
 		if (this.client.commandHandler.handleEdits)
 			this.client.commandHandler.handle(newMessage);
-
-		if (oldMessage.content === newMessage.content) return;
 		if (!oldMessage.guild) return;
 		if (oldMessage.author.discriminator === "0000") return;
 
@@ -34,7 +29,6 @@ export default class MessageEditListener extends Listener {
 				? newMessage.content.substr(0, 600) + "..."
 				: newMessage.content;
 
-		// Cast to please typescript
 		return this.client.sendToLogChannel(oldMessage.guild, "message", {
 			embeds: [
 				this.embed(
