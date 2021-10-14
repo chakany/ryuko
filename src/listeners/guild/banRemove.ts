@@ -10,8 +10,6 @@ export default class GuildBanRemoveListener extends Listener {
 	}
 
 	async exec(ban: GuildBan) {
-		if (ban.partial) await ban.fetch();
-
 		const fetchedLogs = await ban.guild.fetchAuditLogs({
 			limit: 1,
 			type: "MEMBER_BAN_REMOVE",
