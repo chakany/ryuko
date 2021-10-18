@@ -132,8 +132,8 @@ void (async function () {
 			shardArgs,
 		},
 	);
-
-	production ? AutoPoster(topgg_token, manager) : null;
+	// TODO: Comment before merging into master
+	// production ? AutoPoster(topgg_token, manager) : null;
 
 	manager.on("shardCreate", async (shard) => {
 		log.info(`Launched shard ${shard.id}`);
