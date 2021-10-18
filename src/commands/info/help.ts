@@ -52,9 +52,6 @@ export default class HelpCommand extends Command {
 						dynamic: true,
 					}),
 				},
-				image: {
-					url: "https://camo.githubusercontent.com/f7fd8d93e6f7a4ccba321076f2599b0390d13bbbe621adfe8af15d908b36a822/68747470733a2f2f692e696d6775722e636f6d2f336e79336d387a2e6a7067",
-				},
 			});
 			for (const [name, category] of this.handler.categories) {
 				embed.addField(
