@@ -12,7 +12,8 @@ import Db from "./utils/db";
 import Redis from "./utils/redis";
 import home from "./routes/home";
 import commands from "./routes/commands";
-import verify from "./routes/verify";
+// #FUCKDISCORD #FUCKFURRIES
+//import verify from "./routes/verify";
 import wiki from "./routes/wiki";
 
 const {
@@ -207,7 +208,7 @@ void (async function () {
 
 					app.use("/", home);
 					app.use("/commands", commands);
-					app.use("/verify", verify);
+					//app.use("/verify", verify);
 					app.use("/wiki", wiki);
 
 					app.use("/static", express.static("../app/static"));
