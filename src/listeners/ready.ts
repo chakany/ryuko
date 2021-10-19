@@ -106,18 +106,7 @@ export default class ReadyListener extends Listener {
 						},
 						{
 							type: "PLAYING",
-							text: `with ${(
-								await this.client.shard!.fetchClientValues(
-									"users.cache.size"
-								)
-							).reduce(
-								(acc, guildCount) => acc + guildCount,
-								0
-							)} members! | ${this.client.config.prefix}help`,
-						},
-						{
-							type: "PLAYING",
-							text: `https://ryuko.cc | ${this.client.config.prefix}help`,
+							text: `https://bizkitbot.com | ${this.client.config.prefix}help`,
 						},
 				  ];
 		let i = 0;
