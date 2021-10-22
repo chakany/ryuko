@@ -144,9 +144,6 @@ export default class PurgeCommand extends Command {
 			],
 		});
 
-		setTimeout(
-			() => Promise.all([tempMessage.delete(), message.delete()]),
-			5000,
-		);
+		setTimeout(() => tempMessage.delete(), 5000);
 	}
 }
