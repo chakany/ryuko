@@ -1,6 +1,6 @@
 {
 	"name": "@ryukobot/bot",
-	"version": "2.0.0-alpha",
+	"version": "2.0.0",
 	"main": "dist/index.js",
 	"private": true,
 	"repository": "https://github.com/ryukobot/bot",
