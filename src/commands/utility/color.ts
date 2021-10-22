@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, MessageAttachment } from "discord.js";
+import { Message, MessageAttachment } from "discord.js";
 import axios, { AxiosResponse } from "axios";
 
 export default class ColorCommand extends Command {
@@ -28,17 +28,18 @@ export default class ColorCommand extends Command {
 
 	async exec(message: Message, args: any): Promise<any> {
 		if (!args.hexcode)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Arguments",
-					"You must provide a color!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You must provide a color!",
+					),
+				],
+			});
 
 		const loadMessage = await message.channel.send(
-			this.client.emoji.loading + "*Please wait..*"
+			this.client.emoji.loading + "*Please wait..*",
 		);
 
 		const image = await this._getImage(args.hexcode);
@@ -48,20 +49,17 @@ export default class ColorCommand extends Command {
 		loadMessage.delete();
 
 		return message.channel.send({
-			embed: new MessageEmbed({
-				title: "Color",
-				color: message.guild?.me?.displayHexColor,
-				image: {
-					url: "attachment://image.png",
-				},
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			}),
+			embeds: [
+				this.embed(
+					{
+						title: "Color",
+						image: {
+							url: "attachment://image.png",
+						},
+					},
+					message,
+				),
+			],
 			files: [attachment],
 		});
 	}

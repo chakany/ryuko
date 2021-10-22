@@ -1,6 +1,6 @@
 import Command from "../../struct/Command";
 import { Message, TextChannel } from "discord.js";
-import { FieldsEmbed } from "discord-paginationembed";
+import { MessagePagination } from "@ryukobot/paginationembed";
 import moment from "moment";
 
 export default class WarnsCommand extends Command {
@@ -22,47 +22,48 @@ export default class WarnsCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		const warns: any[] = await this.client.db.getAllWarns(
+		const warns = await this.client.db.getAllWarns(
 			args.member.id,
-			message.guild!.id
+			message.guild!.id,
 		);
 
 		if (!warns.length)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Member",
-					"That Member has no warns!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Member",
+						"That Member has no warns!",
+					),
+				],
+			});
 
-		const warnsEmbed = new FieldsEmbed()
-			.setArray(warns)
-			.setChannel(<TextChannel>message.channel)
-			.setAuthorizedUsers([message.author.id])
-			.setElementsPerPage(6)
-			.formatField("Warns", (warn: any) => {
+		const warnsEmbed = new MessagePagination({
+			embed: this.embed(
+				{
+					title: `${args.member.user.tag}'s Warns`,
+					thumbnail: {
+						url: args.member.user.displayAvatarURL({
+							dynamic: true,
+						}),
+					},
+				},
+				message,
+			),
+			message,
+			array: warns as never[],
+			title: "Warns",
+			itemsPerPage: 6,
+			callbackfn: (warn: any) => {
 				const created = moment(warn.createdAt);
 				return `Warned By <@!${
 					warn.adminId
 				}>; <t:${created.unix()}:R>; ${
 					warn.reason ? `\`${warn.reason}\`` : "No Reason Provided"
 				}`;
-			})
-			.setPage(1)
-			.setPageIndicator(true);
+			},
+		});
 
-		warnsEmbed.embed
-			.setColor(message.guild!.me!.displayHexColor)
-			.setTitle(`${args.member.user.tag}'s Warns`)
-			.setThumbnail(args.member.user.displayAvatarURL({ dynamic: true }))
-			.setTimestamp(new Date())
-			.setFooter(
-				message.author.tag,
-				message.author.displayAvatarURL({ dynamic: true })
-			);
-
-		await warnsEmbed.build();
+		warnsEmbed.build();
 	}
 }

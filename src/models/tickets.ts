@@ -31,6 +31,6 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 				allowNull: false,
 			},
 		},
-		{ paranoid: true }
+		{ paranoid: true },
 	);
 }

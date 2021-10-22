@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class CoinflipCommand extends Command {
 	constructor() {
@@ -18,14 +18,15 @@ export default class CoinflipCommand extends Command {
 
 	exec(message: Message, args: any): any {
 		if (!args.question)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"You must ask a question!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Argument",
+						"You must ask a question!",
+					),
+				],
+			});
 
 		const responses = [
 			"It is certain.",
@@ -52,22 +53,19 @@ export default class CoinflipCommand extends Command {
 
 		const number = Math.floor(Math.random() * responses.length);
 
-		return message.channel.send(
-			new MessageEmbed({
-				title: message.util?.parsed?.content,
-				description: responses[number],
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				author: {
-					name: "🎱 8 Ball",
-				},
-			})
-		);
+		return message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: message.util?.parsed?.content,
+						description: responses[number],
+						author: {
+							name: "🎱 8 Ball",
+						},
+					},
+					message,
+				),
+			],
+		});
 	}
 }

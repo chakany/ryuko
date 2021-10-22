@@ -8,7 +8,6 @@
 	"port": 1204,
 	"ownerId": "",
 	"siteUrl": "https://ryuko.cc",
-	"imgApiUrl": "",
 	"supportInvite": "https://discord.gg/c3AppSbaDM",
 	"discord_bots_gg_token": "",
 	"discordbotlist_com_token": "",
@@ -31,8 +30,7 @@
 	"lavalink": [
 		{
 			"name": "",
-			"host": "",
-			"port": 0000,
+			"url": "host:port",
 			"auth": ""
 		}
 	],
@@ -40,9 +38,5 @@
 		"clientID": "",
 		"clientSecret": "",
 		"useSpotifyMetadata": true
-	},
-	"pterodactyl": {
-		"url": "",
-		"key": ""
 	}
 }

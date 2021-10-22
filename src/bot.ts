@@ -1,14 +1,13 @@
-import bunyan from "bunyan";
-import { Category, Command } from "discord-akairo";
+import Logger from "./struct/Logger";
+import { Category, Command } from "@ryukobot/discord-akairo";
 
-let log = bunyan.createLogger({
+const log = new Logger({
 	name: "bot",
-	stream: process.stdout,
-	level: process.env.NODE_ENV !== "production" ? "debug" : "info",
 });
 
 import Bot from "./struct/Client";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { token } = require("../config.json");
 
 const client = new Bot(log);

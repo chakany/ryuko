@@ -19,14 +19,15 @@ export default class SayCommand extends Command {
 
 	async exec(message: Message, args: any): Promise<any> {
 		if (!args.response)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"You must provide something to say!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Argument",
+						"You must provide something to say!",
+					),
+				],
+			});
 		message.channel.send(`${message.util?.parsed?.content}`);
 		return message.delete();
 	}

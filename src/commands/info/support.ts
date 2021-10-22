@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class SupportCommand extends Command {
 	constructor() {
@@ -11,19 +11,16 @@ export default class SupportCommand extends Command {
 	}
 
 	async exec(message: Message) {
-		return message.channel.send(
-			new MessageEmbed({
-				title: "Support",
-				description: `Need help? Join my [Support Server](${this.client.config.supportInvite} "Join support server")`,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			})
-		);
+		return message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: "Support",
+						description: `Need help? Join my [Support Server](${this.client.config.supportInvite} "Join support server")`,
+					},
+					message,
+				),
+			],
+		});
 	}
 }

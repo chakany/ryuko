@@ -1,10 +1,5 @@
-import { Listener } from "discord-akairo";
-import {
-	MessageReaction,
-	TextChannel,
-	Message,
-	MessageEmbed,
-} from "discord.js";
+import Listener from "../../struct/Listener";
+import { MessageReaction, TextChannel, Message } from "discord.js";
 
 export default class MessageReactionRemoveListener extends Listener {
 	constructor() {
@@ -18,12 +13,14 @@ export default class MessageReactionRemoveListener extends Listener {
 		if (reaction.partial) await reaction.fetch();
 
 		if (
-			reaction.message.channel.type == "dm" ||
+			reaction.message.channel.type == "DM" ||
 			reaction.emoji.name != "⭐"
 		)
 			return;
 
-		const message: Message = reaction.message;
+		if (reaction.message.partial) await reaction.message.fetch();
+
+		const message = reaction.message as Message;
 
 		const fields = message.embeds[0] ? message.embeds[0].fields : [];
 
@@ -31,26 +28,30 @@ export default class MessageReactionRemoveListener extends Listener {
 			? message.embeds[0].description
 			: message.content;
 
-		const embed: MessageEmbed = new MessageEmbed({
-			timestamp: message.createdTimestamp,
-			title: "Jump to Message",
-			url: `https://discord.com/channels/${message.guild!.id}/${
-				message.channel.id
-			}/${message.id}`,
-			color: message.guild?.me?.displayHexColor,
-			author: {
-				name: message.author.tag,
-				iconURL: message.author.displayAvatarURL({ dynamic: true }),
+		const embed = this.embed(
+			{
+				timestamp: message.createdTimestamp,
+				title: "Jump to Message",
+				url: `https://discord.com/channels/${message.guild!.id}/${
+					message.channel.id
+				}/${message.id}`,
+				color: message.guild?.me?.displayHexColor,
+				author: {
+					name: message.author.tag,
+					iconURL: message.author.displayAvatarURL({ dynamic: true }),
+				},
+				footer: {
+					text: `ID: ${message.id}`,
+				},
+				description: content!,
+				fields: fields,
 			},
-			footer: {
-				text: `ID: ${message.id}`,
-			},
-			description: content!,
-			fields: fields,
-		});
+			message.author,
+			message.guild!,
+		);
 
 		if (message.attachments.size > 0)
-			embed.setImage(message.attachments.array()[0].url);
+			embed.setImage(Array.from(message.attachments.values())[0].url);
 		else if (message.embeds[0]?.image?.url)
 			embed.setImage(message.embeds[0]?.image?.url);
 		else if (message.embeds[0]?.thumbnail?.url)
@@ -59,9 +60,9 @@ export default class MessageReactionRemoveListener extends Listener {
 		const starredMessage = this.client.starboardMessages.get(message.id);
 
 		if (starredMessage)
-			return starredMessage.edit(
-				`${reaction.count} :star: | ${message.channel}`,
-				{ embed }
-			);
+			return starredMessage.edit({
+				content: `${reaction.count} :star: | ${message.channel}`,
+				embeds: [embed],
+			});
 	}
 }

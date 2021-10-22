@@ -1,5 +1,4 @@
-import { Listener } from "discord-akairo";
-
+import Listener from "../../struct/Listener";
 export default class UnhandledRejectionListener extends Listener {
 	constructor() {
 		super("unhandledRejection", {
@@ -9,6 +8,6 @@ export default class UnhandledRejectionListener extends Listener {
 	}
 
 	exec(error: any) {
-		this.client.log.debug(error);
+		this.client.log.error(error);
 	}
 }

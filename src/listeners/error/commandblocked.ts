@@ -1,4 +1,5 @@
-import { Listener, Command } from "discord-akairo";
+import Listener from "../../struct/Listener";
+import Command from "../../struct/Command";
 import { Message } from "discord.js";
 
 export default class CommandBlockedListener extends Listener {
@@ -10,8 +11,8 @@ export default class CommandBlockedListener extends Listener {
 	}
 
 	exec(message: Message, command: Command, reason: string) {
-		return message.channel.send(
-			this.client.error(message, command, "Command Blocked", reason)
-		);
+		return message.channel.send({
+			embeds: [command.error(message, "Command Blocked", reason)],
+		});
 	}
 }

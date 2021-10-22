@@ -1,20 +1,10 @@
 import fs from "fs";
 import path from "path";
 import { Collection } from "discord.js";
+import { Question } from "./Trivia.d";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { siteUrl } = require("../../config.json");
-
-interface Question {
-	question: string;
-	image?: string;
-	answer: string | string[];
-}
-
-interface Topic {
-	title: string;
-	description: string;
-	questions: Question[];
-}
 
 export default class Trivia {
 	public topics: Collection<string, Question[]>;
@@ -25,6 +15,7 @@ export default class Trivia {
 		const files = fs.readdirSync(path.resolve(__dirname, dir));
 
 		files.forEach((file) => {
+			// eslint-disable-next-line @typescript-eslint/no-var-requires
 			const topic = require(path.resolve(__dirname, dir, file));
 
 			topic.forEach((question: Question) => {

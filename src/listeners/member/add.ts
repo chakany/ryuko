@@ -1,5 +1,7 @@
-import { Listener } from "discord-akairo";
-import { GuildMember, MessageEmbed, TextChannel, User } from "discord.js";
+import Listener from "../../struct/Listener";
+import { GuildMember, TextChannel, Collection } from "discord.js";
+import { time } from "@discordjs/builders";
+import { replace } from "../../utils/command";
 
 export default class MemberAddListener extends Listener {
 	constructor() {
@@ -10,100 +12,164 @@ export default class MemberAddListener extends Listener {
 	}
 
 	async exec(member: GuildMember) {
-		const logChannelId = this.client.settings.get(
-			member.guild.id,
-			"loggingChannel",
-			null
-		);
 		if (
 			await this.client.db.getCurrentUserMutes(member.id, member.guild.id)
 		) {
-			const muteRole = member.guild.roles.cache.get(
-				this.client.settings.get(member.guild.id, "muteRole", null)
+			const muteRole = await member.guild.roles.fetch(
+				this.client.settings.get(member.guild.id, "muteRole", null),
 			);
 
 			if (muteRole) member.roles.add(muteRole);
 		}
-		if (
-			!logChannelId ||
-			!this.client.settings.get(member.guild!.id, "logging", false)
-		)
-			return;
 
-		const logChannel = <TextChannel>(
-			member.guild!.channels.cache.get(logChannelId)
-		);
+		if (this.client.settings.get(member.guild.id, "joinLeave", false)) {
+			const channel = (await member.guild.channels.fetch(
+				this.client.settings.get(
+					member.guild.id,
+					"joinLeaveChannel",
+					null,
+				),
+			)) as TextChannel | undefined;
 
-		member.guild
-			.fetchInvites()
-			.then((guildInvites) => {
-				// This is the *existing* invites for the guild.
-				const ei = this.client.invites.get(member.guild.id);
+			const joinMessage = this.client.settings.get(
+				member.guild.id,
+				"joinMessage",
+				null,
+			);
 
-				// Update the cached invites
-				this.client.invites.set(member.guild.id, guildInvites);
+			if (joinMessage) channel?.send(replace(joinMessage, member.user));
+		}
 
-				// Look through the invites, find the one for which the uses went up.
-				const invite = guildInvites.find(
-					(i) => ei.get(i.code).uses < i.uses!
-				);
+		const ei = this.client.invites.get(member.guild.id);
 
-				return logChannel.send(
-					new MessageEmbed({
-						title: "Member Joined",
-						description: `They are member #${
-							member.guild!.memberCount
-						}!`,
-						thumbnail: {
-							url: member.user.displayAvatarURL({
-								dynamic: true,
-							}),
+		try {
+			const guildInvites = await member.guild.invites.fetch();
+
+			if (member.user.bot)
+				return this.client.sendToLogChannel(member.guild, "member", {
+					embeds: [
+						this.embed(
+							{
+								title: "Member Joined",
+								description: `They are member #${
+									member.guild!.memberCount
+								}!`,
+								thumbnail: {
+									url: member.user.displayAvatarURL({
+										dynamic: true,
+									}),
+								},
+								footer: {},
+								fields: [
+									{
+										name: "Member",
+										value: member.toString(),
+										inline: true,
+									},
+									{
+										name: "Account Created",
+										value: time(member.user.createdAt),
+										inline: true,
+									},
+								],
+							},
+							member.user,
+							member.guild,
+						),
+					],
+				});
+
+			const invites = new Collection<string, number>();
+
+			for (const [key, invite] of guildInvites) {
+				invites.set(key, invite.uses?.valueOf() || 0);
+			}
+
+			this.client.invites.set(member.guild.id, invites);
+
+			// Look through the invites, find the one for which the uses went up.
+			const invite = guildInvites.find(
+				(i) => (ei?.get(i.code) || 0) < i.uses!,
+			);
+
+			return this.client.sendToLogChannel(member.guild, "member", {
+				embeds: [
+					this.embed(
+						{
+							title: "Member Joined",
+							description: `They are member #${
+								member.guild!.memberCount
+							}!`,
+							thumbnail: {
+								url: member.user.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: member.toString(),
+									inline: true,
+								},
+								{
+									name: "Invited by",
+									value:
+										invite?.inviter?.toString() ||
+										"Unknown",
+									inline: true,
+								},
+								{
+									name: "Invite Code",
+									value: invite
+										? `\`${invite?.code}\``
+										: "None",
+									inline: true,
+								},
+								{
+									name: "Account Created",
+									value: time(member.user.createdAt),
+								},
+							],
 						},
-						color: member.guild.me?.displayHexColor,
-						timestamp: new Date(),
-						fields: [
-							{
-								name: "Member",
-								value: member,
-								inline: true,
-							},
-							{
-								name: "Invited by",
-								value: invite ? invite?.inviter : "Unknown",
-								inline: true,
-							},
-							{
-								name: "Invite Code",
-								value: invite ? `\`${invite?.code}\`` : "None",
-								inline: true,
-							},
-						],
-					})
-				);
-			})
-			.catch((error) => {
-				return logChannel.send(
-					new MessageEmbed({
-						title: "Member Joined",
-						description: `They are member #${
-							member.guild!.memberCount
-						}!`,
-						thumbnail: {
-							url: member.user.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-						color: member.guild.me?.displayHexColor,
-						timestamp: new Date(),
-						fields: [
-							{
-								name: "Member",
-								value: member,
-								inline: true,
-							},
-						],
-					})
-				);
+						member.user,
+						member.guild,
+					),
+				],
 			});
+		} catch (error) {
+			return this.client.sendToLogChannel(member.guild, "member", {
+				embeds: [
+					this.embed(
+						{
+							title: "Member Joined",
+							description: `They are member #${
+								member.guild!.memberCount
+							}!`,
+							thumbnail: {
+								url: member.user.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: member.toString(),
+									inline: true,
+								},
+								{
+									name: "Account Created",
+									value: time(member.user.createdAt),
+									inline: true,
+								},
+							],
+						},
+						member.user,
+						member.guild,
+					),
+				],
+			});
+		}
 	}
 }

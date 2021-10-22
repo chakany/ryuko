@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class PrefixCommand extends Command {
 	constructor() {
@@ -22,61 +22,55 @@ export default class PrefixCommand extends Command {
 		const oldPrefix = this.client.settings.get(
 			message.guild!.id,
 			"prefix",
-			this.client.config.prefix
+			this.client.config.prefix,
 		);
 
 		if (!args.prefix) {
-			return message.channel.send(
-				new MessageEmbed({
-					title: `Current Prefix`,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					fields: [
+			return message.channel.send({
+				embeds: [
+					this.embed(
 						{
-							name: "Prefix",
-							value: `\`${oldPrefix}\``,
+							title: `Current Prefix`,
+							fields: [
+								{
+									name: "Prefix",
+									value: `\`${oldPrefix}\``,
+								},
+							],
 						},
-					],
-				})
-			);
+						message,
+					),
+				],
+			});
 		}
 
 		await this.client.settings.set(
 			message.guild!.id,
 			"prefix",
-			args.prefix
+			args.prefix,
 		);
 
-		message.channel.send(
-			new MessageEmbed({
-				title: `${this.client.emoji.greenCheck} Changed Prefix`,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
+		message.channel.send({
+			embeds: [
+				this.embed(
 					{
-						name: "Before",
-						value: `\`${oldPrefix}\``,
-						inline: true,
+						title: `${this.client.emoji.greenCheck} Changed Prefix`,
+						fields: [
+							{
+								name: "Before",
+								value: `\`${oldPrefix}\``,
+								inline: true,
+							},
+							{
+								name: "After",
+								value: `\`${args.prefix}\``,
+								inline: true,
+							},
+						],
 					},
-					{
-						name: "After",
-						value: `\`${args.prefix}\``,
-						inline: true,
-					},
-				],
-			})
-		);
+					message,
+				),
+			],
+		});
 	}
 }

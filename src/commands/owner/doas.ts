@@ -21,28 +21,30 @@ export default class DoasCommand extends Command {
 		});
 	}
 
-	async exec(message: Message, args: any): Promise<any> {
+	exec(message: Message, args: any) {
 		if (!args.member)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Arguments",
-					"You must provide a member to run the command as!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You must provide a member to run the command as!",
+					),
+				],
+			});
 
 		if (!args.command)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Arguments",
-					"You must provide a command to run!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You must provide a command to run!",
+					),
+				],
+			});
 
-		let newMessage = message;
+		const newMessage = message;
 
 		Object.defineProperty(newMessage, "member", {
 			value: args.member,
@@ -51,8 +53,8 @@ export default class DoasCommand extends Command {
 		newMessage.author = (<GuildMember>args.member).user;
 
 		newMessage.content = message.content.replace(
-			/.+(\>) /,
-			message.util?.parsed?.prefix!
+			/.+(>) /,
+			message.util!.parsed!.prefix!,
 		);
 
 		this.handler.handle(newMessage);

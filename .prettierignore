@@ -1,3 +1,4 @@
 app/static
 dist
 node_modules
+.yarn

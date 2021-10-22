@@ -1,4 +1,4 @@
-import { Inhibitor } from "discord-akairo";
+import Inhibitor from "../struct/Inhibitor";
 import Command from "../struct/Command";
 import { Message } from "discord.js";
 
@@ -14,7 +14,7 @@ export default class DisabledInhibitor extends Inhibitor {
 		let disabledCommands = this.client.settings.get(
 			message.guild!.id,
 			"disabledCommands",
-			null
+			null,
 		);
 
 		if (!disabledCommands) return false;

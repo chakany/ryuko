@@ -4,12 +4,9 @@
 		"module": "commonjs",
 		"outDir": "./dist",
 		"strict": true,
-		"baseUrl": "./",
+		"rootDir": "./src",
 		"esModuleInterop": true,
 		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"paths": {
-			"*": ["*"]
-		}
+		"forceConsistentCasingInFileNames": true
 	}
 }

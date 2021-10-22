@@ -13,7 +13,6 @@ To use the bot, you will need some prerequsites:
 -   A MariaDB Server
 -   A Lavalink Node
 -   A Redis Server
--   A img-api Server from `ravener/img-api`
 -   [Yarn](https://yarnpkg.com) installed on the machine it is running on.
 
 Once you have all of these, rename `config.template.json` to `config.json`, and fill it out.

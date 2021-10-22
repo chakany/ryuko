@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class StealEmojiCommand extends Command {
 	constructor() {
@@ -21,14 +21,15 @@ export default class StealEmojiCommand extends Command {
 			!args.emoji ||
 			(!args.emoji.startsWith("<:") && !args.emoji.startsWith("<a:"))
 		)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Argument",
-					"You must provide a valid emoji!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Argument",
+						"You must provide a valid emoji!",
+					),
+				],
+			});
 		const emoji = await message.guild!.emojis.create(
 			args.emoji.startsWith("<a")
 				? `https://cdn.discordapp.com/emojis/${args.emoji
@@ -37,31 +38,28 @@ export default class StealEmojiCommand extends Command {
 				: `https://cdn.discordapp.com/emojis/${args.emoji
 						.split(":")[2]
 						.slice(0, -1)}.png`,
-			args.emoji.split(":")[1]
+			args.emoji.split(":")[1],
 		);
 
-		return message.channel.send(
-			new MessageEmbed({
-				title: "Stole Emoji",
-				description: `The name of the emoji is called \`${emoji.name}\``,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				thumbnail: {
-					url: args.emoji.startsWith("<a")
-						? `https://cdn.discordapp.com/emojis/${args.emoji
-								.split(":")[2]
-								.slice(0, -1)}.gif`
-						: `https://cdn.discordapp.com/emojis/${args.emoji
-								.split(":")[2]
-								.slice(0, -1)}.png`,
-				},
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			})
-		);
+		return message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: "Stole Emoji",
+						description: `The name of the emoji is called \`${emoji.name}\``,
+						thumbnail: {
+							url: args.emoji.startsWith("<a")
+								? `https://cdn.discordapp.com/emojis/${args.emoji
+										.split(":")[2]
+										.slice(0, -1)}.gif`
+								: `https://cdn.discordapp.com/emojis/${args.emoji
+										.split(":")[2]
+										.slice(0, -1)}.png`,
+						},
+					},
+					message,
+				),
+			],
+		});
 	}
 }
