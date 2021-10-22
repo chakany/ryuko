@@ -1,4 +1,4 @@
-import { Listener } from "discord-akairo";
+import Listener from "../../struct/Listener";
 import Command from "../../struct/Command";
 import { Message } from "discord.js";
 
@@ -11,13 +11,14 @@ export default class HandlerErrorListener extends Listener {
 	}
 
 	exec(error: Error, message: Message, command: Command) {
-		return message.channel.send(
-			this.client.error(
-				message,
-				command,
-				"An Error Occurred",
-				`\`\`\`${error}\`\`\``
-			)
-		);
+		return message.channel.send({
+			embeds: [
+				command.error(
+					message,
+					"An Error Occurred",
+					`\`\`\`${error}\`\`\``,
+				),
+			],
+		});
 	}
 }

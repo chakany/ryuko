@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, GuildMember, TextChannel } from "discord.js";
+import { Message, GuildMember, TextChannel } from "discord.js";
 
 export default class KickCommand extends Command {
 	constructor() {
@@ -9,7 +9,7 @@ export default class KickCommand extends Command {
 			category: "Moderation",
 			clientPermissions: ["KICK_MEMBERS"],
 			userPermissions: ["KICK_MEMBERS"],
-			modOnly: true,
+			adminOnly: true,
 			args: [
 				{
 					id: "member",
@@ -25,113 +25,113 @@ export default class KickCommand extends Command {
 
 	async exec(message: Message, args: any): Promise<any> {
 		if (!args.member)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Arguments",
-					"You must provide a member to kick!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You must provide a member to kick!",
+					),
+				],
+			});
 
 		// Check Role Hierarchy
 		if (
 			args.member.roles.highest.position >=
 			message.member!.roles.highest.position
 		)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Permissions",
-					"You cannot kick someone that has the same, or a higher role than you!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Permissions",
+						"You cannot kick someone that has the same, or a higher role than you!",
+					),
+				],
+			});
 
 		// Check if we can kick them
 		if (!(<GuildMember>args.member).kickable)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Permissions",
-					"I cannot kick this person! Please check the role hierarchy!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Permissions",
+						"I cannot kick this person! Please check the role hierarchy!",
+					),
+				],
+			});
 
 		// Kick them
 		(<GuildMember>args.member).kick(
 			args.reason
 				? `${args.reason} | Kicked by ${message.member}`
-				: `No Reason Provided | Kicked by ${message.member}`
+				: `No Reason Provided | Kicked by ${message.member}`,
 		);
 
-		message.channel.send(
-			new MessageEmbed({
-				title: "Kicked Member",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
+		message.channel.send({
+			embeds: [
+				this.embed(
 					{
-						name: "Member",
-						value: args.member,
-						inline: true,
+						title: "Kicked Member",
+						fields: [
+							{
+								name: "Member",
+								value: args.member.toString(),
+								inline: true,
+							},
+							{
+								name: "Kicked by",
+								value: message.member!.toString(),
+								inline: true,
+							},
+							{
+								name: "Reason",
+								value: args.reason
+									? args.reason
+									: "None Provided",
+							},
+						],
 					},
-					{
-						name: "Kicked by",
-						value: message.member,
-						inline: true,
-					},
-					{
-						name: "Reason",
-						value: args.reason ? args.reason : "None Provided",
-					},
-				],
-			})
-		);
+					message,
+				),
+			],
+		});
 
-		if (this.client.settings.get(message.guild!.id, "logging", false))
-			(<TextChannel>(
-				message.guild!.channels.cache.get(
-					this.client.settings.get(
-						message.guild!.id,
-						"loggingChannel",
-						null
-					)
-				)
-			))?.send(
-				new MessageEmbed({
-					title: "Member Kicked",
-					thumbnail: {
-						url: args.member.user.displayAvatarURL({
-							dynamic: true,
-						}),
+		this.client.sendToLogChannel(message.guild!, "member", {
+			embeds: [
+				this.embed(
+					{
+						title: "Member Kicked",
+						thumbnail: {
+							url: args.member.user.displayAvatarURL({
+								dynamic: true,
+							}),
+						},
+						color: message.guild!.me?.displayHexColor,
+						timestamp: new Date(),
+						fields: [
+							{
+								name: "Member",
+								value: args.member.toString(),
+								inline: true,
+							},
+							{
+								name: "Kicked by",
+								value: message.member!.toString(),
+								inline: true,
+							},
+							{
+								name: "Reason",
+								value: args.reason
+									? args.reason
+									: "None Provided",
+							},
+						],
 					},
-					color: message.guild!.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
-						{
-							name: "Member",
-							value: args.member,
-							inline: true,
-						},
-						{
-							name: "Kicked by",
-							value: message.member,
-							inline: true,
-						},
-						{
-							name: "Reason",
-							value: args.reason ? args.reason : "None Provided",
-						},
-					],
-				})
-			);
+					message,
+				),
+			],
+		});
 	}
 }

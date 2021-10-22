@@ -1,0 +1,16 @@
+import { MessageEmbedOptions, User, Guild, MessageEmbed } from "discord.js";
+
+export default class Embed extends MessageEmbed {
+	constructor(options: MessageEmbedOptions, user: User, guild: Guild) {
+		options.footer ??= {
+			text: user.tag,
+			iconURL: user.displayAvatarURL({ dynamic: true }),
+		};
+
+		options.timestamp ??= new Date();
+
+		options.color ??= guild.me?.displayHexColor;
+
+		super(options);
+	}
+}

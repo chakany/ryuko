@@ -1,6 +1,6 @@
-import { Argument } from "discord-akairo";
+import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class DisableCommand extends Command {
 	constructor() {
@@ -19,34 +19,27 @@ export default class DisableCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		let toEnable = args.toenable;
+		const toEnable = args.toenable;
 
 		let oldSettings = this.client.settings.get(
 			message.guild!.id,
 			"disabledCommands",
-			null
+			null,
 		);
 
 		if (typeof oldSettings === "string")
 			oldSettings = JSON.parse(oldSettings);
 
 		if (!toEnable) {
-			const embed = new MessageEmbed({
-				title: "Commands",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
+			const embed = this.embed(
+				{
+					title: "Commands",
 				},
-			});
+				message,
+			);
 
 			let enabledCommands = "";
-			for (const [key, dvalue] of new Map(
-				message.util?.handler.categories!
-			)) {
+			for (const [key, dvalue] of new Map(this.handler.categories)) {
 				// For each category
 				for (const [key2, fvalue] of new Map(dvalue)) {
 					// For each command in that category
@@ -69,44 +62,42 @@ export default class DisableCommand extends Command {
 				embed.addField("Disabled", disabledCommands);
 			}
 
-			return message.channel.send(embed);
+			return message.channel.send({ embeds: [embed] });
 		} else if (toEnable.category) {
 			if (oldSettings && !oldSettings.includes(toEnable.id))
-				return message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"Invalid Argument",
-						"That command is already enabled!"
-					)
-				);
+				return message.channel.send({
+					embeds: [
+						this.error(
+							message,
+							"Invalid Argument",
+							"That command is already enabled!",
+						),
+					],
+				});
 			let enabledCommands;
 
 			if (!oldSettings) enabledCommands = [];
 			else enabledCommands = oldSettings;
 
 			enabledCommands = enabledCommands.filter(
-				(command: any) => ![toEnable.id].includes(command)
+				(command: any) => ![toEnable.id].includes(command),
 			);
 
 			this.client.settings.set(
 				message.guild!.id,
 				"disabledCommands",
-				JSON.stringify(enabledCommands)
+				JSON.stringify(enabledCommands),
 			);
-			return message.channel.send(
-				new MessageEmbed({
-					title: `${this.client.emoji.greenCheck} Enabled command: \`${toEnable.aliases[0]}\``,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-				})
-			);
+			return message.channel.send({
+				embeds: [
+					this.embed(
+						{
+							title: `${this.client.emoji.greenCheck} Enabled command: \`${toEnable.aliases[0]}\``,
+						},
+						message,
+					),
+				],
+			});
 		} else {
 			// Try to resolve as a category
 			if (message.util?.handler.findCategory(toEnable)) {
@@ -130,36 +121,34 @@ export default class DisableCommand extends Command {
 					}
 				}
 				commands = oldSettings.filter(
-					(command: any) => !commands.includes(command)
+					(command: any) => !commands.includes(command),
 				);
 				this.client.settings.set(
 					message.guild!.id,
 					"disabledCommands",
-					JSON.stringify(commands)
+					JSON.stringify(commands),
 				);
-				const embed = new MessageEmbed({
-					title: `${this.client.emoji.greenCheck} Enabled category: \`${category.id}\``,
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
+				const embed = this.embed(
+					{
+						title: `${this.client.emoji.greenCheck} Enabled category: \`${category.id}\``,
+						fields: [{ name: "Enabled", value: enabledCommands }],
 					},
-					fields: [{ name: "Enabled", value: enabledCommands }],
-				});
-
-				return message.channel.send(embed);
-			} else {
-				return message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"Invalid Argument",
-						"You must provide a command or a category!"
-					)
+					message,
 				);
+
+				return message.channel.send({
+					embeds: [embed],
+				});
+			} else {
+				return message.channel.send({
+					embeds: [
+						this.error(
+							message,
+							"Invalid Argument",
+							"You must provide a command or a category!",
+						),
+					],
+				});
 			}
 		}
 	}

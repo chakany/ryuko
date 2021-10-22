@@ -1,6 +1,7 @@
-import { Argument } from "discord-akairo";
+import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
+import { channelMention } from "@discordjs/builders";
 
 export default class StarboardCommand extends Command {
 	constructor() {
@@ -23,143 +24,157 @@ export default class StarboardCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
+		const enabled = this.client.settings.get(
+			message.guild!.id,
+			"starboard",
+			false,
+		);
+
 		switch (args.action) {
 			default:
-				return message.channel.send(
-					new MessageEmbed({
-						title: "Starboard Subcommands",
-						description: `See more information on the [Starboard Wiki](${this.client.config.siteUrl}/wiki/Features/Starboard)`,
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-						fields: [
+				message.channel.send({
+					embeds: [
+						this.embed(
 							{
-								name: "`enable`",
-								value: "Enable the Starboard",
+								title: `${
+									enabled
+										? this.client.emoji.greenCheck
+										: this.client.emoji.redX
+								} Starboard Subcommands`,
+								description: `See more information on the [Starboard Wiki](${this.client.config.siteUrl}/wiki/Features/Starboard)`,
+								fields: [
+									{
+										name: "`enable`",
+										value: "Enable the Starboard",
+									},
+									{
+										name: "`disable`",
+										value: "Disable the Starboard",
+									},
+									{
+										name: `\`channel <channel>\``,
+										value: `Channel to send starred messages into\n**Current Channel:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"starboardChannel",
+												null,
+											)
+												? `${channelMention(
+														this.client.settings.get(
+															message.guild!.id,
+															"starboardChannel",
+															null,
+														),
+												  )}`
+												: "None"
+										}`,
+									},
+								],
 							},
-							{
-								name: "`disable`",
-								value: "Disable the Starboard",
-							},
-							{
-								name: "`channel <channel>`",
-								value: "Channel to send starred messages into",
-							},
-						],
-					})
-				);
+							message,
+						),
+					],
+				});
 				break;
 			case "enable":
 				if (
 					!this.client.settings.get(
 						message.guild!.id,
 						"starboardChannel",
-						null
+						null,
 					)
 				)
-					return message.channel.send(
-						this.client.error(
-							message,
-							this,
-							"Invalid Configuration",
-							"You must set a channel to send starred messages into!"
-						)
-					);
+					return message.channel.send({
+						embeds: [
+							this.error(
+								message,
+								"Invalid Configuration",
+								"You must set a channel to send starred messages into!",
+							),
+						],
+					});
 				this.client.settings.set(message.guild!.id, "starboard", true);
 
-				return message.channel.send(
-					new MessageEmbed({
-						title: `${this.client.emoji.greenCheck} Enabled Starboard`,
-						description: "The Starboard has been enabled",
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-					})
-				);
+				message.channel.send({
+					embeds: [
+						this.embed(
+							{
+								title: `${this.client.emoji.greenCheck} Enabled Starboard`,
+							},
+							message,
+						),
+					],
+				});
 				break;
 			case "disable":
 				this.client.settings.set(message.guild!.id, "starboard", false);
 
-				return message.channel.send(
-					new MessageEmbed({
-						title: `${this.client.emoji.greenCheck} Disabled Starboard`,
-						description: "The Starboard has been disabled",
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-					})
-				);
+				message.channel.send({
+					embeds: [
+						this.embed(
+							{
+								title: `${this.client.emoji.greenCheck} Disabled Starboard`,
+							},
+							message,
+						),
+					],
+				});
 				break;
-			case "channel":
+			case "channel": {
 				const oldChannel = this.client.settings.get(
 					message.guild!.id,
 					"starboardChannel",
-					null
+					null,
 				);
 
 				if (!args.channel)
-					return message.channel.send(
-						new MessageEmbed({
-							title: "Current Starboard Channel",
-							description: oldChannel
-								? `The current channel for the starboard is <#${oldChannel}>`
-								: "There is no current channel for the starboard",
-							color: message.guild?.me?.displayHexColor,
-							timestamp: new Date(),
-							footer: {
-								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-						})
-					);
+					return message.channel.send({
+						embeds: [
+							this.embed(
+								{
+									title: "Current Starboard Channel",
+									description: oldChannel
+										? `The current channel for the starboard is ${channelMention(
+												oldChannel,
+										  )}`
+										: "There is no current channel for the starboard",
+								},
+								message,
+							),
+						],
+					});
 				this.client.settings.set(
 					message.guild!.id,
 					"starboardChannel",
-					args.channel.id
+					args.channel.id,
 				);
 
-				return message.channel.send(
-					new MessageEmbed({
-						title: `${this.client.emoji.greenCheck} Changed Starboard Channel`,
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-						fields: [
+				message.channel.send({
+					embeds: [
+						this.embed(
 							{
-								name: "Before",
-								value: oldChannel ? `<#${oldChannel}>` : "None",
-								inline: true,
+								title: `${this.client.emoji.greenCheck} Changed Starboard Channel`,
+								fields: [
+									{
+										name: "Before",
+										value: oldChannel
+											? channelMention(oldChannel)
+											: "None",
+										inline: true,
+									},
+									{
+										name: "After",
+										value: args.channel.toString(),
+										inline: true,
+									},
+								],
 							},
-							{
-								name: "After",
-								value: args.channel,
-								inline: true,
-							},
-						],
-					})
-				);
+							message,
+						),
+					],
+				});
+				break;
+			}
 		}
 	}
 }

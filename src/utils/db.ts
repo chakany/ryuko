@@ -1,18 +1,19 @@
-import { Sequelize, DataTypes, QueryTypes, Op, ModelCtor } from "sequelize";
-import { SequelizeProvider } from "discord-akairo";
+import { Sequelize, Op, ModelCtor } from "sequelize";
+import { Snowflake } from "discord.js";
+import { SequelizeProvider } from "@ryukobot/discord-akairo";
 import bunyan from "bunyan";
+import { PunishmentType } from "./db.d";
 
 import guildsModel from "../models/guilds";
 import ticketsModel from "../models/tickets";
 import punishmentsModel from "../models/punishments";
 import membersModel from "../models/members";
-import xpModel from "../models/xp";
-import transactionsModel from "../models/transactions";
 import filteredPhrasesModel from "../models/filteredPhrases";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const config = require("../../config.json");
 
-let log = bunyan.createLogger({
+const log = bunyan.createLogger({
 	name: "db",
 	stream: process.stdout,
 	level: process.env.NODE_ENV !== "production" ? "debug" : "info",
@@ -23,8 +24,6 @@ export default class Db extends Sequelize {
 	public tickets: ModelCtor<any>;
 	public punishments: ModelCtor<any>;
 	public members: ModelCtor<any>;
-	public guildXp: ModelCtor<any>;
-	public transactions: ModelCtor<any>;
 	public filteredPhrases: ModelCtor<any>;
 
 	constructor() {
@@ -39,18 +38,16 @@ export default class Db extends Sequelize {
 		this.tickets = ticketsModel(this, config);
 		this.punishments = punishmentsModel(this, config);
 		this.members = membersModel(this, config);
-		this.guildXp = xpModel(this, config);
-		this.transactions = transactionsModel(this, config);
 		this.filteredPhrases = filteredPhrasesModel(this);
 	}
 
-	getSettings() {
+	getSettings(): SequelizeProvider {
 		return new SequelizeProvider(this.guilds, {
 			idColumn: "id",
 		});
 	}
 
-	getMember(id: string) {
+	getMember(id: Snowflake): Promise<any> {
 		return this.members.findOne({
 			where: {
 				id,
@@ -58,10 +55,15 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	async addTicket(guildId: string, memberId: string, channelId: string) {
+	async addTicket(
+		guildId: Snowflake,
+		memberId: Snowflake,
+		channelId: Snowflake,
+	): Promise<any> {
 		await this.members.upsert({
 			id: memberId,
 		});
+
 		return this.tickets.create({
 			guildId,
 			memberId,
@@ -69,7 +71,7 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	findTicket(guildId: string, channelId: string): Promise<any> {
+	findTicket(guildId: Snowflake, channelId: Snowflake): Promise<any> {
 		return this.tickets.findOne({
 			attributes: ["memberId"],
 			where: {
@@ -79,7 +81,11 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	deleteTicket(guildId: string, memberId: string, channelId: string) {
+	deleteTicket(
+		guildId: Snowflake,
+		memberId: Snowflake,
+		channelId: Snowflake,
+	): Promise<number> {
 		return this.tickets.destroy({
 			where: {
 				guildId,
@@ -89,7 +95,17 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	addMember(id: string, cookieId: string, ipAddress: string) {
+	addMember(id: Snowflake): Promise<[any, boolean | null]> {
+		return this.members.upsert({
+			id,
+		});
+	}
+
+	verifyMember(
+		id: Snowflake,
+		cookieId: string,
+		ipAddress: string,
+	): Promise<[any, boolean | null]> {
 		return this.members.upsert({
 			id,
 			cookieId,
@@ -107,82 +123,9 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	async addXp(
-		memberId: string,
-		guildId: string,
-		xp: number
-	): Promise<number | boolean> {
-		const user = await this.query(
-			"INSERT IGNORE INTO `members` (`id`,`createdAt`,`updatedAt`) VALUES (:id,NOW(),NOW()) RETURNING *;",
-			{
-				replacements: {
-					id: memberId,
-				},
-				type: QueryTypes.SELECT,
-			}
-		);
-
-		const multiplier = user[0]
-			? // @ts-expect-error
-			  <number>user[0].xpMultiplier
-			: 1;
-
-		const query = await this.query(
-			"INSERT INTO `xp` (`memberId`,`guildId`,`level`,`xp`,`createdAt`,`updatedAt`) VALUES (:memberId,:guildId,TRUNCATE(:xp / 500, 0) + 1,:xp,NOW(),NOW()) ON DUPLICATE KEY UPDATE `memberId`=VALUES(`memberId`), `guildId`=VALUES(`guildId`), `xp`=xp + (VALUES(`xp`) * :multiplier), `level`=TRUNCATE(xp / 500, 0) + 1, `updatedAt`=VALUES(`updatedAt`) RETURNING *;",
-			{
-				replacements: {
-					memberId,
-					guildId,
-					xp,
-					multiplier,
-				},
-				type: QueryTypes.SELECT,
-			}
-		);
-		// @ts-expect-error
-		const oldXp = query[0].xp - xp * multiplier;
-		const level = Math.trunc((oldXp - xp * multiplier) / 500);
-
-		return (xp * multiplier + oldXp) % 500 == 0 ||
-			(xp * multiplier + oldXp > level * 500 &&
-				xp * multiplier + oldXp < (level + 1) * 500 &&
-				oldXp < level * 500)
-			? // @ts-expect-error
-			  query[0].level
-			: false;
-	}
-
-	async getMemberXp(memberId: string, guildId: string): Promise<any> {
-		let results: any;
-
-		try {
-			results = await this.guildXp.findOne({
-				where: {
-					memberId,
-					guildId,
-				},
-			});
-		} catch (error) {
-			log.error(error);
-		}
-
-		return results;
-	}
-
-	async getGuildXp(guildId: string): Promise<any> {
-		const results: any[] = await this.guildXp.findAll({
-			where: {
-				guildId,
-			},
-			attributes: ["memberId", "level", "xp"],
-		});
-
-		return results?.sort((a, b) => b.xp - a.xp);
-	}
-
 	async getCurrentUserPunishments(
-		memberId: string,
-		guildId: string
+		memberId: Snowflake,
+		guildId: Snowflake,
 	): Promise<any[]> {
 		return await this.punishments.findAll({
 			where: {
@@ -196,7 +139,7 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	async getCurrentUserMutes(memberId: string, guildId: string): Promise<any> {
+	getCurrentUserMutes(memberId: Snowflake, guildId: Snowflake): Promise<any> {
 		return this.punishments.findOne({
 			where: {
 				memberId,
@@ -210,7 +153,7 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	async getAllMutes(memberId: string, guildId: string): Promise<any> {
+	getAllMutes(memberId: Snowflake, guildId: Snowflake): Promise<any[]> {
 		return this.punishments.findAll({
 			where: {
 				memberId,
@@ -221,22 +164,7 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	warnMember(
-		memberId: string,
-		guildId: string,
-		adminId: string,
-		reason = ""
-	): Promise<any> {
-		return this.punishments.create({
-			memberId,
-			guildId,
-			type: "warn",
-			adminId,
-			reason,
-		});
-	}
-
-	getAllWarns(memberId: string, guildId: string): Promise<any> {
+	getAllWarns(memberId: Snowflake, guildId: Snowflake): Promise<any[]> {
 		return this.punishments.findAll({
 			where: {
 				memberId,
@@ -247,7 +175,7 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	async hasPhrase(guildId: string, phrase: string): Promise<boolean> {
+	async hasPhrase(guildId: Snowflake, phrase: string): Promise<boolean> {
 		const found = await this.filteredPhrases.findOne({
 			where: {
 				guildId,
@@ -259,14 +187,14 @@ export default class Db extends Sequelize {
 		else return false;
 	}
 
-	addPhrase(guildId: string, phrase: string): Promise<any> {
+	addPhrase(guildId: Snowflake, phrase: string): Promise<any> {
 		return this.filteredPhrases.create({
 			guildId,
 			phrase,
 		});
 	}
 
-	removePhrase(guildId: string, phrase: string): Promise<any> {
+	removePhrase(guildId: Snowflake, phrase: string): Promise<number> {
 		return this.filteredPhrases.destroy({
 			where: {
 				guildId,
@@ -275,7 +203,7 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	getFilteredPhrases(guildId: string): Promise<any> {
+	getFilteredPhrases(guildId: Snowflake): Promise<any[]> {
 		return this.filteredPhrases.findAll({
 			where: {
 				guildId,
@@ -283,41 +211,34 @@ export default class Db extends Sequelize {
 		});
 	}
 
-	async muteUser(
-		guildId: string,
-		type: string,
-		memberId: string,
-		adminId: string,
+	async addPunishment(
+		guildId: Snowflake,
+		type: PunishmentType,
+		memberId: Snowflake,
+		adminId: Snowflake,
 		reason: string,
-		expires: Date
-	) {
-		try {
-			await this.members.upsert({
-				id: memberId,
-			});
+		expires?: Date,
+	): Promise<any> {
+		await this.members.upsert({
+			id: memberId,
+		});
 
-			await this.punishments.create({
-				guildId,
-				type,
-				memberId,
-				adminId,
-				reason,
-				expires,
-			});
-
-			return true;
-		} catch (err) {
-			log.error(err);
-			throw err;
-		}
+		return this.punishments.create({
+			guildId,
+			type,
+			memberId,
+			adminId,
+			reason,
+			expires,
+		});
 	}
 
-	async unpunishMember(
-		memberId: string,
-		guildId: string,
-		type: string
-	): Promise<any[]> {
-		return await this.punishments.update(
+	unpunishMember(
+		memberId: Snowflake,
+		guildId: Snowflake,
+		type: PunishmentType,
+	): Promise<[number, any[]]> {
+		return this.punishments.update(
 			{
 				unpunished: true,
 			},
@@ -331,7 +252,7 @@ export default class Db extends Sequelize {
 						[Op.gte]: new Date(),
 					},
 				},
-			}
+			},
 		);
 	}
 }

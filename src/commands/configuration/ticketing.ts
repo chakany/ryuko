@@ -1,6 +1,7 @@
-import { Argument } from "discord-akairo";
+import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
+import { roleMention } from "@discordjs/builders";
 
 export default class TicketingCommand extends Command {
 	constructor() {
@@ -23,191 +24,212 @@ export default class TicketingCommand extends Command {
 		});
 	}
 
-	async exec(message: Message, args: any): Promise<any> {
+	exec(message: Message, args: any) {
+		const enabled = this.client.settings.get(
+			message.guild!.id,
+			"tickets",
+			false,
+		);
+
 		switch (args.action) {
 			default:
-				return message.channel.send(
-					new MessageEmbed({
-						title: "Ticketing Subcommands",
-						description: `See more information on the [Ticketing Wiki](${this.client.config.siteUrl}/wiki/Features/Ticketing)`,
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-						fields: [
+				return message.channel.send({
+					embeds: [
+						this.embed(
 							{
-								name: "`enable`",
-								value: "Enable tickets",
+								title: `${
+									enabled
+										? this.client.emoji.greenCheck
+										: this.client.emoji.redX
+								} Ticketing Subcommands`,
+								description: `See more information on the [Ticketing Wiki](${this.client.config.siteUrl}/wiki/Features/Ticketing)`,
+								fields: [
+									{
+										name: "`enable`",
+										value: "Enable tickets",
+									},
+									{
+										name: "`disable`",
+										value: "Disable tickets",
+									},
+									{
+										name: `\`role <role>\``,
+										value: `Role to automatically give access to tickets\n**Current Role:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"ticketRole",
+												null,
+											)
+												? `${roleMention(
+														this.client.settings.get(
+															message.guild!.id,
+															"ticketRole",
+															null,
+														),
+												  )}`
+												: "None"
+										}`,
+									},
+									{
+										name: `\`category <value>\``,
+										value: `Category to make new tickets under (must be an id)\n**Current Category:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"ticketCategory",
+												null,
+											)
+												? `\`${this.client.settings.get(
+														message.guild!.id,
+														"ticketCategory",
+														null,
+												  )}\``
+												: "None"
+										}`,
+									},
+								],
 							},
-							{
-								name: "`disable`",
-								value: "Disable tickets",
-							},
-							{
-								name: "`role <role>`",
-								value: "Role to automatically give access to tickets",
-							},
-							{
-								name: "`category <value>`",
-								value: "Category to make new tickets under (must be an ID)",
-							},
-						],
-					})
-				);
+							message,
+						),
+					],
+				});
 				break;
 			case "enable":
 				this.client.settings.set(message.guild!.id, "tickets", true);
 
-				return message.channel.send(
-					new MessageEmbed({
-						title: `${this.client.emoji.greenCheck} Enabled Tickets`,
-						description: "Tickets have been enabled",
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-					})
-				);
+				return message.channel.send({
+					embeds: [
+						this.embed(
+							{
+								title: `${this.client.emoji.greenCheck} Enabled Tickets`,
+							},
+							message,
+						),
+					],
+				});
 				break;
 			case "disable":
 				this.client.settings.set(message.guild!.id, "tickets", false);
 
-				return message.channel.send(
-					new MessageEmbed({
-						title: `${this.client.emoji.greenCheck} Disabled Tickets`,
-						description: "Tickets have been disabled",
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-					})
-				);
+				return message.channel.send({
+					embeds: [
+						this.embed(
+							{
+								title: `${this.client.emoji.greenCheck} Disabled Tickets`,
+							},
+							message,
+						),
+					],
+				});
 				break;
-			case "role":
+			case "role": {
 				const oldRole = this.client.settings.get(
 					message.guild!.id,
 					"ticketRole",
-					null
+					null,
 				);
 
 				if (!args.value)
-					return message.channel.send(
-						new MessageEmbed({
-							title: "Current Ticket Role",
-							description: oldRole
-								? `The current role for tickets is <#${oldRole}>`
-								: "There is no current role for tickets",
-							color: message.guild?.me?.displayHexColor,
-							timestamp: new Date(),
-							footer: {
-								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-						})
-					);
+					return message.channel.send({
+						embeds: [
+							this.embed(
+								{
+									title: "Current Ticket Role",
+									description: oldRole
+										? `The current role for tickets is ${roleMention(
+												oldRole,
+										  )}`
+										: "There is no current role for tickets",
+								},
+								message,
+							),
+						],
+					});
 				this.client.settings.set(
 					message.guild!.id,
 					"ticketRole",
-					args.value.id
+					args.value.id,
 				);
 
-				return message.channel.send(
-					new MessageEmbed({
-						title: `${this.client.emoji.greenCheck} Changed Ticket Role`,
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-						fields: [
+				message.channel.send({
+					embeds: [
+						this.embed(
 							{
-								name: "Before",
-								value: oldRole ? `<@&${oldRole}>` : "None",
-								inline: true,
+								title: `${this.client.emoji.greenCheck} Changed Ticket Role`,
+								fields: [
+									{
+										name: "Before",
+										value: oldRole
+											? roleMention(oldRole)
+											: "None",
+										inline: true,
+									},
+									{
+										name: "After",
+										value: args.value.toString(),
+										inline: true,
+									},
+								],
 							},
-							{
-								name: "After",
-								value: args.value,
-								inline: true,
-							},
-						],
-					})
-				);
+							message,
+						),
+					],
+				});
 				break;
-			case "category":
+			}
+			case "category": {
 				const oldCategory = this.client.settings.get(
 					message.guild!.id,
 					"ticketCategory",
-					null
+					null,
 				);
 
 				if (!args.value)
-					return message.channel.send(
-						new MessageEmbed({
-							title: "Current Ticket Category",
-							description: oldCategory
-								? `The current category for tickets is \`${oldCategory}\``
-								: "There is no current category for tickets",
-							color: message.guild?.me?.displayHexColor,
-							timestamp: new Date(),
-							footer: {
-								text: message.author.tag,
-								icon_url: message.author.displayAvatarURL({
-									dynamic: true,
-								}),
-							},
-						})
-					);
+					return message.channel.send({
+						embeds: [
+							this.embed(
+								{
+									title: "Current Ticket Category",
+									description: oldCategory
+										? `The current category for tickets is \`${oldCategory}\``
+										: "There is no current category for tickets",
+								},
+								message,
+							),
+						],
+					});
 				this.client.settings.set(
 					message.guild!.id,
 					"ticketCategory",
-					args.value
+					args.value,
 				);
 
-				return message.channel.send(
-					new MessageEmbed({
-						title: `${this.client.emoji.greenCheck} Changed Ticket Category`,
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-						fields: [
+				message.channel.send({
+					embeds: [
+						this.embed(
 							{
-								name: "Before",
-								value: oldCategory
-									? `\`${oldCategory}\``
-									: "None",
-								inline: true,
+								title: `${this.client.emoji.greenCheck} Changed Ticket Category`,
+								fields: [
+									{
+										name: "Before",
+										value: oldCategory
+											? `\`${oldCategory}\``
+											: "None",
+										inline: true,
+									},
+									{
+										name: "After",
+										value: `\`${args.value}\``,
+										inline: true,
+									},
+								],
 							},
-							{
-								name: "After",
-								value: `\`${args.value}\``,
-								inline: true,
-							},
-						],
-					})
-				);
+							message,
+						),
+					],
+				});
+
+				break;
+			}
 		}
 	}
 }

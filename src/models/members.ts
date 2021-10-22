@@ -17,13 +17,5 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 		verifiedAt: {
 			type: DataTypes.DATE,
 		},
-		coins: {
-			type: DataTypes.BIGINT,
-			defaultValue: 0,
-		},
-		xpMultiplier: {
-			type: DataTypes.FLOAT,
-			defaultValue: 1.0,
-		},
 	});
 }

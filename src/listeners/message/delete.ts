@@ -1,5 +1,5 @@
-import { Listener } from "discord-akairo";
-import { Message, MessageEmbed, TextChannel, User } from "discord.js";
+import Listener from "../../struct/Listener";
+import { Message, User } from "discord.js";
 
 export default class DeleteListener extends Listener {
 	constructor() {
@@ -13,17 +13,6 @@ export default class DeleteListener extends Listener {
 		if (!message.guild) return;
 		if (message.author.bot) return;
 
-		const logChannelId = this.client.settings.get(
-			message.guild.id,
-			"loggingChannel",
-			null
-		);
-		if (
-			!logChannelId ||
-			!this.client.settings.get(message.guild!.id, "logging", false)
-		)
-			return;
-
 		const fetchedLogs = await message.guild.fetchAuditLogs({
 			limit: 1,
 			type: "MESSAGE_DELETE",
@@ -32,103 +21,120 @@ export default class DeleteListener extends Listener {
 		const deletionLog = fetchedLogs.entries.first();
 
 		// concatinate message content if it is too long
-		let content =
+		const content =
 			message.content.length > 1900
 				? message.content.substr(0, 1900) + "..."
 				: message.content;
 
-		const logChannel = <TextChannel>(
-			message.guild!.channels.cache.get(logChannelId)
-		);
-
 		if (!deletionLog)
-			return logChannel.send(
-				new MessageEmbed({
-					title: "Message Deleted",
-					thumbnail: {
-						url: message.author.displayAvatarURL({ dynamic: true }),
-					},
-					color: message.guild.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
+			return this.client.sendToLogChannel(message.guild, "message", {
+				embeds: [
+					this.embed(
 						{
-							name: "Content",
-							value: content,
+							title: "Message Deleted",
+							thumbnail: {
+								url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Content",
+									value: content,
+								},
+								{
+									name: "Author",
+									value: message.author.toString(),
+									inline: true,
+								},
+								{
+									name: "Channel",
+									value: message.channel.toString(),
+									inline: true,
+								},
+							],
 						},
-						{
-							name: "Author",
-							value: message.author,
-							inline: true,
-						},
-						{
-							name: "Channel",
-							value: message.channel,
-							inline: true,
-						},
-					],
-				})
-			);
+						message.author,
+						message.guild,
+					),
+				],
+			});
 
 		const { executor, target } = deletionLog;
 
 		if ((<User>target).id == message.author.id)
-			return logChannel.send(
-				new MessageEmbed({
-					title: "Message Deleted",
-					thumbnail: {
-						url: message.author.displayAvatarURL({ dynamic: true }),
-					},
-					color: message.guild.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
+			return this.client.sendToLogChannel(message.guild, "message", {
+				embeds: [
+					this.embed(
 						{
-							name: "Content",
-							value: content,
+							title: "Message Deleted",
+							thumbnail: {
+								url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Content",
+									value: content,
+								},
+								{
+									name: "Author",
+									value: message.author.toString(),
+									inline: true,
+								},
+								{
+									name: "Deleted by",
+									value: executor?.toString() || "Unknown",
+									inline: true,
+								},
+								{
+									name: "Channel",
+									value: message.channel.toString(),
+									inline: true,
+								},
+							],
 						},
-						{
-							name: "Author",
-							value: message.author,
-							inline: true,
-						},
-						{
-							name: "Deleted by",
-							value: <User>executor,
-							inline: true,
-						},
-						{
-							name: "Channel",
-							value: message.channel,
-							inline: true,
-						},
-					],
-				})
-			);
+						message.author,
+						message.guild,
+					),
+				],
+			});
 		else
-			return logChannel.send(
-				new MessageEmbed({
-					title: "Message Deleted",
-					thumbnail: {
-						url: message.author.displayAvatarURL({ dynamic: true }),
-					},
-					color: message.guild.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
+			return this.client.sendToLogChannel(message.guild, "message", {
+				embeds: [
+					this.embed(
 						{
-							name: "Content",
-							value: content,
+							title: "Message Deleted",
+							thumbnail: {
+								url: message.author.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Content",
+									value: content,
+								},
+								{
+									name: "Author",
+									value: message.author.toString(),
+									inline: true,
+								},
+								{
+									name: "Channel",
+									value: message.channel.toString(),
+									inline: true,
+								},
+							],
 						},
-						{
-							name: "Author",
-							value: message.author,
-							inline: true,
-						},
-						{
-							name: "Channel",
-							value: message.channel,
-							inline: true,
-						},
-					],
-				})
-			);
+						message.author,
+						message.guild,
+					),
+				],
+			});
 	}
 }

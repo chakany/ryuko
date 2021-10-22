@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, TextChannel } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 
 export default class UnlockCommand extends Command {
 	constructor() {
@@ -22,76 +22,69 @@ export default class UnlockCommand extends Command {
 
 	async exec(message: Message, args: any): Promise<any> {
 		if (this.client.settings.get(message.guild!.id, "modRole", null))
-			(<TextChannel>args.channel).permissionOverwrites
-				.get(
-					this.client.settings.get(message.guild!.id, "modRole", null)
-				)
-				?.delete(`Channel Unlock Requested by ${message.author.tag}`);
+			(<TextChannel>args.channel).permissionOverwrites.delete(
+				`Channel Unlock Requested by ${message.author.tag}`,
+			);
 
-		(<TextChannel>args.channel).permissionOverwrites
-			.get(message.guild!.roles.everyone.id)
-			?.delete(`Channel Unlock Requested by ${message.author.tag}`);
-
-		const signalMessage = await message.channel.send(
-			new MessageEmbed({
-				title: "Unlocked",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
-					{
-						name: "Channel",
-						value: args.channel,
-						inline: true,
-					},
-					{
-						name: "Unlocked by",
-						value: message.member!,
-						inline: true,
-					},
-				],
-			})
+		(<TextChannel>args.channel).permissionOverwrites.delete(
+			`Channel Unlock Requested by ${message.author.tag}`,
 		);
 
-		setTimeout(() => signalMessage.delete(), 5000);
-
-		if (this.client.settings.get(message.guild!.id, "logging", false))
-			(<TextChannel>(
-				message.guild!.channels.cache.get(
-					this.client.settings.get(
-						message.guild!.id,
-						"loggingChannel",
-						null
-					)
-				)
-			))?.send(
-				new MessageEmbed({
-					title: "Channel Unlocked",
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					thumbnail: {
-						url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
+		const signalMessage = await message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: "Unlocked",
+						fields: [
+							{
+								name: "Channel",
+								value: args.channel.toString(),
+								inline: true,
+							},
+							{
+								name: "Unlocked by",
+								value: message.member!.toString(),
+								inline: true,
+							},
+						],
 					},
-					fields: [
-						{
-							name: "Channel",
-							value: args.channel,
-							inline: true,
+					message,
+				),
+			],
+		});
+
+		setTimeout(
+			() => Promise.all([signalMessage.delete(), message.delete()]),
+			5000,
+		);
+
+		this.client.sendToLogChannel(message.guild!, "guild", {
+			embeds: [
+				this.embed(
+					{
+						title: "Channel Unlocked",
+						thumbnail: {
+							url: message.author.displayAvatarURL({
+								dynamic: true,
+							}),
 						},
-						{
-							name: "Unlocked by",
-							value: message.member!,
-							inline: true,
-						},
-					],
-				})
-			);
+						footer: {},
+						fields: [
+							{
+								name: "Channel",
+								value: args.channel.toString(),
+								inline: true,
+							},
+							{
+								name: "Unlocked by",
+								value: message.member!.toString(),
+								inline: true,
+							},
+						],
+					},
+					message,
+				),
+			],
+		});
 	}
 }

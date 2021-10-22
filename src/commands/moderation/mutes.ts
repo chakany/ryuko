@@ -1,6 +1,6 @@
 import Command from "../../struct/Command";
 import { Message, TextChannel } from "discord.js";
-import { FieldsEmbed } from "discord-paginationembed";
+import { MessagePagination } from "@ryukobot/paginationembed";
 import moment from "moment";
 
 export default class MutesCommand extends Command {
@@ -22,27 +22,39 @@ export default class MutesCommand extends Command {
 	}
 
 	async exec(message: Message, args: any): Promise<any> {
-		const mutes: any[] = await this.client.db.getAllMutes(
+		const mutes = await this.client.db.getAllMutes(
 			args.member.id,
-			message.guild!.id
+			message.guild!.id,
 		);
 
 		if (!mutes.length)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Member",
-					"That Member has no mutes!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Member",
+						"That Member has no mutes!",
+					),
+				],
+			});
 
-		const mutesEmbed = new FieldsEmbed()
-			.setArray(mutes)
-			.setChannel(<TextChannel>message.channel)
-			.setAuthorizedUsers([message.author.id])
-			.setElementsPerPage(6)
-			.formatField("Mutes", (mute: any) => {
+		const mutesEmbed = new MessagePagination({
+			message,
+			embed: this.embed(
+				{
+					title: `${args.member.user.tag}'s Mutes`,
+					thumbnail: {
+						url: args.member.user.displayAvatarURL({
+							dynamic: true,
+						}),
+					},
+				},
+				message,
+			),
+			array: mutes as never[],
+			itemsPerPage: 6,
+			title: "Mutes",
+			callbackfn: (mute: any) => {
 				const created = moment(mute.createdAt);
 				const expires = moment(mute.expires);
 				const diff = expires.diff(created);
@@ -54,20 +66,9 @@ export default class MutesCommand extends Command {
 				}>; **${duration.humanize()}**; <t:${created.unix()}:f>; ${
 					mute.reason ? `\`${mute.reason}\`` : "No Reason Provided"
 				}${mute.unpunished ? `; **Unmuted**` : ""}`;
-			})
-			.setPage(1)
-			.setPageIndicator(true);
+			},
+		});
 
-		mutesEmbed.embed
-			.setColor(message.guild!.me!.displayHexColor)
-			.setTitle(`${args.member.user.tag}'s Mutes`)
-			.setThumbnail(args.member.user.displayAvatarURL({ dynamic: true }))
-			.setTimestamp(new Date())
-			.setFooter(
-				message.author.tag,
-				message.author.displayAvatarURL({ dynamic: true })
-			);
-
-		await mutesEmbed.build();
+		mutesEmbed.build();
 	}
 }

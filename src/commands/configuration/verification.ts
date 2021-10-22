@@ -1,6 +1,7 @@
-import { Argument } from "discord-akairo";
+import { Argument } from "@ryukobot/discord-akairo";
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, Role } from "discord.js";
+import { Message, Role } from "discord.js";
+import { roleMention } from "@discordjs/builders";
 
 export default class VerificationCommand extends Command {
 	constructor() {
@@ -22,231 +23,287 @@ export default class VerificationCommand extends Command {
 		});
 	}
 
-	async exec(message: Message, args: any): Promise<any> {
+	exec(message: Message, args: any) {
+		const enabled = this.client.settings.get(
+			message.guild!.id,
+			"verification",
+			false,
+		);
+
+		const level = this.client.settings.get(
+			message.guild!.id,
+			"verificationLevel",
+			"low",
+		);
+
 		switch (args.action) {
 			default:
-				return message.channel.send(
-					new MessageEmbed({
-						title: "Verification Subcommands",
-						description: `See more information on the [Verification Wiki](${this.client.config.siteUrl}/wiki/Features/Verification)`,
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-						fields: [
+				message.channel.send({
+					embeds: [
+						this.embed(
 							{
-								name: "`enable`",
-								value: "Enable user verification, note that you must have a verified role set",
+								title: `${
+									enabled
+										? this.client.emoji.greenCheck
+										: this.client.emoji.redX
+								} Verification Subcommands`,
+								description: `See more information on the [Verification Wiki](${this.client.config.siteUrl}/wiki/Features/Verification)`,
+								fields: [
+									{
+										name: "`enable`",
+										value: "Enable user verification, note that you must have a verified role set",
+									},
+									{
+										name: "`disable`",
+										value: "Disable user verification",
+									},
+									{
+										name: "`level <value>`",
+										value: `Set the level of verification you want\n${
+											level == "strict"
+												? this.client.emoji.greenCheck +
+												  " "
+												: ""
+										}\`strict\` Ban all alts & Members using a VPN/Proxy\n${
+											level == "medium"
+												? this.client.emoji.greenCheck +
+												  " "
+												: ""
+										}\`medium\` Ban all alts that have an active punishment (like mute, or ban) & Members using a VPN/Proxy\n
+										${
+											level == "low"
+												? this.client.emoji.greenCheck +
+												  " "
+												: ""
+										}\`low\` Take no action against alts and Members using a VPN/Proxy, use this if you only want to present a CAPTCHA to keep out bots.`,
+									},
+									{
+										name: `\`role <role>\``,
+										value: `Set the role that verified users will be given after completing verification\n**Current Role:** ${
+											this.client.settings.get(
+												message.guild!.id,
+												"verifiedRole",
+												null,
+											)
+												? `${roleMention(
+														this.client.settings.get(
+															message.guild!.id,
+															"verifiedRole",
+															null,
+														),
+												  )}`
+												: "None"
+										}`,
+									},
+								],
 							},
-							{
-								name: "`disable`",
-								value: "Disable user verification",
-							},
-							{
-								name: "`level <value>`",
-								value: "Set the level of verification you want\n`strict` Ban all alternate accounts\n`medium` Ban all alternate accounts that have an active punishment (like mute, or ban)\n`low` Take no action against alternate accounts, use this if you only want to present a CAPTCHA to users",
-							},
-							{
-								name: "`role <role>`",
-								value: "Set the role that verified users will be given after completing verification",
-							},
-						],
-					})
-				);
+							message,
+						),
+					],
+				});
 				break;
 			case "enable":
 				if (
 					!this.client.settings.get(
 						message.guild!.id,
 						"verifiedRole",
-						null
+						null,
 					)
 				)
-					return message.channel.send(
-						this.client.error(
-							message,
-							this,
-							"Invalid Configuration",
-							`You must set a role to give to verified users! To do this, run \`${message.util?.parsed?.alias} role <value>\``
-						)
-					);
+					return message.channel.send({
+						embeds: [
+							this.error(
+								message,
+								"Invalid Configuration",
+								`You must set a role to give to verified users! To do this, run \`${message.util?.parsed?.alias} role <value>\``,
+							),
+						],
+					});
 
 				this.client.settings.set(
 					message.guild!.id,
 					"verification",
-					true
+					true,
 				);
 
-				return message.channel.send(
-					new MessageEmbed({
-						title: `${this.client.emoji.greenCheck} Enabled User Verification`,
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-						fields: [
+				message.channel.send({
+					embeds: [
+						this.embed(
 							{
-								name: "Level",
-								value: this.client.settings.get(
-									message.guild!.id,
-									"verificationLevel",
-									"low"
-								),
+								title: `${this.client.emoji.greenCheck} Enabled User Verification`,
+								fields: [
+									{
+										name: "Level",
+										value: this.client.settings.get(
+											message.guild!.id,
+											"verificationLevel",
+											"low",
+										),
+									},
+								],
 							},
-						],
-					})
-				);
+							message,
+						),
+					],
+				});
 				break;
 			case "disable":
 				this.client.settings.set(
 					message.guild!.id,
 					"verification",
-					false
+					false,
 				);
 
-				return message.channel.send(
-					new MessageEmbed({
-						title: `${this.client.emoji.greenCheck} Disabled User Verification`,
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-					})
-				);
+				message.channel.send({
+					embeds: [
+						this.embed(
+							{
+								title: `${this.client.emoji.greenCheck} Disabled User Verification`,
+							},
+							message,
+						),
+					],
+				});
 				break;
-			case "level":
+			case "level": {
 				switch (args.value) {
 					default:
-						return message.channel.send(
-							new MessageEmbed({
-								title: "Verification Levels",
-								color: message.guild?.me?.displayHexColor,
-								timestamp: new Date(),
-								footer: {
-									text: message.author.tag,
-									icon_url: message.author.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								fields: [
+						message.channel.send({
+							embeds: [
+								this.embed(
 									{
-										name: "`strict`",
-										value: "Ban all alternate accounts",
+										title: "Verification Levels",
+										fields: [
+											{
+												name: `${
+													level == "strict"
+														? this.client.emoji
+																.greenCheck +
+														  " "
+														: ""
+												}\`strict\``,
+												value: "Ban all alts & Members using a VPN/Proxy",
+											},
+											{
+												name: `${
+													level == "medium"
+														? this.client.emoji
+																.greenCheck +
+														  " "
+														: ""
+												}\`medium\``,
+												value: "Ban all alts that have an active punishment (like mute, or ban) & Members using a VPN/Proxy",
+											},
+											{
+												name: `${
+													level == "low"
+														? this.client.emoji
+																.greenCheck +
+														  " "
+														: ""
+												}\`low\``,
+												value: "Take no action against alts and Members using a VPN/Proxy, use this if you only want to present a CAPTCHA to users",
+											},
+										],
 									},
-									{
-										name: "`medium`",
-										value: "Ban all alternate accounts that have an active punishment (like mute, or ban)",
-									},
-									{
-										name: "`low`",
-										value: "Take no action against alternate accounts, use this if you only want to present a CAPTCHA to users",
-									},
-								],
-							})
-						);
+									message,
+								),
+							],
+						});
 						break;
 					case "strict":
 					case "medium":
 					case "low":
-						const oldLevel = this.client.settings.get(
-							message.guild!.id,
-							"verificationLevel",
-							"low"
-						);
+						{
+							const oldLevel = this.client.settings.get(
+								message.guild!.id,
+								"verificationLevel",
+								"low",
+							);
 
-						this.client.settings.set(
-							message.guild!.id,
-							"verificationLevel",
-							args.value
-						);
+							this.client.settings.set(
+								message.guild!.id,
+								"verificationLevel",
+								args.value,
+							);
 
-						return message.channel.send(
-							new MessageEmbed({
-								title: `${this.client.emoji.greenCheck} Set verification level`,
-								color: message.guild?.me?.displayHexColor,
-								timestamp: new Date(),
-								footer: {
-									text: message.author.tag,
-									icon_url: message.author.displayAvatarURL({
-										dynamic: true,
-									}),
-								},
-								fields: [
-									{
-										name: "Before",
-										value: oldLevel,
-										inline: true,
-									},
-									{
-										name: "After",
-										value: args.value,
-										inline: true,
-									},
+							message.channel.send({
+								embeds: [
+									this.embed(
+										{
+											title: `${this.client.emoji.greenCheck} Set Verification Level`,
+											fields: [
+												{
+													name: "Before",
+													value: oldLevel,
+													inline: true,
+												},
+												{
+													name: "After",
+													value: args.value,
+													inline: true,
+												},
+											],
+										},
+										message,
+									),
 								],
-							})
-						);
+							});
+						}
+						break;
 				}
 				break;
-			case "role":
+			}
+			case "role": {
 				if (!args.value)
-					return message.channel.send(
-						this.client.error(
-							message,
-							this,
-							"Invalid Arguments",
-							"You must provide a role to set!"
-						)
-					);
+					return message.channel.send({
+						embeds: [
+							this.error(
+								message,
+								"Invalid Arguments",
+								"You must provide a role to set!",
+							),
+						],
+					});
 
 				const oldRole = this.client.settings.get(
 					message.guild!.id,
 					"verifiedRole",
-					null
+					null,
 				);
 
 				this.client.settings.set(
 					message.guild!.id,
 					"verifiedRole",
-					(<Role>args.value).id
+					(<Role>args.value).id,
 				);
 
-				return message.channel.send(
-					new MessageEmbed({
-						title: `${this.client.emoji.greenCheck} Set Verification Role`,
-						color: message.guild?.me?.displayHexColor,
-						timestamp: new Date(),
-						footer: {
-							text: message.author.tag,
-							icon_url: message.author.displayAvatarURL({
-								dynamic: true,
-							}),
-						},
-						fields: [
+				message.channel.send({
+					embeds: [
+						this.embed(
 							{
-								name: "Before",
-								value: oldRole ? `<@&${oldRole}>` : "None",
-								inline: true,
+								title: `${this.client.emoji.greenCheck} Set Verification Role`,
+								fields: [
+									{
+										name: "Before",
+										value: oldRole
+											? roleMention(oldRole)
+											: "None",
+										inline: true,
+									},
+									{
+										name: "After",
+										value: args.value.toString(),
+										inline: true,
+									},
+								],
 							},
-							{
-								name: "After",
-								value: args.value,
-								inline: true,
-							},
-						],
-					})
-				);
+							message,
+						),
+					],
+				});
+				break;
+			}
 		}
 	}
 }

@@ -1,0 +1,13 @@
+diff --git a/src/WebSocket.js b/src/WebSocket.js
+index c12db834fd4a30da0c46b3b623e961dcc8003f7b..7229c563ba244dfd4969fb55b1d941ccf17bdfe4 100644
+--- a/src/WebSocket.js
++++ b/src/WebSocket.js
+@@ -3,7 +3,7 @@
+ let erlpack;
+ 
+ try {
+-  erlpack = require('erlpack');
++  erlpack = require('@ryukobot/erlpack');
+   if (!erlpack.pack) erlpack = null;
+ } catch {} // eslint-disable-line no-empty
+ 

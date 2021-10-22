@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import { Aki } from "aki-api";
 
 export default class AkinatorCommand extends Command {
@@ -14,7 +14,7 @@ export default class AkinatorCommand extends Command {
 	// @ts-expect-error 2425
 	async *args(message: Message) {
 		const loadMessage = await message.channel.send(
-			`${this.client.emoji.loading} ***Please Wait...***`
+			`${this.client.emoji.loading} ***Please Wait...***`,
 		);
 
 		const akinator = new Aki({ region: "en" });
@@ -30,7 +30,7 @@ export default class AkinatorCommand extends Command {
 					start: `**${
 						akinator.question
 					}**\n\n**Answers:**\n${akinator.answers.join(
-						", "
+						", ",
 					)}, Back, or Stop`,
 				},
 			};
@@ -38,7 +38,7 @@ export default class AkinatorCommand extends Command {
 			const index = <0 | 1 | 2 | 3 | 4>(
 				akinator.answers.findIndex(
 					(value) =>
-						(<String>value).toLowerCase() == result.toLowerCase()
+						(<string>value).toLowerCase() == result.toLowerCase(),
 				)
 			);
 
@@ -56,22 +56,19 @@ export default class AkinatorCommand extends Command {
 	}
 
 	async exec(message: Message, args: any) {
-		message.channel.send(
-			new MessageEmbed({
-				title: args.answers[0].name,
-				description: args.answers[0].description,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				image: {
-					url: args.answers[0].absolute_picture_path,
-				},
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			})
-		);
+		message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: args.answers[0].name,
+						description: args.answers[0].description,
+						image: {
+							url: args.answers[0].absolute_picture_path,
+						},
+					},
+					message,
+				),
+			],
+		});
 	}
 }

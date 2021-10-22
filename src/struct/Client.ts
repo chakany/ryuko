@@ -1,120 +1,123 @@
 import {
 	AkairoClient,
-	CommandHandler,
 	InhibitorHandler,
 	ListenerHandler,
 	SequelizeProvider,
-} from "discord-akairo";
-import { Collection, Message, MessageEmbed } from "discord.js";
-import { Shoukaku, ShoukakuPlayer, ShoukakuTrack } from "shoukaku";
+} from "@ryukobot/discord-akairo";
+import {
+	Collection,
+	Message,
+	Guild,
+	MessageOptions,
+	TextChannel,
+	Intents,
+	Snowflake,
+	VoiceChannel,
+	Invite,
+} from "discord.js";
+import { LavasfyConfig, Queue } from "./Client.d";
+import path from "path";
+import { Shoukaku, Libraries } from "shoukaku";
 import { LavasfyClient } from "lavasfy";
-import bunyan from "bunyan";
+import Logger from "./Logger";
 import { Job } from "node-schedule";
 import ms from "ms";
 import moment from "moment";
 
+import CommandHandler from "./CommandHandler";
 import Command from "./Command";
 
 import Db from "../utils/db";
 import Trivia from "./Trivia";
-import Economy from "./Economy";
-import { generateUsage } from "../utils/command";
 
+/* eslint-disable @typescript-eslint/no-var-requires */
 const config = require("../../config.json");
 const emojis = require("../../app/data/emojis.json");
+const { version } = require("../../package.json");
+/* eslint-enable @typescript-eslint/no-var-requires */
 
 const ShoukakuOptions = {
-	moveOnDisconnect: false,
-	resumable: false,
-	resumableTimeout: 30,
+	moveOnDisconnect: true,
+	resumable: true,
+	resumableTimeout: 120,
 	reconnectTries: 2,
 	restTimeout: 10000,
+	userAgent: `ryuko/${version}`,
 };
-
-interface Queue {
-	player: ShoukakuPlayer | null;
-	tracks: ShoukakuTrack[];
-	paused: boolean;
-	loop: boolean;
-}
-
-// Bruh
-declare module "discord-akairo" {
-	interface AkairoClient {
-		db: Db;
-		commandHandler: CommandHandler;
-		starboardMessages: Collection<string, Message>;
-		config: any;
-		emoji: any;
-		generateUsage: Function;
-		economy: Economy;
-		trivia: Trivia;
-		settings: SequelizeProvider;
-		shoukaku: Shoukaku;
-		lavasfy: LavasfyClient;
-		queue: Collection<string, Queue>;
-		log: bunyan;
-		jobs: Map<string, Map<string, Job>>;
-		invites: Collection<string, any>;
-		error(
-			message: Message,
-			command: Command,
-			error: string,
-			description: string
-		): MessageEmbed;
-	}
-}
 
 export default class RyukoClient extends AkairoClient {
 	public db: Db;
-	public config: any;
-	public emoji: any;
-	public generateUsage: Function;
-	public economy: Economy;
+	public config: typeof config;
+	public emoji: typeof emojis;
 	public trivia: Trivia;
 	public settings: SequelizeProvider;
 	public shoukaku: Shoukaku;
 	public lavasfy: LavasfyClient;
 	public queue: Collection<string, Queue>;
-	public log: bunyan;
-	public jobs: Collection<string, Map<string, Job>>;
+	public log: Logger;
+	public voiceLobbies: Collection<
+		Snowflake,
+		Collection<
+			Snowflake,
+			{
+				channel: VoiceChannel;
+				owner: Snowflake;
+			}
+		>
+	>;
+	public jobs: { mutes: Collection<string, Collection<string, Job>> };
 	public starboardMessages: Collection<string, Message>;
-	public invites: Collection<string, any>;
+	public invites: Collection<string, Collection<string, number>>;
 	public commandHandler: CommandHandler;
-	private inhibitorHandler: InhibitorHandler;
-	private listenerHandler: ListenerHandler;
+	public inhibitorHandler: InhibitorHandler;
+	public listenerHandler: ListenerHandler;
 
-	constructor(log: bunyan) {
+	constructor(log: Logger) {
 		super(
 			{
 				ownerID: config.ownerId,
 			},
 			{
-				disableMentions: "everyone",
-			}
+				intents: [
+					Intents.FLAGS.GUILDS,
+					Intents.FLAGS.GUILD_MESSAGES,
+					Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+					Intents.FLAGS.GUILD_BANS,
+					Intents.FLAGS.GUILD_INVITES,
+					Intents.FLAGS.GUILD_MEMBERS,
+					Intents.FLAGS.GUILD_VOICE_STATES,
+				],
+			},
 		);
 		this.config = config;
 		this.emoji = emojis;
 		this.trivia = new Trivia("../../app/data/trivia");
-		this.generateUsage = generateUsage;
 		this.log = log;
-		this.jobs = new Collection();
+		this.jobs = {
+			mutes: new Collection(),
+		};
 		this.invites = new Collection();
+		this.voiceLobbies = new Collection();
 		this.starboardMessages = new Collection();
 
 		this.db = new Db();
-		this.economy = new Economy("../../app/data", this.db);
 		this.settings = this.db.getSettings();
 
-		this.shoukaku = new Shoukaku(this, config.lavalink, ShoukakuOptions);
-		const lavalinkConfig = (): any[] => {
-			let nodes = [];
+		this.shoukaku = new Shoukaku(
+			new Libraries.DiscordJS(this),
+			config.lavalink,
+			ShoukakuOptions,
+		);
+
+		const lavalinkConfig = (): LavasfyConfig[] => {
+			const nodes: LavasfyConfig[] = [];
 			let node;
 			for (let i = 0; (node = config.lavalink[i]); i++) {
+				const splitted = (<string>node.url).split(":");
 				nodes.push({
 					id: node.name,
-					host: node.host,
-					port: node.port,
+					host: splitted[0],
+					port: splitted[1],
 					password: node.auth,
 				});
 			}
@@ -125,14 +128,14 @@ export default class RyukoClient extends AkairoClient {
 		this.queue = new Collection();
 
 		this.commandHandler = new CommandHandler(this, {
-			directory: "./commands",
+			directory: path.resolve(__dirname, "../commands"),
 			prefix: (message) => {
 				if (message.guild) {
 					// The third param is the default.
 					return this.settings.get(
 						message.guild.id,
 						"prefix",
-						config.prefix
+						config.prefix,
 					);
 				}
 
@@ -142,18 +145,25 @@ export default class RyukoClient extends AkairoClient {
 			allowMention: true,
 			handleEdits: true,
 			commandUtil: true,
-			// @ts-expect-error 2322
 			ignorePermissions: (message: Message, command: Command) => {
-				if (config.ownerId.includes(message.author.id)) return true;
+				if (this.isOwner(message.author.id)) return true;
 				else if (
-					command.modOnly &&
 					command.userPermissions &&
-					message.member!.roles.cache.has(
-						this.settings.get(message.guild!.id, "modRole", null)
-					)
+					(command.adminOnly || command.modOnly) &&
+					(message.member!.roles.cache.has(
+						this.settings.get(message.guild!.id, "adminRole", null),
+					) ||
+						message.member!.roles.cache.has(
+							this.settings.get(
+								message.guild!.id,
+								"modRole",
+								null,
+							),
+						))
 				)
 					return true;
-				else return false;
+
+				return false;
 			},
 			ignoreCooldown: config.ownerId,
 		});
@@ -184,11 +194,11 @@ export default class RyukoClient extends AkairoClient {
 		});
 
 		this.inhibitorHandler = new InhibitorHandler(this, {
-			directory: "./inhibitors",
+			directory: path.resolve(__dirname, "../inhibitors"),
 		});
 
 		this.listenerHandler = new ListenerHandler(this, {
-			directory: "./listeners",
+			directory: path.resolve(__dirname, "../listeners"),
 		});
 
 		this.listenerHandler.setEmitters({
@@ -206,29 +216,27 @@ export default class RyukoClient extends AkairoClient {
 		this.commandHandler.loadAll();
 	}
 
-	_setupShoukakuEvents() {
-		const log = bunyan.createLogger({
+	private _setupShoukakuEvents() {
+		const log = new Logger({
 			name: "lavalink",
-			stream: process.stdout,
-			level: process.env.NODE_ENV !== "production" ? "debug" : "info",
 		});
 
 		this.shoukaku.on("ready", (name) => log.info(`[${name}] Connected.`));
 		this.shoukaku.on("error", (name, error) =>
-			log.error(`[${name}]`, error)
+			log.error(`[${name}]`, error),
 		);
 		this.shoukaku.on("close", (name, code, reason) =>
 			log.warn(
 				`[${name}] Connection Closed. Code ${code}. Reason ${
 					reason || "No reason"
-				}`
-			)
+				}`,
+			),
 		);
-		this.shoukaku.on("disconnected", (name, reason) =>
-			log.warn(`[${name}] Disconnected. Reason ${reason || "No reason"}`)
+		this.shoukaku.on("disconnect", (name, reason) =>
+			log.warn(`[${name}] Disconnected. Reason ${reason || "No reason"}`),
 		);
 		this.shoukaku.on("debug", (name, data) =>
-			log.debug(`[${name}] ` + JSON.stringify(data))
+			log.debug(`[${name}] ` + JSON.stringify(data)),
 		);
 	}
 
@@ -240,41 +248,85 @@ export default class RyukoClient extends AkairoClient {
 		return this;
 	}
 
-	async login(token: string) {
+	async login(token: string): Promise<string> {
 		await this.settings.init();
 		return super.login(token);
 	}
 
-	error(
-		message: Message,
-		command: Command,
-		error: string,
-		description: string
-	) {
-		const prefix = message.util?.parsed?.prefix;
-		return new MessageEmbed({
-			title: error,
-			description: description,
-			color: message.guild?.me?.displayHexColor,
-			timestamp: new Date(),
-			footer: {
-				text: `Use the "${message.util?.parsed?.prefix}${
-					command.handler.findCommand("support").aliases[0]
-				}" command if you would like to report this error\n${
-					message.author.tag
-				}`,
-				icon_url: message.author.displayAvatarURL({ dynamic: true }),
-			},
-			author: {
-				name: `❌ Error: ${command.aliases[0]}`,
-				url: `${this.config.siteUrl}/commands/${command.categoryID}/${command.id}`,
-			},
-			fields: [
-				{
-					name: "Usage",
-					value: "`" + this.generateUsage(command, prefix) + "`",
-				},
-			],
-		});
+	async sendToLogChannel(
+		guild: Guild,
+		type: "member" | "message" | "voice" | "guild",
+		options: MessageOptions,
+	): Promise<Message | void> {
+		const guildChannels = await guild.channels.fetch();
+		let channel: TextChannel;
+
+		switch (type) {
+			case "guild":
+				if (!this.settings.get(guild.id, "guildLogs", false)) return;
+
+				if (
+					!this.settings.get(guild.id, "guildLogsChannel", null) ||
+					!guildChannels.get(
+						this.settings.get(guild.id, "guildLogsChannel", null),
+					)
+				)
+					return;
+
+				channel = guildChannels.get(
+					this.settings.get(guild.id, "guildLogsChannel", null),
+				) as TextChannel;
+				break;
+
+			case "member":
+				if (!this.settings.get(guild.id, "memberLogs", false)) return;
+
+				if (
+					!this.settings.get(guild.id, "memberLogsChannel", null) ||
+					!guildChannels.get(
+						this.settings.get(guild.id, "memberLogsChannel", null),
+					)
+				)
+					return;
+
+				channel = guildChannels.get(
+					this.settings.get(guild.id, "memberLogsChannel", null),
+				) as TextChannel;
+				break;
+
+			case "message":
+				if (!this.settings.get(guild.id, "messageLogs", false)) return;
+
+				if (
+					!this.settings.get(guild.id, "messageLogsChannel", null) ||
+					!guildChannels.get(
+						this.settings.get(guild.id, "messageLogsChannel", null),
+					)
+				)
+					return;
+
+				channel = guildChannels.get(
+					this.settings.get(guild.id, "messageLogsChannel", null),
+				) as TextChannel;
+				break;
+
+			case "voice":
+				if (!this.settings.get(guild.id, "voiceLogs", false)) return;
+
+				if (
+					!this.settings.get(guild.id, "voiceLogsChannel", null) ||
+					!guildChannels.get(
+						this.settings.get(guild.id, "voiceLogsChannel", null),
+					)
+				)
+					return;
+
+				channel = guildChannels.get(
+					this.settings.get(guild.id, "voiceLogsChannel", null),
+				) as TextChannel;
+				break;
+		}
+
+		channel.send(options);
 	}
 }

@@ -24,6 +24,9 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 		modRole: {
 			type: DataTypes.STRING,
 		},
+		adminRole: {
+			type: DataTypes.STRING,
+		},
 		muteRole: {
 			type: DataTypes.STRING,
 		},
@@ -38,6 +41,34 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 			defaultValue: false,
 		},
 		loggingChannel: {
+			type: DataTypes.STRING,
+		},
+		guildLogs: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		memberLogs: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		voiceLogs: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		messageLogs: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		guildLogsChannel: {
+			type: DataTypes.STRING,
+		},
+		memberLogsChannel: {
+			type: DataTypes.STRING,
+		},
+		voiceLogsChannel: {
+			type: DataTypes.STRING,
+		},
+		messageLogsChannel: {
 			type: DataTypes.STRING,
 		},
 		verification: {
@@ -71,6 +102,32 @@ export default function (sequelize: Sequelize, config: any): ModelCtor<any> {
 		filter: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false,
+		},
+		filterBypass: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		joinLeave: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		joinLeaveChannel: {
+			type: DataTypes.STRING,
+		},
+		joinMessage: {
+			type: DataTypes.STRING,
+			defaultValue: "Welcome **(tag**, Enjoy your stay!",
+		},
+		leaveMessage: {
+			type: DataTypes.STRING,
+			defaultValue: "Looks like **(tag** left. :(",
+		},
+		voiceLobbies: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		voiceLobbyChannel: {
+			type: DataTypes.STRING,
 		},
 		someDumbFuckingSetting: {
 			type: DataTypes.BOOLEAN,

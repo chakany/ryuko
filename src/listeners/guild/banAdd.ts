@@ -1,5 +1,5 @@
-import { Listener } from "discord-akairo";
-import { Guild, User, TextChannel, MessageEmbed } from "discord.js";
+import Listener from "../../struct/Listener";
+import { GuildBan, User } from "discord.js";
 
 export default class GuildBanAddListener extends Listener {
 	constructor() {
@@ -9,22 +9,10 @@ export default class GuildBanAddListener extends Listener {
 		});
 	}
 
-	async exec(guild: Guild, user: User) {
-		const logChannelId = this.client.settings.get(
-			guild.id,
-			"loggingChannel",
-			null
-		);
+	async exec(ban: GuildBan) {
+		if (ban.partial) await ban.fetch();
 
-		if (
-			!logChannelId ||
-			!this.client.settings.get(guild.id, "logging", false)
-		)
-			return;
-
-		const logChannel = <TextChannel>guild.channels.cache.get(logChannelId);
-
-		const fetchedLogs = await guild.fetchAuditLogs({
+		const fetchedLogs = await ban.guild.fetchAuditLogs({
 			limit: 1,
 			type: "MEMBER_BAN_ADD",
 		});
@@ -32,79 +20,96 @@ export default class GuildBanAddListener extends Listener {
 		const banLog = fetchedLogs.entries.first();
 
 		if (!banLog)
-			return logChannel.send(
-				new MessageEmbed({
-					title: "Member Banned",
-					thumbnail: {
-						url: user.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					color: guild.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
+			return this.client.sendToLogChannel(ban.guild, "member", {
+				embeds: [
+					this.embed(
 						{
-							name: "Member",
-							value: user,
-							inline: true,
+							title: "Member Banned",
+							thumbnail: {
+								url: ban.user.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: ban.user.toString(),
+									inline: true,
+								},
+							],
 						},
-					],
-				})
-			);
+						ban.user,
+						ban.guild,
+					),
+				],
+			});
 
 		const { executor, target } = banLog;
 
-		if (executor == guild.me?.user) return;
+		if (executor == ban.guild.me?.user) return;
 
-		if ((<User>target).id === user.id) {
-			return logChannel.send(
-				new MessageEmbed({
-					title: "Member Banned",
-					thumbnail: {
-						url: user.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					color: guild.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
+		if ((<User>target).id === ban.user.id) {
+			return this.client.sendToLogChannel(ban.guild, "member", {
+				embeds: [
+					this.embed(
 						{
-							name: "Member",
-							value: user,
-							inline: true,
+							title: "Member Banned",
+							thumbnail: {
+								url: ban.user.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: ban.user.toString(),
+									inline: true,
+								},
+								{
+									name: "Banned By",
+									value: executor!.toString(),
+									inline: true,
+								},
+								{
+									name: "Reason",
+									value:
+										banLog.reason?.toString() ||
+										"No Reason Provided",
+								},
+							],
 						},
-						{
-							name: "Banned By",
-							value: executor,
-							inline: true,
-						},
-						{
-							name: "Reason",
-							value: banLog.reason,
-						},
-					],
-				})
-			);
+						ban.user,
+						ban.guild,
+					),
+				],
+			});
 		} else {
-			return logChannel.send(
-				new MessageEmbed({
-					title: "Member Banned",
-					thumbnail: {
-						url: user.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					color: guild.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
+			return this.client.sendToLogChannel(ban.guild, "member", {
+				embeds: [
+					this.embed(
 						{
-							name: "Member",
-							value: user,
-							inline: true,
+							title: "Member Banned",
+							thumbnail: {
+								url: ban.user.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: ban.user.toString(),
+									inline: true,
+								},
+							],
 						},
-					],
-				})
-			);
+						ban.user,
+						ban.guild,
+					),
+				],
+			});
 		}
 	}
 }

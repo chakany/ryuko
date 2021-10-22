@@ -1,5 +1,6 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
+import { roleMention } from "@discordjs/builders";
 
 export default class ModroleCommand extends Command {
 	constructor() {
@@ -12,9 +13,7 @@ export default class ModroleCommand extends Command {
 					type: "role",
 				},
 			],
-			description:
-				"Changes the Mod Role, setting this is required if you want to use Moderation commands.",
-
+			description: "Change the Mod Role",
 			userPermissions: ["MANAGE_GUILD"],
 		});
 	}
@@ -26,71 +25,68 @@ export default class ModroleCommand extends Command {
 		const currentRole = this.client.settings.get(
 			message.guild!.id,
 			"modRole",
-			null
+			null,
 		);
 
 		if (!args.role && currentRole) {
-			return message.channel.send(
-				new MessageEmbed({
-					title: "Current Mod Role",
-					color: message.guild?.me?.displayHexColor,
-					timestamp: new Date(),
-					footer: {
-						text: message.author.tag,
-						icon_url: message.author.displayAvatarURL({
-							dynamic: true,
-						}),
-					},
-					fields: [
+			return message.channel.send({
+				embeds: [
+					this.embed(
 						{
-							name: "Role",
-							value: currentRole ? `<@&${currentRole}>` : "None",
+							title: "Current Mod Role",
+							fields: [
+								{
+									name: "Role",
+									value: currentRole
+										? roleMention(currentRole)
+										: "None",
+								},
+							],
 						},
-					],
-				})
-			);
+						message,
+					),
+				],
+			});
 		} else if (!args.role && !currentRole) {
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Configuration",
-					"There is no mod role set, use the '" +
-						prefix +
-						"modrole' command to set it."
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Configuration",
+						`There is no Mod Role set, use the \`${prefix}${message.util?.parsed?.alias}\`command to set it.`,
+					),
+				],
+			});
 		}
 
 		await this.client.settings.set(
 			message.guild!.id,
 			"modRole",
-			args.role.id
+			args.role.id,
 		);
-		return message.channel.send(
-			new MessageEmbed({
-				title: `${this.client.emoji.greenCheck} Changed Mod Role`,
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
+		return message.channel.send({
+			embeds: [
+				this.embed(
 					{
-						name: "Before",
-						value: currentRole ? `<@&${currentRole}>` : "None",
-						inline: true,
+						title: `${this.client.emoji.greenCheck} Changed Mod Role`,
+						fields: [
+							{
+								name: "Before",
+								value: currentRole
+									? roleMention(currentRole)
+									: "None",
+								inline: true,
+							},
+							{
+								name: "After",
+								value: args.role.toString(),
+								inline: true,
+							},
+						],
 					},
-					{
-						name: "After",
-						value: args.role,
-						inline: true,
-					},
-				],
-			})
-		);
+					message,
+				),
+			],
+		});
 	}
 }

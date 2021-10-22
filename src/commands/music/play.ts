@@ -1,9 +1,7 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
-import { LavalinkTrack } from "lavasfy";
-
-// using import just imported a fucking type, don't listen to what the typescript 'compiler' tells you
-const ShoukakuTrack = require("../../../node_modules/shoukaku/src/constants/ShoukakuTrack.js");
+import { Message } from "discord.js";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const ShoukakuTrack = require("../../../node_modules/shoukaku/src/struct/ShoukakuTrack");
 
 export default class PlayCommand extends Command {
 	constructor() {
@@ -43,37 +41,40 @@ export default class PlayCommand extends Command {
 			guild!.paused = false;
 			return guild!.player?.setPaused(false);
 		} else if (!args.song)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Arguments",
-					"You must provide a search query, or a URL!"
-				)
-			);
-		else if (!message.member!.voice.channelID)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Usage",
-					"You must join a voice channel first!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Arguments",
+						"You must provide a search query, or a URL!",
+					),
+				],
+			});
+		else if (!message.member!.voice.channelId)
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Usage",
+						"You must join a voice channel first!",
+					),
+				],
+			});
 		else if (
 			queue.get(message.guild!.id) &&
-			queue.get(message.guild!.id)?.player?.voiceConnection
-				.voiceChannelID !== message.member?.voice.channelID &&
+			queue.get(message.guild!.id)?.player?.connection.channelId !==
+				message.member?.voice.channelId &&
 			queue.get(message.guild!.id)?.player
 		)
-			return message.channel.send(
-				this.client.error(
-					message,
-					this,
-					"Invalid Usage",
-					"You must be in the same voice channel as me!"
-				)
-			);
+			return message.channel.send({
+				embeds: [
+					this.error(
+						message,
+						"Invalid Usage",
+						"You must be in the same voice channel as me!",
+					),
+				],
+			});
 		const node = this.client.shoukaku.getNode();
 
 		if (!queue.get(message.guild!.id))
@@ -85,32 +86,24 @@ export default class PlayCommand extends Command {
 			});
 
 		const guildQueue = queue.get(message.guild!.id)!;
-		const sentMessage = await message.channel.send(
-			new MessageEmbed({
-				title: `${this.client.emoji.loading} *Please Wait..*`,
-				description:
-					"I am searching for your song(s), if you queued a big playlist this will take a minute!",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-			})
-		);
-		const embedToSend = new MessageEmbed({
-			title: "Now Playing",
-			color: message.guild?.me?.displayHexColor,
-			timestamp: new Date(),
-			footer: {
-				text: message.author.tag,
-				icon_url: message.author.displayAvatarURL({
-					dynamic: true,
-				}),
-			},
+		const sentMessage = await message.channel.send({
+			embeds: [
+				this.embed(
+					{
+						title: `${this.client.emoji.loading} *Please Wait..*`,
+						description:
+							"I am searching for your song(s), if you queued a big playlist this will take a minute!",
+					},
+					message,
+				),
+			],
 		});
+		const embedToSend = this.embed(
+			{
+				title: "Now Playing",
+			},
+			message,
+		);
 
 		// Make embeds more stylish lolol
 		if (
@@ -125,25 +118,26 @@ export default class PlayCommand extends Command {
 				const response = await lavasfyNode?.load(args.song);
 
 				switch (response?.loadType) {
-					case "TRACK_LOADED":
+					case "TRACK_LOADED": {
 						guildQueue.tracks.push(
-							new ShoukakuTrack(response.tracks[0])
+							new ShoukakuTrack(response.tracks[0]),
 						);
 						embedToSend.setDescription(
-							`\`${response.tracks[0].info.title} - ${response?.tracks[0].info.author}\``
+							`\`${response.tracks[0].info.title} - ${response?.tracks[0].info.author}\``,
 						);
 						embedToSend.setURL(response.tracks[0].info.uri);
 						embedToSend.setThumbnail(
-							response.spotifyMetadata.album.images[0].url
+							response.metadata.album.images[0].url,
 						);
 						break;
-					case "PLAYLIST_LOADED":
-						for (let track of response.tracks) {
+					}
+					case "PLAYLIST_LOADED": {
+						for (const track of response.tracks) {
 							guildQueue.tracks.push(new ShoukakuTrack(track));
 						}
 						let playlistCount = 0;
 						let playlistDescription = "";
-						for await (let track of response.tracks) {
+						for await (const track of response.tracks) {
 							if (playlistCount == 0)
 								playlistDescription =
 									playlistDescription +
@@ -151,7 +145,7 @@ export default class PlayCommand extends Command {
 							else if (playlistCount < 7)
 								playlistDescription =
 									playlistDescription +
-									`\n**${playlistCount}:** \`${track.info.title} - ${track.info.author}\``;
+									`\n**${playlistCount}.** \`${track.info.title} - ${track.info.author}\``;
 							else if (playlistCount == 7)
 								playlistDescription =
 									playlistDescription +
@@ -162,83 +156,88 @@ export default class PlayCommand extends Command {
 						}
 						embedToSend.setDescription(playlistDescription);
 						embedToSend.setThumbnail(
-							response.spotifyMetadata.images[0].url
+							response.metadata.images[0].url,
 						);
 						embedToSend.setURL(args.song);
 						break;
+					}
 					case "LOAD_FAILED":
 					case "NO_MATCHES":
-						return message.channel.send(
-							this.client.error(
-								message,
-								this,
-								"An error occurred",
-								"I could not play that, try again?"
-							)
-						);
+						return message.channel.send({
+							embeds: [
+								this.error(
+									message,
+									"An error occurred",
+									"I could not play that, try again?",
+								),
+							],
+						});
 				}
 			} catch (error) {
 				this.client.log.error(error);
-				return sentMessage.edit(
-					this.client.error(
-						message,
-						this,
-						"An error occurred",
-						"I could not play that, try again?"
-					)
-				);
+				return sentMessage.edit({
+					embeds: [
+						this.error(
+							message,
+							"An error occurred",
+							"I could not play that, try again?",
+						),
+					],
+				});
 			}
 		} else if (!this._checkURL(args.song)) {
 			const data = await node.rest.resolve(
-				message.util?.parsed?.content!,
-				"youtube"
+				message.util!.parsed!.content!,
+				"youtube",
 			);
 			if (!data)
-				return sentMessage.edit(
-					this.client.error(
-						message,
-						this,
-						"An error occurred",
-						"I could not play that, try again?"
-					)
-				);
+				return sentMessage.edit({
+					embeds: [
+						this.error(
+							message,
+							"An error occurred",
+							"I could not play that, try again?",
+						),
+					],
+				});
 			if (data?.tracks[0]) guildQueue.tracks.push(data?.tracks[0]);
 			embedToSend.setDescription("`" + data?.tracks[0].info.title + "`");
 			embedToSend.setThumbnail(
-				`https://img.youtube.com/vi/${data?.tracks[0].info.identifier}/default.jpg`
+				`https://img.youtube.com/vi/${data?.tracks[0].info.identifier}/default.jpg`,
 			);
-			embedToSend.setURL(data?.tracks[0].info.uri!);
+			embedToSend.setURL(data!.tracks[0].info.uri!);
 		} else {
 			const data = await node.rest.resolve(
-				message.util?.parsed?.content!
+				message.util!.parsed!.content!,
 			);
 			if (!data)
-				return sentMessage.edit(
-					this.client.error(
-						message,
-						this,
-						"An error occurred",
-						"I could not play that, try again?"
-					)
-				);
+				return sentMessage.edit({
+					embeds: [
+						this.error(
+							message,
+							"An error occurred",
+							"I could not play that, try again?",
+						),
+					],
+				});
 			if (data?.playlistName) {
 				let playlistCount = 0;
 				let playlistDescription = "";
-				for await (let track of data?.tracks) {
+				for await (const track of data?.tracks) {
 					if (playlistCount == 0)
 						playlistDescription =
 							playlistDescription + `\`${track.info.title}\`\n`;
 					else if (playlistCount < 7)
 						playlistDescription =
 							playlistDescription +
-							`\n**${playlistCount}:** \`${track.info.title}\``;
+							`\n**${playlistCount}.** \`${track.info.title}\``;
 					else if (playlistCount == 7)
 						playlistDescription =
 							playlistDescription +
 							`\nand **${data?.tracks.length - 6}** more.`;
 					playlistCount++;
 				}
-				for (let track of data?.tracks) {
+				for (const track of data?.tracks) {
 					guildQueue.tracks.push(new ShoukakuTrack(track));
 				}
 				embedToSend.setDescription(playlistDescription);
@@ -248,15 +247,16 @@ export default class PlayCommand extends Command {
 			}
 			if (data?.tracks[0].info.uri?.startsWith("https://www.youtube.com"))
 				embedToSend.setThumbnail(
-					`https://img.youtube.com/vi/${data?.tracks[0].info.identifier}/default.jpg`
+					`https://img.youtube.com/vi/${data?.tracks[0].info.identifier}/default.jpg`,
 				);
-			embedToSend.setURL(data?.tracks[0].info.uri!);
+			embedToSend.setURL(data!.tracks[0].info.uri!);
 		}
 
 		if (!guildQueue.player) {
-			const player = await node.joinVoiceChannel({
-				guildID: message.guild!.id,
-				voiceChannelID: message.member!.voice.channelID!,
+			const player = await node.joinChannel({
+				guildId: message.guild!.id,
+				channelId: message.member!.voice.channelId!,
+				shardId: message.guild!.shardId,
 				deaf: true,
 			});
 
@@ -268,15 +268,13 @@ export default class PlayCommand extends Command {
 
 			player.on("end", (reason) => {
 				switch (reason.reason) {
-					case "LOAD_FAILED":
-						const fromTracks = guildQueue.tracks.find(
-							(track) => track.track == reason.track
-						);
-
-						if (fromTracks && reason.track != previousFailed) {
+					case "LOAD_FAILED": {
+						if (reason.track && reason.track != previousFailed) {
 							previousFailed = reason.track;
-							return player.playTrack(fromTracks);
+							return player.playTrack(reason.track);
 						}
+					}
+					// eslint-disable-next-line no-fallthrough
 					case "STOPPED":
 					case "CLEANUP":
 					case "FINISHED":
@@ -286,45 +284,50 @@ export default class PlayCommand extends Command {
 						break;
 				}
 
-				player.disconnect();
+				player.connection.disconnect();
 				return queue.delete(message.guild!.id);
 			});
 
 			player.on("closed", (data) => {
-				player.disconnect();
+				player.connection.disconnect();
 				return queue.delete(message.guild!.id);
 			});
 
 			player.on("error", (error) => {
 				this.client.log.error(error);
-				message.channel.send(
-					this.client.error(
-						message,
-						this,
-						"An error occurred",
-						error.message
-					)
-				);
-				player.disconnect();
+				message.channel.send({
+					embeds: [
+						this.error(message, "An error occurred", error.message),
+					],
+				});
+				player.connection.disconnect();
 				return queue.delete(message.guild!.id);
 			});
 
-			player.on("trackException", (reason) => {
+			player.on("exception", (reason: any) => {
 				if (reason.track == previousFailed) {
 					return message.channel.send(
-						`${this.client.emoji.redX} \`${reason.exception.message}\` - Skipping...`
+						`${this.client.emoji.redX} \`${
+							reason.exception?.message || "Unknown"
+						}\` - Skipping...`,
 					);
 				}
 
 				message.channel.send(
-					`${this.client.emoji.redX} \`${reason.exception.message}\` - Retrying...`
+					`${this.client.emoji.redX} \`${
+						reason.exception?.message || "Unknown"
+					}\` - Retrying...`,
 				);
 			});
 
-			return sentMessage.edit(embedToSend);
+			return sentMessage.edit({
+				embeds: [embedToSend],
+			});
 		} else {
 			embedToSend.setTitle("Added to Queue");
-			return sentMessage.edit(embedToSend);
+			return sentMessage.edit({
+				embeds: [embedToSend],
+			});
 		}
 	}
 }

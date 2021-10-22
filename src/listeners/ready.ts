@@ -1,7 +1,9 @@
-import { Listener } from "discord-akairo";
-import { MessageEmbed, TextChannel, ActivityType } from "discord.js";
-import schedule, { Job } from "node-schedule";
+import Listener from "../struct/Listener";
+import Client from "../struct/Client";
+import { ActivityType, Collection } from "discord.js";
 import axios from "axios";
+import moment from "moment";
+import { setMute } from "../utils/command";
 
 export default class ReadyListener extends Listener {
 	constructor() {
@@ -12,65 +14,53 @@ export default class ReadyListener extends Listener {
 	}
 
 	async exec() {
-		const outer = this;
+		// Output total modules loaded for each handler
+		this.client.log.info(
+			`Loaded ${this.client.commandHandler.modules.size} Commands`,
+		);
+		this.client.log.info(
+			`Loaded ${this.client.listenerHandler.modules.size} Listeners`,
+		);
+		this.client.log.info(
+			`Loaded ${this.client.inhibitorHandler.modules.size} Inhibitors`,
+		);
 
 		// Schedule Jobs
 		this.client.log.info("Scheduling Jobs");
 
 		this.client.guilds.cache.forEach(async (g) => {
-			// Get all guild invites, save to collection
-			g.fetchInvites().then((guildInvites) => {
-				this.client.invites.set(g.id, guildInvites);
+			// Get all guild invites, save to collection()
+			g.invites.fetch().then((guildInvites) => {
+				const invites = new Collection<string, number>();
+
+				for (const [key, invite] of guildInvites) {
+					invites.set(key, invite.uses?.valueOf() || 0);
+				}
+
+				this.client.invites.set(g.id, invites);
 			});
 
 			// Get all members that are muted, check if they are still muted
-			const muteRole = g.roles.cache.get(
-				this.client.settings.get(g.id, "muteRole", null)
+			const muteRole = await g.roles.fetch(
+				this.client.settings.get(g.id, "muteRole", "123123"),
 			);
 			if (muteRole)
 				for (const [probablyId, member] of muteRole.members) {
 					const mute = await this.client.db.getCurrentUserMutes(
 						member.id,
-						g.id
+						g.id,
 					);
 					if (!mute) member.roles.remove(muteRole);
 					else if (mute) {
-						const job = schedule.scheduleJob(
-							mute.expires,
-							function () {
-								if (member.roles.cache.has(muteRole.id))
-									// @ts-ignore
-									member.roles.remove(muteRole);
-
-								outer.client.jobs.get(g.id)?.delete(member.id);
-
-								const logChannel = outer.client.settings.get(
-									g.id,
-									"loggingChannel",
-									null
-								);
-
-								if (
-									logChannel &&
-									outer.client.settings.get(
-										g.id,
-										"logging",
-										false
-									)
-								)
-									(<TextChannel>(
-										g.channels.cache.get(`${logChannel}`)
-									))?.send(
-										new MessageEmbed({
-											title: "Member Unmuted",
-											description: `${member}'s mute has expired.`,
-											color: g.me?.displayHexColor,
-											timestamp: new Date(),
-										})
-									);
-							}
+						setMute(
+							this.client as unknown as Client,
+							g,
+							member,
+							await g.members.fetch(mute.adminId),
+							muteRole.id,
+							moment(mute.expires),
+							mute.reason,
 						);
-						outer.client.jobs.get(g.id)?.set(member.id, job);
 					}
 				}
 		});
@@ -78,16 +68,19 @@ export default class ReadyListener extends Listener {
 		this.client.log.info(`${this.client.user!.username} is ready to roll!`);
 
 		const guilds = await this.client.shard!.fetchClientValues(
-			"guilds.cache.size"
+			"guilds.cache.size",
 		);
 
 		const totalGuilds = guilds.reduce(
-			(acc, guildCount) => acc + guildCount,
-			0
+			(acc: any, guildCount: any) => acc + guildCount,
+			0,
 		);
 
 		// Set Discord Status
-		const statuses =
+		const statuses: Array<{
+			type: Exclude<ActivityType, "CUSTOM">;
+			text: string;
+		}> =
 			process.env.NODE_ENV !== "production"
 				? [
 						{
@@ -115,7 +108,7 @@ export default class ReadyListener extends Listener {
 			else i++;
 
 			this.client.user!.setActivity(statuses[i].text, {
-				type: <ActivityType>statuses[i].type,
+				type: statuses[i].type,
 			});
 		}, 15000);
 
@@ -130,13 +123,13 @@ export default class ReadyListener extends Listener {
 				{
 					guildCount: this.client.guilds.cache.size,
 					shardCount: this.client.shard!.count,
-					shardId: this.client.guilds.cache.array()[0].shardID,
+					shardId: this.client.guilds.cache.first()?.shardId,
 				},
 				{
 					headers: {
 						Authorization: this.client.config.discord_bots_gg_token,
 					},
-				}
+				},
 			);
 
 			// discordbotlist.com
@@ -147,14 +140,14 @@ export default class ReadyListener extends Listener {
 				{
 					guilds: this.client.guilds.cache.size,
 					users: this.client.users.cache.size,
-					shard_id: this.client.guilds.cache.array()[0].shardID,
+					shard_id: this.client.guilds.cache.first()?.shardId,
 				},
 				{
 					headers: {
 						Authorization:
 							this.client.config.discordbotlist_com_token,
 					},
-				}
+				},
 			);
 		}
 	}

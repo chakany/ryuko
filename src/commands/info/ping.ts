@@ -1,5 +1,5 @@
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class PingCommand extends Command {
 	constructor() {
@@ -11,29 +11,28 @@ export default class PingCommand extends Command {
 	}
 
 	async exec(message: Message) {
-		return message.channel.send(
-			new MessageEmbed({
-				title: "Pong!",
-				color: message.guild?.me?.displayHexColor,
-				timestamp: new Date(),
-				thumbnail: {
-					url: "https://media.giphy.com/media/fvA1ieS8rEV8Y/giphy.gif",
-				},
-				footer: {
-					text: message.author.tag,
-					icon_url: message.author.displayAvatarURL({
-						dynamic: true,
-					}),
-				},
-				fields: [
+		return message.channel.send({
+			embeds: [
+				this.embed(
 					{
-						name: "API Latency",
-						value:
-							"`" + `${Math.round(this.client.ws.ping)}ms` + "`",
-						inline: true,
+						title: "Pong!",
+						thumbnail: {
+							url: "https://media.giphy.com/media/fvA1ieS8rEV8Y/giphy.gif",
+						},
+						fields: [
+							{
+								name: "API Latency",
+								value:
+									"`" +
+									`${Math.round(this.client.ws.ping)}ms` +
+									"`",
+								inline: true,
+							},
+						],
 					},
-				],
-			})
-		);
+					message,
+				),
+			],
+		});
 	}
 }

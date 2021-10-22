@@ -1,5 +1,6 @@
-import { Listener } from "discord-akairo";
-import { GuildMember, MessageEmbed, TextChannel, User } from "discord.js";
+import Listener from "../../struct/Listener";
+import { GuildMember, TextChannel, User } from "discord.js";
+import { replace } from "../../utils/command";
 
 export default class MemberLeaveListener extends Listener {
 	constructor() {
@@ -10,16 +11,23 @@ export default class MemberLeaveListener extends Listener {
 	}
 
 	async exec(member: GuildMember) {
-		const logChannelId = this.client.settings.get(
-			member.guild.id,
-			"loggingChannel",
-			null
-		);
-		if (
-			!logChannelId ||
-			!this.client.settings.get(member.guild!.id, "logging", false)
-		)
-			return;
+		if (this.client.settings.get(member.guild.id, "joinLeave", false)) {
+			const channel = (await member.guild.channels.fetch(
+				this.client.settings.get(
+					member.guild.id,
+					"joinLeaveChannel",
+					null,
+				),
+			)) as TextChannel | undefined;
+
+			const leaveMessage = this.client.settings.get(
+				member.guild.id,
+				"leaveMessage",
+				null,
+			);
+
+			if (leaveMessage) channel?.send(replace(leaveMessage, member.user));
+		}
 
 		const fetchedLogs = await member.guild.fetchAuditLogs({
 			limit: 1,
@@ -28,71 +36,88 @@ export default class MemberLeaveListener extends Listener {
 
 		const kickLog = fetchedLogs.entries.first();
 
-		const logChannel = <TextChannel>(
-			member.guild!.channels.cache.get(logChannelId)
-		);
-
 		if (!kickLog)
-			return logChannel.send(
-				new MessageEmbed({
-					title: "Member Left",
-					thumbnail: {
-						url: member.user.displayAvatarURL({ dynamic: true }),
-					},
-					color: member.guild.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
+			return this.client.sendToLogChannel(member.guild, "member", {
+				embeds: [
+					this.embed(
 						{
-							name: "Member",
-							value: member,
+							title: "Member Left",
+							thumbnail: {
+								url: member.user.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: member.toString(),
+								},
+							],
 						},
-					],
-				})
-			);
+						member.user,
+						member.guild,
+					),
+				],
+			});
 
 		const { executor, target } = kickLog;
-		if (executor.id === this.client.user!.id) return;
+		if (executor?.id === this.client.user!.id) return;
 
 		if ((<User>target).id === member.id) {
-			return logChannel.send(
-				new MessageEmbed({
-					title: "Member Kicked",
-					thumbnail: {
-						url: member.user.displayAvatarURL({ dynamic: true }),
-					},
-					color: member.guild.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
+			return this.client.sendToLogChannel(member.guild, "member", {
+				embeds: [
+					this.embed(
 						{
-							name: "Member",
-							value: member,
-							inline: true,
+							title: "Member Kicked",
+							thumbnail: {
+								url: member.user.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: member.toString(),
+									inline: true,
+								},
+								{
+									name: "Kicked by",
+									value: executor?.toString() || "Unknown",
+									inline: true,
+								},
+							],
 						},
-						{
-							name: "Kicked by",
-							value: <User>executor,
-							inline: true,
-						},
-					],
-				})
-			);
+						member.user,
+						member.guild,
+					),
+				],
+			});
 		} else {
-			return logChannel.send(
-				new MessageEmbed({
-					title: "Member Left",
-					thumbnail: {
-						url: member.user.displayAvatarURL({ dynamic: true }),
-					},
-					color: member.guild.me?.displayHexColor,
-					timestamp: new Date(),
-					fields: [
+			return this.client.sendToLogChannel(member.guild, "member", {
+				embeds: [
+					this.embed(
 						{
-							name: "Member",
-							value: member,
+							title: "Member Left",
+							thumbnail: {
+								url: member.user.displayAvatarURL({
+									dynamic: true,
+								}),
+							},
+							footer: {},
+							fields: [
+								{
+									name: "Member",
+									value: member.toString(),
+								},
+							],
 						},
-					],
-				})
-			);
+						member.user,
+						member.guild,
+					),
+				],
+			});
 		}
 	}
 }
