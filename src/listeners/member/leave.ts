@@ -29,10 +29,12 @@ export default class MemberLeaveListener extends Listener {
 			if (leaveMessage) channel?.send(replace(leaveMessage, member.user));
 		}
 
-		const fetchedLogs = await member.guild.fetchAuditLogs({
-			limit: 1,
-			type: "MEMBER_KICK",
-		});
+		const fetchedLogs = await member.guild
+			.fetchAuditLogs({
+				limit: 1,
+				type: "MEMBER_KICK",
+			})
+			.catch();
 
 		const kickLog = fetchedLogs.entries.first();
 

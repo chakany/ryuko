@@ -10,10 +10,12 @@ export default class GuildBanRemoveListener extends Listener {
 	}
 
 	async exec(ban: GuildBan) {
-		const fetchedLogs = await ban.guild.fetchAuditLogs({
-			limit: 1,
-			type: "MEMBER_BAN_REMOVE",
-		});
+		const fetchedLogs = await ban.guild
+			.fetchAuditLogs({
+				limit: 1,
+				type: "MEMBER_BAN_REMOVE",
+			})
+			.catch();
 
 		const banLog = fetchedLogs.entries.first();
 

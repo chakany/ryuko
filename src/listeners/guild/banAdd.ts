@@ -12,10 +12,12 @@ export default class GuildBanAddListener extends Listener {
 	async exec(ban: GuildBan) {
 		if (ban.partial) await ban.fetch();
 
-		const fetchedLogs = await ban.guild.fetchAuditLogs({
-			limit: 1,
-			type: "MEMBER_BAN_ADD",
-		});
+		const fetchedLogs = await ban.guild
+			.fetchAuditLogs({
+				limit: 1,
+				type: "MEMBER_BAN_ADD",
+			})
+			.catch();
 
 		const banLog = fetchedLogs.entries.first();
 
