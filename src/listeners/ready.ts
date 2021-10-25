@@ -30,15 +30,18 @@ export default class ReadyListener extends Listener {
 
 		this.client.guilds.cache.forEach(async (g) => {
 			// Get all guild invites, save to collection()
-			g.invites.fetch().then((guildInvites) => {
-				const invites = new Collection<string, number>();
+			g.invites
+				.fetch()
+				.then((guildInvites) => {
+					const invites = new Collection<string, number>();
 
-				for (const [key, invite] of guildInvites) {
-					invites.set(key, invite.uses?.valueOf() || 0);
-				}
+					for (const [key, invite] of guildInvites) {
+						invites.set(key, invite.uses?.valueOf() || 0);
+					}
 
-				this.client.invites.set(g.id, invites);
-			});
+					this.client.invites.set(g.id, invites);
+				})
+				.catch();
 
 			// Get all members that are muted, check if they are still muted
 			const muteRole = await g.roles.fetch(
