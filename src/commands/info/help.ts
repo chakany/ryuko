@@ -53,7 +53,7 @@ export default class HelpCommand extends Command {
 					category.id,
 					`\`${prefix}${alias} ${category.id.toLowerCase()}\`\n[Learn More](${
 						this.client.config.siteUrl
-					}/commands#${category.id}-cateogory "See this Category")`,
+					}/commands#${category.id}-category "See this Category")`,
 					true,
 				);
 			}
