@@ -28,6 +28,8 @@ export default class DeleteListener extends Listener {
 				? message.content.substr(0, 1900) + "..."
 				: message.content;
 
+		if (!content) return;
+
 		if (!deletionLog)
 			return this.client.sendToLogChannel(message.guild, "message", {
 				embeds: [
