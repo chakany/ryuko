@@ -113,12 +113,12 @@ export default class MoveCommand extends Command {
 						fields: [
 							{
 								name: "Unmuted",
-								value: args.member,
+								value: args.member.toString(),
 								inline: true,
 							},
 							{
 								name: "Unmuted By",
-								value: message.member,
+								value: message.member!.toString(),
 								inline: true,
 							},
 						],
