@@ -4,7 +4,7 @@ import { Message } from "discord.js";
 export default class StealEmojiCommand extends Command {
 	constructor() {
 		super("stealemoji", {
-			aliases: ["stealemoji", "stealemote"],
+			aliases: ["steal", "stealemoji", "stealemote"],
 			description: "Steal an emote from another server",
 			category: "Utility",
 			args: [
