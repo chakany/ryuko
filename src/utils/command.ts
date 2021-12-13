@@ -1,7 +1,14 @@
 import Command from "../struct/Command";
 import { ArgumentOptions } from "@ryukobot/discord-akairo";
 import Client from "../struct/Client";
-import { User, Guild, GuildMember, Snowflake, Collection } from "discord.js";
+import {
+	User,
+	Guild,
+	GuildMember,
+	Snowflake,
+	Collection,
+	Message,
+} from "discord.js";
 import Embed from "../struct/Embed";
 import schedule from "node-schedule";
 import { Moment } from "moment";
@@ -92,4 +99,16 @@ export function setMute(
 		client.jobs.mutes.set(guild.id, new Collection());
 
 	client.jobs.mutes.get(guild.id)?.set(member.id, job);
+}
+
+export async function defaultReplyMember(
+	message: Message,
+): Promise<GuildMember> {
+	if (message.type == "REPLY") {
+		// fetch message from ref
+		const fetched = await message.fetchReference();
+		return fetched.member!;
+	}
+
+	return message.member!;
 }

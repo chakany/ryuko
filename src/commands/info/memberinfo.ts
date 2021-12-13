@@ -1,4 +1,5 @@
 import Command from "../../struct/Command";
+import { defaultReplyMember } from "../../utils/command";
 import { Message, GuildMember } from "discord.js";
 
 export default class MemberinfoCommand extends Command {
@@ -11,6 +12,7 @@ export default class MemberinfoCommand extends Command {
 				{
 					id: "member",
 					type: "member",
+					default: defaultReplyMember,
 				},
 			],
 		});
