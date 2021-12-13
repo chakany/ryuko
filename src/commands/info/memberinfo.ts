@@ -1,4 +1,5 @@
 import Command from "../../struct/Command";
+import { defaultReplyMember } from "../../utils/command";
 import { Message, GuildMember } from "discord.js";
 
 export default class MemberinfoCommand extends Command {
@@ -11,6 +12,7 @@ export default class MemberinfoCommand extends Command {
 				{
 					id: "member",
 					type: "member",
+					default: defaultReplyMember,
 				},
 			],
 		});
@@ -18,6 +20,8 @@ export default class MemberinfoCommand extends Command {
 
 	async exec(message: Message, args: any) {
 		const member: GuildMember = args.member ? args.member : message.member;
+
+		await member.user.fetch(true);
 
 		return message.channel.send({
 			embeds: [
@@ -92,10 +96,13 @@ export default class MemberinfoCommand extends Command {
 								inline: true,
 							},
 						],
-						/* TODO: Add user banner
-				image: {
-					url: member.user.banner,
-				},*/
+						image: {
+							url:
+								member.user.bannerURL({
+									dynamic: true,
+									size: 512,
+								}) || "",
+						},
 					},
 					message,
 				),

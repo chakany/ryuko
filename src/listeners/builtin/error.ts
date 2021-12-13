@@ -9,6 +9,7 @@ export default class ErrorListener extends Listener {
 	}
 
 	exec(error: any) {
+		if (error.code == 50013) { return; }
 		this.client.log.error(error);
 	}
 }
