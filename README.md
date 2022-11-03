@@ -6,6 +6,8 @@
 
 ---
 
+⚠️THE BELOW INSTRUCTIONS ARE OUTDATED, AND WILL NOT BE UPDATED SINCE THIS PROJECT IS BEING ARCHIVED FOR POSTERITY PURPOSES⚠️
+
 # Usage
 
 To use the bot, you will need some prerequsites:

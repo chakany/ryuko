@@ -99,7 +99,7 @@ export default class ReadyListener extends Listener {
 						},
 						{
 							type: "PLAYING",
-							text: `https://bizkitbot.com | ${this.client.config.prefix}help`,
+							text: `https://ryukobot.com | ${this.client.config.prefix}help`,
 						},
 				  ];
 		let i = 0;
