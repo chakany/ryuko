@@ -877,67 +877,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ryuko@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "ryuko@workspace:."
-  dependencies:
-    "@discordjs/builders": ^0.6.0
-    "@ryukobot/discord-akairo": ^8.1.2
-    "@ryukobot/erlpack": ^0.1.3
-    "@ryukobot/paginationembed": ^1.0.5
-    "@types/bcrypt": ^5.0.0
-    "@types/bunyan": ^1.8.7
-    "@types/cli-table": ^0.3.0
-    "@types/cookie-parser": ^1.4.2
-    "@types/cors": ^2.8.12
-    "@types/express": ^4.17.13
-    "@types/fast-levenshtein": ^0.0.2
-    "@types/glob": ^7.1.4
-    "@types/ioredis": ^4.27.6
-    "@types/locutus": ^0.0.6
-    "@types/ms": ^0.7.31
-    "@types/node": ^16.10.3
-    "@types/node-schedule": ^1.3.2
-    "@types/qrcode": ^1.4.1
-    "@types/steamid": ^2.0.0
-    "@typescript-eslint/eslint-plugin": ^4.33.0
-    "@typescript-eslint/parser": ^4.33.0
-    aki-api: ^6.0.8
-    axios: ^0.22.0
-    bcrypt: ^5.0.1
-    body-parser: ^1.19.0
-    bunyan: ^1.8.15
-    cli-table: ^0.3.6
-    colors: ^1.4.0
-    cookie-parser: ^1.4.5
-    cors: ^2.8.5
-    cross-env: ^7.0.3
-    discord.js: ^13.2.0
-    eslint: ^7.32.0
-    eslint-config-prettier: ^8.3.0
-    express: ^4.17.1
-    fast-levenshtein: ^3.0.0
-    glob: ^7.2.0
-    ioredis: ^4.27.10
-    lavasfy: ^2.2.1
-    locutus: ^2.0.15
-    mariadb: ^2.5.4
-    moment: ^2.29.1
-    ms: ^2.1.3
-    node-schedule: ^2.0.0
-    prettier: ^2.4.1
-    qrcode: ^1.4.4
-    reddit-grabber: ^2.1.0
-    sequelize: ^6.6.5
-    shoukaku: ^2.0.4
-    spotify-url-info: ^2.2.3
-    steamid: ^2.0.0
-    topgg-autoposter: ^2.0.0
-    ts-node-dev: ^1.1.8
-    typescript: ^4.4.3
-  languageName: unknown
-  linkType: soft
-
 "body-parser@npm:1.19.0, body-parser@npm:^1.19.0":
   version: 1.19.0
   resolution: "body-parser@npm:1.19.0"
@@ -2979,10 +2918,17 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"moment@npm:>= 2.9.0, moment@npm:^2.19.3, moment@npm:^2.26.0, moment@npm:^2.29.1":
+"moment@npm:>= 2.9.0, moment@npm:^2.19.3, moment@npm:^2.26.0":
   version: 2.29.1
   resolution: "moment@npm:2.29.1"
   checksum: 1e14d5f422a2687996be11dd2d50c8de3bd577c4a4ca79ba5d02c397242a933e5b941655de6c8cb90ac18f01cc4127e55b4a12ae3c527a6c0a274e455979345e
+  languageName: node
+  linkType: hard
+
+"moment@npm:^2.29.4":
+  version: 2.29.4
+  resolution: "moment@npm:2.29.4"
+  checksum: 0ec3f9c2bcba38dc2451b1daed5daded747f17610b92427bebe1d08d48d8b7bdd8d9197500b072d14e326dd0ccf3e326b9e3d07c5895d3d49e39b6803b76e80e
   languageName: node
   linkType: hard
 
@@ -3648,6 +3594,67 @@ resolve@^1.0.0:
   checksum: cb4f97ad25a75ebc11a8ef4e33bb962f8af8516bb2001082ceabd8902e15b98f4b84b4f8a9b222e5d57fc3bd1379c483886ed4619367a7680dad65316993021d
   languageName: node
   linkType: hard
+
+"ryuko@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "ryuko@workspace:."
+  dependencies:
+    "@discordjs/builders": ^0.6.0
+    "@ryukobot/discord-akairo": ^8.1.2
+    "@ryukobot/erlpack": ^0.1.3
+    "@ryukobot/paginationembed": ^1.0.5
+    "@types/bcrypt": ^5.0.0
+    "@types/bunyan": ^1.8.7
+    "@types/cli-table": ^0.3.0
+    "@types/cookie-parser": ^1.4.2
+    "@types/cors": ^2.8.12
+    "@types/express": ^4.17.13
+    "@types/fast-levenshtein": ^0.0.2
+    "@types/glob": ^7.1.4
+    "@types/ioredis": ^4.27.6
+    "@types/locutus": ^0.0.6
+    "@types/ms": ^0.7.31
+    "@types/node": ^16.10.3
+    "@types/node-schedule": ^1.3.2
+    "@types/qrcode": ^1.4.1
+    "@types/steamid": ^2.0.0
+    "@typescript-eslint/eslint-plugin": ^4.33.0
+    "@typescript-eslint/parser": ^4.33.0
+    aki-api: ^6.0.8
+    axios: ^0.22.0
+    bcrypt: ^5.0.1
+    body-parser: ^1.19.0
+    bunyan: ^1.8.15
+    cli-table: ^0.3.6
+    colors: ^1.4.0
+    cookie-parser: ^1.4.5
+    cors: ^2.8.5
+    cross-env: ^7.0.3
+    discord.js: ^13.2.0
+    eslint: ^7.32.0
+    eslint-config-prettier: ^8.3.0
+    express: ^4.17.1
+    fast-levenshtein: ^3.0.0
+    glob: ^7.2.0
+    ioredis: ^4.27.10
+    lavasfy: ^2.2.1
+    locutus: ^2.0.15
+    mariadb: ^2.5.4
+    moment: ^2.29.4
+    ms: ^2.1.3
+    node-schedule: ^2.0.0
+    prettier: ^2.4.1
+    qrcode: ^1.4.4
+    reddit-grabber: ^2.1.0
+    sequelize: ^6.6.5
+    shoukaku: ^2.0.4
+    spotify-url-info: ^2.2.3
+    steamid: ^2.0.0
+    topgg-autoposter: ^2.0.0
+    ts-node-dev: ^1.1.8
+    typescript: ^4.4.3
+  languageName: unknown
+  linkType: soft
 
 "safe-buffer@npm:5.1.2, safe-buffer@npm:~5.1.0, safe-buffer@npm:~5.1.1":
   version: 5.1.2
